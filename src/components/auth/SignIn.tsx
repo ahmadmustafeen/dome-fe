@@ -1,0 +1,49 @@
+'use client';
+import Image from 'next/image';
+import { Button, InputWithLabel, Typography } from '@/components';
+import { useRouter } from 'next/navigation';
+
+
+const SignIn = ({ params }: { params: { locale: string } }) => {
+  const router = useRouter();
+  return (
+    <div className="min-w-screen min-h-screen flex justify-center items-center">
+      <div className="w-1/2 flex justify-center items-center">
+        <Image
+          src="/assets/gifs/Login.gif"
+          alt="Loading..."
+          width={400}
+          height={400}
+        />
+      </div>
+      <div className='w-1/2'>
+        <div className='p-12 max-w-xl rounded-lg shadow-xl'>
+          <Typography text="Welcome back!" variant="text-4xl font-semibold mb-1" />
+          <Typography text="Please sign in to your account." variant="text-lg mb-12" />
+          <InputWithLabel label="Email" type="email" placeholder="Enter your email" />
+          <InputWithLabel label="Password" type="password" placeholder="Enter your password" />
+          <Button text="Sign In" onClick={() => { }} variant="my-4" />
+          <div className='flex justify-between'>
+            <div className='flex flex-col justify-start'>
+              <Typography text="Forgot your password?" variant="text-sm" />
+              <div className='flex'>
+                <Button text="Reset Password" onClick={() => router.push(`/${params.locale}/forget-password`)} variant="underline bg-transparent hover:bg-transparent !w-fit !px-0 !py-2 !text-secondary text-xs" />
+              </div>
+            </div>
+            <div className='flex flex-col justify-end'>
+              <Typography text="Don't have an account?" variant="text-sm" />
+              <div className='flex justify-end items-center'>
+                <Button text="Sign Up" onClick={() => router.push(`/${params.locale}/sign-up`)} variant="underline bg-transparent hover:bg-transparent !w-fit !px-0 !py-2 !text-secondary text-xs" />
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+export { SignIn };

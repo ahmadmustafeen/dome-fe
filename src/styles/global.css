@@ -1,3 +1,14 @@
 @layer theme, base, components, utilities;
 
+@theme {
+  --color-primary: #162233;
+  --color-secondary: #34475F;
+}
+
+/* Optional dark mode */
+.dark {
+  --color-primary: #ffffff;
+}
+
 @import 'tailwindcss';
+

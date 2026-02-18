@@ -1,10 +1,7 @@
 import type { Metadata } from 'next';
-import { hasLocale, NextIntlClientProvider } from 'next-intl';
-import { setRequestLocale } from 'next-intl/server';
-import { notFound } from 'next/navigation';
+import { NextIntlClientProvider } from 'next-intl';
 import { routing } from '@/libs/I18nRouting';
 import '@/styles/global.css';
-import { set } from 'zod';
 
 export const metadata: Metadata = {
   icons: [

@@ -9,7 +9,7 @@ export default async function CenterLayout(props: {
 
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <div className="w-full max-w-md">{props.children}</div>
+      <div >{props.children}</div>
     </div>
   );
 }

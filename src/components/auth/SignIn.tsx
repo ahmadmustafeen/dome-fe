@@ -7,8 +7,8 @@ import { useRouter } from 'next/navigation';
 const SignIn = ({ params }: { params: { locale: string } }) => {
   const router = useRouter();
   return (
-    <div className="min-w-screen min-h-screen flex justify-center items-center">
-      <div className="w-1/2 flex justify-center items-center">
+    <div className="min-w-screen min-h-screen flex flex-col md:flex-row justify-center items-center">
+      <div className="w-full md:w-1/2 flex justify-center items-center">
         <Image
           src="/assets/gifs/Login.gif"
           alt="Loading..."
@@ -16,13 +16,13 @@ const SignIn = ({ params }: { params: { locale: string } }) => {
           height={400}
         />
       </div>
-      <div className='w-1/2'>
-        <div className='p-12 max-w-xl rounded-lg shadow-xl'>
-          <Typography text="Welcome back!" variant="text-4xl font-semibold mb-1" />
-          <Typography text="Please sign in to your account." variant="text-lg mb-12" />
+      <div className='w-full md:w-1/2'>
+        <div className='p-4 md:p-12 w-full md:max-w-xl rounded-lg shadow-xl'>
+          <Typography text="Welcome back!" variant="text-xl md:text-4xl font-semibold mb-1" />
+          <Typography text="Please sign in to your account." variant="text-base md:text-lg mb-6 md:mb-12" />
           <InputWithLabel label="Email" type="email" placeholder="Enter your email" />
           <InputWithLabel label="Password" type="password" placeholder="Enter your password" />
-          <Button text="Sign In" onClick={() => { }} variant="my-4" />
+          <Button text="Sign In" onClick={() => { }} variant="my-2 md:my-4" />
           <div className='flex justify-between'>
             <div className='flex flex-col justify-start'>
               <Typography text="Forgot your password?" variant="text-sm" />

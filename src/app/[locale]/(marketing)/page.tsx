@@ -1,30 +1,12 @@
-import type { Metadata } from 'next';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
-type IIndexProps = {
-  params: Promise<{ locale: string }>;
-};
+export default async function Home() {
+  const token = await cookies()
 
-export async function generateMetadata(props: IIndexProps): Promise<Metadata> {
-  const { locale } = await props.params;
-  const t = await getTranslations({
-    locale,
-    namespace: 'Index',
-  });
+  if (!token.get("token")) {
+    redirect("/en/sign-in");
+  }
 
-  return {
-    title: t('meta_title'),
-    description: t('meta_description'),
-  };
+  redirect("/en/dashboard");
 }
-
-export default async function Index(props: IIndexProps) {
-  const { locale } = await props.params;
-  setRequestLocale(locale);
-
-  return (
-    <div>
-      Test
-    </div>
-  );
-};

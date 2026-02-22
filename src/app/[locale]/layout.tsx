@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
+import { ToastContainer } from 'react-toastify';
+
 import { routing } from '@/libs/I18nRouting';
 import '@/styles/global.css';
 
@@ -46,6 +48,7 @@ export default async function RootLayout(props: {
     <html lang={locale}>
       <body>
         <NextIntlClientProvider>
+          <ToastContainer />
           {props.children}
         </NextIntlClientProvider>
       </body>

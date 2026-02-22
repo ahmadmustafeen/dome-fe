@@ -4,7 +4,7 @@ import { LoginPayload, RegisterPayload } from "@/types/payload"
 
 export const authService = {
   login: (data: LoginPayload) =>
-    apiFetch('/user/login', {
+    apiFetch('/users/login', {
       method: 'POST',
       body: JSON.stringify(data),
     }),

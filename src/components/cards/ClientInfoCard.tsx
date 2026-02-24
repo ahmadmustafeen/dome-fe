@@ -1,3 +1,4 @@
+import { formatPhoneNumber } from '@/utils/Helpers';
 import { Edit2Icon, Trash } from 'lucide-react'
 
 
@@ -18,7 +19,7 @@ const ClientInfoCard = ({ client, handleDelete, handleEdit }: { client: Client, 
       <div className='w-11/12 mx-auto flex flex-col justify-center items-center text-center gap-y-1'>
         <p className='text-white text-2xl my-2'>{client.name}</p>
         <p className='text-white text-xs'>{client.address}</p>
-        <p className="text-white text-xs">{client.phone}</p>
+        <p className="text-white text-xs">{formatPhoneNumber(client.phone)}</p>
         <p className="text-white text-xs">{client.email}</p>
       </div>
       <div className='flex gap-x-2 mt-5'>

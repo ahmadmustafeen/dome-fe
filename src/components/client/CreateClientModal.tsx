@@ -5,6 +5,7 @@ import { Button, InputWithLabel } from "../common";
 import { clientService } from "@/services/client-service";
 import { toast } from "react-toastify";
 import { Client } from "../cards";
+import { formatPhoneNumber } from "@/utils/Helpers";
 
 const CreateClientModal = ({ editData, toggleModal, refetchClients, updateClient }: { editData?: Client, toggleModal: () => void, refetchClients: () => void, updateClient: (id: string, data: any) => Promise<void> }) => {
   const [data, setData] = useState(editData || {
@@ -67,7 +68,13 @@ const CreateClientModal = ({ editData, toggleModal, refetchClients, updateClient
         <div className="w-full flex flex-col mt-5 px-10">
           <InputWithLabel type="text" placeholder="Acme" label="Name" value={data.name} onChange={(e) => handleChange('name', e.target.value)} />
           <InputWithLabel type="email" placeholder="info@acmecorp.com" label="Email" value={data.email} onChange={(e) => handleChange('email', e.target.value)} />
-          <InputWithLabel type="tel" placeholder="(555) 123-4567" label="Phone" value={data.phone} onChange={(e) => handleChange('phone', e.target.value)} />
+          <InputWithLabel type="tel" placeholder="(555) 123-4567" label="Phone"
+            value={formatPhoneNumber(data.phone)}
+            onChange={(e) => {
+              const raw = e.target.value.replace(/\D/g, '').slice(0, 10);
+              handleChange('phone', raw);
+            }}
+          />
           <InputWithLabel type="text" placeholder="123 Main St, Anytown, USA" label="Address" value={data.address} onChange={(e) => handleChange('address', e.target.value)} />
 
           <div className="flex justify-center gap-x-2 mt-2">

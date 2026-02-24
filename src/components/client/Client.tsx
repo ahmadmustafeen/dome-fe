@@ -1,6 +1,7 @@
 'use client'
 import { Client, ClientInfoCard, CreateClientModal, CreateNewClientCard } from '@/components';
 import { clientService } from '@/services/client-service';
+import { authService, } from '@/services/auth-service';
 import { useEffect, useState } from 'react';
 import { LogOutIcon } from 'lucide-react';
 import Image from 'next/image';
@@ -53,6 +54,19 @@ function ClientPage({ }: { params: { locale: string } }) {
     fetchClients();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      toast.success('Logged out successfully');
+      window.location.replace('/en/sign-in');
+      // Redirect to login page or perform other actions after logout
+    } catch (error) {
+      console.log({ error });
+
+      toast.error('An error occurred during logout');
+    }
+  }
+
 
   return (
     <div className="w-full">
@@ -68,7 +82,7 @@ function ClientPage({ }: { params: { locale: string } }) {
         <div className='w-fit h-full flex justify-center items-center gap-x-4'>
           <h2 className='text-base text-white w-40 text-right'>John Doe</h2>
           <div>
-            <LogOutIcon className='text-white cursor-pointer' />
+            <LogOutIcon className='text-white cursor-pointer' onClick={handleLogout} />
           </div>
         </div>
       </div>

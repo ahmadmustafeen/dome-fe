@@ -40,10 +40,6 @@ export default async function RootLayout(props: {
 }) {
   const { locale } = await props.params;
 
-  console.log('Available locales:', routing.locales);
-  console.log('Requested locale:', locale);
-
-
   return (
     <html lang={locale}>
       <body>

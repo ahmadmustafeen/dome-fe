@@ -16,8 +16,13 @@ export const authService = {
     }),
 
   forgotPassword: (email: string) =>
-    apiFetch('/user/forgot-password', {
+    apiFetch('/users/forgot-password', {
       method: 'POST',
       body: JSON.stringify({ email }),
+    }),
+
+  logout: () =>
+    apiFetch('/users/logout', {
+      method: 'POST',
     }),
 }

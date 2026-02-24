@@ -42,7 +42,7 @@ const SignUp = ({ params }: Props) => {
       });
       console.log("Registration response:", response);
       toast.success("Registration successful!");
-      router.push(`/${locale}/sign-in`);
+      router.push(`/${locale}/dashboard`);
     } catch (error: any) {
       toast.error(error.message || "An error occurred during registration");
       console.error("Error during registration:", error.message || error);

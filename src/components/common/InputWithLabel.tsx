@@ -15,7 +15,7 @@ const InputWithLabel = ({ label, type, placeholder, onChange, value, showEye }: 
       placeholder={placeholder}
       onChange={onChange}
       value={value}
-      className="shadow appearance-none border rounded-lg md:rounded-xl w-full  p-2 md:p-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+      className="shadow appearance-none border rounded-lg md:rounded-xl w-full  p-2 md:p-4 text-gray-700 leading-tight placeholder:text-sm focus:outline-none focus:shadow-outline"
     />
     {showEye && (
       <button type="button" onClick={toggleShowPassword} className="cursor-pointer absolute right-3 top-9 md:top-11 text-gray-600">

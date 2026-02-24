@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { authService } from '@/services/auth-service';
 import { toast } from 'react-toastify';
+import { isValidEmail } from '@/utils/Helpers';
 
 
 const SignIn = ({ params }: { params: { locale: string } }) => {
@@ -25,11 +26,11 @@ const SignIn = ({ params }: { params: { locale: string } }) => {
 
   const onSignIn = async () => {
     if (!data.email || !data.password) {
-      alert('Please fill in all fields');
+      toast.error('Please fill in all fields');
       return;
     }
-    if (!/\S+@\S+\.\S+/.test(data.email)) {
-      alert('Please enter a valid email');
+    if (!isValidEmail(data.email)) {
+      toast.error('Please enter a valid email');
       return;
     }
 
@@ -39,12 +40,11 @@ const SignIn = ({ params }: { params: { locale: string } }) => {
         email: data.email,
         password: data.password,
       });
-      console.log("Login response:", response);
+      console.log({ response });
       toast.success("Login successful!");
       router.push(`/${locale}/dashboard`);
     } catch (error: any) {
       toast.error(error.message || "An error occurred during login");
-      console.error("Error during login:", error.message || error);
 
     }
     finally {

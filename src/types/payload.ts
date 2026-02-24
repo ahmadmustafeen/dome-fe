@@ -9,3 +9,11 @@ export interface RegisterPayload {
   email: string
   password: string
 }
+
+
+export interface ClientPayload {
+  name: string
+  email: string
+  phone: string
+  address: string
+}

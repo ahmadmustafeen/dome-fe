@@ -17,6 +17,15 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/en/dashboard', request.url));
   }
 
+  if (token && pathname === '/')
+    return NextResponse.redirect(new URL('/en/dashboard', request.url));
+
+
+  if (!token && pathname === '/')
+    return NextResponse.redirect(new URL('/en/sign-in', request.url));
+
+
+
   return NextResponse.next();
 }
 

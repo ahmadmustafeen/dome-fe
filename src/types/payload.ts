@@ -17,3 +17,11 @@ export interface ClientPayload {
   phone: string
   address: string
 }
+
+export interface SitePayload {
+  clientId: string
+  name: string
+  timeline: string
+  startDate: string
+  address: string
+}

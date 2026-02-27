@@ -1,26 +1,25 @@
-import { formatPhoneNumber } from '@/utils/Helpers';
 import { Edit2Icon, Trash } from 'lucide-react'
 
 
-export interface Client {
+export interface Site {
   _id: string;
   name: string;
   address: string;
-  phone: string;
-  email: string;
+  startDate: string;
+  timeline: string;
 }
 
-const ClientInfoCard = ({ client, handleDelete, handleEdit, onSelectClient }: { client: Client, handleDelete: () => void, handleEdit: () => void, onSelectClient: () => void }) => {
+const SiteInfoCard = ({ site, handleDelete, handleEdit, onSelectClient }: { site: Site, handleDelete: () => void, handleEdit: () => void, onSelectClient: () => void }) => {
   return (
     <div className='border cursor-pointer hover:bg-secondary transition-all duration-500 hover:scale-[105%] rounded-xl py-10 w-[32.2%] bg-primary flex justify-center items-center flex-col' onClick={onSelectClient}>
       <div className='bg-white text-primary w-24 h-24 rounded-full flex justify-center items-center text-3xl mb-2'>
-        <p>{client.name.split("")?.[0]}</p>
+        <p>{site.name.split("")?.[0]}</p>
       </div>
       <div className='w-11/12 mx-auto flex flex-col justify-center items-center text-center gap-y-1'>
-        <p className='text-white text-2xl my-2'>{client.name}</p>
-        <p className='text-white text-xs'>{client.address}</p>
-        <p className="text-white text-xs">{formatPhoneNumber(client.phone)}</p>
-        <p className="text-white text-xs">{client.email}</p>
+        <p className='text-white text-2xl my-2'>{site.name}</p>
+        <p className='text-white text-xs'>{site.address}</p>
+        <p className="text-white text-xs">{site.startDate}</p>
+        <p className="text-white text-xs">{site.timeline}</p>
       </div>
       <div className='flex gap-x-2 mt-5'>
         <button
@@ -34,4 +33,4 @@ const ClientInfoCard = ({ client, handleDelete, handleEdit, onSelectClient }: { 
   )
 }
 
-export { ClientInfoCard };
+export { SiteInfoCard };

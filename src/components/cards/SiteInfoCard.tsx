@@ -1,4 +1,5 @@
 import { Edit2Icon, Trash } from 'lucide-react'
+import { AppButton } from '../common';
 
 
 export interface Site {
@@ -9,25 +10,40 @@ export interface Site {
   timeline: string;
 }
 
-const SiteInfoCard = ({ site, handleDelete, handleEdit, onSelectClient }: { site: Site, handleDelete: () => void, handleEdit: () => void, onSelectClient: () => void }) => {
+export interface iSiteInfoCard {
+  site: Site,
+  handleDelete: () => void,
+  handleEdit: () => void,
+  onSelectSite: () => void
+}
+
+
+const SiteInfoCard = ({ site, handleDelete, handleEdit, onSelectSite }: iSiteInfoCard) => {
+
   return (
-    <div className='border cursor-pointer hover:bg-secondary transition-all duration-500 hover:scale-[105%] rounded-xl py-10 w-[32.2%] bg-primary flex justify-center items-center flex-col' onClick={onSelectClient}>
-      <div className='bg-white text-primary w-24 h-24 rounded-full flex justify-center items-center text-3xl mb-2'>
-        <p>{site.name.split("")?.[0]}</p>
+    <div className='border relative transition-all duration-500 rounded-xl py-10 w-[32.2%] bg-primary flex justify-center items-center flex-col'>
+      <div onClick={onSelectSite} className='absolute underline cursor-pointer top-2 right-2 text-white'>
+        Continue
       </div>
-      <div className='w-11/12 mx-auto flex flex-col justify-center items-center text-center gap-y-1'>
+      <div className='w-11/12 mx-auto flex flex-col items-center text-center gap-y-1'>
         <p className='text-white text-2xl my-2'>{site.name}</p>
-        <p className='text-white text-xs'>{site.address}</p>
-        <p className="text-white text-xs">{site.startDate}</p>
-        <p className="text-white text-xs">{site.timeline}</p>
+        <p className='text-white text-sm'>Site Address: {site.address}</p>
+        <p className="text-white text-sm">Start From: {site.startDate}</p>
+        <p className="text-white text-sm">Timeline: {site.timeline}</p>
       </div>
       <div className='flex gap-x-2 mt-5'>
-        <button
+        <AppButton
           onClick={handleEdit}
-          className="bg-blue-700 text-white px-4 py-2 rounded-lg mr-2 flex justify-center items-center gap-x-2 cursor-pointer"><Edit2Icon size={14} /> Edit</button>
-        <button
+          variant='secondary'
+          icon={<Edit2Icon size={14} />}
+          title='Edit'
+        />
+        <AppButton
           onClick={handleDelete}
-          className="bg-red-700 text-white px-4 py-2 rounded-lg flex justify-center items-center gap-x-2 cursor-pointer"><Trash size={14} /> Delete</button>
+          variant='default'
+          icon={<Trash size={14} />}
+          title='Delete'
+        />
       </div>
     </div>
   )

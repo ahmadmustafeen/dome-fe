@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 const Button = ({ text, onClick, variant, isLoading }: { text: string; onClick: () => void; variant?: string; isLoading?: boolean }) => (
   <button
     onClick={onClick}
@@ -8,4 +10,25 @@ const Button = ({ text, onClick, variant, isLoading }: { text: string; onClick: 
   </button>
 );
 
-export { Button };
+interface iAppButton {
+  onClick: () => void,
+  icon?: ReactNode
+  title?: string
+  variant: 'primary' | 'default' | 'secondary' | 'danger'
+}
+
+const AppButton = ({ onClick, icon, title, variant }: iAppButton) => {
+  let variantClass = 'bg-white text-primary border-white hover:bg-primary hover:text-white hover:border-white border'
+  if (variant === 'secondary') {
+    variantClass = 'bg-primary text-white border border-white hover:bg-white hover:text-primary'
+  }
+  return <button
+    onClick={onClick}
+    className={`
+      transition-all duration-500 px-4 py-2 rounded-lg mr-2 flex justify-center items-center gap-x-2 cursor-pointer
+      ${variantClass}`
+    }>{icon} {title}</button>
+
+}
+
+export { Button, AppButton };

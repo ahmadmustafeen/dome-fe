@@ -1,5 +1,5 @@
 'use client'
-import { Client, ClientInfoCard, CreateClientModal, CreateNewClientCard, HeadingWithDescription } from '@/components';
+import { Client, ClientInfoCard, CreateClientModal, CreateNewClientCard, DeleteConfirmationScreen, HeadingWithDescription, ScreenLoader } from '@/components';
 import { clientService } from '@/services/client-service';
 import { authService, } from '@/services/auth-service';
 import { useEffect, useState } from 'react';
@@ -11,6 +11,8 @@ import { useRouter } from 'next/navigation';
 
 function ClientPage({ }: { params: { locale: string } }) {
   const router = useRouter()
+  const [isClientsLoading, setIsClientLoading] = useState(false)
+  const [deleteId, setDeleteId] = useState("")
   const [clients, setClients] = useState<Client[]>([]);
   const [editData, setEditData] = useState<Client | null>(null);
   const [showCreateClientModal, setShowCreateClientModal] = useState(false);
@@ -20,15 +22,22 @@ function ClientPage({ }: { params: { locale: string } }) {
   };
 
   const fetchClients = async () => {
-    // Logic to fetch clients from the server
-    const response = await clientService.getAllClient() as Client[];
-    if (response && Array.isArray(response)) {
-      setClients(response);
+    try {
+      setIsClientLoading(true)
+      const response = await clientService.getAllClient() as Client[];
+      if (response && Array.isArray(response)) {
+        setClients(response);
+      }
+    } finally {
+      setTimeout(() => {
+        setIsClientLoading(false)
+      }, 500)
     }
   };
 
   const deleteClient = async (clientId: string) => {
     await clientService.deleteClient(clientId);
+    setDeleteId("")
     toast.success('Client deleted successfully');
     fetchClients();
   };
@@ -76,6 +85,20 @@ function ClientPage({ }: { params: { locale: string } }) {
 
   return (
     <div className="w-full">
+      {deleteId &&
+        <DeleteConfirmationScreen
+          heading="Delete Site"
+          description='Are you sure you want to delete the site? This action is irreversible.'
+          handleCancel={() => setDeleteId("")}
+          handleContinue={() => deleteClient(deleteId)}
+        />
+      }
+      {isClientsLoading &&
+        <ScreenLoader
+          heading="Loading"
+          description='Clients are loading, please wait'
+        />
+      }
       {showCreateClientModal && <CreateClientModal
         editData={editData ?? undefined}
         toggleModal={handleToggle} refetchClients={fetchClients}
@@ -83,22 +106,37 @@ function ClientPage({ }: { params: { locale: string } }) {
       />}
       <div className='bg-primary w-full p-4 flex justify-between items-center'>
         <div>
-          <Image src={'/assets/images/glenart-logo.png'} alt='Glenart Group Logo' width={120} height={120} />
+          <Image
+            src={'/assets/images/glenart-logo.png'}
+            alt='Glenart Group Logo'
+            width={120}
+            height={120}
+          />
         </div>
         <div className='w-fit h-full flex justify-center items-center gap-x-4'>
           <h2 className='text-base text-white w-40 text-right'>John Doe</h2>
           <div>
-            <LogOutIcon className='text-white cursor-pointer' onClick={handleLogout} />
+            <LogOutIcon
+              className='text-white cursor-pointer'
+              onClick={handleLogout}
+            />
           </div>
         </div>
       </div>
-      <HeadingWithDescription title='Clients' description='Here you can manage and create new clients for your organization.' />
+      <HeadingWithDescription
+        title='Clients'
+        description='Here you can manage and create new clients for your organization.'
+      />
       <div className='my-5 w-4/5 mx-auto flex flex-wrap gap-4'>
-        <CreateNewClientCard onClick={toggleCreateClientModal} />
+        <CreateNewClientCard
+          onClick={toggleCreateClientModal}
+        />
         {clients.map((company, index) => (
-          <ClientInfoCard key={index} client={company}
+          <ClientInfoCard
+            key={index}
+            client={company}
             onSelectClient={() => selectClient(company._id)}
-            handleDelete={() => deleteClient(company._id)}
+            handleDelete={() => setDeleteId(company._id)}
             handleEdit={() => handleEdit(company)}
           />
         ))}

@@ -1,10 +1,11 @@
+import { Site } from "@/components"
 import { apiFetch } from "@/libs/fetcher"
 import { SitePayload } from "@/types/payload"
 
 
 export const siteService = {
-  getAllSite: () =>
-    apiFetch('/sites', {
+  getAllSites: (params?: Record<string, string>) =>
+    apiFetch<Site[]>(`/sites${params ? `?${new URLSearchParams(params)}` : ''}`, {
       method: 'GET',
     }),
 

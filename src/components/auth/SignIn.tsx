@@ -40,7 +40,6 @@ const SignIn = ({ params }: { params: { locale: string } }) => {
         email: data.email,
         password: data.password,
       });
-      console.log({ response });
       toast.success("Login successful!");
       router.push(`/${locale}/dashboard`);
     } catch (error: any) {

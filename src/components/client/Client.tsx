@@ -7,10 +7,12 @@ import { LogOutIcon } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import { useAppContext } from '@/context/AppContext';
 
 
 function ClientPage({ }: { params: { locale: string } }) {
   const router = useRouter()
+  const { setClient } = useAppContext();
   const [isClientsLoading, setIsClientLoading] = useState(false)
   const [deleteId, setDeleteId] = useState("")
   const [clients, setClients] = useState<Client[]>([]);
@@ -79,7 +81,8 @@ function ClientPage({ }: { params: { locale: string } }) {
   }
 
   const selectClient = (id: string) => {
-    router.push(`dashboard/${id}`)
+    setClient(clients.find(client => client._id === id) ?? null)
+    router.push(`dashboard/client`)
   }
 
 

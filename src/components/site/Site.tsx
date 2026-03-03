@@ -1,4 +1,15 @@
 'use client'
+
+import {
+  useEffect,
+  useState
+} from 'react';
+import { LogOutIcon } from 'lucide-react';
+import { useAppContext } from "@/context/AppContext";
+import Image from 'next/image';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
+
 import {
   Site,
   SiteInfoCard,
@@ -10,18 +21,10 @@ import {
 } from '@/components';
 import { siteService } from '@/services/site-service';
 import { authService } from '@/services/auth-service';
-import {
-  useEffect,
-  useState
-} from 'react';
-import { LogOutIcon } from 'lucide-react';
-import Image from 'next/image';
-import { toast } from 'react-toastify';
-import { useRouter } from 'next/navigation';
 
 
 function SitePage({ params }: { params: { locale: string, clientId: string } }) {
-
+  const { setSite, client } = useAppContext();
   const router = useRouter()
   const [sites, setSites] = useState<Site[]>([]);
   const [editData, setEditData] = useState<Site | null>(null);
@@ -35,8 +38,9 @@ function SitePage({ params }: { params: { locale: string, clientId: string } }) 
 
   const fetchSites = async () => {
     setIsSiteLoading(true);
+    if (!client?._id) return router.back()
     try {
-      const response = await siteService.getAllSites({ clientId: params.clientId });
+      const response = await siteService.getAllSites({ clientId: client?._id });
       if (Array.isArray(response)) {
         setSites(response);
       } else {
@@ -92,7 +96,8 @@ function SitePage({ params }: { params: { locale: string, clientId: string } }) 
   }
 
   const selectSite = (id: string) => {
-    router.push(`dashboard/${id}`)
+    setSite(sites.find(item => item._id === id) || null)
+    router.push(`/en/dashboard/site`)
   }
 
 
@@ -121,15 +126,21 @@ function SitePage({ params }: { params: { locale: string, clientId: string } }) 
         />
       }
       <div className='bg-primary w-full p-4 flex justify-between items-center'>
-        <div>
+        <div className='w-1/3'>
+
           <Image
             src={'/assets/images/glenart-logo.png'}
             alt='Glenart Group Logo'
+            className=''
             width={120}
             height={120}
           />
         </div>
-        <div className='w-fit h-full flex justify-center items-center gap-x-4'>
+
+        <div className='text-center text-white text-3xl w-1/3'>
+          Client: {client?.name}
+        </div>
+        <div className='h-full flex justify-end gap-x-4 w-1/3'>
           <h2 className='text-base text-white w-40 text-right'>John Doe</h2>
           <div>
             <LogOutIcon
@@ -139,7 +150,11 @@ function SitePage({ params }: { params: { locale: string, clientId: string } }) 
           </div>
         </div>
       </div>
-      <HeadingWithDescription title='Sites' description='Here you can manage and create new sites for your organization.' />
+
+      <HeadingWithDescription
+        title='Sites'
+        description={`Here you can manage and create new sites`} />
+
       <div className='my-5 w-4/5 mx-auto flex flex-wrap gap-4'>
         <CreateNewSiteCard
           onClick={toggleCreateClientModal}

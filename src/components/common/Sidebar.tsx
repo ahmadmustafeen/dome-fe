@@ -2,6 +2,9 @@
 import { useState } from "react"
 import { Navbar, NavItem } from "@/constants/data"
 import { useRouter } from "next/navigation"
+import { authService } from "@/services/auth-service"
+import { toast } from "react-toastify"
+import { LogOutIcon } from 'lucide-react'
 
 const SideBarNavigation = ({ currentPath }: { currentPath: string }) => {
   const router = useRouter()
@@ -21,8 +24,21 @@ const SideBarNavigation = ({ currentPath }: { currentPath: string }) => {
     }
   }
 
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      toast.success('Logged out successfully');
+      window.location.replace('/en/sign-in');
+      // Redirect to login page or perform other actions after logout
+    } catch (error) {
+      console.log({ error });
+
+      toast.error('An error occurred during logout');
+    }
+  }
+
   return (
-    <div className="my-3 w-full flex flex-col gap-y-2">
+    <div className="my-3 w-full flex flex-col gap-y-2 relative">
 
       {Navbar.map((item: NavItem) => {
 
@@ -60,7 +76,7 @@ const SideBarNavigation = ({ currentPath }: { currentPath: string }) => {
                   return (
                     <div
                       key={sub.id}
-                      className={`py-2 text-sm text-white cursor-pointer hover:bg-secondary w-9/12 mx-auto text-center rounded-lg ${isSubActive ? "bg-secondary" : ""
+                      className={`py-2 text-sm text-white cursor-pointer hover:bg-secondary w-9/12 mx-auto px-4 rounded-lg ${isSubActive ? "bg-secondary" : ""
                         }`}
                       onClick={() => navigateToLink(sub.link)}
                     >
@@ -75,6 +91,12 @@ const SideBarNavigation = ({ currentPath }: { currentPath: string }) => {
           </div>
         )
       })}
+      <div
+        className={`py-3 text-white cursor-pointer bg-secondary/50 w-11/12 mx-auto text-center rounded-lg flex justify-start gap-x-3 items-center px-4`}
+        onClick={() => handleLogout()}
+      >
+        Logout
+      </div>
 
     </div>
   )

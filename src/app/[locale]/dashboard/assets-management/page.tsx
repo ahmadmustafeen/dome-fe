@@ -53,6 +53,7 @@ export default function AssetManagementPage() {
         </div>
         <div className="flex gap-x-2">
           {selectedAssets?.size ? <AppButton title="Delete Asset(s)" onClick={() => { }} variant="danger" /> : null}
+          <AppButton title="Upload CSV/XLSX" onClick={() => { }} variant="secondary" />
           <AppButton title="Create Asset" onClick={() => { }} variant="secondary" />
         </div>
       </div>

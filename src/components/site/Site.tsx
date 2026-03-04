@@ -97,7 +97,7 @@ function SitePage({ params }: { params: { locale: string, clientId: string } }) 
 
   const selectSite = (id: string) => {
     setSite(sites.find(item => item._id === id) || null)
-    router.push(`/en/dashboard/site`)
+    router.push(`/en/dashboard/assets-management`)
   }
 
 

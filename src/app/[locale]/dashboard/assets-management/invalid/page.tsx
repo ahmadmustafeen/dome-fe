@@ -40,7 +40,7 @@ export default function AssetManagementPage() {
           Site: {site?.name}
         </div>
         <div className="my-3 w-full gap-y-2">
-          <SideBarNavigation currentPath="assets-management" />
+          <SideBarNavigation currentPath="assets-management/invalid" />
         </div>
       </div>
     </div>
@@ -48,12 +48,11 @@ export default function AssetManagementPage() {
       <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-black">
-            Assets
+            Invalid Assets
           </h1>
         </div>
         <div className="flex gap-x-2">
           {selectedAssets?.size ? <AppButton title="Delete Asset(s)" onClick={() => { }} variant="danger" /> : null}
-          <AppButton title="Create Asset" onClick={() => { }} variant="secondary" />
         </div>
       </div>
 

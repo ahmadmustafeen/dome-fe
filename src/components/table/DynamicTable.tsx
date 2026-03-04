@@ -1,10 +1,11 @@
 "use client";
 
+import { iTableHeader } from "@/constants/data";
 import { useState, useRef, useEffect } from "react";
 
 interface iDynamicTable {
   data: { [key: string]: string; id: string }[];
-  columns: { id: string; label: string; key: string }[];
+  columns: iTableHeader[];
   setSelectedIds: (ids: Set<string>) => void;
   selectedIds: Set<string>;
 }

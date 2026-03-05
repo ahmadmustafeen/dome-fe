@@ -1,8 +1,8 @@
 "use client";
 
-import { Pagination } from "@/app/[locale]/dashboard/assets-management/page";
 import { iTableHeader } from "@/constants/data";
 import { useRef, useEffect } from "react";
+import { Pagination } from "./Pagnination";
 
 interface iDynamicTable {
   data: { [key: string]: string }[];

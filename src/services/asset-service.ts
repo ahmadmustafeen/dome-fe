@@ -23,9 +23,16 @@ export const assetService = {
     }),
 
 
+
   updateAsset: (id: string, data: AssetPayload) =>
     apiFetch(`/assets/${id}`, {
       method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+
+  deleteBulkAsset: (data: { ids: string[] }) =>
+    apiFetch('/assets/delete-many', {
+      method: 'POST',
       body: JSON.stringify(data),
     }),
 
@@ -33,4 +40,14 @@ export const assetService = {
     apiFetch(`/assets/${id}`, {
       method: 'DELETE',
     }),
+
+  uploadAssets: (siteId: string, file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return apiFetch(`/assets/site/${siteId}/upload`, {
+      method: 'POST',
+      body: formData,
+    });
+  },
 }

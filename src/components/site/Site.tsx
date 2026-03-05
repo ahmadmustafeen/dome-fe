@@ -23,7 +23,7 @@ import { siteService } from '@/services/site-service';
 import { authService } from '@/services/auth-service';
 
 
-function SitePage({ params }: { params: { locale: string, clientId: string } }) {
+function SitePage({ }: { params: { locale: string, clientId: string } }) {
   const { setSite, client } = useAppContext();
   const router = useRouter()
   const [sites, setSites] = useState<Site[]>([]);
@@ -119,7 +119,7 @@ function SitePage({ params }: { params: { locale: string, clientId: string } }) 
       }
       {showCreateSiteModal &&
         <CreateSiteModal
-          clientId={params.clientId}
+          clientId={client?._id!}
           editData={editData ?? undefined}
           toggleModal={handleToggle} refetchClients={fetchSites}
           updateClient={updateClient}

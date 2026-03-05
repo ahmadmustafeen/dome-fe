@@ -13,6 +13,7 @@ export default function AssetManagementPage() {
   const [assets, setAssets] = useState<Asset[]>([])
   const [asset, setAsset] = useState<Asset | undefined>()
   const [totalPages, setTotalPages] = useState(0)
+  const [confirmDeleteAllAssets, setConfirmDeleteAllAssets] = useState(false)
   const [deleteId, setDeleteId] = useState("")
   const [totalAssets, setTotalAssets] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
@@ -118,25 +119,56 @@ export default function AssetManagementPage() {
     fetchInvalidAssetsBySiteId(site?._id!);
   };
 
-  return <div className="flex">
-    <div className='bg-primary w-xs h-screen'>
-      {showCreateAsset ? <CreateAssetModal toggleModal={closeToggle} refetchAssets={refetchAssets}
-        editData={asset}
-        updateAsset={handleUpdateAsset}
+  const toggleDeleteAllAssets = () => {
+    setConfirmDeleteAllAssets(prev => !prev)
+  }
 
-      /> : null}
-      {deleteId &&
-        <DeleteConfirmationScreen
-          heading="Delete Asset"
-          description='Are you sure you want to delete the asset? This action is irreversible.'
-          handleCancel={() => setDeleteId("")}
-          handleContinue={() => deleteAsset(deleteId)}
-        />
-      }
-      {isAssetsLoading ? <ScreenLoader
-        heading="Loading"
-        description='Assets are loading, please wait'
-      /> : null}
+  const handleCancelDeleteAll = () => {
+    setConfirmDeleteAllAssets(false);
+    setSelectedAssets(new Set())
+  }
+
+  const handleConfirmDeleteAll = () => {
+    try {
+      assetService.deleteBulkAsset({ ids: Array.from(selectedAssets) });
+      toast.success("All selected assets deleted!");
+      setSelectedAssets(new Set())
+      setConfirmDeleteAllAssets(false)
+      refetchAssets()
+    } catch (err) {
+      toast.error("something went wrong!")
+    }
+    finally {
+    }
+  }
+
+  return <div className="flex">
+    {showCreateAsset ? <CreateAssetModal toggleModal={closeToggle} refetchAssets={refetchAssets}
+      editData={asset}
+      updateAsset={handleUpdateAsset}
+
+    /> : null}
+    {deleteId &&
+      <DeleteConfirmationScreen
+        heading="Delete Asset"
+        description='Are you sure you want to delete the asset? This action is irreversible.'
+        handleCancel={() => setDeleteId("")}
+        handleContinue={() => deleteAsset(deleteId)}
+      />
+    }
+    {isAssetsLoading ? <ScreenLoader
+      heading="Loading"
+      description='Assets are loading, please wait'
+    /> : null}
+    {confirmDeleteAllAssets &&
+      <DeleteConfirmationScreen
+        heading="Delete all selected asset(s)"
+        description='Are you sure you want to delete all selected asset? This action is irreversible.'
+        handleCancel={handleCancelDeleteAll}
+        handleContinue={handleConfirmDeleteAll}
+      />
+    }
+    <div className='bg-primary w-xs h-screen'>
       <div className='w-full justify-center flex pt-10 my-5'>
         <Image
           src={'/assets/images/glenart-logo.png'}
@@ -157,7 +189,7 @@ export default function AssetManagementPage() {
         </div>
       </div>
     </div>
-    <div className='flex-1  p-8'>
+    <div className='p-8 w-[calc(100vw-320px)]'>
       <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-black">
@@ -165,7 +197,7 @@ export default function AssetManagementPage() {
           </h1>
         </div>
         <div className="flex gap-x-2">
-          {selectedAssets?.size ? <AppButton title="Delete Asset(s)" onClick={() => { }} variant="danger" /> : null}
+          {selectedAssets?.size ? <AppButton title="Delete Asset(s)" onClick={toggleDeleteAllAssets} variant="danger" /> : null}
         </div>
       </div>
 

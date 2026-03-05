@@ -1,5 +1,5 @@
 'use client'
-import { AppButton, Asset, CreateAssetModal, DeleteConfirmationScreen, ScreenLoader, SideBarNavigation } from "@/components";
+import { AppButton, Asset, CreateAssetModal, DeleteConfirmationScreen, ScreenLoader, SideBarNavigation, UploadAssetModal } from "@/components";
 import DynamicTable from "@/components/table/DynamicTable";
 import { AssetTableHeaders } from "@/constants/data";
 import { useAppContext } from "@/context/AppContext";
@@ -14,9 +14,11 @@ export default function AssetManagementPage() {
   const [totalPages, setTotalPages] = useState(0)
   const [totalAssets, setTotalAssets] = useState(0)
   const [deleteId, setDeleteId] = useState("")
+  const [confirmDeleteAllAssets, setConfirmDeleteAllAssets] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const { site, client } = useAppContext()
   const [showCreateAsset, setShowCreateAsset] = useState(false)
+  const [showUploadAssets, setShowUploadAssets] = useState(false)
   const [isAssetsLoading, setIsAssetsLoading] = useState(false)
   const [selectedAssets, setSelectedAssets] = useState(new Set<string>());
 
@@ -101,6 +103,7 @@ export default function AssetManagementPage() {
       }
     }
   }
+
   const handleDeletePress = (id: string) => {
     setDeleteId(id)
   }
@@ -112,25 +115,63 @@ export default function AssetManagementPage() {
     fetchAssetsBySiteId(site?._id!);
   };
 
-  return <div className="flex">
-    <div className='bg-primary w-xs h-screen'>
-      {showCreateAsset ? <CreateAssetModal toggleModal={closeToggle} refetchAssets={refetchAssets}
-        editData={asset}
-        updateAsset={handleUpdateAsset}
+  const toggleUploadAsset = () => {
+    setShowUploadAssets(prevState => !prevState)
+  }
 
-      /> : null}
-      {deleteId &&
-        <DeleteConfirmationScreen
-          heading="Delete Asset"
-          description='Are you sure you want to delete the asset? This action is irreversible.'
-          handleCancel={() => setDeleteId("")}
-          handleContinue={() => deleteAsset(deleteId)}
-        />
-      }
-      {isAssetsLoading ? <ScreenLoader
-        heading="Loading"
-        description='Assets are loading, please wait'
-      /> : null}
+  const toggleDeleteAllAssets = () => {
+    setConfirmDeleteAllAssets(prev => !prev)
+  }
+
+  const handleCancelDeleteAll = () => {
+    setConfirmDeleteAllAssets(false);
+    setSelectedAssets(new Set())
+  }
+
+  const handleConfirmDeleteAll = () => {
+    try {
+      assetService.deleteBulkAsset({ ids: Array.from(selectedAssets) });
+      toast.success("All selected assets deleted!");
+      setSelectedAssets(new Set())
+      setConfirmDeleteAllAssets(false)
+      refetchAssets()
+    } catch (err) {
+      toast.error("something went wrong!")
+    }
+    finally {
+    }
+  }
+
+
+  return <div className="flex h-screen overflow-y-scroll">
+    {showCreateAsset ? <CreateAssetModal toggleModal={closeToggle} refetchAssets={refetchAssets}
+      editData={asset}
+      updateAsset={handleUpdateAsset}
+
+    /> : null}
+    {showUploadAssets ? <UploadAssetModal toggleModal={toggleUploadAsset} refetchAssets={refetchAssets} /> : null}
+    {deleteId &&
+      <DeleteConfirmationScreen
+        heading="Delete Asset"
+        description='Are you sure you want to delete the asset? This action is irreversible.'
+        handleCancel={() => setDeleteId("")}
+        handleContinue={() => deleteAsset(deleteId)}
+      />
+    }
+    {confirmDeleteAllAssets &&
+      <DeleteConfirmationScreen
+        heading="Delete all selected asset(s)"
+        description='Are you sure you want to delete all selected asset? This action is irreversible.'
+        handleCancel={handleCancelDeleteAll}
+        handleContinue={handleConfirmDeleteAll}
+      />
+    }
+    {isAssetsLoading ? <ScreenLoader
+      heading="Loading"
+      description='Assets are loading, please wait'
+    /> : null}
+    {/* sidebar */}
+    <div className='bg-primary w-xs min-h-screen overflow-scroll'>
       <div className='w-full justify-center flex pt-10 my-5'>
         <Image
           src={'/assets/images/glenart-logo.png'}
@@ -151,7 +192,8 @@ export default function AssetManagementPage() {
         </div>
       </div>
     </div>
-    <div className='flex-1  p-8'>
+
+    <div className='p-8 w-[calc(100vw-320px)]'>
       <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-black">
@@ -159,8 +201,8 @@ export default function AssetManagementPage() {
           </h1>
         </div>
         <div className="flex gap-x-2">
-          {selectedAssets?.size ? <AppButton title="Delete Asset(s)" onClick={() => { }} variant="danger" /> : null}
-          <AppButton title="Upload CSV/XLSX" onClick={() => { }} variant="secondary" />
+          {selectedAssets?.size ? <AppButton title="Delete Asset(s)" onClick={toggleDeleteAllAssets} variant="danger" /> : null}
+          <AppButton title="Upload CSV/XLSX" onClick={toggleUploadAsset} variant="secondary" />
           <AppButton title="Create Asset" onClick={toggleCreateAsset} variant="secondary" />
         </div>
       </div>

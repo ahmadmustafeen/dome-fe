@@ -4,7 +4,6 @@ import { Navbar, NavItem } from "@/constants/data"
 import { useRouter } from "next/navigation"
 import { authService } from "@/services/auth-service"
 import { toast } from "react-toastify"
-import { LogOutIcon } from 'lucide-react'
 
 const SideBarNavigation = ({ currentPath }: { currentPath: string }) => {
   const router = useRouter()

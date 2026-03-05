@@ -10,6 +10,8 @@ export interface NavItem {
 }
 
 export const Navbar: NavItem[] = [
+  { id: 1, title: "Client Management", link: "" },
+  { id: 2, title: "Site Management", link: "client" },
   {
     id: 1, title: "Assets Management", link: "assets-management",
     subItems: [
@@ -17,11 +19,7 @@ export const Navbar: NavItem[] = [
       { id: 22, title: "Invalid Assets", link: "assets-management/invalid" },
     ],
   },
-  {
-    id: 2,
-    title: "Document Management",
-    link: "document-management",
-  },
+  { id: 2, title: "Document Management", link: "document-management" },
   { id: 3, title: "Document Generator", link: "document-generator" },
   { id: 4, title: "SOP Management", link: "sop-management" },
   { id: 5, title: "EOP Management", link: "eop-management" },

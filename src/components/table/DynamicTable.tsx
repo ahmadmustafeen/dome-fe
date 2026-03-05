@@ -21,7 +21,7 @@ export default function DynamicTable({ data, columns, selectedIds, setSelectedId
   const allSelected = data.length > 0 && selectedIds.size === data.length;
   const toggleAll = () => {
     if (allSelected) setSelectedIds(new Set());
-    else setSelectedIds(new Set(data.map((r) => r.id).filter((id): id is string => id !== undefined)));
+    else setSelectedIds(new Set(data.map((r) => r._id).filter((id): id is string => id !== undefined)));
   };
   const toggleRow = (id: string) => {
     const next = new Set(selectedIds);

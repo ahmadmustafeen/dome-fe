@@ -90,8 +90,8 @@ function ClientPage({ }: { params: { locale: string } }) {
     <div className="w-full">
       {deleteId &&
         <DeleteConfirmationScreen
-          heading="Delete Site"
-          description='Are you sure you want to delete the site? This action is irreversible.'
+          heading="Delete Client"
+          description='Are you sure you want to delete the client? This action is irreversible.'
           handleCancel={() => setDeleteId("")}
           handleContinue={() => deleteClient(deleteId)}
         />

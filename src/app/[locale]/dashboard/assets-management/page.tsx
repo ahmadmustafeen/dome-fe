@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 
 export default function AssetManagementPage() {
   const [assets, setAssets] = useState<Asset[]>([])
+  const [asset, setAsset] = useState<Asset | undefined>()
   const [totalPages, setTotalPages] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const { site, client } = useAppContext()
@@ -57,6 +58,10 @@ export default function AssetManagementPage() {
     setShowCreateAsset(prevState => !prevState)
   }
 
+  const closeToggle = () => {
+    toggleCreateAsset()
+    setAsset(undefined)
+  }
 
   const refetchAssets = () => {
     if (site?._id) {
@@ -65,9 +70,41 @@ export default function AssetManagementPage() {
     }
   }
 
+  const handleEditPress = (id: string) => {
+    const selectedAsset = assets.find(item => item._id === id)
+    if (!selectedAsset) return;
+    setAsset(selectedAsset)
+    toggleCreateAsset()
+  }
+
+  const handleUpdateAsset = async (id: string, data: Asset) => {
+    try {
+      const resp = await assetService.updateAsset(id, data) as { data: unknown }
+      if (resp.data) {
+        toast.success("Asset Updated Successfully")
+      }
+      else {
+        toast.error("Something went wrong while updating the Asset")
+      }
+    }
+    catch {
+      toast.error("Something went wrong while updating the Asset")
+    }
+    finally {
+      toggleCreateAsset();
+      if (site?._id) {
+        fetchAssetsBySiteId(site?._id, currentPage)
+      }
+    }
+  }
+
   return <div className="flex">
     <div className='bg-primary w-xs h-screen'>
-      {showCreateAsset ? <CreateAssetModal toggleModal={toggleCreateAsset} refetchAssets={refetchAssets} /> : null}
+      {showCreateAsset ? <CreateAssetModal toggleModal={closeToggle} refetchAssets={refetchAssets}
+        editData={asset}
+        updateAsset={handleUpdateAsset}
+
+      /> : null}
       {isAssetsLoading ? <ScreenLoader
         heading="Loading"
         description='Assets are loading, please wait'
@@ -111,6 +148,7 @@ export default function AssetManagementPage() {
         currentPage={currentPage}
         totalPage={totalPages}
         changePage={handlePageChange}
+        handleEditPress={handleEditPress}
         setSelectedIds={setSelectedAssets}
         columns={AssetTableHeaders}
         data={assets as unknown as { [key: string]: string; }[]}

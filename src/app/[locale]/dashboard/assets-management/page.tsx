@@ -12,6 +12,7 @@ export default function AssetManagementPage() {
   const [assets, setAssets] = useState<Asset[]>([])
   const [asset, setAsset] = useState<Asset | undefined>()
   const [totalPages, setTotalPages] = useState(0)
+  const [totalAssets, setTotalAssets] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const { site, client } = useAppContext()
   const [showCreateAsset, setShowCreateAsset] = useState(false)
@@ -25,6 +26,7 @@ export default function AssetManagementPage() {
         data: {
           assets: Asset[],
           totalPages: number,
+          total: number
           page: number
         }
       };
@@ -34,6 +36,7 @@ export default function AssetManagementPage() {
       }
       setAssets(assets.data.assets as Asset[])
       setTotalPages(assets.data.totalPages)
+      setTotalAssets(assets.data.total)
 
     } finally {
       setIsAssetsLoading(false);
@@ -149,6 +152,7 @@ export default function AssetManagementPage() {
         totalPage={totalPages}
         changePage={handlePageChange}
         handleEditPress={handleEditPress}
+        totalCount={totalAssets}
         setSelectedIds={setSelectedAssets}
         columns={AssetTableHeaders}
         data={assets as unknown as { [key: string]: string; }[]}

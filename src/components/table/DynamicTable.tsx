@@ -2,7 +2,7 @@
 
 import { iTableHeader } from "@/constants/data";
 import { useRef, useEffect } from "react";
-import { Pagination } from "./Pagnination";
+import { Pagination } from "./Pagination";
 
 interface iDynamicTable {
   data: { [key: string]: string }[];
@@ -13,9 +13,10 @@ interface iDynamicTable {
   totalPage: number;
   changePage: (page: number) => void;
   handleEditPress: (id: string) => void;
+  totalCount: number
 }
 
-export default function DynamicTable({ data, columns, selectedIds, setSelectedIds, changePage, currentPage, totalPage, handleEditPress }: iDynamicTable) {
+export default function DynamicTable({ data, columns, selectedIds, setSelectedIds, changePage, currentPage, totalPage, handleEditPress, totalCount }: iDynamicTable) {
   const allSelected = data.length > 0 && selectedIds.size === data.length;
   const toggleAll = () => {
     if (allSelected) setSelectedIds(new Set());
@@ -118,7 +119,9 @@ export default function DynamicTable({ data, columns, selectedIds, setSelectedId
             </tbody>
           </table>
           <div className="flex absolute bottom-2.5 justify-end px-4 items-center w-full">
-            <Pagination currentPage={currentPage} totalPage={totalPage} changePage={changePage} />
+            <Pagination currentPage={currentPage} totalPage={totalPage} changePage={changePage}
+              totalCount={totalCount}
+            />
           </div>
         </div>
 

@@ -19,7 +19,7 @@ interface iAppButton {
 }
 
 const AppButton = ({ onClick, icon, title, variant, disabled }: iAppButton) => {
-  let variantClass = 'bg-white text-primary border-white hover:bg-primary hover:text-white hover:border-white border'
+  let variantClass = 'bg-white text-primary border-primary hover:bg-primary hover:text-white hover:border-white border'
   if (variant === 'secondary') {
     variantClass = 'bg-primary text-white hover:border-primary border border-white hover:bg-white hover:text-primary'
   }

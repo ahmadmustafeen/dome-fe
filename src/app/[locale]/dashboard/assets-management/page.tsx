@@ -1,5 +1,5 @@
 'use client'
-import { AppButton, Asset, CreateAssetModal, ScreenLoader, SideBarNavigation } from "@/components";
+import { AppButton, Asset, CreateAssetModal, DeleteConfirmationScreen, ScreenLoader, SideBarNavigation } from "@/components";
 import DynamicTable from "@/components/table/DynamicTable";
 import { AssetTableHeaders } from "@/constants/data";
 import { useAppContext } from "@/context/AppContext";
@@ -13,6 +13,7 @@ export default function AssetManagementPage() {
   const [asset, setAsset] = useState<Asset | undefined>()
   const [totalPages, setTotalPages] = useState(0)
   const [totalAssets, setTotalAssets] = useState(0)
+  const [deleteId, setDeleteId] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
   const { site, client } = useAppContext()
   const [showCreateAsset, setShowCreateAsset] = useState(false)
@@ -100,6 +101,16 @@ export default function AssetManagementPage() {
       }
     }
   }
+  const handleDeletePress = (id: string) => {
+    setDeleteId(id)
+  }
+
+  const deleteAsset = async (assetId: string) => {
+    await assetService.deleteAsset(assetId);
+    setDeleteId("")
+    toast.success('Asset deleted successfully');
+    fetchAssetsBySiteId(site?._id!);
+  };
 
   return <div className="flex">
     <div className='bg-primary w-xs h-screen'>
@@ -108,6 +119,14 @@ export default function AssetManagementPage() {
         updateAsset={handleUpdateAsset}
 
       /> : null}
+      {deleteId &&
+        <DeleteConfirmationScreen
+          heading="Delete Asset"
+          description='Are you sure you want to delete the asset? This action is irreversible.'
+          handleCancel={() => setDeleteId("")}
+          handleContinue={() => deleteAsset(deleteId)}
+        />
+      }
       {isAssetsLoading ? <ScreenLoader
         heading="Loading"
         description='Assets are loading, please wait'
@@ -152,6 +171,7 @@ export default function AssetManagementPage() {
         totalPage={totalPages}
         changePage={handlePageChange}
         handleEditPress={handleEditPress}
+        handleDeletePress={handleDeletePress}
         totalCount={totalAssets}
         setSelectedIds={setSelectedAssets}
         columns={AssetTableHeaders}

@@ -1,29 +1,117 @@
 'use client'
-import { AppButton, SideBarNavigation } from "@/components";
+import { AppButton, Asset, CreateAssetModal, ScreenLoader, SideBarNavigation } from "@/components";
 import DynamicTable from "@/components/table/DynamicTable";
 import { AssetTableHeaders } from "@/constants/data";
 import { useAppContext } from "@/context/AppContext";
+import { assetService } from "@/services/asset-service";
 import Image from "next/image";
-import { useState } from "react";
-
-const generateId = () => Math.random().toString(36).substr(2, 9);
-
-const defaultRows = [
-  { id: generateId(), "col-name": "Alice Johnson", "col-role": "Engineer", "col-status": "Active" },
-  { id: generateId(), "col-name": "Bob Martinez", "col-role": "Designer", "col-status": "On Leave" },
-  { id: generateId(), "col-name": "Carol White", "col-role": "Manager", "col-status": "Active" },
-];
-
-
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 
 export default function AssetManagementPage() {
+  const [assets, setAssets] = useState<Asset[]>([])
+  const [asset, setAsset] = useState<Asset | undefined>()
+  const [totalPages, setTotalPages] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
   const { site, client } = useAppContext()
+  const [showCreateAsset, setShowCreateAsset] = useState(false)
+  const [isAssetsLoading, setIsAssetsLoading] = useState(false)
   const [selectedAssets, setSelectedAssets] = useState(new Set<string>());
 
 
+
+  const fetchInvalidAssetsBySiteId = async (id: string, page?: number) => {
+    try {
+      setIsAssetsLoading(true);
+      const assets = await assetService.getAllInvalidAssetsBySiteId(id, page) as {
+        data: {
+          assets: Asset[],
+          totalPages: number,
+          page: number
+        }
+      };
+      if (!assets || !assets?.data) {
+        toast.error("Something went wrong while fetching assets, refresh the page.")
+        return
+      }
+      setAssets(assets.data.assets as Asset[])
+      setTotalPages(assets.data.totalPages)
+
+    } finally {
+      setIsAssetsLoading(false);
+
+    }
+  }
+
+  const handlePageChange = (page: number) => {
+    if (site?._id) {
+      setCurrentPage(page)
+      fetchInvalidAssetsBySiteId(site._id, page)
+    }
+  }
+
+  useEffect(() => {
+    if (site?._id) {
+      fetchInvalidAssetsBySiteId(site._id)
+    }
+  }, [site])
+
+  const toggleCreateAsset = () => {
+    setShowCreateAsset(prevState => !prevState)
+  }
+
+  const closeToggle = () => {
+    toggleCreateAsset()
+    setAsset(undefined)
+  }
+
+  const refetchAssets = () => {
+    if (site?._id) {
+      fetchInvalidAssetsBySiteId(site?._id)
+      setCurrentPage(1)
+    }
+  }
+
+  const handleEditPress = (id: string) => {
+    const selectedAsset = assets.find(item => item._id === id)
+    if (!selectedAsset) return;
+    setAsset(selectedAsset)
+    toggleCreateAsset()
+  }
+
+  const handleUpdateAsset = async (id: string, data: Asset) => {
+    try {
+      const resp = await assetService.updateAsset(id, data) as { data: unknown }
+      if (resp.data) {
+        toast.success("Asset Updated Successfully")
+      }
+      else {
+        toast.error("Something went wrong while updating the Asset")
+      }
+    }
+    catch {
+      toast.error("Something went wrong while updating the Asset")
+    }
+    finally {
+      toggleCreateAsset();
+      if (site?._id) {
+        fetchInvalidAssetsBySiteId(site?._id, currentPage)
+      }
+    }
+  }
+
   return <div className="flex">
     <div className='bg-primary w-xs h-screen'>
+      {showCreateAsset ? <CreateAssetModal toggleModal={closeToggle} refetchAssets={refetchAssets}
+        editData={asset}
+        updateAsset={handleUpdateAsset}
+
+      /> : null}
+      {isAssetsLoading ? <ScreenLoader
+        heading="Loading"
+        description='Assets are loading, please wait'
+      /> : null}
       <div className='w-full justify-center flex pt-10 my-5'>
         <Image
           src={'/assets/images/glenart-logo.png'}
@@ -58,9 +146,13 @@ export default function AssetManagementPage() {
 
       <DynamicTable
         selectedIds={selectedAssets}
+        currentPage={currentPage}
+        totalPage={totalPages}
+        changePage={handlePageChange}
+        handleEditPress={handleEditPress}
         setSelectedIds={setSelectedAssets}
         columns={AssetTableHeaders}
-        data={defaultRows}
+        data={assets as unknown as { [key: string]: string; }[]}
       />
     </div>
   </div>

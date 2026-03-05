@@ -88,7 +88,7 @@ export default function DynamicTable({ data, columns, selectedIds, setSelectedId
                           title={row[col.key] || "Double-click to edit"}
                         >
                           {row[col.key] || (
-                            <span className="text-slate-600 italic">empty</span>
+                            <span className="text-red-400 italic">Missing</span>
                           )}
                         </span>
                       </td>

@@ -11,8 +11,8 @@ export const assetService = {
     apiFetch(`/assets/site/${id}?page=${page || 1}`, {
       method: 'GET',
     }),
-  getAllInvalidAssetsBySiteId: (id: string) =>
-    apiFetch(`/assets/site/invalid/${id}`, {
+  getAllInvalidAssetsBySiteId: (id: string, page?: number) =>
+    apiFetch(`/assets/site/invalid/${id}?page=${page || 1}`, {
       method: 'GET',
     }),
 

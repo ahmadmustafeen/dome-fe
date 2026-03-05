@@ -1,29 +1,106 @@
 'use client'
-import { AppButton, SideBarNavigation } from "@/components";
+import { AppButton, Asset, CreateAssetModal, ScreenLoader, SideBarNavigation } from "@/components";
 import DynamicTable from "@/components/table/DynamicTable";
 import { AssetTableHeaders } from "@/constants/data";
 import { useAppContext } from "@/context/AppContext";
+import { assetService } from "@/services/asset-service";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
-const generateId = () => Math.random().toString(36).substr(2, 9);
+interface iPagination {
+  currentPage: number;
+  totalPage: number;
+  changePage: (page: number) => void;
+}
 
-const defaultRows = [
-  { id: generateId(), "col-name": "Alice Johnson", "col-role": "Engineer", "col-status": "Active" },
-  { id: generateId(), "col-name": "Bob Martinez", "col-role": "Designer", "col-status": "On Leave" },
-  { id: generateId(), "col-name": "Carol White", "col-role": "Manager", "col-status": "Active" },
-];
-
-
+export const Pagination = ({ currentPage, totalPage, changePage }: iPagination) => {
+  const handleIncrement = (updatedPage: number) => {
+    if (totalPage < updatedPage) {
+      return
+    }
+    changePage(updatedPage)
+  }
+  const handleDecrement = (updatedPage: number) => {
+    if (updatedPage < 1) {
+      return
+    }
+    changePage(updatedPage)
+  }
+  return <div className="text-black w-full mx-auto">
+    <div className="flex gap-x-2 justify-center items-center">
+      <AppButton title="Previous" onClick={() => handleDecrement(currentPage - 1)} variant="secondary" disabled={currentPage === 1} />
+      Showing {currentPage} out of {totalPage}
+      <AppButton title="Next" onClick={() => handleIncrement(currentPage + 1)} variant="secondary" disabled={currentPage === totalPage} />
+    </div>
+  </div>
+}
 
 
 export default function AssetManagementPage() {
+  const [assets, setAssets] = useState<Asset[]>([])
+  const [totalPages, setTotalPages] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
   const { site, client } = useAppContext()
+  const [showCreateAsset, setShowCreateAsset] = useState(false)
+  const [isAssetsLoading, setIsAssetsLoading] = useState(false)
   const [selectedAssets, setSelectedAssets] = useState(new Set<string>());
 
+  const fetchAssetsBySiteId = async (id: string, page?: number) => {
+    try {
+      setIsAssetsLoading(true);
+      const assets = await assetService.getAllAssetsBySiteId(id, page) as {
+        data: {
+          assets: Asset[],
+          totalPages: number,
+          page: number
+        }
+      };
+      if (!assets || !assets?.data) {
+        toast.error("Something went wrong while fetching assets, refresh the page.")
+        return
+      }
+      setAssets(assets.data.assets as Asset[])
+      setTotalPages(assets.data.totalPages)
+
+    } finally {
+      setIsAssetsLoading(false);
+
+    }
+  }
+
+  const handlePageChange = (page: number) => {
+    if (site?._id) {
+      setCurrentPage(page)
+      fetchAssetsBySiteId(site._id, page)
+    }
+  }
+
+  useEffect(() => {
+    if (site?._id) {
+      fetchAssetsBySiteId(site._id)
+    }
+  }, [site])
+
+  const toggleCreateAsset = () => {
+    setShowCreateAsset(prevState => !prevState)
+  }
+
+
+  const refetchAssets = () => {
+    if (site?._id) {
+      fetchAssetsBySiteId(site?._id)
+      setCurrentPage(1)
+    }
+  }
 
   return <div className="flex">
     <div className='bg-primary w-xs h-screen'>
+      {showCreateAsset ? <CreateAssetModal toggleModal={toggleCreateAsset} refetchAssets={refetchAssets} /> : null}
+      {isAssetsLoading ? <ScreenLoader
+        heading="Loading"
+        description='Assets are loading, please wait'
+      /> : null}
       <div className='w-full justify-center flex pt-10 my-5'>
         <Image
           src={'/assets/images/glenart-logo.png'}
@@ -54,15 +131,18 @@ export default function AssetManagementPage() {
         <div className="flex gap-x-2">
           {selectedAssets?.size ? <AppButton title="Delete Asset(s)" onClick={() => { }} variant="danger" /> : null}
           <AppButton title="Upload CSV/XLSX" onClick={() => { }} variant="secondary" />
-          <AppButton title="Create Asset" onClick={() => { }} variant="secondary" />
+          <AppButton title="Create Asset" onClick={toggleCreateAsset} variant="secondary" />
         </div>
       </div>
 
       <DynamicTable
         selectedIds={selectedAssets}
+        currentPage={currentPage}
+        totalPage={totalPages}
+        changePage={handlePageChange}
         setSelectedIds={setSelectedAssets}
         columns={AssetTableHeaders}
-        data={defaultRows}
+        data={assets as unknown as { [key: string]: string; }[]}
       />
     </div>
   </div>

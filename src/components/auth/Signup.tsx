@@ -27,13 +27,12 @@ const SignUp = () => {
   const handleSignUp = async () => {
     try {
       setLoading(true);
-      const response = await authService.register({
+      await authService.register({
         firstName: data.firstName,
         lastName: data.lastName,
         email: data.email,
         password: data.password,
       });
-      console.log("Registration response:", response);
       toast.success("Registration successful!");
       router.push(`/${locale}/dashboard`);
     } catch (error: any) {

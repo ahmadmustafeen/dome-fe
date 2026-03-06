@@ -1,4 +1,6 @@
 import { setRequestLocale } from 'next-intl/server';
+import { AppProvider } from '@/context/AppContext';
+
 
 export default async function DashboardLayout(props: {
   children: React.ReactNode;
@@ -7,5 +9,8 @@ export default async function DashboardLayout(props: {
   const { locale } = await props.params;
   setRequestLocale(locale);
 
-  return props.children;
+  return <AppProvider>
+    {props.children}
+  </AppProvider>
+
 }

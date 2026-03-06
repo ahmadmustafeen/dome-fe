@@ -25,3 +25,15 @@ export interface SitePayload {
   startDate: string
   address: string
 }
+
+export interface AssetPayload {
+  siteId: string;
+  assetId: string;
+  assetName: string;
+  category: string;
+  subCategory: string;
+  make: string;
+  modelName: string;
+  location?: string;
+  serialNumber?: string;
+}

@@ -7,10 +7,12 @@ import { LogOutIcon } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import { useAppContext } from '@/context/AppContext';
 
 
 function ClientPage({ }: { params: { locale: string } }) {
   const router = useRouter()
+  const { setClient } = useAppContext();
   const [isClientsLoading, setIsClientLoading] = useState(false)
   const [deleteId, setDeleteId] = useState("")
   const [clients, setClients] = useState<Client[]>([]);
@@ -79,7 +81,8 @@ function ClientPage({ }: { params: { locale: string } }) {
   }
 
   const selectClient = (id: string) => {
-    router.push(`dashboard/${id}`)
+    setClient(clients.find(client => client._id === id) ?? null)
+    router.push(`dashboard/client`)
   }
 
 
@@ -87,8 +90,8 @@ function ClientPage({ }: { params: { locale: string } }) {
     <div className="w-full">
       {deleteId &&
         <DeleteConfirmationScreen
-          heading="Delete Site"
-          description='Are you sure you want to delete the site? This action is irreversible.'
+          heading="Delete Client"
+          description='Are you sure you want to delete the client? This action is irreversible.'
           handleCancel={() => setDeleteId("")}
           handleContinue={() => deleteClient(deleteId)}
         />

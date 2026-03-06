@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { Site } from "../cards";
 import { siteService } from "@/services/site-service";
 
-const CreateSiteModal = ({ editData, toggleModal, refetchClients, updateClient, clientId }: { editData?: Site, toggleModal: () => void, refetchClients: () => void, updateClient: (id: string, data: any) => Promise<void>, clientId: string }) => {
+const CreateSiteModal = ({ editData, toggleModal, refetchClients, updateSite, clientId }: { editData?: Site, toggleModal: () => void, refetchClients: () => void, updateSite: (id: string, data: any) => Promise<void>, clientId: string }) => {
   const [data, setData] = useState(editData || {
     clientId: clientId,
     name: '',
@@ -43,7 +43,7 @@ const CreateSiteModal = ({ editData, toggleModal, refetchClients, updateClient, 
     setLoading(true);
 
     if (editData) {
-      await updateClient(editData._id, data);
+      await updateSite(editData._id, data);
       resetData();
       return;
     }

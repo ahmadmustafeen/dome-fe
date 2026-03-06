@@ -92,12 +92,13 @@ export default function AssetManagementPage() {
   const handleUpdateAsset = async (id: string, data: Asset) => {
     try {
       const formData = new FormData();
-  const fields = {
+      const fields = {
         assetId: data.assetId,
         assetName: data.assetName,
         category: data.category,
         subCategory: data.subCategory,
         serialNumber: data.serialNumber,
+        equipmentName: data.equipmentName,
         make: data.make,
         modelName: data.modelName,
         location: data.location,

@@ -10,6 +10,7 @@ export interface Asset {
   _id: '',
   assetId: '',
   assetName: '',
+  equipmentName: '',
   category: '',
   subCategory: '',
   make: '',
@@ -65,6 +66,7 @@ const CreateAssetModal = ({ editData, toggleModal, refetchAssets, updateAsset, f
     serialNumber: '',
     location: '',
     comment: '',
+    equipmentName: '',
     images: []
   });
   const [loading, setLoading] = useState(false);
@@ -83,6 +85,7 @@ const CreateAssetModal = ({ editData, toggleModal, refetchAssets, updateAsset, f
       make: '',
       modelName: '',
       serialNumber: '',
+      equipmentName: '',
       location: '',
       comment: '',
       images: []
@@ -125,7 +128,7 @@ const CreateAssetModal = ({ editData, toggleModal, refetchAssets, updateAsset, f
   const removeFile = (index: number) => {
     setFiles(prev => prev.filter((_, i) => i !== index));
   };
-  
+
   return (
     <div className="fixed z-10 h-screen w-screen flex justify-center items-center bg-black/50 text-white">
       <div className="w-5xl max-h-140 overflow-y-scroll bg-white rounded-xl py-4 px-2 relative  ">
@@ -187,13 +190,24 @@ const CreateAssetModal = ({ editData, toggleModal, refetchAssets, updateAsset, f
               onChange={(e) => handleChange('serialNumber', e.target.value)}
             />
           </div>
-          <InputWithLabel
-            type="text"
-            placeholder="123 Main St, Anytown, USA"
-            label="Location"
-            value={data.location}
-            onChange={(e) => handleChange('location', e.target.value)}
-          />{
+          <div className="flex gap-x-2">
+            <InputWithLabel
+              type="text"
+              placeholder="123 Main St, Anytown, USA"
+              label="Location"
+              value={data.location}
+              onChange={(e) => handleChange('location', e.target.value)}
+            />
+            <InputWithLabel
+              type="text"
+              placeholder="Equipment Name"
+              label="Equipment Name"
+              value={data.equipmentName}
+              onChange={(e) => handleChange('equipmentName', e.target.value)}
+            />
+          </div>
+          ‰
+          {
             editData ?
               <>
                 <InputWithLabel

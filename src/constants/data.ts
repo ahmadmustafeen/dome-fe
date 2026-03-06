@@ -37,6 +37,7 @@ export const AssetTableHeaders: iTableHeader[] = [
   { id: "assetName", label: "Asset Name", key: "assetName" },
   { id: "category", label: "Category", key: "category" },
   { id: "subCategory", label: "Sub Category", key: "subCategory" },
+  { id: "equipmentName", label: "Equipment Name", key: "equipmentName" },
   { id: "make", label: "Make", key: "make" },
   { id: "model", label: "Model", key: "modelName" },
   { id: "location", label: "Location", key: "location" },

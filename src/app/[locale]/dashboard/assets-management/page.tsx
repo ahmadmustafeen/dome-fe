@@ -96,6 +96,7 @@ export default function AssetManagementPage() {
         serialNumber: data.serialNumber,
         make: data.make,
         modelName: data.modelName,
+        equipmentName: data.equipmentName,
         location: data.location,
         siteId: data.siteId,
         comment: data.comment,

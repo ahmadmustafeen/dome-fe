@@ -66,10 +66,10 @@ function SitePage() {
     toggleCreateClientModal();
   };
 
-  const updateClient = async (siteId: string, updatedData: any) => {
+  const updateSite = async (siteId: string, updatedData: any) => {
     // Logic to update a client
     await siteService.updateSite(siteId, updatedData);
-    toast.success('Client updated successfully');
+    toast.success('Site updated successfully');
     setEditData(null);
     toggleCreateClientModal();
     fetchSites();
@@ -122,7 +122,7 @@ function SitePage() {
           clientId={client?._id!}
           editData={editData ?? undefined}
           toggleModal={handleToggle} refetchClients={fetchSites}
-          updateClient={updateClient}
+          updateSite={updateSite}
         />
       }
       <div className='bg-primary w-full p-4 flex justify-between items-center'>

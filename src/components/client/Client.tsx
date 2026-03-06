@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useAppContext } from '@/context/AppContext';
 
 
-function ClientPage({ }: { params: { locale: string } }) {
+function ClientPage() {
   const router = useRouter()
   const { setClient } = useAppContext();
   const [isClientsLoading, setIsClientLoading] = useState(false)

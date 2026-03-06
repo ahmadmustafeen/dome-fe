@@ -4,18 +4,11 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { authService } from '@/services/auth-service';
 import Image from 'next/image';
-import {toast} from 'react-toastify';
-
-type Props = {
-  params: {
-    locale: string;
-  };
-};
+import { toast } from 'react-toastify';
 
 
-
-const SignUp = ({ params }: Props) => {
-  const { locale } = params;
+const SignUp = () => {
+  const locale = 'en'
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     firstName: "",
@@ -46,7 +39,7 @@ const SignUp = ({ params }: Props) => {
     } catch (error: any) {
       toast.error(error.message || "An error occurred during registration");
       console.error("Error during registration:", error.message || error);
-      
+
     }
     finally {
       setLoading(false);

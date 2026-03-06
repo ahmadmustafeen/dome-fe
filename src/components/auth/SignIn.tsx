@@ -8,9 +8,8 @@ import { toast } from 'react-toastify';
 import { isValidEmail } from '@/utils/Helpers';
 
 
-const SignIn = ({ params }: { params: { locale: string } }) => {
-  const { locale } = params;
-
+const SignIn = () => {
+  const locale = 'en'
   const [data, setData] = useState({
     email: '',
     password: '',
@@ -36,7 +35,7 @@ const SignIn = ({ params }: { params: { locale: string } }) => {
 
     try {
       setLoading(true);
-      const response = await authService.login({
+      await authService.login({
         email: data.email,
         password: data.password,
       });
@@ -75,13 +74,13 @@ const SignIn = ({ params }: { params: { locale: string } }) => {
             <div className='flex flex-col justify-start'>
               <Typography text="Forgot your password?" variant="text-sm" />
               <div className='flex'>
-                <Button text="Reset Password" onClick={() => router.push(`/${params.locale}/forget-password`)} variant="underline bg-transparent hover:bg-transparent !w-fit !px-0 !py-2 !text-secondary text-xs" />
+                <Button text="Reset Password" onClick={() => router.push(`/${locale}/forget-password`)} variant="underline bg-transparent hover:bg-transparent !w-fit !px-0 !py-2 !text-secondary text-xs" />
               </div>
             </div>
             <div className='flex flex-col justify-end'>
               <Typography text="Don't have an account?" variant="text-sm" />
               <div className='flex justify-end items-center'>
-                <Button text="Sign Up" onClick={() => router.push(`/${params.locale}/sign-up`)} variant="underline bg-transparent hover:bg-transparent !w-fit !px-0 !py-2 !text-secondary text-xs" />
+                <Button text="Sign Up" onClick={() => router.push(`/${locale}/sign-up`)} variant="underline bg-transparent hover:bg-transparent !w-fit !px-0 !py-2 !text-secondary text-xs" />
               </div>
             </div>
 

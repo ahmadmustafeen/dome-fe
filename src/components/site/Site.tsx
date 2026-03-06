@@ -23,7 +23,7 @@ import { siteService } from '@/services/site-service';
 import { authService } from '@/services/auth-service';
 
 
-function SitePage({ }: { params: { locale: string, clientId: string } }) {
+function SitePage() {
   const { setSite, client } = useAppContext();
   const router = useRouter()
   const [sites, setSites] = useState<Site[]>([]);

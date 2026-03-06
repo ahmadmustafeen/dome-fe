@@ -1,12 +1,11 @@
 import { ClientPage } from "@/components";
 
 
-export default async function DashboardPage({ params }: { params: { locale: string } }) {
-  const _params = await params;
+export default function DashboardPage() {
 
   return (
     <div className="w-full">
-      <ClientPage params={_params} />
+      <ClientPage />
     </div>
   );
 }

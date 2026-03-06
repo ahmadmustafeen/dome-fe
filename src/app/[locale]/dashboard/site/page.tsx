@@ -2,16 +2,6 @@
 import { SideBarNavigation } from "@/components";
 import { useAppContext } from "@/context/AppContext";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-
-const Navbar = [
-  { id: 1, title: "Assets Management", link: "assets-management" },
-  { id: 2, title: "Document Management", link: "" },
-  { id: 3, title: "Document Generator", link: "" },
-  { id: 4, title: "SOP Management", link: "" },
-  { id: 5, title: "EOP Management", link: "" },
-  { id: 6, title: "MOP Management", link: "" },
-]
 
 export default function DashboardPage() {
   const { site, client } = useAppContext()

@@ -1,10 +1,8 @@
 import { SignIn } from '@/components';
 
 
-export default async function SignInPage({ params }: { params: { locale: string } }) {
-  const _params = await params;
-
+export default function SignInPage() {
   return (
-    <SignIn params={_params} />
+    <SignIn />
   );
 }

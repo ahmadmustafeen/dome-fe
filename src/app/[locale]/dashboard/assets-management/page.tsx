@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function AssetManagementPage() {
+  const [files, setFiles] = useState<File[]>([])
   const [assets, setAssets] = useState<Asset[]>([])
   const [asset, setAsset] = useState<Asset | undefined>()
   const [totalPages, setTotalPages] = useState(0)
@@ -85,24 +86,46 @@ export default function AssetManagementPage() {
 
   const handleUpdateAsset = async (id: string, data: Asset) => {
     try {
-      const resp = await assetService.updateAsset(id, data) as { data: unknown }
+      // Create FormData
+      const formData = new FormData();
+      const fields = {
+        assetId: data.assetId,
+        assetName: data.assetName,
+        category: data.category,
+        subCategory: data.subCategory,
+        serialNumber: data.serialNumber,
+        make: data.make,
+        modelName: data.modelName,
+        location: data.location,
+        siteId: data.siteId,
+        comment: data.comment,
+      };
+
+      Object.entries(fields).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          formData.append(key, String(value));
+        }
+      });
+      formData.append("images", JSON.stringify(data.images ?? []))
+
+      files.forEach(file => formData.append("files", file));
+      const resp = await assetService.updateAsset(id, formData) as { data: unknown };
+
       if (resp.data) {
-        toast.success("Asset Updated Successfully")
+        toast.success("Asset Updated Successfully");
+        setFiles([]);
+      } else {
+        toast.error("Something went wrong while updating the Asset");
       }
-      else {
-        toast.error("Something went wrong while updating the Asset")
-      }
-    }
-    catch {
-      toast.error("Something went wrong while updating the Asset")
-    }
-    finally {
-      toggleCreateAsset();
+    } catch (err) {
+      toast.error("Something went wrong while updating the Asset");
+    } finally {
+      closeToggle();
       if (site?._id) {
-        fetchAssetsBySiteId(site?._id, currentPage)
+        fetchAssetsBySiteId(site?._id, currentPage);
       }
     }
-  }
+  };
 
   const handleDeletePress = (id: string) => {
     setDeleteId(id)
@@ -144,7 +167,10 @@ export default function AssetManagementPage() {
 
 
   return <div className="flex h-screen overflow-y-scroll">
-    {showCreateAsset ? <CreateAssetModal toggleModal={closeToggle} refetchAssets={refetchAssets}
+    {showCreateAsset ? <CreateAssetModal
+      files={files}
+      setFiles={setFiles}
+      toggleModal={closeToggle} refetchAssets={refetchAssets}
       editData={asset}
       updateAsset={handleUpdateAsset}
 

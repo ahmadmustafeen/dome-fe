@@ -22,12 +22,10 @@ export const assetService = {
       body: JSON.stringify(data),
     }),
 
-
-
-  updateAsset: (id: string, data: AssetPayload) =>
+  updateAsset: (id: string, data: FormData) =>
     apiFetch(`/assets/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(data),
+      body: data,
     }),
 
   deleteBulkAsset: (data: { ids: string[] }) =>

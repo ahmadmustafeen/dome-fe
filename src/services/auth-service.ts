@@ -1,28 +1,39 @@
-import { apiFetch } from "@/libs/fetcher"
-import { LoginPayload, RegisterPayload } from "@/types/payload"
+import type {
+  ForgotPasswordPayload,
+  LoginPayload,
+  RegisterPayload,
+  ResetPasswordPayload,
+} from "@/types/payload";
 
+import { apiFetch } from "@/libs/fetcher";
 
 export const authService = {
   login: (data: LoginPayload) =>
-    apiFetch('/users/login', {
-      method: 'POST',
+    apiFetch("/users/login", {
+      method: "POST",
       body: JSON.stringify(data),
     }),
 
   register: (data: RegisterPayload) =>
-    apiFetch('/users/register', {
-      method: 'POST',
+    apiFetch("/users/register", {
+      method: "POST",
       body: JSON.stringify(data),
     }),
 
-  forgotPassword: (email: string) =>
-    apiFetch('/users/forgot-password', {
-      method: 'POST',
-      body: JSON.stringify({ email }),
+  forgotPassword: (data: ForgotPasswordPayload) =>
+    apiFetch("/users/forgot-password", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  resetPassword: (data: ResetPasswordPayload) =>
+    apiFetch("/users/reset-password", {
+      method: "POST",
+      body: JSON.stringify(data),
     }),
 
   logout: () =>
-    apiFetch('/users/logout', {
-      method: 'POST',
+    apiFetch("/users/logout", {
+      method: "POST",
     }),
-}
+};

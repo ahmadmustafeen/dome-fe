@@ -1,8 +1,5 @@
-import { SignIn } from '@/components';
-
+import { SignIn } from "@/components";
 
 export default function SignInPage() {
-  return (
-    <SignIn />
-  );
+  return <SignIn />;
 }

@@ -16,8 +16,8 @@ const DOCUMENT_TYPES: DocumentType[] = [
   "Asset List",
 ];
 
-const ACCEPTED_EXTENSIONS = ["pdf", "doc", "docx", "txt", "png", "jpg", "jpeg"];
-const ACCEPTED_MIME = ".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg";
+const ACCEPTED_EXTENSIONS = ["pdf", "doc", "docx", "txt"];
+const ACCEPTED_MIME = ".pdf,.doc,.docx,.txt";
 
 const formatFileSize = (bytes: number): string => {
   if (bytes < 1024) {
@@ -194,13 +194,12 @@ const UploadDocumentModal = ({
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               onClick={() => !file && inputRef.current?.click()}
-              className={`relative cursor-pointer rounded-xl border-2 border-dashed transition-all duration-200 select-none ${
-                file
-                  ? "cursor-default border-primary/40 bg-primary/5"
-                  : isDragging
-                    ? "scale-[1.01] border-secondary bg-secondary/5"
-                    : "border-gray-300 bg-gray-50 hover:border-primary hover:bg-primary/5"
-              }`}
+              className={`relative cursor-pointer rounded-xl border-2 border-dashed transition-all duration-200 select-none ${file
+                ? "cursor-default border-primary/40 bg-primary/5"
+                : isDragging
+                  ? "scale-[1.01] border-secondary bg-secondary/5"
+                  : "border-gray-300 bg-gray-50 hover:border-primary hover:bg-primary/5"
+                }`}
             >
               <div className="p-6">
                 {file ? (
@@ -257,7 +256,7 @@ const UploadDocumentModal = ({
               />
             </div>
             <p className="mt-1.5 text-xs text-gray-400">
-              Accepted types: PDF, DOC, DOCX, TXT, PNG, JPG, JPEG
+              Accepted types: PDF, DOC, DOCX, TXT
             </p>
           </div>
 

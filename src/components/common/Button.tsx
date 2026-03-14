@@ -1,39 +1,64 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
-const Button = ({ text, onClick, variant, isLoading }: { text: string; onClick: () => void; variant?: string; isLoading?: boolean }) => (
-  <button
-    onClick={onClick}
-    disabled={isLoading}
-    className={`w-full cursor-pointer bg-primary text-white p-2 md:p-4 rounded-lg md:rounded-xl hover:bg-secondary transition ${variant || ''} ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-  >
-    {isLoading ? "Loading..." : text}
-  </button>
-);
+import { Loader2 } from "lucide-react";
 
-interface iAppButton {
-  onClick: () => void,
-  icon?: ReactNode
-  title?: string
-  variant: 'primary' | 'default' | 'secondary' | 'danger',
-  disabled?: boolean
-}
+const Button = ({
+  text,
+  onClick,
+  variant,
+  isLoading,
+  disabled,
+}: {
+  text: string;
+  onClick: () => void;
+  variant?: string;
+  isLoading?: boolean;
+  disabled?: boolean;
+}) => {
+  const isDisabled = isLoading || disabled;
+  return (
+    <button
+      onClick={onClick}
+      disabled={isDisabled}
+      className={`flex w-full items-center justify-center gap-2 rounded-lg p-2 text-white transition md:rounded-xl md:p-4 ${
+        isDisabled
+          ? "cursor-not-allowed bg-slate-400"
+          : "cursor-pointer bg-primary hover:bg-secondary"
+      } ${variant || ""}`}
+    >
+      {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : text}
+    </button>
+  );
+};
+
+type iAppButton = {
+  onClick: () => void;
+  icon?: ReactNode;
+  title?: string;
+  variant: "primary" | "default" | "secondary" | "danger";
+  disabled?: boolean;
+};
 
 const AppButton = ({ onClick, icon, title, variant, disabled }: iAppButton) => {
-  let variantClass = 'bg-white text-primary border-primary hover:bg-primary hover:text-white hover:border-white border'
-  if (variant === 'secondary') {
-    variantClass = 'bg-primary text-white hover:border-primary border border-white hover:bg-white hover:text-primary'
+  let variantClass =
+    "bg-white text-primary border-primary hover:bg-primary hover:text-white hover:border-white border";
+  if (variant === "secondary") {
+    variantClass =
+      "bg-primary text-white hover:border-primary border border-white hover:bg-white hover:text-primary";
   }
-  if (variant === 'danger') {
-    variantClass = 'bg-red-500 hover:border-red-500 text-white border border-white hover:bg-white hover:text-red-500'
+  if (variant === "danger") {
+    variantClass =
+      "bg-red-500 hover:border-red-500 text-white border border-white hover:bg-white hover:text-red-500";
   }
-  return <button
-    onClick={onClick}
-    disabled={disabled}
-    className={`
-      transition-all disabled:text-black disabled:bg-gray-300 disabled:border-none disabled:cursor-not-allowed duration-500 px-4 py-2 rounded-lg mr-2 flex justify-center items-center gap-x-2 cursor-pointer
-      ${variantClass}`
-    }>{icon} {title}</button>
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={`mr-2 flex cursor-pointer items-center justify-center gap-x-2 rounded-lg px-4 py-2 transition-all duration-500 disabled:cursor-not-allowed disabled:border-none disabled:bg-gray-400 disabled:text-white ${variantClass}`}
+    >
+      {icon} {title}
+    </button>
+  );
+};
 
-}
-
-export { Button, AppButton };
+export { AppButton, Button };

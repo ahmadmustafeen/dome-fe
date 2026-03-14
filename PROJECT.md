@@ -285,6 +285,10 @@ No external state library (Redux/Zustand) — uses React Context only.
 | 2026-03-10 | **Bug fix:** Removed invalid `--webpack` flag from `next build` script |
 | 2026-03-10 | **Bug fix:** Fixed duplicate Navbar `id` values in `src/constants/data.ts` (was causing React key collision warning) |
 | 2026-03-10 | **Bug fix:** Added `suppressHydrationWarning` to `<html>` tag in root layout (fixes browser-extension hydration mismatch) |
+| 2026-03-10 | **Document Management:** Created `src/types/document.ts` with full type definitions (`DocumentRecord`, `DocumentType`, `DocumentUploadPayload`, API response types) for BE developer |
+| 2026-03-10 | **Document Management:** Built `DocumentManagementPage` — table with file-type icons, category color badges, real-time client-side search + type filter dropdown, View/Download/Delete row actions, delete confirmation dialog |
+| 2026-03-10 | **Document Management:** Built `UploadDocumentModal` — drag-and-drop zone, document type selector (required), file type validation, inline error, loading state, prepends new doc to top of table |
+| 2026-03-10 | **Common component:** Added reusable `EmptyState` component (`heading`, `description`, `icon`, `action` props) |
 
 ---
 

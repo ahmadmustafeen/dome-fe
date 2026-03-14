@@ -1,42 +1,79 @@
-import { apiFetch } from "@/libs/fetcher"
-import { AssetPayload } from "@/types/payload"
-
+import type { AssetPayload } from "@/types/payload";
+import { apiFetch } from "@/libs/fetcher";
 
 export const assetService = {
   getAllAssets: () =>
-    apiFetch('/assets', {
-      method: 'GET',
+    apiFetch("/assets", {
+      method: "GET",
     }),
-  getAllAssetsBySiteId: (id: string, page?: number) =>
-    apiFetch(`/assets/site/${id}?page=${page || 1}`, {
-      method: 'GET',
-    }),
-  getAllInvalidAssetsBySiteId: (id: string, page?: number) =>
-    apiFetch(`/assets/site/invalid/${id}?page=${page || 1}`, {
-      method: 'GET',
-    }),
+  getAllAssetsBySiteId: (
+    id: string,
+    params?: {
+      page?: number;
+      search?: string;
+      sortBy?: string;
+      sortOrder?: "asc" | "desc";
+    },
+  ) => {
+    const query = new URLSearchParams({ page: String(params?.page || 1) });
+    if (params?.search) {
+      query.set("search", params.search);
+    }
+    if (params?.sortBy) {
+      query.set("sortBy", params.sortBy);
+    }
+    if (params?.sortOrder) {
+      query.set("sortOrder", params.sortOrder);
+    }
+    return apiFetch(`/assets/site/${id}?${query.toString()}`, {
+      method: "GET",
+    });
+  },
+  getAllInvalidAssetsBySiteId: (
+    id: string,
+    params?: {
+      page?: number;
+      search?: string;
+      sortBy?: string;
+      sortOrder?: "asc" | "desc";
+    },
+  ) => {
+    const query = new URLSearchParams({ page: String(params?.page || 1) });
+    if (params?.search) {
+      query.set("search", params.search);
+    }
+    if (params?.sortBy) {
+      query.set("sortBy", params.sortBy);
+    }
+    if (params?.sortOrder) {
+      query.set("sortOrder", params.sortOrder);
+    }
+    return apiFetch(`/assets/site/invalid/${id}?${query.toString()}`, {
+      method: "GET",
+    });
+  },
 
   createAsset: (data: AssetPayload) =>
-    apiFetch('/assets', {
-      method: 'POST',
+    apiFetch("/assets", {
+      method: "POST",
       body: JSON.stringify(data),
     }),
 
   updateAsset: (id: string, data: FormData) =>
     apiFetch(`/assets/${id}`, {
-      method: 'PUT',
+      method: "PUT",
       body: data,
     }),
 
   deleteBulkAsset: (data: { ids: string[] }) =>
-    apiFetch('/assets/delete-many', {
-      method: 'POST',
+    apiFetch("/assets/delete-many", {
+      method: "POST",
       body: JSON.stringify(data),
     }),
 
   deleteAsset: (id: string) =>
     apiFetch(`/assets/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
     }),
 
   uploadAssets: (siteId: string, file: File) => {
@@ -44,8 +81,8 @@ export const assetService = {
     formData.append("file", file);
 
     return apiFetch(`/assets/site/${siteId}/upload`, {
-      method: 'POST',
+      method: "POST",
       body: formData,
     });
   },
-}
+};

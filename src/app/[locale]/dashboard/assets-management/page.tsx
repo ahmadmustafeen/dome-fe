@@ -1,94 +1,160 @@
-'use client'
-import { AppButton, Asset, CreateAssetModal, DeleteConfirmationScreen, ScreenLoader, SideBarNavigation, UploadAssetModal } from "@/components";
+"use client";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { toast } from "react-toastify";
+import { useTranslations } from "next-intl";
+
+import {
+  ChevronDown,
+  ChevronsUpDown,
+  ChevronUp,
+  Search,
+  X,
+} from "lucide-react";
+
+import type { Asset } from "@/components";
+import {
+  AppButton,
+  CreateAssetModal,
+  DeleteConfirmationScreen,
+  ScreenLoader,
+  UploadAssetModal,
+} from "@/components";
 import DynamicTable from "@/components/table/DynamicTable";
+import {
+  ASSET_DEFAULT_SORT_BY,
+  ASSET_DEFAULT_SORT_ORDER,
+  ASSET_SORT_FIELDS,
+} from "@/constants/assets";
 import { AssetTableHeaders } from "@/constants/data";
 import { useAppContext } from "@/context/AppContext";
 import { assetService } from "@/services/asset-service";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import type { SortOrder } from "@/types/asset";
 
 export default function AssetManagementPage() {
-  const [files, setFiles] = useState<File[]>([])
-  const [assets, setAssets] = useState<Asset[]>([])
-  const [asset, setAsset] = useState<Asset | undefined>()
-  const [totalPages, setTotalPages] = useState(0)
-  const [totalAssets, setTotalAssets] = useState(0)
-  const [deleteId, setDeleteId] = useState("")
-  const [confirmDeleteAllAssets, setConfirmDeleteAllAssets] = useState(false)
-  const [currentPage, setCurrentPage] = useState(1)
-  const { site, client } = useAppContext()
-  const [showCreateAsset, setShowCreateAsset] = useState(false)
-  const [showUploadAssets, setShowUploadAssets] = useState(false)
-  const [isAssetsLoading, setIsAssetsLoading] = useState(false)
+  const t = useTranslations("AssetsManagement");
+  const { site } = useAppContext();
+
+  const [files, setFiles] = useState<File[]>([]);
+  const [assets, setAssets] = useState<Asset[]>([]);
+  const [asset, setAsset] = useState<Asset | undefined>();
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalAssets, setTotalAssets] = useState(0);
+  const [deleteId, setDeleteId] = useState("");
+  const [confirmDeleteAllAssets, setConfirmDeleteAllAssets] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showCreateAsset, setShowCreateAsset] = useState(false);
+  const [showUploadAssets, setShowUploadAssets] = useState(false);
+  const [isAssetsLoading, setIsAssetsLoading] = useState(false);
   const [selectedAssets, setSelectedAssets] = useState(new Set<string>());
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState(ASSET_DEFAULT_SORT_BY);
+  const [sortOrder, setSortOrder] = useState<SortOrder>(
+    ASSET_DEFAULT_SORT_ORDER,
+  );
+  const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const fetchAssetsBySiteId = async (id: string, page?: number) => {
-    try {
-      setIsAssetsLoading(true);
-      const assets = await assetService.getAllAssetsBySiteId(id, page) as {
-        data: {
-          assets: Asset[],
-          totalPages: number,
-          total: number
-          page: number
+  const fetchAssets = useCallback(
+    async (
+      id: string,
+      page?: number,
+      search?: string,
+      sort?: string,
+      order?: SortOrder,
+    ) => {
+      try {
+        setIsAssetsLoading(true);
+        const response = (await assetService.getAllAssetsBySiteId(id, {
+          page: page ?? 1,
+          search: (search ?? searchQuery) || undefined,
+          sortBy: sort ?? sortBy,
+          sortOrder: order ?? sortOrder,
+        })) as {
+          data: {
+            assets: Asset[];
+            totalPages: number;
+            total: number;
+            page: number;
+          };
+        };
+
+        if (!response?.data) {
+          toast.error(t("toast_fetch_error"));
+          return;
         }
-      };
-      if (!assets || !assets?.data) {
-        toast.error("Something went wrong while fetching assets, refresh the page.")
-        return
+        setAssets(response.data.assets);
+        setTotalPages(response.data.totalPages);
+        setTotalAssets(response.data.total);
+      } finally {
+        setIsAssetsLoading(false);
       }
-      setAssets(assets.data.assets as Asset[])
-      setTotalPages(assets.data.totalPages)
-      setTotalAssets(assets.data.total)
-
-    } finally {
-      setIsAssetsLoading(false);
-
-    }
-  }
-
-  const handlePageChange = (page: number) => {
-    if (site?._id) {
-      setCurrentPage(page)
-      fetchAssetsBySiteId(site._id, page)
-    }
-  }
+    },
+    [searchQuery, sortBy, sortOrder, t],
+  );
 
   useEffect(() => {
     if (site?._id) {
-      fetchAssetsBySiteId(site._id)
+      fetchAssets(site._id);
     }
-  }, [site])
+  }, [site]);
 
-  const toggleCreateAsset = () => {
-    setShowCreateAsset(prevState => !prevState)
-  }
+  const handlePageChange = (page: number) => {
+    if (site?._id) {
+      setCurrentPage(page);
+      fetchAssets(site._id, page);
+    }
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    if (searchDebounceRef.current) {
+      clearTimeout(searchDebounceRef.current);
+    }
+    searchDebounceRef.current = setTimeout(() => {
+      if (site?._id) {
+        setCurrentPage(1);
+        fetchAssets(site._id, 1, value, sortBy, sortOrder);
+      }
+    }, 400);
+  };
+
+  const handleSortChange = (field: string) => {
+    const newOrder: SortOrder =
+      sortBy === field && sortOrder === "asc" ? "desc" : "asc";
+    setSortBy(field);
+    setSortOrder(newOrder);
+    if (site?._id) {
+      setCurrentPage(1);
+      fetchAssets(site._id, 1, searchQuery, field, newOrder);
+    }
+  };
+
+  const toggleCreateAsset = () => setShowCreateAsset((prev) => !prev);
 
   const closeToggle = () => {
-    toggleCreateAsset()
-    setAsset(undefined)
-  }
+    toggleCreateAsset();
+    setAsset(undefined);
+  };
 
   const refetchAssets = () => {
     if (site?._id) {
-      fetchAssetsBySiteId(site?._id)
-      setCurrentPage(1)
+      fetchAssets(site._id);
+      setCurrentPage(1);
     }
-  }
+  };
 
   const handleEditPress = (id: string) => {
-    const selectedAsset = assets.find(item => item._id === id)
-    if (!selectedAsset) return;
-    setAsset(selectedAsset)
-    toggleCreateAsset()
-  }
+    const selected = assets.find((item) => item._id === id);
+    if (!selected) {
+      return;
+    }
+    setAsset(selected);
+    toggleCreateAsset();
+  };
 
   const handleUpdateAsset = async (id: string, data: Asset) => {
     try {
-      // Create FormData
       const formData = new FormData();
-      const fields = {
+      const fields: Record<string, string | undefined> = {
         assetId: data.assetId,
         assetName: data.assetName,
         category: data.category,
@@ -101,151 +167,194 @@ export default function AssetManagementPage() {
         siteId: data.siteId,
         comment: data.comment,
       };
-
       Object.entries(fields).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          formData.append(key, String(value));
+        if (value != null) {
+          formData.append(key, value);
         }
       });
-      formData.append("images", JSON.stringify(data.images ?? []))
+      formData.append("images", JSON.stringify(data.images ?? []));
+      files.forEach((file) => formData.append("files", file));
 
-      files.forEach(file => formData.append("files", file));
-      const resp = await assetService.updateAsset(id, formData) as { data: unknown };
-
+      const resp = (await assetService.updateAsset(id, formData)) as {
+        data: unknown;
+      };
       if (resp.data) {
-        toast.success("Asset Updated Successfully");
+        toast.success(t("toast_update_success"));
         setFiles([]);
       } else {
-        toast.error("Something went wrong while updating the Asset");
+        toast.error(t("toast_update_error"));
       }
     } catch (err) {
-      toast.error("Something went wrong while updating the Asset");
+      toast.error(`${t("toast_update_error")}: ${err}`);
     } finally {
       closeToggle();
       if (site?._id) {
-        fetchAssetsBySiteId(site?._id, currentPage);
+        fetchAssets(site._id, currentPage);
       }
     }
   };
 
-  const handleDeletePress = (id: string) => {
-    setDeleteId(id)
-  }
-
   const deleteAsset = async (assetId: string) => {
     await assetService.deleteAsset(assetId);
-    setDeleteId("")
-    toast.success('Asset deleted successfully');
-    fetchAssetsBySiteId(site?._id!);
+    setDeleteId("");
+    toast.success(t("toast_delete_success"));
+    if (site?._id) {
+      fetchAssets(site._id);
+    }
   };
-
-  const toggleUploadAsset = () => {
-    setShowUploadAssets(prevState => !prevState)
-  }
-
-  const toggleDeleteAllAssets = () => {
-    setConfirmDeleteAllAssets(prev => !prev)
-  }
-
-  const handleCancelDeleteAll = () => {
-    setConfirmDeleteAllAssets(false);
-    setSelectedAssets(new Set())
-  }
 
   const handleConfirmDeleteAll = () => {
     try {
       assetService.deleteBulkAsset({ ids: Array.from(selectedAssets) });
-      toast.success("All selected assets deleted!");
-      setSelectedAssets(new Set())
-      setConfirmDeleteAllAssets(false)
-      refetchAssets()
+      toast.success(t("toast_delete_all_success"));
+      setSelectedAssets(new Set());
+      setConfirmDeleteAllAssets(false);
+      refetchAssets();
     } catch (err) {
-      toast.error("something went wrong!")
+      toast.error(`Something went wrong! ${err}`);
     }
-    finally {
-    }
-  }
+  };
 
+  return (
+    <div className="h-full">
+      {showCreateAsset && (
+        <CreateAssetModal
+          files={files}
+          setFiles={setFiles}
+          toggleModal={closeToggle}
+          refetchAssets={refetchAssets}
+          editData={asset}
+          updateAsset={handleUpdateAsset}
+        />
+      )}
+      {showUploadAssets && (
+        <UploadAssetModal
+          toggleModal={() => setShowUploadAssets(false)}
+          refetchAssets={refetchAssets}
+        />
+      )}
+      {deleteId && (
+        <DeleteConfirmationScreen
+          heading={t("delete_heading")}
+          description={t("delete_description")}
+          handleCancel={() => setDeleteId("")}
+          handleContinue={() => deleteAsset(deleteId)}
+        />
+      )}
+      {confirmDeleteAllAssets && (
+        <DeleteConfirmationScreen
+          heading={t("delete_all_heading")}
+          description={t("delete_all_description")}
+          handleCancel={() => {
+            setConfirmDeleteAllAssets(false);
+            setSelectedAssets(new Set());
+          }}
+          handleContinue={handleConfirmDeleteAll}
+        />
+      )}
+      {isAssetsLoading && (
+        <ScreenLoader
+          heading={t("loader_heading")}
+          description={t("loader_description")}
+        />
+      )}
 
-  return <div className="flex h-screen overflow-y-scroll">
-    {showCreateAsset ? <CreateAssetModal
-      files={files}
-      setFiles={setFiles}
-      toggleModal={closeToggle} refetchAssets={refetchAssets}
-      editData={asset}
-      updateAsset={handleUpdateAsset}
+      <div className="p-8">
+        {/* Header */}
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-black">
+              {t("title")}
+            </h1>
+            <p className="mt-1 text-sm text-gray-500">
+              {totalAssets !== 1
+                ? t("assets_found_other", { count: totalAssets })
+                : t("assets_found_one", { count: totalAssets })}
+            </p>
+          </div>
+          <div className="flex gap-x-2">
+            {selectedAssets.size > 0 && (
+              <AppButton
+                title={t("btn_delete_selected")}
+                onClick={() => setConfirmDeleteAllAssets(true)}
+                variant="danger"
+              />
+            )}
+            <AppButton
+              title={t("btn_upload_csv")}
+              onClick={() => setShowUploadAssets(true)}
+              variant="secondary"
+            />
+            <AppButton
+              title={t("btn_create_asset")}
+              onClick={toggleCreateAsset}
+              variant="secondary"
+            />
+          </div>
+        </div>
 
-    /> : null}
-    {showUploadAssets ? <UploadAssetModal toggleModal={toggleUploadAsset} refetchAssets={refetchAssets} /> : null}
-    {deleteId &&
-      <DeleteConfirmationScreen
-        heading="Delete Asset"
-        description='Are you sure you want to delete the asset? This action is irreversible.'
-        handleCancel={() => setDeleteId("")}
-        handleContinue={() => deleteAsset(deleteId)}
-      />
-    }
-    {confirmDeleteAllAssets &&
-      <DeleteConfirmationScreen
-        heading="Delete all selected asset(s)"
-        description='Are you sure you want to delete all selected asset? This action is irreversible.'
-        handleCancel={handleCancelDeleteAll}
-        handleContinue={handleConfirmDeleteAll}
-      />
-    }
-    {isAssetsLoading ? <ScreenLoader
-      heading="Loading"
-      description='Assets are loading, please wait'
-    /> : null}
-    {/* sidebar */}
-    <div className='bg-primary w-xs min-h-screen overflow-scroll'>
-      <div className='w-full justify-center flex pt-10 my-5'>
-        <Image
-          src={'/assets/images/glenart-logo.png'}
-          alt='Glenart Group Logo'
-          width={160}
-          height={160}
+        {/* Search & Sort Controls */}
+        <div className="mb-4 flex flex-wrap items-center gap-3">
+          <div className="relative max-w-sm min-w-[200px] flex-1">
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              placeholder={t("search_placeholder")}
+              className="w-full rounded-lg border border-gray-300 py-2 pr-8 pl-9 text-sm focus:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => handleSearchChange("")}
+                className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-sm font-medium text-gray-500">
+              {t("sort_label")}
+            </span>
+            {ASSET_SORT_FIELDS.map((field) => (
+              <button
+                key={field.value}
+                onClick={() => handleSortChange(field.value)}
+                className={`flex items-center gap-1 rounded-lg border px-3 py-1.5 text-sm transition-colors ${
+                  sortBy === field.value
+                    ? "border-primary bg-primary text-white"
+                    : "border-gray-300 bg-white text-gray-600 hover:border-primary hover:text-primary"
+                }`}
+              >
+                {field.label}
+                {sortBy === field.value ? (
+                  sortOrder === "asc" ? (
+                    <ChevronUp className="h-3 w-3" />
+                  ) : (
+                    <ChevronDown className="h-3 w-3" />
+                  )
+                ) : (
+                  <ChevronsUpDown className="h-3 w-3 opacity-50" />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <DynamicTable
+          selectedIds={selectedAssets}
+          currentPage={currentPage}
+          totalPage={totalPages}
+          changePage={handlePageChange}
+          handleEditPress={handleEditPress}
+          handleDeletePress={(id) => setDeleteId(id)}
+          totalCount={totalAssets}
+          setSelectedIds={setSelectedAssets}
+          columns={AssetTableHeaders}
+          data={assets as unknown as { [key: string]: string }[]}
         />
       </div>
-      <div className="w-full flex justify-center items-center flex-col gap-y-1">
-        <div className="flex text-white text-2xl">
-          Client: {client?.name}
-        </div>
-        <div className="flex text-white text-2xl">
-          Site: {site?.name}
-        </div>
-        <div className="my-3 w-full gap-y-2">
-          <SideBarNavigation currentPath="assets-management" />
-        </div>
-      </div>
     </div>
-
-    <div className='p-8 w-[calc(100vw-320px)]'>
-      <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-black">
-            Assets
-          </h1>
-        </div>
-        <div className="flex gap-x-2">
-          {selectedAssets?.size ? <AppButton title="Delete Asset(s)" onClick={toggleDeleteAllAssets} variant="danger" /> : null}
-          <AppButton title="Upload CSV/XLSX" onClick={toggleUploadAsset} variant="secondary" />
-          <AppButton title="Create Asset" onClick={toggleCreateAsset} variant="secondary" />
-        </div>
-      </div>
-
-      <DynamicTable
-        selectedIds={selectedAssets}
-        currentPage={currentPage}
-        totalPage={totalPages}
-        changePage={handlePageChange}
-        handleEditPress={handleEditPress}
-        handleDeletePress={handleDeletePress}
-        totalCount={totalAssets}
-        setSelectedIds={setSelectedAssets}
-        columns={AssetTableHeaders}
-        data={assets as unknown as { [key: string]: string; }[]}
-      />
-    </div>
-  </div>
+  );
 }

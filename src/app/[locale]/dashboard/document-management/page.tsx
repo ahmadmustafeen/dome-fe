@@ -14,8 +14,6 @@ import { formatDate, formatFileSize } from '@/utils/formatters';
 export default function DocumentManagementPage() {
   const t = useTranslations('DocumentManagement');
 
-  // API INTEGRATION POINT: replace MOCK_DOCUMENTS with a useEffect + API call:
-  //   useEffect(() => { documentService.getDocuments().then(setDocuments); }, []);
   const [documents, setDocuments] = useState<DocumentRecord[]>(MOCK_DOCUMENTS);
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<DocumentType | 'all'>('all');
@@ -90,7 +88,7 @@ export default function DocumentManagementPage() {
 
         {/* Controls: Search + Type Filter */}
         <div className="mb-4 flex flex-wrap items-center gap-3">
-          <div className="relative max-w-sm min-w-[200px] flex-1">
+          <div className="relative max-w-sm min-w-50 flex-1">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
@@ -170,14 +168,14 @@ export default function DocumentManagementPage() {
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
                             <FileTypeIcon ext={doc.fileExtension} />
-                            <span className="max-w-[220px] truncate text-sm font-medium text-black" title={doc.name}>
+                            <span className="max-w-55 truncate text-sm font-medium text-black" title={doc.name}>
                               {doc.name}
                             </span>
                           </div>
                         </td>
                         <td className="px-4 py-3">
                           <span
-                            className={`inline-block max-w-[200px] truncate rounded-full px-2.5 py-1 text-xs font-medium ${DOCUMENT_TYPE_BADGE[doc.documentType]}`}
+                            className={`inline-block max-w-50 truncate rounded-full px-2.5 py-1 text-xs font-medium ${DOCUMENT_TYPE_BADGE[doc.documentType]}`}
                             title={doc.documentType}
                           >
                             {doc.documentType}

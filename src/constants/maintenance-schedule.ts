@@ -1,0 +1,296 @@
+import type { MaintenanceScheduleData } from "@/types/maintenance-schedule";
+
+/**
+ * Dummy maintenance schedule used until the AI generation API is available.
+ * Each row represents a grouped asset category with frequency flags and
+ * MOP / EOP / SOP requirement descriptions.
+ */
+export const DUMMY_MAINTENANCE_SCHEDULE: MaintenanceScheduleData = {
+  generatedAt: new Date().toISOString(),
+  rows: [
+    {
+      id: "1",
+      category: "Air Handling Units",
+      assetCount: 38,
+      frequency: {
+        monthly: true,
+        quarterly: true,
+        semiAnnual: false,
+        annual: true,
+        twoYear: false,
+        threeYear: false,
+        fiveYear: false,
+      },
+      totalMOPs: 3,
+      totalEOPs: 1,
+      totalSOPs: 2,
+      mopRequirements: [
+        "MOP-AHU-01: Monthly filter inspection and replacement procedure",
+        "MOP-AHU-02: Quarterly belt tension and lubrication procedure",
+        "MOP-AHU-03: Annual coil cleaning and refrigerant charge verification",
+      ],
+      eopRequirements: [
+        "EOP-AHU-01: Emergency shutdown and isolation procedure for AHU failure",
+      ],
+      sopRequirements: [
+        "SOP-AHU-01: Standard startup and commissioning checklist",
+        "SOP-AHU-02: Alarm response and escalation procedure",
+      ],
+    },
+    {
+      id: "2",
+      category: "Automatic Transfer Switches",
+      assetCount: 9,
+      frequency: {
+        monthly: false,
+        quarterly: true,
+        semiAnnual: false,
+        annual: true,
+        twoYear: true,
+        threeYear: false,
+        fiveYear: false,
+      },
+      totalMOPs: 3,
+      totalEOPs: 2,
+      totalSOPs: 1,
+      mopRequirements: [
+        "MOP-ATS-01: Quarterly operation test under load with utility and generator",
+        "MOP-ATS-02: Annual contact inspection, cleaning and torque verification",
+        "MOP-ATS-03: Bi-annual full maintenance overhaul and firmware update",
+      ],
+      eopRequirements: [
+        "EOP-ATS-01: Manual transfer procedure during utility failure",
+        "EOP-ATS-02: ATS failure isolation and bypass to manual operation",
+      ],
+      sopRequirements: [
+        "SOP-ATS-01: Transfer sequence verification and logging procedure",
+      ],
+    },
+    {
+      id: "3",
+      category: "Backflow Preventers",
+      assetCount: 4,
+      frequency: {
+        monthly: false,
+        quarterly: false,
+        semiAnnual: false,
+        annual: true,
+        twoYear: false,
+        threeYear: false,
+        fiveYear: false,
+      },
+      totalMOPs: 1,
+      totalEOPs: 0,
+      totalSOPs: 1,
+      mopRequirements: [
+        "MOP-BFP-01: Annual backflow preventer test, inspection and certification",
+      ],
+      eopRequirements: [],
+      sopRequirements: [
+        "SOP-BFP-01: Isolation and bypass procedure for backflow preventer servicing",
+      ],
+    },
+    {
+      id: "4",
+      category: "Building Management & Controls",
+      assetCount: 3,
+      frequency: {
+        monthly: false,
+        quarterly: true,
+        semiAnnual: false,
+        annual: true,
+        twoYear: false,
+        threeYear: false,
+        fiveYear: false,
+      },
+      totalMOPs: 2,
+      totalEOPs: 1,
+      totalSOPs: 2,
+      mopRequirements: [
+        "MOP-BMS-01: Quarterly BMS calibration and sensor verification",
+        "MOP-BMS-02: Annual control panel inspection and firmware update",
+      ],
+      eopRequirements: [
+        "EOP-BMS-01: BMS failure response and manual override procedure",
+      ],
+      sopRequirements: [
+        "SOP-BMS-01: Set point adjustment and alarm threshold update procedure",
+        "SOP-BMS-02: Trend data review and reporting procedure",
+      ],
+    },
+    {
+      id: "5",
+      category: "Condenser Units",
+      assetCount: 55,
+      frequency: {
+        monthly: true,
+        quarterly: false,
+        semiAnnual: false,
+        annual: true,
+        twoYear: false,
+        threeYear: false,
+        fiveYear: false,
+      },
+      totalMOPs: 2,
+      totalEOPs: 1,
+      totalSOPs: 1,
+      mopRequirements: [
+        "MOP-CDU-01: Monthly coil inspection and cleaning procedure",
+        "MOP-CDU-02: Annual refrigerant charge check and leak inspection",
+      ],
+      eopRequirements: [
+        "EOP-CDU-01: Emergency refrigerant leak response and isolation procedure",
+      ],
+      sopRequirements: ["SOP-CDU-01: Seasonal startup and shutdown procedure"],
+    },
+    {
+      id: "6",
+      category: "Generators",
+      assetCount: 6,
+      frequency: {
+        monthly: true,
+        quarterly: true,
+        semiAnnual: true,
+        annual: true,
+        twoYear: false,
+        threeYear: false,
+        fiveYear: false,
+      },
+      totalMOPs: 4,
+      totalEOPs: 3,
+      totalSOPs: 2,
+      mopRequirements: [
+        "MOP-GEN-01: Monthly no-load test run and visual inspection",
+        "MOP-GEN-02: Quarterly load bank test and fuel system check",
+        "MOP-GEN-03: Semi-annual coolant flush, filter and oil change",
+        "MOP-GEN-04: Annual full load test, battery replacement and AVR calibration",
+      ],
+      eopRequirements: [
+        "EOP-GEN-01: Generator failure response and load shedding procedure",
+        "EOP-GEN-02: Fuel spill containment and emergency shutdown",
+        "EOP-GEN-03: Paralleling failure isolation procedure",
+      ],
+      sopRequirements: [
+        "SOP-GEN-01: Generator start-up and manual transfer checklist",
+        "SOP-GEN-02: Fuel level monitoring and top-up procedure",
+      ],
+    },
+    {
+      id: "7",
+      category: "UPS Systems",
+      assetCount: 22,
+      frequency: {
+        monthly: true,
+        quarterly: true,
+        semiAnnual: false,
+        annual: true,
+        twoYear: false,
+        threeYear: false,
+        fiveYear: false,
+      },
+      totalMOPs: 3,
+      totalEOPs: 2,
+      totalSOPs: 2,
+      mopRequirements: [
+        "MOP-UPS-01: Monthly runtime test and battery health check",
+        "MOP-UPS-02: Quarterly static bypass test and internal inspection",
+        "MOP-UPS-03: Annual battery replacement and capacitor inspection",
+      ],
+      eopRequirements: [
+        "EOP-UPS-01: UPS overload and emergency bypass procedure",
+        "EOP-UPS-02: Critical load transfer to alternate feed upon UPS failure",
+      ],
+      sopRequirements: [
+        "SOP-UPS-01: Battery discharge test and data logging procedure",
+        "SOP-UPS-02: Alarm acknowledgment and escalation procedure",
+      ],
+    },
+    {
+      id: "8",
+      category: "Power Distribution Units",
+      assetCount: 24,
+      frequency: {
+        monthly: true,
+        quarterly: false,
+        semiAnnual: false,
+        annual: true,
+        twoYear: false,
+        threeYear: false,
+        fiveYear: false,
+      },
+      totalMOPs: 3,
+      totalEOPs: 1,
+      totalSOPs: 1,
+      mopRequirements: [
+        "MOP-PDU-01: Monthly breaker and metering inspection",
+        "MOP-PDU-02: Annual thermal imaging and torque verification",
+        "MOP-PDU-03: Annual busbar cleaning and insulation resistance test",
+      ],
+      eopRequirements: [
+        "EOP-PDU-01: PDU fault isolation and downstream load transfer procedure",
+      ],
+      sopRequirements: [
+        "SOP-PDU-01: Circuit breaker trip investigation and reset procedure",
+      ],
+    },
+    {
+      id: "9",
+      category: "Cooling Towers",
+      assetCount: 12,
+      frequency: {
+        monthly: true,
+        quarterly: true,
+        semiAnnual: false,
+        annual: true,
+        twoYear: false,
+        threeYear: false,
+        fiveYear: false,
+      },
+      totalMOPs: 3,
+      totalEOPs: 1,
+      totalSOPs: 2,
+      mopRequirements: [
+        "MOP-CT-01: Monthly water quality testing and chemical dosing",
+        "MOP-CT-02: Quarterly drift eliminator and fill inspection",
+        "MOP-CT-03: Annual basin cleaning, fan and motor inspection",
+      ],
+      eopRequirements: [
+        "EOP-CT-01: Legionella outbreak response and emergency disinfection procedure",
+      ],
+      sopRequirements: [
+        "SOP-CT-01: Seasonal startup flushing and commissioning checklist",
+        "SOP-CT-02: Water treatment chemical handling and dosing procedure",
+      ],
+    },
+    {
+      id: "10",
+      category: "Fire Suppression Systems",
+      assetCount: 8,
+      frequency: {
+        monthly: false,
+        quarterly: true,
+        semiAnnual: false,
+        annual: true,
+        twoYear: false,
+        threeYear: false,
+        fiveYear: true,
+      },
+      totalMOPs: 2,
+      totalEOPs: 2,
+      totalSOPs: 3,
+      mopRequirements: [
+        "MOP-FSS-01: Quarterly agent level inspection and detector test",
+        "MOP-FSS-02: Annual full discharge test and cylinder recharge",
+      ],
+      eopRequirements: [
+        "EOP-FSS-01: System discharge response and area evacuation procedure",
+        "EOP-FSS-02: False discharge isolation and system reset procedure",
+      ],
+      sopRequirements: [
+        "SOP-FSS-01: System arming and disarming procedure for maintenance access",
+        "SOP-FSS-02: Pre-work hot-work permit and suppression system inhibit procedure",
+        "SOP-FSS-03: Inspection log completion and authority notification procedure",
+      ],
+    },
+  ],
+};

@@ -12,15 +12,12 @@ export interface NavItem {
 export const Navbar: NavItem[] = [
   { id: 1, title: "Client Management", link: "" },
   { id: 2, title: "Site Management", link: "client" },
-  {
-    id: 3,
-    title: "Assets Management",
-    link: "assets-management",
-    subItems: [
+  { id: 3, title: "Assets Management", link: "assets-management", subItems: [
       { id: 31, title: "Assets Listing", link: "assets-management" },
       { id: 32, title: "Invalid Assets", link: "assets-management/invalid" },
     ],
   },
+  { id: 9, title: "Maintenance Schedule", link: "maintenance-schedule" },
   { id: 4, title: "Document Management", link: "document-management" },
   { id: 5, title: "Document Generator", link: "document-generator" },
   { id: 6, title: "SOP Management", link: "sop-management" },

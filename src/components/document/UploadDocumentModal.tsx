@@ -5,40 +5,26 @@ import { toast } from "react-toastify";
 import { Upload, X } from "lucide-react";
 
 import { AppButton, Button } from "@/components/common";
-import type { DocumentRecord, DocumentType } from "@/types/document";
-
-const DOCUMENT_TYPES: DocumentType[] = [
-  "Asset Maintenance and Service Documents",
-  "Asset Manuals and Diagrams",
-  "Site Diagrams and Documents",
-  "Outdated MOPs, SOPs and EOPs",
-  "Company Policies and Documents",
-  "Asset List",
-];
+import { DOCUMENT_TYPES } from "@/constants/document-management";
+import { documentService } from "@/services/document-service";
+import type { DocumentApiRecord } from "@/types/document";
+import { formatFileSize } from "@/utils/formatters";
 
 const ACCEPTED_EXTENSIONS = ["pdf", "doc", "docx", "txt", "png", "jpg", "jpeg"];
 const ACCEPTED_MIME = ".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg";
 
-const formatFileSize = (bytes: number): string => {
-  if (bytes < 1024) {
-    return `${bytes} B`;
-  }
-  if (bytes < 1024 * 1024) {
-    return `${(bytes / 1024).toFixed(1)} KB`;
-  }
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-};
-
 interface UploadDocumentModalProps {
+  siteId: string;
   onClose: () => void;
-  onSuccess: (doc: DocumentRecord) => void;
+  onSuccess: (doc: DocumentApiRecord) => void;
 }
 
 const UploadDocumentModal = ({
+  siteId,
   onClose,
   onSuccess,
 }: UploadDocumentModalProps) => {
-  const [documentType, setDocumentType] = useState<DocumentType | "">("");
+  const [documentType, setDocumentType] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -106,39 +92,19 @@ const UploadDocumentModal = ({
     }
     setLoading(true);
     setErrorMsg("");
-
     try {
-      // ── API INTEGRATION POINT ──────────────────────────────────────────────
-      // When the backend is ready, replace this block with:
-      //
-      //   const formData = new FormData();
-      //   formData.append('file', file!);
-      //   formData.append('documentType', documentType);
-      //   const response = await documentService.uploadDocument(formData) as DocumentUploadResponse;
-      //   onSuccess(response.data);
-      //
-      // ──────────────────────────────────────────────────────────────────────
-
-      // Simulate network delay
-      await new Promise((res) => setTimeout(res, 800));
-
-      const ext = (file!.name.split(".").pop()?.toLowerCase() ??
-        "pdf") as DocumentRecord["fileExtension"];
-      const newDoc: DocumentRecord = {
-        id: `doc_${Date.now()}`,
-        name: file!.name,
-        documentType: documentType as DocumentType,
-        fileSize: file!.size,
-        uploadDate: new Date().toISOString(),
-        fileUrl: URL.createObjectURL(file!),
-        fileExtension: ext,
-      };
-
+      const response = await documentService.createDocument(
+        siteId,
+        documentType,
+        file!,
+      );
       toast.success("Document uploaded successfully");
-      onSuccess(newDoc);
+      onSuccess(response.data);
       onClose();
-    } catch {
-      setErrorMsg("Upload failed. Please try again.");
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Upload failed. Please try again.";
+      setErrorMsg(message);
     } finally {
       setLoading(false);
     }
@@ -147,7 +113,6 @@ const UploadDocumentModal = ({
   return (
     <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/50">
       <div className="relative w-full max-w-lg rounded-xl bg-white p-6">
-        {/* Header */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full p-2 text-black hover:bg-primary hover:text-white"
@@ -161,15 +126,17 @@ const UploadDocumentModal = ({
         <div className="mt-6 space-y-5">
           {/* Document Type Select */}
           <div>
-            <label className="mb-1.5 block text-sm font-semibold text-gray-700">
+            <label
+              htmlFor="doc-type-select"
+              className="mb-1.5 block text-sm font-semibold text-gray-700"
+            >
               Document Type
               <span className="ml-1 text-red-500">*</span>
             </label>
             <select
+              id="doc-type-select"
               value={documentType}
-              onChange={(e) =>
-                setDocumentType(e.target.value as DocumentType | "")
-              }
+              onChange={(e) => setDocumentType(e.target.value)}
               className="w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-700 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
             >
               <option value="" disabled>
@@ -185,15 +152,25 @@ const UploadDocumentModal = ({
 
           {/* Drag-and-drop zone */}
           <div>
-            <label className="mb-1.5 block text-sm font-semibold text-gray-700">
+            <label
+              htmlFor="doc-file-input"
+              className="mb-1.5 block text-sm font-semibold text-gray-700"
+            >
               File
               <span className="ml-1 text-red-500">*</span>
             </label>
             <div
+              role="button"
+              tabIndex={0}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               onClick={() => !file && inputRef.current?.click()}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  inputRef.current?.click();
+                }
+              }}
               className={`relative cursor-pointer rounded-xl border-2 border-dashed transition-all duration-200 select-none ${
                 file
                   ? "cursor-default border-primary/40 bg-primary/5"
@@ -204,7 +181,6 @@ const UploadDocumentModal = ({
             >
               <div className="p-6">
                 {file ? (
-                  /* File selected preview */
                   <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                       <Upload className="h-5 w-5 text-primary" />
@@ -225,7 +201,6 @@ const UploadDocumentModal = ({
                     </button>
                   </div>
                 ) : (
-                  /* Empty drop zone */
                   <div className="flex flex-col items-center gap-2 text-center">
                     <div
                       className={`flex h-12 w-12 items-center justify-center rounded-full transition-all duration-200 ${isDragging ? "bg-secondary/20" : "bg-gray-200"}`}
@@ -249,6 +224,7 @@ const UploadDocumentModal = ({
                 )}
               </div>
               <input
+                id="doc-file-input"
                 ref={inputRef}
                 type="file"
                 accept={ACCEPTED_MIME}
@@ -261,14 +237,12 @@ const UploadDocumentModal = ({
             </p>
           </div>
 
-          {/* Inline error */}
           {errorMsg && (
             <p className="rounded-lg bg-red-50 px-4 py-2.5 text-sm text-red-600">
               {errorMsg}
             </p>
           )}
 
-          {/* Actions */}
           <div className="flex items-center justify-end gap-3 border-t border-gray-100 pt-4">
             <AppButton
               title="Cancel"

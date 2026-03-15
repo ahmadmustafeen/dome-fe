@@ -128,6 +128,10 @@
     "empty_filtered_description": "Essayez d'ajuster votre recherche ou votre filtre.",
     "delete_heading": "Supprimer le document",
     "delete_description": "Êtes-vous sûr de vouloir supprimer ce document ? Cette action est irréversible.",
-    "toast_delete_success": "Document supprimé avec succès"
+    "toast_delete_success": "Document supprimé avec succès",
+    "btn_delete_selected": "Supprimer la sélection ({count})",
+    "delete_bulk_heading": "Supprimer les documents sélectionnés",
+    "delete_bulk_description": "Êtes-vous sûr de vouloir supprimer {count} {count, plural, one {document sélectionné} other {documents sélectionnés}} ? Cette action est irréversible.",
+    "toast_bulk_delete_success": "Documents supprimés avec succès"
   }
 }

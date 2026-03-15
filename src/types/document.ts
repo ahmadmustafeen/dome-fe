@@ -1,6 +1,7 @@
-// Document Management Types
+// ─────────────────────────────────────────────────────────────────────────────
+// Domain types
+// ─────────────────────────────────────────────────────────────────────────────
 
-/** The six allowed document categories. */
 export type DocumentType =
   | "Asset Maintenance and Service Documents"
   | "Asset Manuals and Diagrams"
@@ -9,63 +10,25 @@ export type DocumentType =
   | "Company Policies and Documents"
   | "Asset List";
 
-/** Accepted file extensions. */
-export type DocumentFileExtension =
-  | "pdf"
-  | "doc"
-  | "docx"
-  | "txt"
-  | "png"
-  | "jpg"
-  | "jpeg";
-
-/**
- * A single document record as returned by the API.
- * Maps to the MongoDB document schema on the backend.
- */
-export interface DocumentRecord {
-  /** MongoDB _id string. */
-  id: string;
-  /** Original file name (e.g. "Maintenance_Report_Q4.pdf"). */
-  name: string;
-  /** One of the six allowed document categories. */
-  documentType: DocumentType;
-  /** File size in bytes. */
-  fileSize: number;
-  /** ISO 8601 timestamp of when the document was uploaded. */
-  uploadDate: string;
-  /** Publicly accessible file URL (e.g. S3 pre-signed URL or CDN URL). */
-  fileUrl: string;
-  /** Lowercase file extension without the dot. */
-  fileExtension: DocumentFileExtension;
+export interface DocumentApiRecord {
+  _id: string;
+  type: string;
+  /** Publicly accessible S3 URL of the uploaded file. */
+  documentUrl: string;
+  siteId: string;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// API Payload Types
+// API response wrappers
 // ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * Payload for POST /documents
- * Send as multipart/form-data.
- */
-export interface DocumentUploadPayload {
-  documentType: DocumentType;
-  /** The binary file. Accepted MIME types: pdf, doc, docx, txt, png, jpg, jpeg. */
-  file: File;
-}
-
-// Expected response body for POST /documents (201 Created).
-export interface DocumentUploadResponse {
-  success: boolean;
-  message: string;
-  data: DocumentRecord;
-}
-
-// Expected response body for GET /documents (200 OK).
-export interface DocumentsListResponse {
+export interface DocumentListApiResponse {
   success: boolean;
   data: {
-    documents: DocumentRecord[];
+    documents: DocumentApiRecord[];
     total: number;
     page: number;
     limit: number;
@@ -73,8 +36,13 @@ export interface DocumentsListResponse {
   };
 }
 
-// Expected response body for DELETE /documents/:id (200 OK).
-export interface DocumentDeleteResponse {
+export interface DocumentCreateApiResponse {
+  success: boolean;
+  message: string;
+  data: DocumentApiRecord;
+}
+
+export interface DocumentDeleteApiResponse {
   success: boolean;
   message: string;
 }

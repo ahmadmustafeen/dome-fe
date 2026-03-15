@@ -10,8 +10,8 @@ import { documentService } from "@/services/document-service";
 import type { DocumentApiRecord } from "@/types/document";
 import { formatFileSize } from "@/utils/formatters";
 
-const ACCEPTED_EXTENSIONS = ["pdf", "doc", "docx", "txt", "png", "jpg", "jpeg"];
-const ACCEPTED_MIME = ".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg";
+const ACCEPTED_EXTENSIONS = ["pdf", "doc", "docx", "txt"];
+const ACCEPTED_MIME = ".pdf,.doc,.docx,.txt";
 
 interface UploadDocumentModalProps {
   siteId: string;
@@ -233,7 +233,7 @@ const UploadDocumentModal = ({
               />
             </div>
             <p className="mt-1.5 text-xs text-gray-400">
-              Accepted types: PDF, DOC, DOCX, TXT, PNG, JPG, JPEG
+              Accepted types: PDF, DOC, DOCX, TXT
             </p>
           </div>
 

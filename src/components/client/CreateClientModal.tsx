@@ -60,7 +60,7 @@ const CreateClientModal = ({ editData, toggleModal, refetchClients, updateClient
   }
 
   return (
-    <div className="fixed z-10 h-screen w-screen flex justify-center items-center bg-black/50 text-white">
+    <div className="fixed z-10 h-screen w-screen flex top-0 left-0 justify-center items-center bg-black/50 text-white">
       <div className="w-lg bg-white rounded-xl py-4 px-2 relative  ">
         <X onClick={handleToggle} className="absolute text-xl text-black top-4 right-4 cursor-pointer rounded-full w-8 h-8 p-2 hover:bg-primary hover:text-white" />
 

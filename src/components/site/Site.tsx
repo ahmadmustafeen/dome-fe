@@ -113,7 +113,7 @@ function SitePage() {
         description="Here you can manage and create new sites"
       />
 
-      <div className="mx-auto my-5 flex w-4/5 flex-wrap gap-4">
+      <div className="mx-auto my-5 flex w-11/12 flex-wrap gap-4">
         <CreateNewSiteCard onClick={toggleCreateClientModal} />
         {sites.map((site, index) => (
           <SiteInfoCard

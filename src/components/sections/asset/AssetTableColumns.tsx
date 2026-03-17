@@ -98,7 +98,9 @@ export const getAssetColumns = ({
         className="block max-w-[140px] truncate text-sm text-gray-700"
         title={row.original.category}
       >
-        {row.original.category || "—"}
+        {row.original.category || (
+          <span className="text-red-400 italic">Missing</span>
+        )}
       </span>
     ),
   },
@@ -111,7 +113,9 @@ export const getAssetColumns = ({
         className="block max-w-[140px] truncate text-sm text-gray-700"
         title={row.original.subCategory}
       >
-        {row.original.subCategory || "—"}
+        {row.original.subCategory || (
+          <span className="text-red-400 italic">Missing</span>
+        )}
       </span>
     ),
   },
@@ -124,7 +128,9 @@ export const getAssetColumns = ({
         className="block max-w-[160px] truncate text-sm text-gray-700"
         title={row.original.equipmentName}
       >
-        {row.original.equipmentName || "—"}
+        {row.original.equipmentName || (
+          <span className="text-red-400 italic">Missing</span>
+        )}
       </span>
     ),
   },
@@ -133,7 +139,11 @@ export const getAssetColumns = ({
     accessorKey: "make",
     header: labels.colMake,
     cell: ({ row }) => (
-      <span className="text-sm text-gray-700">{row.original.make || "—"}</span>
+      <span className="text-sm text-gray-700">
+        {row.original.make || (
+          <span className="text-red-400 italic">Missing</span>
+        )}
+      </span>
     ),
   },
   {
@@ -145,7 +155,9 @@ export const getAssetColumns = ({
         className="block max-w-[120px] truncate text-sm text-gray-700"
         title={row.original.modelName}
       >
-        {row.original.modelName || "—"}
+        {row.original.modelName || (
+          <span className="text-red-400 italic">Missing</span>
+        )}
       </span>
     ),
   },
@@ -155,7 +167,9 @@ export const getAssetColumns = ({
     header: labels.colLocation,
     cell: ({ row }) => (
       <span className="text-sm text-gray-700">
-        {row.original.location || "—"}
+        {row.original.location || (
+          <span className="text-red-400 italic">Missing</span>
+        )}
       </span>
     ),
   },
@@ -165,7 +179,9 @@ export const getAssetColumns = ({
     header: labels.colSerial,
     cell: ({ row }) => (
       <span className="text-sm text-gray-700">
-        {row.original.serialNumber || "—"}
+        {row.original.serialNumber || (
+          <span className="text-red-400 italic">Missing</span>
+        )}
       </span>
     ),
   },

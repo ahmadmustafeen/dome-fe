@@ -1,19 +1,24 @@
 "use client";
-import { useMemo, useState } from "react";
-import { useTranslations } from "next-intl";
-
+import type { Row } from "@tanstack/react-table";
 import {
   CalendarDays,
   Check,
-  ChevronDown,
-  ChevronUp,
   RefreshCw,
   Search,
   Trash2,
   X,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useMemo, useState } from "react";
 
-import { AppButton, EmptyState, ScreenLoader } from "@/components/common";
+import {
+  AppButton,
+  EmptyState,
+  Pagination,
+  ScreenLoader,
+} from "@/components/common";
+import { DataTable } from "@/components/DataTable";
+import { getMaintenanceColumns } from "@/components/sections/maintenance/MaintenanceTableColumns";
 import { DUMMY_MAINTENANCE_SCHEDULE } from "@/constants/maintenance-schedule";
 import { useAppContext } from "@/context/AppContext";
 import type {
@@ -22,21 +27,7 @@ import type {
 } from "@/types/maintenance-schedule";
 import { formatDate } from "@/utils/formatters";
 
-// ── Helper components ────────────────────────────────────────────────────────
-
-const FrequencyCell = ({ active }: { active: boolean }) =>
-  active ? (
-    <Check className="mx-auto h-4 w-4 text-teal-500" strokeWidth={3} />
-  ) : null;
-
-const CountBadge = ({ count }: { count: number }) =>
-  count > 0 ? (
-    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
-      {count}
-    </span>
-  ) : (
-    <span className="text-xs text-gray-400">—</span>
-  );
+// ── Requirement list sub-component (used in renderSubRow) ─────────────────────
 
 const RequirementList = ({
   label,
@@ -49,16 +40,18 @@ const RequirementList = ({
 }) => (
   <div className={`rounded-lg border ${color} p-4`}>
     <p
-      className={`mb-3 text-xs font-bold uppercase tracking-wider ${color.replace("border-", "text-").replace("-200", "-700")}`}
+      className={`mb-3 text-xs font-bold tracking-wider uppercase ${color
+        .replace("border-", "text-")
+        .replace("-200", "-700")}`}
     >
       {label}
     </p>
     {items.length === 0 ? (
-      <p className="text-xs italic text-gray-400">None required</p>
+      <p className="text-xs text-gray-400 italic">None required</p>
     ) : (
-      <ol className="space-y-1.5 list-decimal list-inside">
+      <ol className="list-inside list-decimal space-y-1.5">
         {items.map((req, i) => (
-          <li key={i} className="text-xs text-gray-700 leading-relaxed">
+          <li key={i} className="text-xs leading-relaxed text-gray-700">
             {req}
           </li>
         ))}
@@ -69,6 +62,8 @@ const RequirementList = ({
 
 // ── Main page ────────────────────────────────────────────────────────────────
 
+const MS_PAGE_SIZE = 5;
+
 export default function MaintenanceSchedulePage() {
   const t = useTranslations("MaintenanceSchedule");
   const { site } = useAppContext();
@@ -78,7 +73,7 @@ export default function MaintenanceSchedulePage() {
   );
   const [isGenerating, setIsGenerating] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [msPage, setMsPage] = useState(1);
 
   const simulate = (data: MaintenanceScheduleData) =>
     new Promise<void>((resolve) =>
@@ -106,7 +101,7 @@ export default function MaintenanceSchedulePage() {
   const handleClear = () => {
     setSchedule(null);
     setSearchQuery("");
-    setExpandedId(null);
+    setMsPage(1);
   };
 
   const filteredRows = useMemo<MaintenanceRow[]>(() => {
@@ -114,10 +109,24 @@ export default function MaintenanceSchedulePage() {
       return [];
     }
     const q = searchQuery.trim().toLowerCase();
-    return q
+    const rows = q
       ? schedule.rows.filter((r) => r.category.toLowerCase().includes(q))
       : schedule.rows;
+    setMsPage(1);
+    return rows;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [schedule, searchQuery]);
+
+  const msTotalPages = Math.max(
+    1,
+    Math.ceil(filteredRows.length / MS_PAGE_SIZE),
+  );
+
+  const pagedRows = useMemo(
+    () =>
+      filteredRows.slice((msPage - 1) * MS_PAGE_SIZE, msPage * MS_PAGE_SIZE),
+    [filteredRows, msPage],
+  );
 
   const totals = useMemo(
     () => ({
@@ -127,6 +136,48 @@ export default function MaintenanceSchedulePage() {
       sops: filteredRows.reduce((s, r) => s + r.totalSOPs, 0),
     }),
     [filteredRows],
+  );
+
+  const columns = useMemo(
+    () =>
+      getMaintenanceColumns({
+        colCategory: t("col_category"),
+        colAssets: t("col_assets"),
+        colMonthly: t("col_monthly"),
+        colQuarterly: t("col_quarterly"),
+        colSemiAnnual: t("col_semi_annual"),
+        colAnnual: t("col_annual"),
+        colTwoYear: t("col_two_year"),
+        colThreeYear: t("col_three_year"),
+        colFiveYear: t("col_five_year"),
+        colTotalMops: t("col_total_mops"),
+        colTotalEops: t("col_total_eops"),
+        colTotalSops: t("col_total_sops"),
+        colDetails: t("col_details"),
+        btnShowDetails: t("btn_show_details"),
+        btnHideDetails: t("btn_hide_details"),
+      }),
+    [t],
+  );
+
+  const renderSubRow = (row: Row<MaintenanceRow>) => (
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <RequirementList
+        label={t("details_mops")}
+        items={row.original.mopRequirements}
+        color="border-blue-200"
+      />
+      <RequirementList
+        label={t("details_eops")}
+        items={row.original.eopRequirements}
+        color="border-red-200"
+      />
+      <RequirementList
+        label={t("details_sops")}
+        items={row.original.sopRequirements}
+        color="border-green-200"
+      />
+    </div>
   );
 
   if (!site?._id) {
@@ -195,7 +246,7 @@ export default function MaintenanceSchedulePage() {
           />
         ) : (
           <>
-            {/* ── Search row ── */}
+            {/* ── Search ── */}
             <div className="mb-4">
               <div className="relative max-w-sm min-w-[220px]">
                 <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
@@ -217,174 +268,28 @@ export default function MaintenanceSchedulePage() {
               </div>
             </div>
 
-            {/* ── Table ── */}
-            <div className="overflow-x-auto rounded-lg border border-slate-800 shadow-xl shadow-black/20">
-              <table className="w-full border-collapse text-sm">
-                <thead>
-                  <tr className="border-b border-slate-700 bg-slate-900 text-white">
-                    <th className="sticky left-0 z-10 bg-slate-900 px-4 py-3 text-left text-xs font-semibold tracking-wider whitespace-nowrap">
-                      {t("col_category")}
-                    </th>
-                    <th className="px-3 py-3 text-center text-xs font-semibold tracking-wider whitespace-nowrap">
-                      {t("col_assets")}
-                    </th>
-                    {/* Frequency */}
-                    <th className="px-3 py-3 text-center text-xs font-semibold tracking-wider whitespace-nowrap">
-                      {t("col_monthly")}
-                    </th>
-                    <th className="px-3 py-3 text-center text-xs font-semibold tracking-wider whitespace-nowrap">
-                      {t("col_quarterly")}
-                    </th>
-                    <th className="px-3 py-3 text-center text-xs font-semibold tracking-wider whitespace-nowrap">
-                      {t("col_semi_annual")}
-                    </th>
-                    <th className="px-3 py-3 text-center text-xs font-semibold tracking-wider whitespace-nowrap">
-                      {t("col_annual")}
-                    </th>
-                    <th className="px-3 py-3 text-center text-xs font-semibold tracking-wider whitespace-nowrap">
-                      {t("col_two_year")}
-                    </th>
-                    <th className="px-3 py-3 text-center text-xs font-semibold tracking-wider whitespace-nowrap">
-                      {t("col_three_year")}
-                    </th>
-                    <th className="px-3 py-3 text-center text-xs font-semibold tracking-wider whitespace-nowrap">
-                      {t("col_five_year")}
-                    </th>
-                    {/* Totals */}
-                    <th className="px-3 py-3 text-center text-xs font-semibold tracking-wider whitespace-nowrap">
-                      {t("col_total_mops")}
-                    </th>
-                    <th className="px-3 py-3 text-center text-xs font-semibold tracking-wider whitespace-nowrap">
-                      {t("col_total_eops")}
-                    </th>
-                    <th className="px-3 py-3 text-center text-xs font-semibold tracking-wider whitespace-nowrap">
-                      {t("col_total_sops")}
-                    </th>
-                    <th className="px-3 py-3 text-center text-xs font-semibold tracking-wider whitespace-nowrap">
-                      {t("col_details")}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredRows.length === 0 ? (
-                    <tr>
-                      <td
-                        colSpan={13}
-                        className="px-4 py-10 text-center text-sm text-gray-400"
-                      >
-                        No categories match your search.
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredRows.map((row, idx) => {
-                      const isExpanded = expandedId === row.id;
-                      const rowBg = idx % 2 === 0 ? "bg-white" : "bg-slate-50";
-                      return (
-                        <>
-                          {/* ── Data row ── */}
-                          <tr
-                            key={row.id}
-                            className={`border-b border-slate-200 ${rowBg} transition-colors hover:bg-primary/5`}
-                          >
-                            <td
-                              className={`sticky left-0 z-10 px-4 py-3 font-medium text-gray-900 whitespace-nowrap ${rowBg}`}
-                            >
-                              {row.category}
-                            </td>
-                            <td className="px-3 py-3 text-center font-semibold text-gray-700">
-                              {row.assetCount}
-                            </td>
-                            {/* Frequency checkmarks */}
-                            <td className="px-3 py-3 text-center">
-                              <FrequencyCell active={row.frequency.monthly} />
-                            </td>
-                            <td className="px-3 py-3 text-center">
-                              <FrequencyCell active={row.frequency.quarterly} />
-                            </td>
-                            <td className="px-3 py-3 text-center">
-                              <FrequencyCell
-                                active={row.frequency.semiAnnual}
-                              />
-                            </td>
-                            <td className="px-3 py-3 text-center">
-                              <FrequencyCell active={row.frequency.annual} />
-                            </td>
-                            <td className="px-3 py-3 text-center">
-                              <FrequencyCell active={row.frequency.twoYear} />
-                            </td>
-                            <td className="px-3 py-3 text-center">
-                              <FrequencyCell active={row.frequency.threeYear} />
-                            </td>
-                            <td className="px-3 py-3 text-center">
-                              <FrequencyCell active={row.frequency.fiveYear} />
-                            </td>
-                            {/* Totals */}
-                            <td className="px-3 py-3 text-center">
-                              <CountBadge count={row.totalMOPs} />
-                            </td>
-                            <td className="px-3 py-3 text-center">
-                              <CountBadge count={row.totalEOPs} />
-                            </td>
-                            <td className="px-3 py-3 text-center">
-                              <CountBadge count={row.totalSOPs} />
-                            </td>
-                            {/* Details toggle */}
-                            <td className="px-3 py-3 text-center">
-                              <button
-                                onClick={() =>
-                                  setExpandedId(isExpanded ? null : row.id)
-                                }
-                                className="flex cursor-pointer items-center gap-1 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:border-primary hover:bg-primary hover:text-white"
-                              >
-                                {isExpanded ? (
-                                  <>
-                                    <ChevronUp className="h-3 w-3" />{" "}
-                                    {t("btn_hide_details")}
-                                  </>
-                                ) : (
-                                  <>
-                                    <ChevronDown className="h-3 w-3" />{" "}
-                                    {t("btn_show_details")}
-                                  </>
-                                )}
-                              </button>
-                            </td>
-                          </tr>
-
-                          {/* ── Expandable details row ── */}
-                          {isExpanded && (
-                            <tr
-                              key={`${row.id}-details`}
-                              className="border-b border-slate-200 bg-slate-100"
-                            >
-                              <td colSpan={13} className="px-6 py-5">
-                                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                                  <RequirementList
-                                    label={t("details_mops")}
-                                    items={row.mopRequirements}
-                                    color="border-blue-200"
-                                  />
-                                  <RequirementList
-                                    label={t("details_eops")}
-                                    items={row.eopRequirements}
-                                    color="border-red-200"
-                                  />
-                                  <RequirementList
-                                    label={t("details_sops")}
-                                    items={row.sopRequirements}
-                                    color="border-green-200"
-                                  />
-                                </div>
-                              </td>
-                            </tr>
-                          )}
-                        </>
-                      );
-                    })
-                  )}
-                </tbody>
-              </table>
+            {/* ── DataTable ── */}
+            <div className="overflow-hidden rounded-lg border border-slate-800 shadow-xl shadow-black/20">
+              <DataTable
+                columns={columns}
+                data={pagedRows}
+                getRowId={(row) => row.id}
+                noDataMessage="No categories match your search."
+                renderSubRow={renderSubRow}
+                bodyRowClassName="border-b border-slate-200 odd:bg-white even:bg-slate-50 hover:bg-primary/5 transition-colors"
+                bodyCellClassName="py-3 text-sm"
+                headerCellClassName="text-center first:text-left"
+              />
             </div>
+
+            {/* ── Pagination ── */}
+            <Pagination
+              totalPages={msTotalPages}
+              currentPage={msPage}
+              onPageChange={setMsPage}
+              totalCount={filteredRows.length}
+              pageSize={MS_PAGE_SIZE}
+            />
 
             {/* ── Legend ── */}
             <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 rounded-lg border border-slate-200 bg-slate-50 px-5 py-3 text-xs text-slate-500">
@@ -404,7 +309,7 @@ export default function MaintenanceSchedulePage() {
             <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 px-6 py-4 text-sm text-slate-600">
               <div className="grid grid-cols-2 gap-x-8 gap-y-1 sm:grid-cols-3 md:grid-cols-6">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                  <p className="text-xs font-semibold tracking-wide text-slate-400 uppercase">
                     {t("summary_generated")}
                   </p>
                   <p className="mt-0.5 font-medium">
@@ -412,31 +317,31 @@ export default function MaintenanceSchedulePage() {
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                  <p className="text-xs font-semibold tracking-wide text-slate-400 uppercase">
                     {t("summary_groups")}
                   </p>
                   <p className="mt-0.5 font-medium">{filteredRows.length}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                  <p className="text-xs font-semibold tracking-wide text-slate-400 uppercase">
                     {t("summary_assets")}
                   </p>
                   <p className="mt-0.5 font-medium">{totals.assets}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                  <p className="text-xs font-semibold tracking-wide text-slate-400 uppercase">
                     {t("summary_mops")}
                   </p>
                   <p className="mt-0.5 font-medium">{totals.mops}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                  <p className="text-xs font-semibold tracking-wide text-slate-400 uppercase">
                     {t("summary_eops")}
                   </p>
                   <p className="mt-0.5 font-medium">{totals.eops}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                  <p className="text-xs font-semibold tracking-wide text-slate-400 uppercase">
                     {t("summary_sops")}
                   </p>
                   <p className="mt-0.5 font-medium">{totals.sops}</p>

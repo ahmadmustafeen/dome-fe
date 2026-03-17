@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+import type { RowSelectionState } from "@tanstack/react-table";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 import type { Asset } from "@/components";
@@ -7,34 +8,45 @@ import {
   AppButton,
   CreateAssetModal,
   DeleteConfirmationScreen,
+  Pagination,
   ScreenLoader,
 } from "@/components";
-import DynamicTable from "@/components/table/DynamicTable";
-import { AssetTableHeaders } from "@/constants/data";
+import { DataTable } from "@/components/DataTable";
+import { getAssetColumns } from "@/components/sections/asset/AssetTableColumns";
 import { useAppContext } from "@/context/AppContext";
 import { assetService } from "@/services/asset-service";
 
+const PAGE_SIZE = 10;
+
 export default function InvalidAssetsPage() {
+  const { site } = useAppContext();
+
   const [files, setFiles] = useState<File[]>([]);
   const [assets, setAssets] = useState<Asset[]>([]);
   const [asset, setAsset] = useState<Asset | undefined>();
   const [totalPages, setTotalPages] = useState(0);
-  const [confirmDeleteAllAssets, setConfirmDeleteAllAssets] = useState(false);
-  const [deleteId, setDeleteId] = useState("");
   const [totalAssets, setTotalAssets] = useState(0);
+  const [deleteId, setDeleteId] = useState("");
+  const [confirmDeleteAllAssets, setConfirmDeleteAllAssets] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const { site } = useAppContext();
   const [showCreateAsset, setShowCreateAsset] = useState(false);
   const [isAssetsLoading, setIsAssetsLoading] = useState(false);
-  const [selectedAssets, setSelectedAssets] = useState(new Set<string>());
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
-  const fetchInvalidAssetsBySiteId = async (id: string, page?: number) => {
+  const selectedIds = useMemo(
+    () =>
+      Object.entries(rowSelection)
+        .filter(([, v]) => v)
+        .map(([k]) => k),
+    [rowSelection],
+  );
+
+  const fetchInvalidAssets = async (id: string, page?: number) => {
     try {
       setIsAssetsLoading(true);
-      const response = (await assetService.getAllInvalidAssetsBySiteId(
-        id,
-        { page },
-      )) as {
+      const response = (await assetService.getAllInvalidAssetsBySiteId(id, {
+        page,
+      })) as {
         data: {
           assets: Asset[];
           totalPages: number;
@@ -59,13 +71,14 @@ export default function InvalidAssetsPage() {
   const handlePageChange = (page: number) => {
     if (site?._id) {
       setCurrentPage(page);
-      fetchInvalidAssetsBySiteId(site._id, page);
+      setRowSelection({});
+      fetchInvalidAssets(site._id, page);
     }
   };
 
   useEffect(() => {
     if (site?._id) {
-      fetchInvalidAssetsBySiteId(site._id);
+      fetchInvalidAssets(site._id);
     }
   }, [site]);
 
@@ -78,8 +91,9 @@ export default function InvalidAssetsPage() {
 
   const refetchAssets = () => {
     if (site?._id) {
-      fetchInvalidAssetsBySiteId(site._id);
+      fetchInvalidAssets(site._id);
       setCurrentPage(1);
+      setRowSelection({});
     }
   };
 
@@ -129,38 +143,54 @@ export default function InvalidAssetsPage() {
     } finally {
       closeToggle();
       if (site?._id) {
-        fetchInvalidAssetsBySiteId(site._id, currentPage);
+        fetchInvalidAssets(site._id, currentPage);
       }
     }
   };
-
-  const handleDeletePress = (id: string) => setDeleteId(id);
 
   const deleteAsset = async (assetId: string) => {
     await assetService.deleteAsset(assetId);
     setDeleteId("");
     toast.success("Asset deleted successfully");
     if (site?._id) {
-      fetchInvalidAssetsBySiteId(site._id);
+      fetchInvalidAssets(site._id);
     }
-  };
-
-  const handleCancelDeleteAll = () => {
-    setConfirmDeleteAllAssets(false);
-    setSelectedAssets(new Set());
   };
 
   const handleConfirmDeleteAll = () => {
     try {
-      assetService.deleteBulkAsset({ ids: Array.from(selectedAssets) });
+      assetService.deleteBulkAsset({ ids: selectedIds });
       toast.success("All selected assets deleted!");
-      setSelectedAssets(new Set());
+      setRowSelection({});
       setConfirmDeleteAllAssets(false);
       refetchAssets();
     } catch (err) {
       toast.error(`Something went wrong! ${err}`);
     }
   };
+
+  const columns = useMemo(
+    () =>
+      getAssetColumns({
+        onEdit: handleEditPress,
+        onDelete: (id) => setDeleteId(id),
+        labels: {
+          colAssetId: "Asset Id",
+          colAssetName: "Asset Name",
+          colCategory: "Category",
+          colSubCategory: "Sub Category",
+          colEquipmentName: "Equipment Name",
+          colMake: "Make",
+          colModel: "Model",
+          colLocation: "Location",
+          colSerial: "Serial Number",
+          colActions: "Actions",
+          actionEdit: "Edit",
+          actionDelete: "Delete",
+        },
+      }),
+    [],
+  );
 
   return (
     <div className="h-full">
@@ -186,7 +216,10 @@ export default function InvalidAssetsPage() {
         <DeleteConfirmationScreen
           heading="Delete all selected asset(s)"
           description="Are you sure you want to delete all selected assets? This action is irreversible."
-          handleCancel={handleCancelDeleteAll}
+          handleCancel={() => {
+            setConfirmDeleteAllAssets(false);
+            setRowSelection({});
+          }}
           handleContinue={handleConfirmDeleteAll}
         />
       )}
@@ -198,11 +231,17 @@ export default function InvalidAssetsPage() {
       )}
 
       <div className="p-8">
+        {/* Header */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-          <h1 className="text-2xl font-bold tracking-tight text-black">
-            Invalid Assets
-          </h1>
-          {selectedAssets.size > 0 && (
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-black">
+              Invalid Assets
+            </h1>
+            <p className="mt-1 text-sm text-gray-500">
+              {totalAssets} {totalAssets !== 1 ? "assets" : "asset"} found
+            </p>
+          </div>
+          {selectedIds.length > 0 && (
             <AppButton
               title="Delete Asset(s)"
               onClick={() => setConfirmDeleteAllAssets(true)}
@@ -211,17 +250,27 @@ export default function InvalidAssetsPage() {
           )}
         </div>
 
-        <DynamicTable
-          selectedIds={selectedAssets}
+        {/* Table */}
+        <div className="overflow-hidden rounded-lg border border-slate-800 shadow-xl shadow-black/20">
+          <DataTable
+            columns={columns}
+            data={assets}
+            getRowId={(row) => row._id}
+            loading={isAssetsLoading}
+            noDataMessage="No invalid assets found."
+            rowSelection={rowSelection}
+            onRowSelectionStateChange={setRowSelection}
+            bodyRowClassName="border-b border-slate-200 odd:bg-white even:bg-slate-50 hover:bg-primary/5 transition-colors"
+          />
+        </div>
+
+        {/* Pagination */}
+        <Pagination
+          totalPages={totalPages}
           currentPage={currentPage}
-          totalPage={totalPages}
-          changePage={handlePageChange}
+          onPageChange={handlePageChange}
           totalCount={totalAssets}
-          handleDeletePress={handleDeletePress}
-          handleEditPress={handleEditPress}
-          setSelectedIds={setSelectedAssets}
-          columns={AssetTableHeaders}
-          data={assets as unknown as { [key: string]: string }[]}
+          pageSize={PAGE_SIZE}
         />
       </div>
     </div>

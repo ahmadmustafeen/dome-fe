@@ -1,6 +1,7 @@
 import type {
   ColumnDef,
   ColumnFiltersState,
+  ExpandedState,
   Row,
   RowSelectionState,
   SortingState,
@@ -10,6 +11,7 @@ import type {
 import {
   flexRender,
   getCoreRowModel,
+  getExpandedRowModel,
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
@@ -58,6 +60,8 @@ interface DataTableProps<TData, TValue> {
   onRowSelectionStateChange?: React.Dispatch<
     React.SetStateAction<RowSelectionState>
   >;
+  /** Optional: render expanded detail content below each expanded row */
+  renderSubRow?: (row: Row<TData>) => React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
@@ -78,10 +82,12 @@ export function DataTable<TData, TValue>({
   bodyCellClassName,
   rowSelection: externalRowSelection,
   onRowSelectionStateChange,
+  renderSubRow,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [expanded, setExpanded] = useState<ExpandedState>({});
   const [internalRowSelection, setInternalRowSelection] =
     useState<RowSelectionState>({});
 
@@ -97,9 +103,11 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    state: { sorting, columnFilters, columnVisibility, rowSelection },
+    onExpandedChange: setExpanded,
+    state: { sorting, columnFilters, columnVisibility, rowSelection, expanded },
   });
 
   useEffect(() => {
@@ -159,6 +167,7 @@ export function DataTable<TData, TValue>({
             noDataMessage={noDataMessage}
             bodyRowClassName={bodyRowClassName}
             bodyCellClassName={bodyCellClassName}
+            renderSubRow={renderSubRow}
           />
         </TableBody>
       </Table>

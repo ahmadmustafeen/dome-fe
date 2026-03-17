@@ -1,38 +1,25 @@
 "use client";
+import type { RowSelectionState } from "@tanstack/react-table";
+import { FolderOpen, Search, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
-import { useTranslations } from "next-intl";
-
-import {
-  ChevronLeft,
-  ChevronRight,
-  Download,
-  Eye,
-  FolderOpen,
-  Search,
-  Trash2,
-  X,
-} from "lucide-react";
 
 import {
   AppButton,
   DeleteConfirmationScreen,
   EmptyState,
+  Pagination,
   ScreenLoader,
 } from "@/components/common";
-import { FileTypeIcon, UploadDocumentModal } from "@/components/document";
-import {
-  DOCUMENT_TYPE_BADGE,
-  DOCUMENT_TYPES,
-} from "@/constants/document-management";
+import { DataTable } from "@/components/DataTable";
+import { UploadDocumentModal } from "@/components/document";
+import { getDocumentColumns } from "@/components/sections/document/DocumentTableColumns";
+import { DOCUMENT_TYPES } from "@/constants/document-management";
 import { useAppContext } from "@/context/AppContext";
 import { documentService } from "@/services/document-service";
 import type { DocumentApiRecord, DocumentType } from "@/types/document";
-import {
-  extractDocumentName,
-  extractFileExtension,
-  formatDate,
-} from "@/utils/formatters";
+import { extractDocumentName } from "@/utils/formatters";
 
 const PAGE_LIMIT = 10;
 
@@ -54,12 +41,14 @@ export default function DocumentManagementPage() {
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // bulk delete
-  const [selectedIds, setSelectedIds] = useState(() => new Set<string>());
+  // bulk delete — TanStack row selection (key = doc._id)
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
   const [isBulkDeleting, setIsBulkDeleting] = useState(false);
 
-  // ── Fetch documents (server-side pagination) ────────────────────────────────
+  const selectedIds = Object.keys(rowSelection).filter((k) => rowSelection[k]);
+
+  // ── Fetch ───────────────────────────────────────────────────────────────────
   const fetchDocuments = useCallback(async (siteId: string, page: number) => {
     setIsLoading(true);
     try {
@@ -71,9 +60,9 @@ export default function DocumentManagementPage() {
       setTotalPages(response.data.totalPages);
       setTotalCount(response.data.total);
     } catch (err) {
-      const msg =
-        err instanceof Error ? err.message : "Failed to load documents.";
-      toast.error(msg);
+      toast.error(
+        err instanceof Error ? err.message : "Failed to load documents.",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -85,7 +74,7 @@ export default function DocumentManagementPage() {
     }
   }, [site, currentPage, fetchDocuments]);
 
-  // ── Client-side filtering on current page data ─────────────────────────────
+  // ── Client-side filter on current page ────────────────────────────────────
   const filteredDocuments = useMemo(() => {
     return documents.filter((doc) => {
       const q = searchQuery.trim().toLowerCase();
@@ -96,31 +85,6 @@ export default function DocumentManagementPage() {
       return matchesSearch && matchesType;
     });
   }, [documents, searchQuery, typeFilter]);
-
-  // ── Selection helpers ───────────────────────────────────────────────────────
-  const allPageSelected =
-    filteredDocuments.length > 0 &&
-    filteredDocuments.every((doc) => selectedIds.has(doc._id));
-
-  const toggleSelectAll = () => {
-    if (allPageSelected) {
-      setSelectedIds(new Set());
-    } else {
-      setSelectedIds(new Set(filteredDocuments.map((d) => d._id)));
-    }
-  };
-
-  const toggleSelect = (id: string) => {
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
-      return next;
-    });
-  };
 
   // ── Handlers ───────────────────────────────────────────────────────────────
   const handleUploadSuccess = (newDoc: DocumentApiRecord) => {
@@ -137,60 +101,70 @@ export default function DocumentManagementPage() {
       await documentService.deleteDocument(deleteTargetId);
       setDocuments((prev) => prev.filter((d) => d._id !== deleteTargetId));
       setTotalCount((prev) => Math.max(0, prev - 1));
-      setSelectedIds((prev) => {
-        const n = new Set(prev);
-        n.delete(deleteTargetId);
-        return n;
-      });
       setDeleteTargetId(null);
       toast.success(t("toast_delete_success"));
     } catch (err) {
-      const msg =
-        err instanceof Error ? err.message : "Failed to delete document.";
-      toast.error(msg);
+      toast.error(
+        err instanceof Error ? err.message : "Failed to delete document.",
+      );
     } finally {
       setIsDeleting(false);
     }
   };
 
   const handleBulkDeleteConfirm = async () => {
-    const ids = Array.from(selectedIds);
     setIsBulkDeleting(true);
     try {
-      await documentService.deleteBulkDocuments(ids);
-      setDocuments((prev) => prev.filter((d) => !selectedIds.has(d._id)));
-      setTotalCount((prev) => Math.max(0, prev - ids.length));
-      setSelectedIds(new Set());
+      await documentService.deleteBulkDocuments(selectedIds);
+      setDocuments((prev) => prev.filter((d) => !selectedIds.includes(d._id)));
+      setTotalCount((prev) => Math.max(0, prev - selectedIds.length));
+      setRowSelection({});
       setShowBulkDeleteConfirm(false);
       toast.success(t("toast_bulk_delete_success"));
     } catch (err) {
-      const msg =
-        err instanceof Error ? err.message : "Failed to delete documents.";
-      toast.error(msg);
+      toast.error(
+        err instanceof Error ? err.message : "Failed to delete documents.",
+      );
     } finally {
       setIsBulkDeleting(false);
     }
-  };
-
-  const handleView = (doc: DocumentApiRecord) => {
-    window.open(doc.documentUrl, "_blank", "noopener,noreferrer");
-  };
-
-  const handleDownload = (doc: DocumentApiRecord) => {
-    const link = document.createElement("a");
-    link.href = doc.documentUrl;
-    link.download = extractDocumentName(doc.documentUrl);
-    link.click();
   };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     setSearchQuery("");
     setTypeFilter("all");
-    setSelectedIds(new Set());
+    setRowSelection({});
   };
 
   const isFiltered = Boolean(searchQuery || typeFilter !== "all");
+
+  // ── Column definitions ─────────────────────────────────────────────────────
+  const columns = useMemo(
+    () =>
+      getDocumentColumns({
+        onView: (doc) =>
+          window.open(doc.documentUrl, "_blank", "noopener,noreferrer"),
+        onDownload: (doc) => {
+          const link = window.document.createElement("a");
+          link.href = doc.documentUrl;
+          link.download = extractDocumentName(doc.documentUrl);
+          link.click();
+        },
+        onDelete: (doc) => setDeleteTargetId(doc._id),
+        isDeleting,
+        labels: {
+          colName: t("col_name"),
+          colType: t("col_type"),
+          colDate: t("col_date"),
+          colActions: t("col_actions"),
+          actionView: t("action_view"),
+          actionDownload: t("action_download"),
+          actionDelete: t("action_delete"),
+        },
+      }),
+    [isDeleting, t],
+  );
 
   if (!site?._id) {
     return (
@@ -223,7 +197,7 @@ export default function DocumentManagementPage() {
         <DeleteConfirmationScreen
           heading={t("delete_bulk_heading")}
           description={t("delete_bulk_description", {
-            count: selectedIds.size,
+            count: selectedIds.length,
           })}
           handleCancel={() => setShowBulkDeleteConfirm(false)}
           handleContinue={handleBulkDeleteConfirm}
@@ -248,9 +222,9 @@ export default function DocumentManagementPage() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            {selectedIds.size > 0 && (
+            {selectedIds.length > 0 && (
               <AppButton
-                title={t("btn_delete_selected", { count: selectedIds.size })}
+                title={t("btn_delete_selected", { count: selectedIds.length })}
                 onClick={() => setShowBulkDeleteConfirm(true)}
                 variant="danger"
                 disabled={isBulkDeleting}
@@ -266,7 +240,7 @@ export default function DocumentManagementPage() {
 
         {/* Controls: Search + Type Filter */}
         <div className="mb-4 flex flex-wrap items-center gap-3">
-          <div className="relative max-w-sm min-w-50 flex-1">
+          <div className="relative max-w-sm min-w-[200px] flex-1">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
@@ -284,7 +258,6 @@ export default function DocumentManagementPage() {
               </button>
             )}
           </div>
-
           <div className="relative">
             <select
               value={typeFilter}
@@ -318,189 +291,54 @@ export default function DocumentManagementPage() {
           </div>
         </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto rounded-lg border border-slate-800 shadow-xl shadow-black/20">
-          <div className="h-[calc(100vh-310px)] overflow-y-auto">
-            <table className="w-full border-collapse text-sm">
-              <thead className="sticky top-0 z-10">
-                <tr className="border-b border-slate-800 bg-slate-900">
-                  <th className="w-10 px-4 py-3">
-                    <input
-                      type="checkbox"
-                      checked={allPageSelected}
-                      onChange={toggleSelectAll}
-                      className="h-4 w-4 cursor-pointer rounded border-gray-500 accent-primary"
-                      aria-label="Select all documents"
-                    />
-                  </th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold tracking-wider text-white">
-                    {t("col_name")}
-                  </th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold tracking-wider text-white">
-                    {t("col_type")}
-                  </th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold tracking-wider text-white">
-                    {t("col_date")}
-                  </th>
-                  <th className="w-44 px-4 py-3 text-right text-sm font-semibold tracking-wider text-white">
-                    {t("col_actions")}
-                  </th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {filteredDocuments.length === 0 ? (
-                  <tr>
-                    <td colSpan={5} className="px-4 py-2">
-                      <EmptyState
-                        icon={<FolderOpen className="h-9 w-9" />}
-                        heading={
-                          isFiltered
-                            ? t("empty_filtered_heading")
-                            : t("empty_heading")
-                        }
-                        description={
-                          isFiltered
-                            ? t("empty_filtered_description")
-                            : t("empty_description")
-                        }
-                        action={
-                          !isFiltered ? (
-                            <AppButton
-                              title={t("btn_upload")}
-                              onClick={() => setShowUpload(true)}
-                              variant="secondary"
-                            />
-                          ) : undefined
-                        }
-                      />
-                    </td>
-                  </tr>
-                ) : (
-                  filteredDocuments.map((doc, idx) => {
-                    const name = extractDocumentName(doc.documentUrl);
-                    const ext = extractFileExtension(doc.documentUrl);
-                    const isSelected = selectedIds.has(doc._id);
-                    return (
-                      <tr
-                        key={doc._id}
-                        className={`border-b border-slate-800/60 transition-colors hover:bg-slate-800/50 ${
-                          isSelected
-                            ? "bg-primary/10"
-                            : idx % 2 === 0
-                              ? "bg-secondary/20"
-                              : "bg-transparent"
-                        }`}
-                      >
-                        <td className="px-4 py-3">
-                          <input
-                            type="checkbox"
-                            checked={isSelected}
-                            onChange={() => toggleSelect(doc._id)}
-                            className="h-4 w-4 cursor-pointer rounded border-gray-500 accent-primary"
-                            aria-label={`Select ${name}`}
-                          />
-                        </td>
-                        <td className="px-4 py-3">
-                          <div className="flex items-center gap-2">
-                            <FileTypeIcon ext={ext} />
-                            <span
-                              className="max-w-[220px] truncate text-sm font-medium text-black"
-                              title={name}
-                            >
-                              {name}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3">
-                          <span
-                            className={`inline-block max-w-[200px] truncate rounded-full px-2.5 py-1 text-xs font-medium ${DOCUMENT_TYPE_BADGE[doc.type as DocumentType] ?? "bg-gray-100 text-gray-700"}`}
-                            title={doc.type}
-                          >
-                            {doc.type}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-600">
-                          {formatDate(doc.createdAt)}
-                        </td>
-                        <td className="px-4 py-3">
-                          <div className="flex items-center justify-end gap-1.5">
-                            <button
-                              onClick={() => handleView(doc)}
-                              title={t("action_view")}
-                              className="flex cursor-pointer items-center gap-1 rounded bg-slate-900 px-2.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-slate-700"
-                            >
-                              <Eye className="h-3.5 w-3.5" />
-                              {t("action_view")}
-                            </button>
-                            <button
-                              onClick={() => handleDownload(doc)}
-                              title={t("action_download")}
-                              className="flex cursor-pointer items-center gap-1 rounded bg-blue-600 px-2.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-blue-700"
-                            >
-                              <Download className="h-3.5 w-3.5" />
-                              {t("action_download")}
-                            </button>
-                            <button
-                              onClick={() => setDeleteTargetId(doc._id)}
-                              disabled={isDeleting}
-                              title={t("action_delete")}
-                              className="flex cursor-pointer items-center gap-1 rounded bg-red-500 px-2.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50"
-                            >
-                              <Trash2 className="h-3.5 w-3.5" />
-                              {t("action_delete")}
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="mt-4 flex items-center justify-between">
-            <p className="text-sm text-gray-500">
-              Page {currentPage} of {totalPages} &mdash; {totalCount}{" "}
-              {totalCount !== 1 ? "documents" : "document"}
-            </p>
-            <div className="flex items-center gap-1">
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="flex h-8 w-8 items-center justify-center rounded border border-gray-300 text-gray-600 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (page) => (
-                  <button
-                    key={page}
-                    onClick={() => handlePageChange(page)}
-                    className={`flex h-8 w-8 items-center justify-center rounded border text-xs font-medium transition-colors ${
-                      page === currentPage
-                        ? "border-primary bg-primary text-white"
-                        : "border-gray-300 text-gray-600 hover:bg-gray-100"
-                    }`}
-                  >
-                    {page}
-                  </button>
-                ),
-              )}
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="flex h-8 w-8 items-center justify-center rounded border border-gray-300 text-gray-600 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
+        {/* DataTable */}
+        {filteredDocuments.length === 0 && !isLoading ? (
+          <EmptyState
+            icon={<FolderOpen className="h-9 w-9" />}
+            heading={
+              isFiltered ? t("empty_filtered_heading") : t("empty_heading")
+            }
+            description={
+              isFiltered
+                ? t("empty_filtered_description")
+                : t("empty_description")
+            }
+            action={
+              !isFiltered ? (
+                <AppButton
+                  title={t("btn_upload")}
+                  onClick={() => setShowUpload(true)}
+                  variant="secondary"
+                />
+              ) : undefined
+            }
+          />
+        ) : (
+          <div className="rounded-lg border border-slate-800 shadow-xl shadow-black/20">
+            <DataTable
+              columns={columns}
+              data={filteredDocuments}
+              loading={isLoading}
+              getRowId={(row) => row._id}
+              rowSelection={rowSelection}
+              onRowSelectionStateChange={setRowSelection}
+              noDataMessage="No documents found"
+              className="h-[calc(100vh-310px)]"
+              bodyRowClassName="border-b border-slate-800/60 odd:bg-slate-50/30 even:bg-white hover:bg-slate-800/10"
+              bodyCellClassName="text-gray-600"
+              headerCellClassName="first:w-10"
+            />
           </div>
         )}
+
+        {/* Pagination */}
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+          totalCount={totalCount}
+          pageSize={PAGE_LIMIT}
+        />
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ import {
   DeleteConfirmationScreen,
   Pagination,
   ScreenLoader,
+  Typography,
 } from "@/components";
 import { DataTable } from "@/components/DataTable";
 import { getAssetColumns } from "@/components/sections/asset/AssetTableColumns";
@@ -234,12 +235,10 @@ export default function InvalidAssetsPage() {
         {/* Header */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-black">
-              Invalid Assets
-            </h1>
-            <p className="mt-1 text-sm text-gray-500">
+            <Typography variant="h1">Invalid Assets</Typography>
+            <Typography variant="p" className="mt-1 text-gray-500">
               {totalAssets} {totalAssets !== 1 ? "assets" : "asset"} found
-            </p>
+            </Typography>
           </div>
           {selectedIds.length > 0 && (
             <AppButton

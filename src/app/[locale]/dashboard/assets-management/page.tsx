@@ -18,6 +18,7 @@ import {
   DeleteConfirmationScreen,
   Pagination,
   ScreenLoader,
+  Typography,
   UploadAssetModal,
 } from "@/components";
 import { DataTable } from "@/components/DataTable";
@@ -302,14 +303,12 @@ export default function AssetManagementPage() {
         {/* Header */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-black">
-              {t("title")}
-            </h1>
-            <p className="mt-1 text-sm text-gray-500">
+            <Typography variant="h1">{t("title")}</Typography>
+            <Typography variant="p" className="mt-1 text-gray-500">
               {totalAssets !== 1
                 ? t("assets_found_other", { count: totalAssets })
                 : t("assets_found_one", { count: totalAssets })}
-            </p>
+            </Typography>
           </div>
           <div className="flex gap-x-2">
             {selectedIds.length > 0 && (
@@ -353,9 +352,9 @@ export default function AssetManagementPage() {
             )}
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm font-medium text-gray-500">
+            <Typography variant="label" className="text-gray-500">
               {t("sort_label")}
-            </span>
+            </Typography>
             {ASSET_SORT_FIELDS.map((field) => (
               <button
                 key={field.value}

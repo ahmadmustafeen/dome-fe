@@ -11,6 +11,7 @@ import {
   EmptyState,
   Pagination,
   ScreenLoader,
+  Typography,
 } from "@/components/common";
 import { DataTable } from "@/components/DataTable";
 import { UploadDocumentModal } from "@/components/document";
@@ -214,12 +215,10 @@ export default function DocumentManagementPage() {
         {/* Header */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-black">
-              {t("title")}
-            </h1>
-            <p className="mt-1 text-sm text-gray-500">
+            <Typography variant="h1">{t("title")}</Typography>
+            <Typography variant="p" className="mt-1 text-gray-500">
               {totalCount} {totalCount !== 1 ? "documents" : "document"} total
-            </p>
+            </Typography>
           </div>
           <div className="flex items-center gap-2">
             {selectedIds.length > 0 && (
@@ -261,9 +260,7 @@ export default function DocumentManagementPage() {
           <div className="relative">
             <select
               value={typeFilter}
-              onChange={(e) =>
-                setTypeFilter(e.target.value as DocumentType | "all")
-              }
+              onChange={(e) => setTypeFilter(e.target.value as DocumentType | "all")}
               className="appearance-none rounded-lg border border-gray-300 bg-white py-2 pr-8 pl-3 text-sm text-gray-700 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none"
             >
               <option value="all">{t("filter_all_types")}</option>

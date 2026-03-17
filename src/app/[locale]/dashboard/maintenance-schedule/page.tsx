@@ -16,6 +16,7 @@ import {
   EmptyState,
   Pagination,
   ScreenLoader,
+  Typography,
 } from "@/components/common";
 import { DataTable } from "@/components/DataTable";
 import { getMaintenanceColumns } from "@/components/sections/maintenance/MaintenanceTableColumns";
@@ -50,8 +51,8 @@ const RequirementList = ({
       <p className="text-xs text-gray-400 italic">None required</p>
     ) : (
       <ol className="list-inside list-decimal space-y-1.5">
-        {items.map((req, i) => (
-          <li key={i} className="text-xs leading-relaxed text-gray-700">
+        {items.map((req) => (
+          <li key={req} className="text-xs leading-relaxed text-gray-700">
             {req}
           </li>
         ))}
@@ -86,6 +87,7 @@ export default function MaintenanceSchedulePage() {
   const handleGenerate = async () => {
     setIsGenerating(true);
     await simulate(DUMMY_MAINTENANCE_SCHEDULE);
+    setMsPage(1);
     setIsGenerating(false);
   };
 
@@ -95,6 +97,7 @@ export default function MaintenanceSchedulePage() {
       ...DUMMY_MAINTENANCE_SCHEDULE,
       generatedAt: new Date().toISOString(),
     });
+    setMsPage(1);
     setIsGenerating(false);
   };
 
@@ -109,12 +112,9 @@ export default function MaintenanceSchedulePage() {
       return [];
     }
     const q = searchQuery.trim().toLowerCase();
-    const rows = q
+    return q
       ? schedule.rows.filter((r) => r.category.toLowerCase().includes(q))
       : schedule.rows;
-    setMsPage(1);
-    return rows;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [schedule, searchQuery]);
 
   const msTotalPages = Math.max(
@@ -203,14 +203,12 @@ export default function MaintenanceSchedulePage() {
         {/* ── Page header ── */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-black">
-              {t("title")}
-            </h1>
-            <p className="mt-1 text-sm text-gray-500">
+            <Typography variant="h1">{t("title")}</Typography>
+            <Typography variant="p" className="mt-1 text-gray-500">
               {schedule
                 ? `${filteredRows.length} ${filteredRows.length !== 1 ? "categories" : "category"} · ${totals.assets} assets`
                 : "Generate a schedule to view your maintenance plan"}
-            </p>
+            </Typography>
           </div>
           {!schedule ? (
             <AppButton
@@ -253,13 +251,19 @@ export default function MaintenanceSchedulePage() {
                 <input
                   type="text"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setMsPage(1);
+                  }}
                   placeholder={t("search_placeholder")}
                   className="w-full rounded-lg border border-gray-300 py-2 pr-8 pl-9 text-sm focus:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none"
                 />
                 {searchQuery && (
                   <button
-                    onClick={() => setSearchQuery("")}
+                    onClick={() => {
+                      setSearchQuery("");
+                      setMsPage(1);
+                    }}
                     className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
                     <X className="h-4 w-4" />
@@ -292,59 +296,93 @@ export default function MaintenanceSchedulePage() {
             />
 
             {/* ── Legend ── */}
-            <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 rounded-lg border border-slate-200 bg-slate-50 px-5 py-3 text-xs text-slate-500">
-              <span className="flex items-center gap-1.5">
+            <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 rounded-lg border border-slate-200 bg-slate-50 px-5 py-3">
+              <Typography
+                variant="caption"
+                className="flex items-center gap-1.5 text-slate-500"
+              >
                 <Check className="h-3.5 w-3.5 text-teal-500" strokeWidth={3} />
                 Scheduled Maintenance Frequency
-              </span>
-              <span className="flex items-center gap-1.5">
+              </Typography>
+              <Typography
+                variant="caption"
+                className="flex items-center gap-1.5 text-slate-500"
+              >
                 <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">
                   N
                 </span>
                 MOP / EOP / SOP Count
-              </span>
+              </Typography>
             </div>
 
             {/* ── Summary footer ── */}
-            <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 px-6 py-4 text-sm text-slate-600">
-              <div className="grid grid-cols-2 gap-x-8 gap-y-1 sm:grid-cols-3 md:grid-cols-6">
+            <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 px-6 py-4">
+              <div className="grid grid-cols-2 gap-x-8 gap-y-3 sm:grid-cols-3 md:grid-cols-6">
                 <div>
-                  <p className="text-xs font-semibold tracking-wide text-slate-400 uppercase">
+                  <Typography variant="h6" className="text-slate-400">
                     {t("summary_generated")}
-                  </p>
-                  <p className="mt-0.5 font-medium">
+                  </Typography>
+                  <Typography
+                    variant="p"
+                    className="mt-0.5 font-medium text-slate-700"
+                  >
                     {formatDate(schedule.generatedAt)}
-                  </p>
+                  </Typography>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold tracking-wide text-slate-400 uppercase">
+                  <Typography variant="h6" className="text-slate-400">
                     {t("summary_groups")}
-                  </p>
-                  <p className="mt-0.5 font-medium">{filteredRows.length}</p>
+                  </Typography>
+                  <Typography
+                    variant="p"
+                    className="mt-0.5 font-medium text-slate-700"
+                  >
+                    {filteredRows.length}
+                  </Typography>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold tracking-wide text-slate-400 uppercase">
+                  <Typography variant="h6" className="text-slate-400">
                     {t("summary_assets")}
-                  </p>
-                  <p className="mt-0.5 font-medium">{totals.assets}</p>
+                  </Typography>
+                  <Typography
+                    variant="p"
+                    className="mt-0.5 font-medium text-slate-700"
+                  >
+                    {totals.assets}
+                  </Typography>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold tracking-wide text-slate-400 uppercase">
+                  <Typography variant="h6" className="text-slate-400">
                     {t("summary_mops")}
-                  </p>
-                  <p className="mt-0.5 font-medium">{totals.mops}</p>
+                  </Typography>
+                  <Typography
+                    variant="p"
+                    className="mt-0.5 font-medium text-slate-700"
+                  >
+                    {totals.mops}
+                  </Typography>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold tracking-wide text-slate-400 uppercase">
+                  <Typography variant="h6" className="text-slate-400">
                     {t("summary_eops")}
-                  </p>
-                  <p className="mt-0.5 font-medium">{totals.eops}</p>
+                  </Typography>
+                  <Typography
+                    variant="p"
+                    className="mt-0.5 font-medium text-slate-700"
+                  >
+                    {totals.eops}
+                  </Typography>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold tracking-wide text-slate-400 uppercase">
+                  <Typography variant="h6" className="text-slate-400">
                     {t("summary_sops")}
-                  </p>
-                  <p className="mt-0.5 font-medium">{totals.sops}</p>
+                  </Typography>
+                  <Typography
+                    variant="p"
+                    className="mt-0.5 font-medium text-slate-700"
+                  >
+                    {totals.sops}
+                  </Typography>
                 </div>
               </div>
             </div>

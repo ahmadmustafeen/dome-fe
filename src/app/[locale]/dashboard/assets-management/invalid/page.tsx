@@ -10,6 +10,7 @@ import {
   DeleteConfirmationScreen,
   Pagination,
   ScreenLoader,
+  SectionWrapper,
   Typography,
 } from "@/components";
 import { DataTable } from "@/components/DataTable";
@@ -231,7 +232,7 @@ export default function InvalidAssetsPage() {
         />
       )}
 
-      <div className="p-4 sm:p-6 lg:p-8">
+      <SectionWrapper>
         {/* Header */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>
@@ -271,7 +272,7 @@ export default function InvalidAssetsPage() {
           totalCount={totalAssets}
           pageSize={PAGE_SIZE}
         />
-      </div>
+      </SectionWrapper>
     </div>
   );
 }

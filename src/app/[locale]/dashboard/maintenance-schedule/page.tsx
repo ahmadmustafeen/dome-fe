@@ -16,6 +16,7 @@ import {
   EmptyState,
   Pagination,
   ScreenLoader,
+  SectionWrapper,
   Typography,
 } from "@/components/common";
 import { DataTable } from "@/components/DataTable";
@@ -199,7 +200,7 @@ export default function MaintenanceSchedulePage() {
         />
       )}
 
-      <div className="p-4 sm:p-6 lg:p-8">
+      <SectionWrapper>
         {/* ── Page header ── */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>
@@ -388,7 +389,7 @@ export default function MaintenanceSchedulePage() {
             </div>
           </>
         )}
-      </div>
+      </SectionWrapper>
     </div>
   );
 }

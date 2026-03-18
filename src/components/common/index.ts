@@ -4,6 +4,7 @@ export * from "./EmptyState";
 export * from "./InputWithLabel";
 export * from "./Pagination";
 export * from "./ScreenLoader";
+export { default as SectionWrapper } from "./SectionWrapper";
 export * from "./Sidebar";
 export { default as StateIndicator } from "./StateIndicator";
 export * from "./Typography";

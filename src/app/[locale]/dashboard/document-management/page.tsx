@@ -11,6 +11,7 @@ import {
   EmptyState,
   Pagination,
   ScreenLoader,
+  SectionWrapper,
   Typography,
 } from "@/components/common";
 import { DataTable } from "@/components/DataTable";
@@ -211,7 +212,7 @@ export default function DocumentManagementPage() {
         />
       )}
 
-      <div className="p-4 sm:p-6 lg:p-8">
+      <SectionWrapper>
         {/* Header */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>
@@ -336,7 +337,7 @@ export default function DocumentManagementPage() {
           totalCount={totalCount}
           pageSize={PAGE_LIMIT}
         />
-      </div>
+      </SectionWrapper>
     </div>
   );
 }

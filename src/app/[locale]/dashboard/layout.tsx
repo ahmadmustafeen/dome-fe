@@ -1,4 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
+import * as React from "react";
 
 import { DashboardShell } from "@/components/layout/DashboardShell";
 import { AppProvider } from "@/context/AppContext";

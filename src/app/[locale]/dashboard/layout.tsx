@@ -1,7 +1,7 @@
-import { setRequestLocale } from 'next-intl/server';
+import { setRequestLocale } from "next-intl/server";
 
-import { DashboardSidebar } from '@/components/layout/DashboardSidebar';
-import { AppProvider } from '@/context/AppContext';
+import { DashboardShell } from "@/components/layout/DashboardShell";
+import { AppProvider } from "@/context/AppContext";
 
 export default async function DashboardLayout(props: {
   children: React.ReactNode;
@@ -12,12 +12,7 @@ export default async function DashboardLayout(props: {
 
   return (
     <AppProvider>
-      <div className="flex h-screen overflow-hidden">
-        <DashboardSidebar />
-        <main className="flex-1 overflow-y-auto">
-          {props.children}
-        </main>
-      </div>
+      <DashboardShell>{props.children}</DashboardShell>
     </AppProvider>
   );
 }

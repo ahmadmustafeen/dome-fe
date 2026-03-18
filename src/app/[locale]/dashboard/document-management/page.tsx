@@ -169,10 +169,10 @@ export default function DocumentManagementPage() {
 
   if (!site?._id) {
     return (
-      <div className="flex h-full items-center justify-center p-8">
-        <p className="text-sm text-gray-400">
+      <div className="flex h-full items-center justify-center p-4 sm:p-6 lg:p-8">
+        <Typography variant="caption" className="text-gray-400">
           Select a site to view documents.
-        </p>
+        </Typography>
       </div>
     );
   }
@@ -211,7 +211,7 @@ export default function DocumentManagementPage() {
         />
       )}
 
-      <div className="p-8">
+      <div className="p-4 sm:p-6 lg:p-8">
         {/* Header */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>

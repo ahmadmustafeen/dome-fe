@@ -1,14 +1,17 @@
-'use client';
-import { Button, InputWithLabel, Typography } from '@/components';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { authService } from '@/services/auth-service';
-import Image from 'next/image';
-import { toast } from 'react-toastify';
+"use client";
 
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "react-toastify";
+
+import { Button, InputWithLabel, Typography } from "@/components";
+import { authService } from "@/services/auth-service";
+
+import { AuthWrapper } from "./AuthWrapper";
 
 const SignUp = () => {
-  const locale = 'en'
+  const locale = "en";
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     firstName: "",
@@ -18,11 +21,8 @@ const SignUp = () => {
   });
 
   const handleChange = (key: string, value: string) => {
-    setData((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-  }
+    setData((prev) => ({ ...prev, [key]: value }));
+  };
 
   const handleSignUp = async () => {
     try {
@@ -35,54 +35,82 @@ const SignUp = () => {
       });
       toast.success("Registration successful!");
       router.push(`/${locale}/dashboard`);
-    } catch (error: any) {
-      toast.error(error.message || "An error occurred during registration");
-      console.error("Error during registration:", error.message || error);
-
-    }
-    finally {
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "An error occurred during registration";
+      toast.error(message);
+      console.error("Error during registration:", error);
+    } finally {
       setLoading(false);
     }
   };
 
-  const router = useRouter();
   return (
-    <div className="min-w-screen min-h-screen flex justify-center items-center flex-col md:flex-row">
-      <div className="w-11/12 mx-auto md:w-1/2 flex justify-center items-center">
-        <Image
-          src="/assets/gifs/Signup.gif"
-          alt="Loading..."
-          width={400}
-          height={400}
-          unoptimized
+    <AuthWrapper
+      image="/assets/gifs/Signup.gif"
+      imageAlt="Sign up illustration"
+    >
+      <Typography variant="h2">Create an account</Typography>
+      <Typography variant="p" className="mt-1 mb-6 text-gray-500">
+        Please fill in the form below to create an account.
+      </Typography>
+
+      <div className="flex gap-x-3">
+        <div className="flex-1">
+          <InputWithLabel
+            label="First Name"
+            type="text"
+            placeholder="First name"
+            onChange={(e) => handleChange("firstName", e.target.value)}
+            value={data.firstName}
+          />
+        </div>
+        <div className="flex-1">
+          <InputWithLabel
+            label="Last Name"
+            type="text"
+            placeholder="Last name"
+            onChange={(e) => handleChange("lastName", e.target.value)}
+            value={data.lastName}
+          />
+        </div>
+      </div>
+
+      <InputWithLabel
+        label="Email"
+        type="email"
+        placeholder="Enter your email"
+        onChange={(e) => handleChange("email", e.target.value)}
+        value={data.email}
+      />
+      <InputWithLabel
+        label="Password"
+        type="password"
+        showEye
+        placeholder="Enter your password"
+        onChange={(e) => handleChange("password", e.target.value)}
+        value={data.password}
+      />
+
+      <Button
+        isLoading={loading}
+        text="Sign Up"
+        onClick={handleSignUp}
+        variant="my-4"
+      />
+
+      <div className="flex items-center justify-end gap-x-1">
+        <Typography variant="caption">Already have an account?</Typography>
+        <Button
+          text="Sign In"
+          onClick={() => router.push(`/${locale}/sign-in`)}
+          variant="underline bg-transparent hover:bg-transparent !w-fit !px-0 !py-1 !text-secondary text-xs"
         />
       </div>
-      <div className='w-11/12 mx-auto md:w-1/2'>
-        <div className='p-4 md:p-12 w-full md:max-w-xl border-0.5 rounded-lg shadow-lg'>
-          <Typography text="Create an account" variant="text-xl md:text-4xl font-semibold mb-1" />
-          <Typography text="Please fill in the form below to create an account." variant="text-base md:text-lg mb-6 md:mb-12" />
-          <div className='flex gap-x-2'>
-            <div className='w-1/2'>
-              <InputWithLabel label="First Name" type="text" placeholder="Enter your first name" onChange={(e) => handleChange("firstName", e.target.value)} value={data.firstName || ""} />
-            </div>
-            <div className='w-1/2'>
-              <InputWithLabel label="Last Name" type="text" placeholder="Enter your last name" onChange={(e) => handleChange("lastName", e.target.value)} value={data.lastName || ""} />
-            </div>
-          </div>
-          <InputWithLabel label="Email" type="email" placeholder="Enter your email" onChange={(e) => handleChange("email", e.target.value)} value={data.email} />
-          <InputWithLabel label="Password" type="password" showEye placeholder="Enter your password" onChange={(e) => handleChange("password", e.target.value)} value={data.password} />
-          <Button isLoading={loading} text="Sign Up" onClick={handleSignUp} variant="my-2 md:my-4" />
-          <div className='flex flex-row gap-x-1 justify-end'>
-            <Typography text="Already have an account?" variant="text-sm ml-auto w-fit" />
-            <div className='flex justify-end items-center'>
-              <Button text="Sign In" onClick={() => router.push(`/${locale}/sign-in`)} variant="underline bg-transparent hover:bg-transparent !w-fit !px-0 !py-2 !text-secondary text-xs" />
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  )
-}
+    </AuthWrapper>
+  );
+};
 
 export { SignUp };

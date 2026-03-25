@@ -107,7 +107,7 @@ function ClientPage() {
         title="Clients"
         description="Here you can manage and create new clients for your organization."
       />
-      <div className="mx-auto my-5 flex w-11/12 flex-wrap gap-4">
+      <div className="mx-auto my-5 grid w-11/12 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <CreateNewClientCard onClick={toggleCreateClientModal} />
         {clients.map((company, index) => (
           <ClientInfoCard

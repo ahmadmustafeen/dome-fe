@@ -1,11 +1,13 @@
 "use client";
-import Image from "next/image";
+
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
 import { Button, InputWithLabel, Typography } from "@/components";
 import { authService } from "@/services/auth-service";
+
+import { AuthWrapper } from "./AuthWrapper";
 
 const ResetPassword = () => {
   const router = useRouter();
@@ -49,107 +51,92 @@ const ResetPassword = () => {
 
   if (!token) {
     return (
-      <div className="flex min-h-screen min-w-screen items-center justify-center">
-        <div className="p-8 text-center">
-          <Typography
-            text="Invalid Reset Link"
-            variant="text-2xl font-semibold mb-4"
-          />
-          <p className="mb-6 text-gray-500">
-            This password reset link is invalid or has already been used.
-          </p>
-          <Button
-            text="Request New Link"
-            onClick={() => router.push("/en/forget-password")}
-            variant=""
-          />
-        </div>
-      </div>
+      <AuthWrapper
+        image="/assets/gifs/Resetpassword.gif"
+        imageAlt="Reset password illustration"
+      >
+        <Typography variant="h2">Invalid Reset Link</Typography>
+        <Typography variant="p" className="mt-1 mb-6 text-gray-500">
+          This password reset link is invalid or has already been used.
+        </Typography>
+        <Button
+          text="Request New Link"
+          onClick={() => router.push("/en/forget-password")}
+          variant="my-4"
+        />
+      </AuthWrapper>
     );
   }
 
   return (
-    <div className="flex min-h-screen min-w-screen flex-col items-center justify-center md:flex-row">
-      <div className="flex w-full items-center justify-center md:w-1/2">
-        <Image
-          src="/assets/gifs/Resetpassword.gif"
-          alt="Reset Password"
-          width={400}
-          height={400}
-        />
-      </div>
-      <div className="w-full md:w-1/2">
-        <div className="w-full rounded-lg p-4 shadow-lg md:max-w-xl md:p-12">
-          {success ? (
-            <>
-              <Typography
-                text="Password Reset!"
-                variant="text-xl md:text-4xl font-semibold mb-1"
+    <AuthWrapper
+      image="/assets/gifs/Resetpassword.gif"
+      imageAlt="Reset password illustration"
+    >
+      {success ? (
+        <>
+          <Typography variant="h2">Password Reset!</Typography>
+          <Typography variant="p" className="mt-1 mb-6 text-gray-500">
+            Your password has been reset successfully.
+          </Typography>
+
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+            <svg
+              className="h-8 w-8 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
               />
-              <Typography
-                text="Your password has been reset successfully."
-                variant="text-base md:text-lg mb-6 md:mb-12"
-              />
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-                <svg
-                  className="h-8 w-8 text-green-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
-              <Button
-                text="Back to Sign In"
-                onClick={() => router.push("/en/sign-in")}
-                variant="my-2 md:my-4"
-              />
-            </>
-          ) : (
-            <>
-              <Typography
-                text="Reset Password"
-                variant="text-xl md:text-4xl font-semibold mb-1"
-              />
-              <Typography
-                text="Please fill in the form below to set your new password."
-                variant="text-base md:text-lg mb-6 md:mb-12"
-              />
-              <InputWithLabel
-                label="New Password"
-                type="password"
-                placeholder="Enter your new password (min. 8 characters)"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                showEye
-                disabled={loading}
-              />
-              <InputWithLabel
-                label="Confirm Password"
-                type="password"
-                placeholder="Confirm your new password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                showEye
-                disabled={loading}
-              />
-              <Button
-                text={loading ? "Resetting..." : "Reset Password"}
-                onClick={handleSubmit}
-                variant="my-2 md:my-4"
-                isLoading={loading}
-              />
-            </>
-          )}
-        </div>
-      </div>
-    </div>
+            </svg>
+          </div>
+
+          <Button
+            text="Back to Sign In"
+            onClick={() => router.push("/en/sign-in")}
+            variant="my-4"
+          />
+        </>
+      ) : (
+        <>
+          <Typography variant="h2">Reset Password</Typography>
+          <Typography variant="p" className="mt-1 mb-6 text-gray-500">
+            Please enter and confirm your new password below.
+          </Typography>
+
+          <InputWithLabel
+            label="New Password"
+            type="password"
+            placeholder="Enter your new password (min. 8 characters)"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            showEye
+            disabled={loading}
+          />
+          <InputWithLabel
+            label="Confirm Password"
+            type="password"
+            placeholder="Confirm your new password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            showEye
+            disabled={loading}
+          />
+
+          <Button
+            text={loading ? "Resetting..." : "Reset Password"}
+            onClick={handleSubmit}
+            variant="my-4"
+            isLoading={loading}
+          />
+        </>
+      )}
+    </AuthWrapper>
   );
 };
 

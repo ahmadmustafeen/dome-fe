@@ -1,9 +1,11 @@
+import "@/styles/global.css";
+
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
+import * as React from "react";
 import { ToastContainer } from "react-toastify";
 
 import { routing } from "@/libs/I18nRouting";
-import "@/styles/global.css";
 
 export const metadata: Metadata = {
   icons: [

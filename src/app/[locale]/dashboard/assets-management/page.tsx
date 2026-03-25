@@ -1,8 +1,5 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { toast } from "react-toastify";
-import { useTranslations } from "next-intl";
-
+import type { RowSelectionState } from "@tanstack/react-table";
 import {
   ChevronDown,
   ChevronsUpDown,
@@ -10,25 +7,33 @@ import {
   Search,
   X,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { toast } from "react-toastify";
 
 import type { Asset } from "@/components";
 import {
   AppButton,
   CreateAssetModal,
   DeleteConfirmationScreen,
+  Pagination,
   ScreenLoader,
+  SectionWrapper,
+  Typography,
   UploadAssetModal,
 } from "@/components";
-import DynamicTable from "@/components/table/DynamicTable";
+import { DataTable } from "@/components/DataTable";
+import { getAssetColumns } from "@/components/sections/asset/AssetTableColumns";
 import {
   ASSET_DEFAULT_SORT_BY,
   ASSET_DEFAULT_SORT_ORDER,
   ASSET_SORT_FIELDS,
 } from "@/constants/assets";
-import { AssetTableHeaders } from "@/constants/data";
 import { useAppContext } from "@/context/AppContext";
 import { assetService } from "@/services/asset-service";
 import type { SortOrder } from "@/types/asset";
+
+const PAGE_SIZE = 10;
 
 export default function AssetManagementPage() {
   const t = useTranslations("AssetsManagement");
@@ -45,13 +50,22 @@ export default function AssetManagementPage() {
   const [showCreateAsset, setShowCreateAsset] = useState(false);
   const [showUploadAssets, setShowUploadAssets] = useState(false);
   const [isAssetsLoading, setIsAssetsLoading] = useState(false);
-  const [selectedAssets, setSelectedAssets] = useState(new Set<string>());
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState(ASSET_DEFAULT_SORT_BY);
   const [sortOrder, setSortOrder] = useState<SortOrder>(
     ASSET_DEFAULT_SORT_ORDER,
   );
   const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  /** IDs of currently-selected rows (derived from TanStack selection state). */
+  const selectedIds = useMemo(
+    () =>
+      Object.entries(rowSelection)
+        .filter(([, v]) => v)
+        .map(([k]) => k),
+    [rowSelection],
+  );
 
   const fetchAssets = useCallback(
     async (
@@ -100,6 +114,7 @@ export default function AssetManagementPage() {
   const handlePageChange = (page: number) => {
     if (site?._id) {
       setCurrentPage(page);
+      setRowSelection({});
       fetchAssets(site._id, page);
     }
   };
@@ -112,6 +127,7 @@ export default function AssetManagementPage() {
     searchDebounceRef.current = setTimeout(() => {
       if (site?._id) {
         setCurrentPage(1);
+        setRowSelection({});
         fetchAssets(site._id, 1, value, sortBy, sortOrder);
       }
     }, 400);
@@ -139,6 +155,7 @@ export default function AssetManagementPage() {
     if (site?._id) {
       fetchAssets(site._id);
       setCurrentPage(1);
+      setRowSelection({});
     }
   };
 
@@ -205,15 +222,39 @@ export default function AssetManagementPage() {
 
   const handleConfirmDeleteAll = () => {
     try {
-      assetService.deleteBulkAsset({ ids: Array.from(selectedAssets) });
+      assetService.deleteBulkAsset({ ids: selectedIds });
       toast.success(t("toast_delete_all_success"));
-      setSelectedAssets(new Set());
+      setRowSelection({});
       setConfirmDeleteAllAssets(false);
       refetchAssets();
     } catch (err) {
       toast.error(`Something went wrong! ${err}`);
     }
   };
+
+  const columns = useMemo(
+    () =>
+      getAssetColumns({
+        onEdit: handleEditPress,
+        onDelete: (id) => setDeleteId(id),
+        labels: {
+          colAssetId: "Asset Id",
+          colAssetName: "Asset Name",
+          colCategory: "Category",
+          colSubCategory: "Sub Category",
+          colEquipmentName: "Equipment Name",
+          colMake: "Make",
+          colModel: "Model",
+          colLocation: "Location",
+          colSerial: "Serial Number",
+          colActions: "Actions",
+          actionEdit: "Edit",
+          actionDelete: "Delete",
+        },
+      }),
+
+    [],
+  );
 
   return (
     <div className="h-full">
@@ -247,7 +288,7 @@ export default function AssetManagementPage() {
           description={t("delete_all_description")}
           handleCancel={() => {
             setConfirmDeleteAllAssets(false);
-            setSelectedAssets(new Set());
+            setRowSelection({});
           }}
           handleContinue={handleConfirmDeleteAll}
         />
@@ -259,21 +300,19 @@ export default function AssetManagementPage() {
         />
       )}
 
-      <div className="p-8">
+      <SectionWrapper>
         {/* Header */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-black">
-              {t("title")}
-            </h1>
-            <p className="mt-1 text-sm text-gray-500">
+            <Typography variant="h1">{t("title")}</Typography>
+            <Typography variant="p" className="mt-1 text-gray-500">
               {totalAssets !== 1
                 ? t("assets_found_other", { count: totalAssets })
                 : t("assets_found_one", { count: totalAssets })}
-            </p>
+            </Typography>
           </div>
           <div className="flex gap-x-2">
-            {selectedAssets.size > 0 && (
+            {selectedIds.length > 0 && (
               <AppButton
                 title={t("btn_delete_selected")}
                 onClick={() => setConfirmDeleteAllAssets(true)}
@@ -314,9 +353,9 @@ export default function AssetManagementPage() {
             )}
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm font-medium text-gray-500">
+            <Typography variant="label" className="text-gray-500">
               {t("sort_label")}
-            </span>
+            </Typography>
             {ASSET_SORT_FIELDS.map((field) => (
               <button
                 key={field.value}
@@ -342,19 +381,29 @@ export default function AssetManagementPage() {
           </div>
         </div>
 
-        <DynamicTable
-          selectedIds={selectedAssets}
+        {/* Table */}
+        <div className="overflow-hidden rounded-lg border border-slate-800 shadow-xl shadow-black/20">
+          <DataTable
+            columns={columns}
+            data={assets}
+            getRowId={(row) => row._id}
+            loading={isAssetsLoading}
+            noDataMessage="No assets found."
+            rowSelection={rowSelection}
+            onRowSelectionStateChange={setRowSelection}
+            bodyRowClassName="border-b border-slate-200 odd:bg-white even:bg-slate-50 hover:bg-primary/5 transition-colors"
+          />
+        </div>
+
+        {/* Pagination */}
+        <Pagination
+          totalPages={totalPages}
           currentPage={currentPage}
-          totalPage={totalPages}
-          changePage={handlePageChange}
-          handleEditPress={handleEditPress}
-          handleDeletePress={(id) => setDeleteId(id)}
+          onPageChange={handlePageChange}
           totalCount={totalAssets}
-          setSelectedIds={setSelectedAssets}
-          columns={AssetTableHeaders}
-          data={assets as unknown as { [key: string]: string }[]}
+          pageSize={PAGE_SIZE}
         />
-      </div>
+      </SectionWrapper>
     </div>
   );
 }

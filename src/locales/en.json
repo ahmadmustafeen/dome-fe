@@ -75,6 +75,8 @@
   },
   "AssetsManagement": {
     "title": "Assets",
+    "upload_loader_heading": "Uploading XLSX",
+    "upload_loader_description": "Please wait, while we upload and bulk create.",
     "assets_found_one": "{count} asset found",
     "assets_found_other": "{count} assets found",
     "btn_delete_selected": "Delete Asset(s)",
@@ -111,6 +113,8 @@
   },
   "DocumentManagement": {
     "title": "Document Management",
+    "loader_heading": "Loading",
+    "loader_description": "Documents are loading, please wait",
     "btn_upload": "Upload Document",
     "search_placeholder": "Search documents...",
     "filter_all_types": "All Types",
@@ -136,6 +140,8 @@
   },
   "MaintenanceSchedule": {
     "title": "Maintenance Schedule",
+    "loader_heading": "Generating Schedule",
+    "loader_description": "AI is analysing your uploaded assets and documents…",
     "subtitle": "Maintenance Schedule",
     "btn_generate": "Generate Schedule",
     "btn_regenerate": "Regenerate Schedule",
@@ -190,5 +196,13 @@
     "back": "Back to Category",
     "placeholder_heading": "Asset Detail",
     "placeholder_description": "Full asset detail content will be built in the next UI phase."
+  },
+  "SitePage": {
+    "loader_heading": "Loading",
+    "loader_description": "Sites are loading, please wait"
+  },
+  "ClientPage": {
+    "loader_heading": "Loading",
+    "loader_description": "Clients are loading, please wait"
   }
 }

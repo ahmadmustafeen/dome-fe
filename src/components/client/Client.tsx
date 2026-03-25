@@ -1,10 +1,11 @@
 "use client";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 
+import type { Client } from "@/components";
 import {
-  Client,
   ClientInfoCard,
   CreateClientModal,
   CreateNewClientCard,
@@ -16,6 +17,7 @@ import { useAppContext } from "@/context/AppContext";
 import { clientService } from "@/services/client-service";
 
 function ClientPage() {
+  const t = useTranslations("ClientPage");
   const router = useRouter();
   const { setClient } = useAppContext();
   const [isClientsLoading, setIsClientLoading] = useState(false);
@@ -89,8 +91,8 @@ function ClientPage() {
       )}
       {isClientsLoading && (
         <ScreenLoader
-          heading="Loading"
-          description="Clients are loading, please wait"
+          heading={t("loader_heading")}
+          description={t("loader_description")}
         />
       )}
       {showCreateClientModal && (
@@ -105,7 +107,7 @@ function ClientPage() {
         title="Clients"
         description="Here you can manage and create new clients for your organization."
       />
-      <div className="my-5 w-11/12 mx-auto flex flex-wrap gap-4">
+      <div className="mx-auto my-5 flex w-11/12 flex-wrap gap-4">
         <CreateNewClientCard onClick={toggleCreateClientModal} />
         {clients.map((company, index) => (
           <ClientInfoCard

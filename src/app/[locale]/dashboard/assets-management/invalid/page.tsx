@@ -1,5 +1,6 @@
 "use client";
 import type { RowSelectionState } from "@tanstack/react-table";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -21,6 +22,7 @@ import { assetService } from "@/services/asset-service";
 const PAGE_SIZE = 10;
 
 export default function InvalidAssetsPage() {
+  const t = useTranslations("InvalidAssets");
   const { site } = useAppContext();
 
   const [files, setFiles] = useState<File[]>([]);
@@ -227,8 +229,8 @@ export default function InvalidAssetsPage() {
       )}
       {isAssetsLoading && (
         <ScreenLoader
-          heading="Loading"
-          description="Assets are loading, please wait"
+          heading={t("loader_heading")}
+          description={t("loader_description")}
         />
       )}
 

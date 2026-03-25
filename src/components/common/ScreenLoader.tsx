@@ -1,36 +1,35 @@
 import Image from "next/image";
 
-interface iScreenLoader {
+import { Typography } from "./Typography";
+
+interface ScreenLoaderProps {
   heading: string;
   description: string;
   containerClass?: string;
 }
+
 const ScreenLoader = ({
   heading,
   description,
   containerClass,
-}: iScreenLoader) => {
+}: ScreenLoaderProps) => {
   return (
-    <div
-      className={`fixed top-0 left-0 z-30 flex h-screen w-screen items-center justify-center bg-black/30 `}
-    >
+    <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/30 px-4">
       <div
-        className={`flex min-h-60 min-w-xl flex-col items-center rounded-2xl bg-white p-3 ${containerClass}`}
+        className={`flex w-full max-w-lg flex-col items-center rounded-2xl bg-white shadow-xl ${containerClass ?? ""}`}
       >
-        <div className="w-full border-b-2 border-gray-200 text-center">
-          <h1 className="text-heading mb-2 text-lg font-bold tracking-tight md:text-xl lg:text-3xl">
-            {heading}
-          </h1>
+        <div className="w-full border-b border-gray-200 px-6 py-4 text-center sm:px-8 sm:py-5">
+          <Typography variant="h2">{heading}</Typography>
         </div>
-        <div className="flex h-40 flex-col items-center justify-center">
-          <p className="text-body text-base font-normal lg:text-lg ">
+        <div className="flex flex-col items-center gap-3 px-6 py-6 sm:px-8 sm:py-8">
+          <Typography variant="p" className="text-center text-gray-500">
             {description}
-          </p>
+          </Typography>
           <Image
             src="/assets/gifs/Loading.gif"
             alt="Loading..."
-            width={100}
-            height={100}
+            width={80}
+            height={80}
           />
         </div>
       </div>

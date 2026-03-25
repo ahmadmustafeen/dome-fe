@@ -190,8 +190,8 @@ export default function MaintenanceSchedulePage() {
     <div className="h-full">
       {isGenerating && (
         <ScreenLoader
-          heading="Generating Schedule"
-          description="AI is analysing your uploaded assets and documents…"
+          heading={t("loader_heading")}
+          description={t("loader_description")}
         />
       )}
 

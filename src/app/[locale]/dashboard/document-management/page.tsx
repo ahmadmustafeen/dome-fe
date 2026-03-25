@@ -207,8 +207,8 @@ export default function DocumentManagementPage() {
       )}
       {isLoading && (
         <ScreenLoader
-          heading="Loading"
-          description="Documents are loading, please wait"
+          heading={t("loader_heading")}
+          description={t("loader_description")}
         />
       )}
 

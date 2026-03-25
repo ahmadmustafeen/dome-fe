@@ -1,7 +1,8 @@
 "use client";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 
 import type { Site } from "@/components";
 import {
@@ -16,6 +17,7 @@ import { useAppContext } from "@/context/AppContext";
 import { siteService } from "@/services/site-service";
 
 function SitePage() {
+  const t = useTranslations("SitePage");
   const { setSite, client } = useAppContext();
   const router = useRouter();
   const [sites, setSites] = useState<Site[]>([]);
@@ -95,8 +97,8 @@ function SitePage() {
       )}
       {isSiteLoading && (
         <ScreenLoader
-          heading="Loading"
-          description="Sites are loading, please wait"
+          heading={t("loader_heading")}
+          description={t("loader_description")}
         />
       )}
       {showCreateSiteModal && client?._id && (

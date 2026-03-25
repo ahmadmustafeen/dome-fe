@@ -1,14 +1,24 @@
-'use client'
-import { useCallback, useRef, useState } from "react";
+"use client";
 import { X } from "lucide-react";
-import { AppButton, ScreenLoader } from "../common";
+import { useTranslations } from "next-intl";
+import type * as React from "react";
+import { useCallback, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { assetService } from "@/services/asset-service";
+
 import { useAppContext } from "@/context/AppContext";
+import { assetService } from "@/services/asset-service";
 
+import { AppButton, ScreenLoader } from "../common";
 
-const UploadAssetModal = ({ toggleModal, refetchAssets }: { toggleModal: () => void, refetchAssets: () => void, }) => {
-  const { site } = useAppContext()
+const UploadAssetModal = ({
+  toggleModal,
+  refetchAssets,
+}: {
+  toggleModal: () => void;
+  refetchAssets: () => void;
+}) => {
+  const t = useTranslations("AssetsManagement");
+  const { site } = useAppContext();
   const [isDragging, setIsDragging] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -27,74 +37,86 @@ const UploadAssetModal = ({ toggleModal, refetchAssets }: { toggleModal: () => v
     e.preventDefault();
     setIsDragging(false);
     const dropped = e.dataTransfer?.files[0];
-    if (dropped) setFile(dropped);
+    if (dropped) {
+      setFile(dropped);
+    }
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
-    if (selected) setFile(selected);
+    if (selected) {
+      setFile(selected);
+    }
   };
 
   const handleRemove = () => {
     setFile(null);
-    if (inputRef.current) inputRef.current.value = "";
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
   };
-
-
-
 
   const [loading, setLoading] = useState(false);
 
   const handleToggle = () => {
     toggleModal();
-  }
+  };
 
   const handleSubmit = async () => {
     setLoading(true);
     if (!site?._id) {
-      toast.error("Please reselect site, SiteId not found.")
-      return
+      toast.error("Please reselect site, SiteId not found.");
+      return;
     }
     try {
-      await assetService.uploadAssets(site._id, file!) as Response;
-      toast.success('Asset created successfully');
+      (await assetService.uploadAssets(site._id, file!)) as Response;
+      toast.success("Asset created successfully");
       handleToggle();
       refetchAssets();
-    }
-    catch (err) {
+    } catch (err) {
       console.log({ err });
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <>
-      {loading ? <ScreenLoader heading="Uploading XLSX" description="Please wait, while we upload and bulk create." containerClass="w-lg" /> : null}
-      <div className="fixed z-10 h-screen w-screen flex justify-center items-center bg-black/50 text-white">
-        <div className="w-3xl bg-white rounded-xl p-4 relative  ">
-          <X onClick={handleToggle} className="absolute text-xl text-black top-4 right-4 cursor-pointer rounded-full w-8 h-8 p-2 hover:bg-primary hover:text-white" />
+      {loading ? (
+        <ScreenLoader
+          heading={t("upload_loader_heading")}
+          description={t("upload_loader_description")}
+        />
+      ) : null}
+      <div className="fixed z-10 flex h-screen w-screen items-center justify-center bg-black/50 text-white">
+        <div className="relative w-3xl rounded-xl bg-white p-4  ">
+          <X
+            onClick={handleToggle}
+            className="absolute top-4 right-4 h-8 w-8 cursor-pointer rounded-full p-2 text-xl text-black hover:bg-primary hover:text-white"
+          />
 
-          <h1 className="text-2xl text-center mt-5 text-primary font-bold">Upload Asset File</h1>
+          <h1 className="mt-5 text-center text-2xl font-bold text-primary">
+            Upload Asset File
+          </h1>
           <div
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             onClick={() => !file && inputRef.current?.click()}
             className={`
-            relative rounded-xl mt-6 border-2 border-dashed transition-all duration-300 cursor-pointer select-none
-            ${file
-                ? "border-stone-600 bg-primary cursor-default"
+            relative mt-6 cursor-pointer rounded-xl border-2 border-dashed transition-all duration-300 select-none
+            ${
+              file
+                ? "cursor-default border-stone-600 bg-primary"
                 : isDragging
-                  ? "border-amber-400 bg-amber-400/5 scale-[1.01]"
+                  ? "scale-[1.01] border-amber-400 bg-amber-400/5"
                   : "border-stone-700 bg-primary hover:border-stone-500 hover:bg-primary/80"
-              }
+            }
           `}
           >
             {/* Glow effect when dragging */}
             {isDragging && (
-              <div className="absolute inset-0 rounded-xl bg-secondary/30 pointer-events-none" />
+              <div className="pointer-events-none absolute inset-0 rounded-xl bg-secondary/30" />
             )}
 
             <div className="p-8">
@@ -103,8 +125,8 @@ const UploadAssetModal = ({ toggleModal, refetchAssets }: { toggleModal: () => v
                 <div className="flex flex-col items-center gap-4 text-center">
                   <div
                     className={`
-                    w-14 h-14 rounded-full flex items-center justify-center text-2xl transition-all duration-300
-                    ${isDragging ? "bg-secondary/50 scale-110" : "bg-secondary"}
+                    flex h-14 w-14 items-center justify-center rounded-full text-2xl transition-all duration-300
+                    ${isDragging ? "scale-110 bg-secondary/50" : "bg-secondary"}
                   `}
                   >
                     {isDragging ? "✦" : "↑"}
@@ -116,9 +138,9 @@ const UploadAssetModal = ({ toggleModal, refetchAssets }: { toggleModal: () => v
                     >
                       {isDragging ? "Release to upload" : "Drop your file here"}
                     </p>
-                    <p className="text-xs text-white mt-1">
+                    <p className="mt-1 text-xs text-white">
                       or{" "}
-                      <span className="text-white underline underline-offset-2 cursor-pointer hover:text-stone-200 transition-colors">
+                      <span className="cursor-pointer text-white underline underline-offset-2 transition-colors hover:text-stone-200">
                         browse files
                       </span>
                     </p>
@@ -127,20 +149,21 @@ const UploadAssetModal = ({ toggleModal, refetchAssets }: { toggleModal: () => v
               ) : (
                 /* File preview */
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-stone-800 flex items-center justify-center text-xl flex-shrink-0">
-                  </div>
-                  <div className="flex-1 min-w-0">
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-stone-800 text-xl"></div>
+                  <div className="min-w-0 flex-1">
                     <p
-                      className="text-sm text-stone-200 font-medium truncate"
+                      className="truncate text-sm font-medium text-stone-200"
                       style={{ fontFamily: "'Courier New', monospace" }}
                     >
                       {file.name}
                     </p>
-
                   </div>
                   <button
-                    onClick={(e) => { e.stopPropagation(); handleRemove(); }}
-                    className="w-7 h-7 rounded-full bg-stone-800 hover:bg-red-900/60 flex items-center justify-center text-stone-500 hover:text-red-400 transition-all duration-200 flex-shrink-0 text-xs"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemove();
+                    }}
+                    className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-stone-800 text-xs text-stone-500 transition-all duration-200 hover:bg-red-900/60 hover:text-red-400"
                   >
                     ✕
                   </button>
@@ -155,16 +178,20 @@ const UploadAssetModal = ({ toggleModal, refetchAssets }: { toggleModal: () => v
               onChange={handleChange}
               className="hidden"
             />
-
           </div>
-          {file ? <div className="w-full flex justify-center items-center pt-4">
-            <AppButton title="Upload" onClick={handleSubmit} variant="secondary" />
-          </div> : null}
+          {file ? (
+            <div className="flex w-full items-center justify-center pt-4">
+              <AppButton
+                title="Upload"
+                onClick={handleSubmit}
+                variant="secondary"
+              />
+            </div>
+          ) : null}
         </div>
       </div>
     </>
+  );
+};
 
-  )
-}
-
-export { UploadAssetModal }
+export { UploadAssetModal };

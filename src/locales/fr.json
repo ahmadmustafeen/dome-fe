@@ -75,6 +75,8 @@
   },
   "AssetsManagement": {
     "title": "Actifs",
+    "upload_loader_heading": "Importation du fichier XLSX",
+    "upload_loader_description": "Veuillez patienter pendant l'importation en masse.",
     "assets_found_one": "{count} actif trouvé",
     "assets_found_other": "{count} actifs trouvés",
     "btn_delete_selected": "Supprimer les actifs",
@@ -111,6 +113,8 @@
   },
   "DocumentManagement": {
     "title": "Gestion des documents",
+    "loader_heading": "Chargement",
+    "loader_description": "Les documents se chargent, veuillez patienter",
     "btn_upload": "Téléverser un document",
     "search_placeholder": "Rechercher des documents...",
     "filter_all_types": "Tous les types",
@@ -136,6 +140,8 @@
   },
   "MaintenanceSchedule": {
     "title": "Planning de Maintenance",
+    "loader_heading": "Génération du planning",
+    "loader_description": "L'IA analyse vos actifs et documents téléversés…",
     "subtitle": "Planning de Maintenance",
     "btn_generate": "Générer le planning",
     "btn_regenerate": "Régénérer le planning",
@@ -190,5 +196,13 @@
     "back": "Retour à la catégorie",
     "placeholder_heading": "Détail de l'actif",
     "placeholder_description": "Le contenu complet du détail de l'actif sera développé lors de la prochaine phase."
+  },
+  "SitePage": {
+    "loader_heading": "Chargement",
+    "loader_description": "Les sites se chargent, veuillez patienter"
+  },
+  "ClientPage": {
+    "loader_heading": "Chargement",
+    "loader_description": "Les clients se chargent, veuillez patienter"
   }
 }

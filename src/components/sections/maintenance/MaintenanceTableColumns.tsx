@@ -1,7 +1,8 @@
 "use client";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Check, ChevronDown, ChevronUp } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 
+import { AppButton } from "@/components/common";
 import type { MaintenanceRow } from "@/types/maintenance-schedule";
 
 // ── Small cell helpers ────────────────────────────────────────────────────────
@@ -36,19 +37,27 @@ type Labels = {
   colTotalEops: string;
   colTotalSops: string;
   colDetails: string;
+  colViewDetails: string;
   btnShowDetails: string;
   btnHideDetails: string;
+  btnViewDetails: string;
 };
 
-export const getMaintenanceColumns = (
-  labels: Labels,
-): ColumnDef<MaintenanceRow>[] => [
+type MaintenanceColumnsConfig = {
+  labels: Labels;
+  onViewDetails: (id: string) => void;
+};
+
+export const getMaintenanceColumns = ({
+  labels,
+  onViewDetails,
+}: MaintenanceColumnsConfig): ColumnDef<MaintenanceRow>[] => [
   {
     id: "category",
     accessorKey: "category",
     header: labels.colCategory,
     cell: ({ row }) => (
-      <span className="min-w-[160px] font-medium text-gray-900 whitespace-nowrap">
+      <span className="min-w-[160px] font-medium whitespace-nowrap text-gray-900">
         {row.original.category}
       </span>
     ),
@@ -142,30 +151,38 @@ export const getMaintenanceColumns = (
       </div>
     ),
   },
-  // ── Expand toggle ────────────────────────────────────────────────────────────
+  // ── Expand toggle ─────────────────────────────────────────────────────────
   {
     id: "details",
     header: labels.colDetails,
     cell: ({ row }) => (
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          row.toggleExpanded();
-        }}
-        className="flex cursor-pointer items-center gap-1 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:border-primary hover:bg-primary hover:text-white"
-      >
-        {row.getIsExpanded() ? (
-          <>
-            <ChevronUp className="h-3 w-3" />
-            {labels.btnHideDetails}
-          </>
-        ) : (
-          <>
-            <ChevronDown className="h-3 w-3" />
-            {labels.btnShowDetails}
-          </>
-        )}
-      </button>
+      <AppButton
+        variant="default"
+        icon={
+          row.getIsExpanded() ? (
+            <ChevronUp className="size-5" />
+          ) : (
+            <ChevronDown className="size-5" />
+          )
+        }
+        title={
+          row.getIsExpanded() ? labels.btnHideDetails : labels.btnShowDetails
+        }
+        onClick={() => row.toggleExpanded()}
+      />
+    ),
+  },
+  // ── View Details navigation ──────────────────────────────────────────────
+  {
+    id: "viewDetails",
+    header: labels.colViewDetails,
+    cell: ({ row }) => (
+      <AppButton
+        variant="secondary"
+        icon={<ExternalLink className="size-5" />}
+        title={labels.btnViewDetails}
+        onClick={() => onViewDetails(row.original.id)}
+      />
     ),
   },
 ];

@@ -156,17 +156,39 @@
     "col_total_eops": "Total EOPs",
     "col_total_sops": "Total SOPs",
     "col_details": "Details",
+    "col_view_details": "Category",
     "details_mops": "MOP Requirements",
     "details_eops": "EOP Requirements",
     "details_sops": "SOP Requirements",
     "no_requirements": "None required",
     "btn_show_details": "Show Details",
     "btn_hide_details": "Hide Details",
+    "btn_view_details": "View Details",
     "summary_generated": "Generated",
     "summary_groups": "Equipment Groups",
     "summary_assets": "Total Assets",
     "summary_mops": "Total MOPs",
     "summary_eops": "Total EOPs",
     "summary_sops": "Total SOPs"
+  },
+  "MaintenanceCategoryDetail": {
+    "back": "Back to Schedule",
+    "assets_count_one": "{count} asset",
+    "assets_count_other": "{count} assets",
+    "search_placeholder": "Search assets...",
+    "col_asset_id": "Asset ID",
+    "col_asset_name": "Asset Name",
+    "col_location": "Location",
+    "col_serial": "Serial Number",
+    "col_mops": "MOPs",
+    "col_eops": "EOPs",
+    "col_sops": "SOPs",
+    "empty_heading": "No assets found",
+    "empty_description": "No assets are assigned to this category yet."
+  },
+  "MaintenanceAssetDetail": {
+    "back": "Back to Category",
+    "placeholder_heading": "Asset Detail",
+    "placeholder_description": "Full asset detail content will be built in the next UI phase."
   }
 }

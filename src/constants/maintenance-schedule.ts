@@ -1,10 +1,5 @@
 import type { MaintenanceScheduleData } from "@/types/maintenance-schedule";
 
-/**
- * Dummy maintenance schedule used until the AI generation API is available.
- * Each row represents a grouped asset category with frequency flags and
- * MOP / EOP / SOP requirement descriptions.
- */
 export const DUMMY_MAINTENANCE_SCHEDULE: MaintenanceScheduleData = {
   generatedAt: new Date().toISOString(),
   rows: [
@@ -25,16 +20,16 @@ export const DUMMY_MAINTENANCE_SCHEDULE: MaintenanceScheduleData = {
       totalEOPs: 1,
       totalSOPs: 2,
       mopRequirements: [
-        "MOP-AHU-01: Monthly filter inspection and replacement procedure",
-        "MOP-AHU-02: Quarterly belt tension and lubrication procedure",
-        "MOP-AHU-03: Annual coil cleaning and refrigerant charge verification",
+        { id: "mop-ahu-01", description: "MOP-AHU-01: Monthly filter inspection and replacement procedure", generated: true, documentUrl: "https://example.com/docs/mop-ahu-01.pdf" },
+        { id: "mop-ahu-02", description: "MOP-AHU-02: Quarterly belt tension and lubrication procedure", generated: true, documentUrl: "https://example.com/docs/mop-ahu-02.pdf" },
+        { id: "mop-ahu-03", description: "MOP-AHU-03: Annual coil cleaning and refrigerant charge verification", generated: false },
       ],
       eopRequirements: [
-        "EOP-AHU-01: Emergency shutdown and isolation procedure for AHU failure",
+        { id: "eop-ahu-01", description: "EOP-AHU-01: Emergency shutdown and isolation procedure for AHU failure", generated: false },
       ],
       sopRequirements: [
-        "SOP-AHU-01: Standard startup and commissioning checklist",
-        "SOP-AHU-02: Alarm response and escalation procedure",
+        { id: "sop-ahu-01", description: "SOP-AHU-01: Standard startup and commissioning checklist", generated: true, documentUrl: "https://example.com/docs/sop-ahu-01.pdf" },
+        { id: "sop-ahu-02", description: "SOP-AHU-02: Alarm response and escalation procedure", generated: false },
       ],
     },
     {
@@ -54,16 +49,16 @@ export const DUMMY_MAINTENANCE_SCHEDULE: MaintenanceScheduleData = {
       totalEOPs: 2,
       totalSOPs: 1,
       mopRequirements: [
-        "MOP-ATS-01: Quarterly operation test under load with utility and generator",
-        "MOP-ATS-02: Annual contact inspection, cleaning and torque verification",
-        "MOP-ATS-03: Bi-annual full maintenance overhaul and firmware update",
+        { id: "mop-ats-01", description: "MOP-ATS-01: Quarterly operation test under load with utility and generator", generated: true, documentUrl: "https://example.com/docs/mop-ats-01.pdf" },
+        { id: "mop-ats-02", description: "MOP-ATS-02: Annual contact inspection, cleaning and torque verification", generated: false },
+        { id: "mop-ats-03", description: "MOP-ATS-03: Bi-annual full maintenance overhaul and firmware update", generated: false },
       ],
       eopRequirements: [
-        "EOP-ATS-01: Manual transfer procedure during utility failure",
-        "EOP-ATS-02: ATS failure isolation and bypass to manual operation",
+        { id: "eop-ats-01", description: "EOP-ATS-01: Manual transfer procedure during utility failure", generated: true, documentUrl: "https://example.com/docs/eop-ats-01.pdf" },
+        { id: "eop-ats-02", description: "EOP-ATS-02: ATS failure isolation and bypass to manual operation", generated: false },
       ],
       sopRequirements: [
-        "SOP-ATS-01: Transfer sequence verification and logging procedure",
+        { id: "sop-ats-01", description: "SOP-ATS-01: Transfer sequence verification and logging procedure", generated: false },
       ],
     },
     {
@@ -83,11 +78,11 @@ export const DUMMY_MAINTENANCE_SCHEDULE: MaintenanceScheduleData = {
       totalEOPs: 0,
       totalSOPs: 1,
       mopRequirements: [
-        "MOP-BFP-01: Annual backflow preventer test, inspection and certification",
+        { id: "mop-bfp-01", description: "MOP-BFP-01: Annual backflow preventer test, inspection and certification", generated: true, documentUrl: "https://example.com/docs/mop-bfp-01.pdf" },
       ],
       eopRequirements: [],
       sopRequirements: [
-        "SOP-BFP-01: Isolation and bypass procedure for backflow preventer servicing",
+        { id: "sop-bfp-01", description: "SOP-BFP-01: Isolation and bypass procedure for backflow preventer servicing", generated: false },
       ],
     },
     {
@@ -107,15 +102,15 @@ export const DUMMY_MAINTENANCE_SCHEDULE: MaintenanceScheduleData = {
       totalEOPs: 1,
       totalSOPs: 2,
       mopRequirements: [
-        "MOP-BMS-01: Quarterly BMS calibration and sensor verification",
-        "MOP-BMS-02: Annual control panel inspection and firmware update",
+        { id: "mop-bms-01", description: "MOP-BMS-01: Quarterly BMS calibration and sensor verification", generated: false },
+        { id: "mop-bms-02", description: "MOP-BMS-02: Annual control panel inspection and firmware update", generated: false },
       ],
       eopRequirements: [
-        "EOP-BMS-01: BMS failure response and manual override procedure",
+        { id: "eop-bms-01", description: "EOP-BMS-01: BMS failure response and manual override procedure", generated: true, documentUrl: "https://example.com/docs/eop-bms-01.pdf" },
       ],
       sopRequirements: [
-        "SOP-BMS-01: Set point adjustment and alarm threshold update procedure",
-        "SOP-BMS-02: Trend data review and reporting procedure",
+        { id: "sop-bms-01", description: "SOP-BMS-01: Set point adjustment and alarm threshold update procedure", generated: true, documentUrl: "https://example.com/docs/sop-bms-01.pdf" },
+        { id: "sop-bms-02", description: "SOP-BMS-02: Trend data review and reporting procedure", generated: false },
       ],
     },
     {
@@ -135,13 +130,15 @@ export const DUMMY_MAINTENANCE_SCHEDULE: MaintenanceScheduleData = {
       totalEOPs: 1,
       totalSOPs: 1,
       mopRequirements: [
-        "MOP-CDU-01: Monthly coil inspection and cleaning procedure",
-        "MOP-CDU-02: Annual refrigerant charge check and leak inspection",
+        { id: "mop-cdu-01", description: "MOP-CDU-01: Monthly coil inspection and cleaning procedure", generated: true, documentUrl: "https://example.com/docs/mop-cdu-01.pdf" },
+        { id: "mop-cdu-02", description: "MOP-CDU-02: Annual refrigerant charge check and leak inspection", generated: true, documentUrl: "https://example.com/docs/mop-cdu-02.pdf" },
       ],
       eopRequirements: [
-        "EOP-CDU-01: Emergency refrigerant leak response and isolation procedure",
+        { id: "eop-cdu-01", description: "EOP-CDU-01: Emergency refrigerant leak response and isolation procedure", generated: false },
       ],
-      sopRequirements: ["SOP-CDU-01: Seasonal startup and shutdown procedure"],
+      sopRequirements: [
+        { id: "sop-cdu-01", description: "SOP-CDU-01: Seasonal startup and shutdown procedure", generated: true, documentUrl: "https://example.com/docs/sop-cdu-01.pdf" },
+      ],
     },
     {
       id: "6",
@@ -160,19 +157,19 @@ export const DUMMY_MAINTENANCE_SCHEDULE: MaintenanceScheduleData = {
       totalEOPs: 3,
       totalSOPs: 2,
       mopRequirements: [
-        "MOP-GEN-01: Monthly no-load test run and visual inspection",
-        "MOP-GEN-02: Quarterly load bank test and fuel system check",
-        "MOP-GEN-03: Semi-annual coolant flush, filter and oil change",
-        "MOP-GEN-04: Annual full load test, battery replacement and AVR calibration",
+        { id: "mop-gen-01", description: "MOP-GEN-01: Monthly no-load test run and visual inspection", generated: true, documentUrl: "https://example.com/docs/mop-gen-01.pdf" },
+        { id: "mop-gen-02", description: "MOP-GEN-02: Quarterly load bank test and fuel system check", generated: true, documentUrl: "https://example.com/docs/mop-gen-02.pdf" },
+        { id: "mop-gen-03", description: "MOP-GEN-03: Semi-annual coolant flush, filter and oil change", generated: false },
+        { id: "mop-gen-04", description: "MOP-GEN-04: Annual full load test, battery replacement and AVR calibration", generated: false },
       ],
       eopRequirements: [
-        "EOP-GEN-01: Generator failure response and load shedding procedure",
-        "EOP-GEN-02: Fuel spill containment and emergency shutdown",
-        "EOP-GEN-03: Paralleling failure isolation procedure",
+        { id: "eop-gen-01", description: "EOP-GEN-01: Generator failure response and load shedding procedure", generated: true, documentUrl: "https://example.com/docs/eop-gen-01.pdf" },
+        { id: "eop-gen-02", description: "EOP-GEN-02: Fuel spill containment and emergency shutdown", generated: false },
+        { id: "eop-gen-03", description: "EOP-GEN-03: Paralleling failure isolation procedure", generated: false },
       ],
       sopRequirements: [
-        "SOP-GEN-01: Generator start-up and manual transfer checklist",
-        "SOP-GEN-02: Fuel level monitoring and top-up procedure",
+        { id: "sop-gen-01", description: "SOP-GEN-01: Generator start-up and manual transfer checklist", generated: true, documentUrl: "https://example.com/docs/sop-gen-01.pdf" },
+        { id: "sop-gen-02", description: "SOP-GEN-02: Fuel level monitoring and top-up procedure", generated: false },
       ],
     },
     {
@@ -192,17 +189,17 @@ export const DUMMY_MAINTENANCE_SCHEDULE: MaintenanceScheduleData = {
       totalEOPs: 2,
       totalSOPs: 2,
       mopRequirements: [
-        "MOP-UPS-01: Monthly runtime test and battery health check",
-        "MOP-UPS-02: Quarterly static bypass test and internal inspection",
-        "MOP-UPS-03: Annual battery replacement and capacitor inspection",
+        { id: "mop-ups-01", description: "MOP-UPS-01: Monthly runtime test and battery health check", generated: false },
+        { id: "mop-ups-02", description: "MOP-UPS-02: Quarterly static bypass test and internal inspection", generated: false },
+        { id: "mop-ups-03", description: "MOP-UPS-03: Annual battery replacement and capacitor inspection", generated: false },
       ],
       eopRequirements: [
-        "EOP-UPS-01: UPS overload and emergency bypass procedure",
-        "EOP-UPS-02: Critical load transfer to alternate feed upon UPS failure",
+        { id: "eop-ups-01", description: "EOP-UPS-01: UPS overload and emergency bypass procedure", generated: false },
+        { id: "eop-ups-02", description: "EOP-UPS-02: Critical load transfer to alternate feed upon UPS failure", generated: false },
       ],
       sopRequirements: [
-        "SOP-UPS-01: Battery discharge test and data logging procedure",
-        "SOP-UPS-02: Alarm acknowledgment and escalation procedure",
+        { id: "sop-ups-01", description: "SOP-UPS-01: Battery discharge test and data logging procedure", generated: false },
+        { id: "sop-ups-02", description: "SOP-UPS-02: Alarm acknowledgment and escalation procedure", generated: false },
       ],
     },
     {
@@ -222,15 +219,15 @@ export const DUMMY_MAINTENANCE_SCHEDULE: MaintenanceScheduleData = {
       totalEOPs: 1,
       totalSOPs: 1,
       mopRequirements: [
-        "MOP-PDU-01: Monthly breaker and metering inspection",
-        "MOP-PDU-02: Annual thermal imaging and torque verification",
-        "MOP-PDU-03: Annual busbar cleaning and insulation resistance test",
+        { id: "mop-pdu-01", description: "MOP-PDU-01: Monthly breaker and metering inspection", generated: true, documentUrl: "https://example.com/docs/mop-pdu-01.pdf" },
+        { id: "mop-pdu-02", description: "MOP-PDU-02: Annual thermal imaging and torque verification", generated: true, documentUrl: "https://example.com/docs/mop-pdu-02.pdf" },
+        { id: "mop-pdu-03", description: "MOP-PDU-03: Annual busbar cleaning and insulation resistance test", generated: true, documentUrl: "https://example.com/docs/mop-pdu-03.pdf" },
       ],
       eopRequirements: [
-        "EOP-PDU-01: PDU fault isolation and downstream load transfer procedure",
+        { id: "eop-pdu-01", description: "EOP-PDU-01: PDU fault isolation and downstream load transfer procedure", generated: true, documentUrl: "https://example.com/docs/eop-pdu-01.pdf" },
       ],
       sopRequirements: [
-        "SOP-PDU-01: Circuit breaker trip investigation and reset procedure",
+        { id: "sop-pdu-01", description: "SOP-PDU-01: Circuit breaker trip investigation and reset procedure", generated: true, documentUrl: "https://example.com/docs/sop-pdu-01.pdf" },
       ],
     },
     {
@@ -250,16 +247,16 @@ export const DUMMY_MAINTENANCE_SCHEDULE: MaintenanceScheduleData = {
       totalEOPs: 1,
       totalSOPs: 2,
       mopRequirements: [
-        "MOP-CT-01: Monthly water quality testing and chemical dosing",
-        "MOP-CT-02: Quarterly drift eliminator and fill inspection",
-        "MOP-CT-03: Annual basin cleaning, fan and motor inspection",
+        { id: "mop-ct-01", description: "MOP-CT-01: Monthly water quality testing and chemical dosing", generated: true, documentUrl: "https://example.com/docs/mop-ct-01.pdf" },
+        { id: "mop-ct-02", description: "MOP-CT-02: Quarterly drift eliminator and fill inspection", generated: false },
+        { id: "mop-ct-03", description: "MOP-CT-03: Annual basin cleaning, fan and motor inspection", generated: false },
       ],
       eopRequirements: [
-        "EOP-CT-01: Legionella outbreak response and emergency disinfection procedure",
+        { id: "eop-ct-01", description: "EOP-CT-01: Legionella outbreak response and emergency disinfection procedure", generated: false },
       ],
       sopRequirements: [
-        "SOP-CT-01: Seasonal startup flushing and commissioning checklist",
-        "SOP-CT-02: Water treatment chemical handling and dosing procedure",
+        { id: "sop-ct-01", description: "SOP-CT-01: Seasonal startup flushing and commissioning checklist", generated: true, documentUrl: "https://example.com/docs/sop-ct-01.pdf" },
+        { id: "sop-ct-02", description: "SOP-CT-02: Water treatment chemical handling and dosing procedure", generated: false },
       ],
     },
     {
@@ -279,17 +276,17 @@ export const DUMMY_MAINTENANCE_SCHEDULE: MaintenanceScheduleData = {
       totalEOPs: 2,
       totalSOPs: 3,
       mopRequirements: [
-        "MOP-FSS-01: Quarterly agent level inspection and detector test",
-        "MOP-FSS-02: Annual full discharge test and cylinder recharge",
+        { id: "mop-fss-01", description: "MOP-FSS-01: Quarterly agent level inspection and detector test", generated: false },
+        { id: "mop-fss-02", description: "MOP-FSS-02: Annual full discharge test and cylinder recharge", generated: false },
       ],
       eopRequirements: [
-        "EOP-FSS-01: System discharge response and area evacuation procedure",
-        "EOP-FSS-02: False discharge isolation and system reset procedure",
+        { id: "eop-fss-01", description: "EOP-FSS-01: System discharge response and area evacuation procedure", generated: false },
+        { id: "eop-fss-02", description: "EOP-FSS-02: False discharge isolation and system reset procedure", generated: false },
       ],
       sopRequirements: [
-        "SOP-FSS-01: System arming and disarming procedure for maintenance access",
-        "SOP-FSS-02: Pre-work hot-work permit and suppression system inhibit procedure",
-        "SOP-FSS-03: Inspection log completion and authority notification procedure",
+        { id: "sop-fss-01", description: "SOP-FSS-01: System arming and disarming procedure for maintenance access", generated: false },
+        { id: "sop-fss-02", description: "SOP-FSS-02: Pre-work hot-work permit and suppression system inhibit procedure", generated: false },
+        { id: "sop-fss-03", description: "SOP-FSS-03: Inspection log completion and authority notification procedure", generated: false },
       ],
     },
   ],

@@ -9,6 +9,26 @@ export type MaintenanceFrequency = {
   fiveYear: boolean;
 };
 
+/** A single MOP / EOP / SOP procedure with its generation status. */
+export type ProcedureItem = {
+  id: string;
+  description: string;
+  generated: boolean;
+  documentUrl?: string;
+};
+
+/** A single asset inside a category, with per-asset procedure items. */
+export type CategoryAsset = {
+  id: string;
+  assetId: string;
+  assetName: string;
+  location: string;
+  serialNumber: string;
+  mops: ProcedureItem[];
+  eops: ProcedureItem[];
+  sops: ProcedureItem[];
+};
+
 /** One row in the maintenance schedule table. */
 export type MaintenanceRow = {
   id: string;
@@ -18,12 +38,9 @@ export type MaintenanceRow = {
   totalMOPs: number;
   totalEOPs: number;
   totalSOPs: number;
-  /** Up to 10 MOP requirement descriptions. */
-  mopRequirements: string[];
-  /** Up to 10 EOP requirement descriptions. */
-  eopRequirements: string[];
-  /** Up to 10 SOP requirement descriptions. */
-  sopRequirements: string[];
+  mopRequirements: ProcedureItem[];
+  eopRequirements: ProcedureItem[];
+  sopRequirements: ProcedureItem[];
 };
 
 /** The full generated schedule for a site. */

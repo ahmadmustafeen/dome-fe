@@ -1,6 +1,5 @@
-import type { ReactNode } from "react";
-
 import { Loader2 } from "lucide-react";
+import type { ReactNode } from "react";
 
 const Button = ({
   text,
@@ -54,7 +53,7 @@ const AppButton = ({ onClick, icon, title, variant, disabled }: iAppButton) => {
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`mr-2 flex text-sm cursor-pointer items-center justify-center gap-x-2 rounded-lg px-4 py-2 transition-all duration-500 disabled:cursor-not-allowed disabled:border-none disabled:bg-gray-400 disabled:text-white ${variantClass}`}
+      className={`mr-2 flex cursor-pointer items-center justify-center gap-x-2 rounded-lg px-4 py-2 text-sm transition-all duration-500 disabled:cursor-not-allowed disabled:border-none disabled:bg-gray-400 disabled:text-white ${variantClass}`}
     >
       {icon} {title}
     </button>

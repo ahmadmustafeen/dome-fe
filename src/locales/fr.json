@@ -156,17 +156,39 @@
     "col_total_eops": "Total EOPs",
     "col_total_sops": "Total SOPs",
     "col_details": "Détails",
+    "col_view_details": "Catégorie",
     "details_mops": "Exigences MOP",
     "details_eops": "Exigences EOP",
     "details_sops": "Exigences SOP",
     "no_requirements": "Aucune exigence",
     "btn_show_details": "Voir les détails",
     "btn_hide_details": "Masquer les détails",
+    "btn_view_details": "Voir les détails",
     "summary_generated": "Généré le",
     "summary_groups": "Groupes d'équipements",
     "summary_assets": "Total des actifs",
     "summary_mops": "Total MOPs",
     "summary_eops": "Total EOPs",
     "summary_sops": "Total SOPs"
+  },
+  "MaintenanceCategoryDetail": {
+    "back": "Retour au planning",
+    "assets_count_one": "{count} actif",
+    "assets_count_other": "{count} actifs",
+    "search_placeholder": "Rechercher des actifs...",
+    "col_asset_id": "ID actif",
+    "col_asset_name": "Nom de l'actif",
+    "col_location": "Emplacement",
+    "col_serial": "Numéro de série",
+    "col_mops": "MOPs",
+    "col_eops": "EOPs",
+    "col_sops": "SOPs",
+    "empty_heading": "Aucun actif trouvé",
+    "empty_description": "Aucun actif n'est affecté à cette catégorie pour l'instant."
+  },
+  "MaintenanceAssetDetail": {
+    "back": "Retour à la catégorie",
+    "placeholder_heading": "Détail de l'actif",
+    "placeholder_description": "Le contenu complet du détail de l'actif sera développé lors de la prochaine phase."
   }
 }

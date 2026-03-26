@@ -24,12 +24,16 @@ import { DataTable } from "@/components/DataTable";
 import { getMaintenanceColumns } from "@/components/sections/maintenance/MaintenanceTableColumns";
 import { RequirementSection } from "@/components/sections/maintenance/RequirementSection";
 import { DUMMY_MAINTENANCE_SCHEDULE } from "@/constants/maintenance-schedule";
-import { DASHBOARD_ROUTES, maintenanceCategoryRoute } from "@/constants/routes";
+import {
+  maintenanceCategoryRoute,
+  maintenanceGenerateProcedureRoute,
+} from "@/constants/routes";
 import { useAppContext } from "@/context/AppContext";
 import type {
   MaintenanceRow,
   MaintenanceScheduleData,
   ProcedureItem,
+  ProcedureKind,
 } from "@/types/maintenance-schedule";
 import { formatDate } from "@/utils/formatters";
 
@@ -86,8 +90,13 @@ export default function MaintenanceSchedulePage() {
   );
 
   const handleProcedureGenerate = useCallback(
-    (_item: ProcedureItem) => {
-      router.push(DASHBOARD_ROUTES.DOCUMENT_MANAGEMENT);
+    (item: ProcedureItem, kind: ProcedureKind, categoryId: string) => {
+      router.push(
+        maintenanceGenerateProcedureRoute(kind, {
+          categoryId,
+          procedureId: item.id,
+        }),
+      );
     },
     [router],
   );
@@ -157,19 +166,25 @@ export default function MaintenanceSchedulePage() {
           label={t("details_mops")}
           items={row.original.mopRequirements}
           colorClass="border-blue-200"
-          onGenerate={handleProcedureGenerate}
+          onGenerate={(item) => {
+            handleProcedureGenerate(item, "mop", row.original.id);
+          }}
         />
         <RequirementSection
           label={t("details_eops")}
           items={row.original.eopRequirements}
           colorClass="border-red-200"
-          onGenerate={handleProcedureGenerate}
+          onGenerate={(item) => {
+            handleProcedureGenerate(item, "eop", row.original.id);
+          }}
         />
         <RequirementSection
           label={t("details_sops")}
           items={row.original.sopRequirements}
           colorClass="border-green-200"
-          onGenerate={handleProcedureGenerate}
+          onGenerate={(item) => {
+            handleProcedureGenerate(item, "sop", row.original.id);
+          }}
         />
       </div>
     ),

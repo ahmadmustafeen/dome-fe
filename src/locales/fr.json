@@ -197,6 +197,18 @@
     "placeholder_heading": "Détail de l'actif",
     "placeholder_description": "Le contenu complet du détail de l'actif sera développé lors de la prochaine phase."
   },
+  "MaintenanceGenerate": {
+    "back": "Retour",
+    "heading_mop": "Générer un MOP",
+    "heading_eop": "Générer un EOP",
+    "heading_sop": "Générer un SOP",
+    "description": "La génération de documents sera branchée ici dans une phase ultérieure. Utilisez le bouton ci-dessous pour valider le flux (placeholder).",
+    "btn_generate_document": "Générer le document",
+    "context_category": "Catégorie",
+    "context_procedure": "Procédure",
+    "context_asset": "Actif",
+    "toast_placeholder": "La génération sera connectée lors de la prochaine phase."
+  },
   "SitePage": {
     "loader_heading": "Chargement",
     "loader_description": "Les sites se chargent, veuillez patienter"

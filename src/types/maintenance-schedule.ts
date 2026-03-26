@@ -9,6 +9,14 @@ export type MaintenanceFrequency = {
   fiveYear: boolean;
 };
 
+/** Procedure family used for generation flows (MOP / EOP / SOP). */
+export type ProcedureKind = "mop" | "eop" | "sop";
+
+export const PROCEDURE_KINDS: readonly ProcedureKind[] = ["mop", "eop", "sop"];
+
+export const isProcedureKind = (value: string): value is ProcedureKind =>
+  (PROCEDURE_KINDS as readonly string[]).includes(value);
+
 /** A single MOP / EOP / SOP procedure with its generation status. */
 export type ProcedureItem = {
   id: string;

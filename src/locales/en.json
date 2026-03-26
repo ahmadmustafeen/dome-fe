@@ -197,6 +197,18 @@
     "placeholder_heading": "Asset Detail",
     "placeholder_description": "Full asset detail content will be built in the next UI phase."
   },
+  "MaintenanceGenerate": {
+    "back": "Back",
+    "heading_mop": "Generate MOP",
+    "heading_eop": "Generate EOP",
+    "heading_sop": "Generate SOP",
+    "description": "Document generation will run here in a later phase. Use the button below to confirm the flow (placeholder).",
+    "btn_generate_document": "Generate document",
+    "context_category": "Category",
+    "context_procedure": "Procedure",
+    "context_asset": "Asset",
+    "toast_placeholder": "Generation will be wired in the next phase."
+  },
   "SitePage": {
     "loader_heading": "Loading",
     "loader_description": "Sites are loading, please wait"

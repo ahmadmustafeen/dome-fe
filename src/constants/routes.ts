@@ -1,3 +1,5 @@
+import type { ProcedureKind } from "@/types/maintenance-schedule";
+
 export enum AUTH_ROUTES {
   SIGN_IN = "/en/sign-in",
   SIGN_UP = "/en/sign-up",
@@ -25,3 +27,31 @@ export const maintenanceAssetRoute = (
   assetId: string,
 ): string =>
   `${DASHBOARD_ROUTES.MAINTENANCE_SCHEDULE}/${categoryId}/${assetId}`;
+
+type MaintenanceGenerateQuery = {
+  categoryId?: string;
+  procedureId?: string;
+  assetId?: string;
+};
+
+export const maintenanceGenerateProcedureRoute = (
+  procedureType: ProcedureKind,
+  query?: MaintenanceGenerateQuery,
+): string => {
+  const base = `${DASHBOARD_ROUTES.MAINTENANCE_SCHEDULE}/generate/${procedureType}`;
+  if (!query) {
+    return base;
+  }
+  const params = new URLSearchParams();
+  if (query.categoryId) {
+    params.set("categoryId", query.categoryId);
+  }
+  if (query.procedureId) {
+    params.set("procedureId", query.procedureId);
+  }
+  if (query.assetId) {
+    params.set("assetId", query.assetId);
+  }
+  const qs = params.toString();
+  return qs ? `${base}?${qs}` : base;
+};

@@ -2,7 +2,11 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Eye, FilePlus } from "lucide-react";
 
-import type { CategoryAsset, ProcedureItem } from "@/types/maintenance-schedule";
+import type {
+  CategoryAsset,
+  ProcedureItem,
+  ProcedureKind,
+} from "@/types/maintenance-schedule";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -73,7 +77,7 @@ const ProcedureCell = ({ items, label, onGenerate }: ProcedureCellProps) => {
 // ── Column factory ────────────────────────────────────────────────────────────
 
 type CategoryAssetColumnHandlers = {
-  onGenerate: (assetId: string, type: "mop" | "eop" | "sop") => void;
+  onGenerate: (assetId: string, type: ProcedureKind) => void;
   labels: {
     colAssetId: string;
     colAssetName: string;

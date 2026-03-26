@@ -15,8 +15,12 @@ import { DataTable } from "@/components/DataTable";
 import { getCategoryAssetColumns } from "@/components/sections/maintenance/CategoryAssetsTableColumns";
 import { DUMMY_MAINTENANCE_SCHEDULE } from "@/constants/maintenance-schedule";
 import { MOCK_CATEGORY_ASSETS } from "@/constants/maintenance-schedule-assets";
-import { DASHBOARD_ROUTES, maintenanceAssetRoute } from "@/constants/routes";
-import type { CategoryAsset } from "@/types/maintenance-schedule";
+import {
+  DASHBOARD_ROUTES,
+  maintenanceAssetRoute,
+  maintenanceGenerateProcedureRoute,
+} from "@/constants/routes";
+import type { CategoryAsset, ProcedureKind } from "@/types/maintenance-schedule";
 
 const PAGE_SIZE = 10;
 
@@ -67,10 +71,15 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
   );
 
   const handleGenerate = useCallback(
-    (_assetId: string, _type: "mop" | "eop" | "sop") => {
-      router.push(DASHBOARD_ROUTES.DOCUMENT_MANAGEMENT);
+    (assetId: string, type: ProcedureKind) => {
+      router.push(
+        maintenanceGenerateProcedureRoute(type, {
+          categoryId,
+          assetId,
+        }),
+      );
     },
-    [router],
+    [router, categoryId],
   );
 
   const handleRowClick = useCallback(

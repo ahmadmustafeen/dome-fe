@@ -13,6 +13,7 @@ import {
   HeadingWithDescription,
   ScreenLoader,
 } from "@/components";
+import { DASHBOARD_ROUTES } from "@/constants/routes";
 import { useAppContext } from "@/context/AppContext";
 import { clientService } from "@/services/client-service";
 
@@ -76,7 +77,7 @@ function ClientPage() {
 
   const selectClient = (id: string) => {
     setClient(clients.find((client) => client._id === id) ?? null);
-    router.push(`dashboard/client`);
+    router.push(DASHBOARD_ROUTES.CLIENT);
   };
 
   return (

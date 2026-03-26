@@ -5,13 +5,13 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 import { Button, InputWithLabel, Typography } from "@/components";
+import { AUTH_ROUTES, DASHBOARD_ROUTES } from "@/constants/routes";
 import { authService } from "@/services/auth-service";
 import { isValidEmail } from "@/utils/Helpers";
 
 import { AuthWrapper } from "./AuthWrapper";
 
 const SignIn = () => {
-  const locale = "en";
   const router = useRouter();
 
   const [data, setData] = useState({ email: "", password: "" });
@@ -34,7 +34,7 @@ const SignIn = () => {
       setLoading(true);
       await authService.login({ email: data.email, password: data.password });
       toast.success("Login successful!");
-      router.push(`/${locale}/dashboard`);
+      router.push(DASHBOARD_ROUTES.ROOT);
     } catch (error: unknown) {
       const message =
         error instanceof Error
@@ -81,7 +81,7 @@ const SignIn = () => {
           <Typography variant="caption">Forgot your password?</Typography>
           <Button
             text="Reset Password"
-            onClick={() => router.push(`/${locale}/forget-password`)}
+            onClick={() => router.push(AUTH_ROUTES.FORGET_PASSWORD)}
             variant="underline bg-transparent hover:bg-transparent !w-fit !px-0 !py-1 !text-secondary text-xs"
           />
         </div>
@@ -90,7 +90,7 @@ const SignIn = () => {
           <div className="flex justify-end">
             <Button
               text="Sign Up"
-              onClick={() => router.push(`/${locale}/sign-up`)}
+              onClick={() => router.push(AUTH_ROUTES.SIGN_UP)}
               variant="underline bg-transparent hover:bg-transparent !w-fit !px-0 !py-1 !text-secondary text-xs"
             />
           </div>

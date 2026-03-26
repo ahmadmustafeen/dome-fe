@@ -5,12 +5,12 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 import { Button, InputWithLabel, Typography } from "@/components";
+import { AUTH_ROUTES, DASHBOARD_ROUTES } from "@/constants/routes";
 import { authService } from "@/services/auth-service";
 
 import { AuthWrapper } from "./AuthWrapper";
 
 const SignUp = () => {
-  const locale = "en";
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
@@ -34,7 +34,7 @@ const SignUp = () => {
         password: data.password,
       });
       toast.success("Registration successful!");
-      router.push(`/${locale}/dashboard`);
+      router.push(DASHBOARD_ROUTES.ROOT);
     } catch (error: unknown) {
       const message =
         error instanceof Error
@@ -105,7 +105,7 @@ const SignUp = () => {
         <Typography variant="caption">Already have an account?</Typography>
         <Button
           text="Sign In"
-          onClick={() => router.push(`/${locale}/sign-in`)}
+          onClick={() => router.push(AUTH_ROUTES.SIGN_IN)}
           variant="underline bg-transparent hover:bg-transparent !w-fit !px-0 !py-1 !text-secondary text-xs"
         />
       </div>

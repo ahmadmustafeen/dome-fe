@@ -1,11 +1,12 @@
 "use client";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { use, useMemo } from "react";
 
 import { AppButton, SectionWrapper, Typography } from "@/components/common";
 import { MOCK_CATEGORY_ASSETS } from "@/constants/maintenance-schedule-assets";
+import { maintenanceCategoryRoute } from "@/constants/routes";
 
 type PageProps = {
   params: Promise<{ categoryId: string; assetId: string }>;
@@ -15,7 +16,6 @@ export default function MaintenanceAssetDetailPage({ params }: PageProps) {
   const { categoryId, assetId } = use(params);
   const t = useTranslations("MaintenanceAssetDetail");
   const router = useRouter();
-  const locale = useLocale();
 
   const asset = useMemo(() => {
     const assets = MOCK_CATEGORY_ASSETS[categoryId] ?? [];
@@ -29,11 +29,7 @@ export default function MaintenanceAssetDetailPage({ params }: PageProps) {
         <div className="mb-4">
           <AppButton
             title={t("back")}
-            onClick={() =>
-              router.push(
-                `/${locale}/dashboard/maintenance-schedule/${categoryId}`,
-              )
-            }
+            onClick={() => router.push(maintenanceCategoryRoute(categoryId))}
             variant="default"
             icon={<ArrowLeft className="h-4 w-4" />}
           />

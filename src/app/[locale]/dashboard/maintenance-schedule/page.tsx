@@ -9,7 +9,7 @@ import {
   X,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useCallback, useMemo, useState } from "react";
 
 import {
@@ -24,6 +24,7 @@ import { DataTable } from "@/components/DataTable";
 import { getMaintenanceColumns } from "@/components/sections/maintenance/MaintenanceTableColumns";
 import { RequirementSection } from "@/components/sections/maintenance/RequirementSection";
 import { DUMMY_MAINTENANCE_SCHEDULE } from "@/constants/maintenance-schedule";
+import { DASHBOARD_ROUTES, maintenanceCategoryRoute } from "@/constants/routes";
 import { useAppContext } from "@/context/AppContext";
 import type {
   MaintenanceRow,
@@ -38,7 +39,6 @@ export default function MaintenanceSchedulePage() {
   const t = useTranslations("MaintenanceSchedule");
   const { site } = useAppContext();
   const router = useRouter();
-  const locale = useLocale();
 
   const [schedule, setSchedule] = useState<MaintenanceScheduleData | null>(
     null,
@@ -80,16 +80,16 @@ export default function MaintenanceSchedulePage() {
 
   const handleViewDetails = useCallback(
     (categoryId: string) => {
-      router.push(`/${locale}/dashboard/maintenance-schedule/${categoryId}`);
+      router.push(maintenanceCategoryRoute(categoryId));
     },
-    [router, locale],
+    [router],
   );
 
   const handleProcedureGenerate = useCallback(
     (_item: ProcedureItem) => {
-      router.push(`/${locale}/dashboard/document-management`);
+      router.push(DASHBOARD_ROUTES.DOCUMENT_MANAGEMENT);
     },
-    [router, locale],
+    [router],
   );
 
   const filteredRows = useMemo<MaintenanceRow[]>(() => {

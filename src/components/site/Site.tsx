@@ -1,6 +1,6 @@
 "use client";
-import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -13,6 +13,7 @@ import {
   ScreenLoader,
   SiteInfoCard,
 } from "@/components";
+import { DASHBOARD_ROUTES } from "@/constants/routes";
 import { useAppContext } from "@/context/AppContext";
 import { siteService } from "@/services/site-service";
 
@@ -82,7 +83,7 @@ function SitePage() {
 
   const selectSite = (id: string) => {
     setSite(sites.find((item) => item._id === id) || null);
-    router.push(`/en/dashboard/assets-management`);
+    router.push(DASHBOARD_ROUTES.ASSETS_MANAGEMENT);
   };
 
   return (

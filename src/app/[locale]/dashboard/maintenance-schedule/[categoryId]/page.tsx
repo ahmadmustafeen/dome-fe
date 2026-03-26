@@ -1,7 +1,7 @@
 "use client";
 import { ArrowLeft, Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { use, useCallback, useMemo, useState } from "react";
 
 import {
@@ -15,6 +15,7 @@ import { DataTable } from "@/components/DataTable";
 import { getCategoryAssetColumns } from "@/components/sections/maintenance/CategoryAssetsTableColumns";
 import { DUMMY_MAINTENANCE_SCHEDULE } from "@/constants/maintenance-schedule";
 import { MOCK_CATEGORY_ASSETS } from "@/constants/maintenance-schedule-assets";
+import { DASHBOARD_ROUTES, maintenanceAssetRoute } from "@/constants/routes";
 import type { CategoryAsset } from "@/types/maintenance-schedule";
 
 const PAGE_SIZE = 10;
@@ -27,7 +28,6 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
   const { categoryId } = use(params);
   const t = useTranslations("MaintenanceCategoryDetail");
   const router = useRouter();
-  const locale = useLocale();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -68,18 +68,18 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
 
   const handleGenerate = useCallback(
     (_assetId: string, _type: "mop" | "eop" | "sop") => {
-      router.push(`/${locale}/dashboard/document-management`);
+      router.push(DASHBOARD_ROUTES.DOCUMENT_MANAGEMENT);
     },
-    [router, locale],
+    [router],
   );
 
   const handleRowClick = useCallback(
     (asset: CategoryAsset) => {
       router.push(
-        `/${locale}/dashboard/maintenance-schedule/${categoryId}/${asset.id}`,
+        maintenanceAssetRoute(categoryId, asset.id),
       );
     },
-    [router, locale, categoryId],
+    [router, categoryId],
   );
 
   const columns = useMemo(
@@ -108,9 +108,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
         <div className="mb-4">
           <AppButton
             title={t("back")}
-            onClick={() =>
-              router.push(`/${locale}/dashboard/maintenance-schedule`)
-            }
+            onClick={() => router.push(DASHBOARD_ROUTES.MAINTENANCE_SCHEDULE)}
             variant="default"
             icon={<ArrowLeft className="size-4" />}
           />

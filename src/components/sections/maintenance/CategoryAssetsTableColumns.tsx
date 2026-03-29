@@ -2,18 +2,8 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
+import { CountBadge } from "@/components/common";
 import type { CategoryAsset } from "@/types/maintenance-schedule";
-
-const CountBadge = ({ count }: { count: number }) =>
-  count > 0 ? (
-    <div className="flex justify-center">
-      <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-primary px-1.5 text-xs font-bold text-white">
-        {count}
-      </span>
-    </div>
-  ) : (
-    <span className="block text-center text-xs text-gray-400">—</span>
-  );
 
 type CategoryAssetColumnLabels = {
   colAssetId: string;

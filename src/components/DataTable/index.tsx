@@ -40,6 +40,8 @@ interface DataTableProps<TData, TValue> {
     React.SetStateAction<TanStackTable<TData> | null>
   >;
   handleRowClick?: (data: TData) => void;
+  /** When set, row clicks call this instead of handleRowClick (e.g. toggle expand). */
+  onRowActivate?: (row: Row<TData>) => void;
   cellClassName?: string;
   loading?: boolean;
   noDataMessage?: string;
@@ -71,6 +73,7 @@ export function DataTable<TData, TValue>({
   loading,
   cellClassName,
   handleRowClick,
+  onRowActivate,
   setTablesState,
   onRowSelectionChange,
   noDataMessage,
@@ -163,6 +166,7 @@ export function DataTable<TData, TValue>({
             cellClassName={cellClassName}
             columnsLength={columns.length}
             handleTableRowClick={handleRowClick}
+            onRowActivate={onRowActivate}
             loading={loading}
             noDataMessage={noDataMessage}
             bodyRowClassName={bodyRowClassName}

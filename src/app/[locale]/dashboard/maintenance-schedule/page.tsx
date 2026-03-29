@@ -1,5 +1,4 @@
 "use client";
-import type { Row } from "@tanstack/react-table";
 import {
   CalendarDays,
   Check,
@@ -22,18 +21,12 @@ import {
 } from "@/components/common";
 import { DataTable } from "@/components/DataTable";
 import { getMaintenanceColumns } from "@/components/sections/maintenance/MaintenanceTableColumns";
-import { RequirementSection } from "@/components/sections/maintenance/RequirementSection";
 import { DUMMY_MAINTENANCE_SCHEDULE } from "@/constants/maintenance-schedule";
-import {
-  maintenanceCategoryRoute,
-  maintenanceGenerateProcedureRoute,
-} from "@/constants/routes";
+import { maintenanceCategoryRoute } from "@/constants/routes";
 import { useAppContext } from "@/context/AppContext";
 import type {
   MaintenanceRow,
   MaintenanceScheduleData,
-  ProcedureItem,
-  ProcedureKind,
 } from "@/types/maintenance-schedule";
 import { formatDate } from "@/utils/formatters";
 
@@ -89,18 +82,6 @@ export default function MaintenanceSchedulePage() {
     [router],
   );
 
-  const handleProcedureGenerate = useCallback(
-    (item: ProcedureItem, kind: ProcedureKind, categoryId: string) => {
-      router.push(
-        maintenanceGenerateProcedureRoute(kind, {
-          categoryId,
-          procedureId: item.id,
-        }),
-      );
-    },
-    [router],
-  );
-
   const filteredRows = useMemo<MaintenanceRow[]>(() => {
     if (!schedule) {
       return [];
@@ -135,60 +116,21 @@ export default function MaintenanceSchedulePage() {
   const columns = useMemo(
     () =>
       getMaintenanceColumns({
-        onViewDetails: handleViewDetails,
-        labels: {
-          colCategory: t("col_category"),
-          colAssets: t("col_assets"),
-          colMonthly: t("col_monthly"),
-          colQuarterly: t("col_quarterly"),
-          colSemiAnnual: t("col_semi_annual"),
-          colAnnual: t("col_annual"),
-          colTwoYear: t("col_two_year"),
-          colThreeYear: t("col_three_year"),
-          colFiveYear: t("col_five_year"),
-          colTotalMops: t("col_total_mops"),
-          colTotalEops: t("col_total_eops"),
-          colTotalSops: t("col_total_sops"),
-          colDetails: t("col_details"),
-          colViewDetails: t("col_view_details"),
-          btnShowDetails: t("btn_show_details"),
-          btnHideDetails: t("btn_hide_details"),
-          btnViewDetails: t("btn_view_details"),
-        },
+        colCategory: t("col_category"),
+        colAssets: t("col_assets"),
+        colMonthly: t("col_monthly"),
+        colQuarterly: t("col_quarterly"),
+        colSemiAnnual: t("col_semi_annual"),
+        colAnnual: t("col_annual"),
+        colTwoYear: t("col_two_year"),
+        colThreeYear: t("col_three_year"),
+        colFiveYear: t("col_five_year"),
+        colTotalMops: t("col_total_mops"),
+        colTotalEops: t("col_total_eops"),
+        colTotalSops: t("col_total_sops"),
+        colOpenCategory: t("col_open_category"),
       }),
-    [t, handleViewDetails],
-  );
-
-  const renderSubRow = useCallback(
-    (row: Row<MaintenanceRow>) => (
-      <div className="grid grid-cols-3 gap-4">
-        <RequirementSection
-          label={t("details_mops")}
-          items={row.original.mopRequirements}
-          colorClass="border-blue-200"
-          onGenerate={(item) => {
-            handleProcedureGenerate(item, "mop", row.original.id);
-          }}
-        />
-        <RequirementSection
-          label={t("details_eops")}
-          items={row.original.eopRequirements}
-          colorClass="border-red-200"
-          onGenerate={(item) => {
-            handleProcedureGenerate(item, "eop", row.original.id);
-          }}
-        />
-        <RequirementSection
-          label={t("details_sops")}
-          items={row.original.sopRequirements}
-          colorClass="border-green-200"
-          onGenerate={(item) => {
-            handleProcedureGenerate(item, "sop", row.original.id);
-          }}
-        />
-      </div>
-    ),
-    [t, handleProcedureGenerate],
+    [t],
   );
 
   if (!site?._id) {
@@ -288,9 +230,11 @@ export default function MaintenanceSchedulePage() {
                 columns={columns}
                 data={pagedRows}
                 getRowId={(row) => row.id}
+                handleRowClick={(row) => {
+                  handleViewDetails(row.id);
+                }}
                 noDataMessage="No categories match your search."
-                renderSubRow={renderSubRow}
-                bodyRowClassName="border-b border-slate-200 odd:bg-white even:bg-slate-50 hover:bg-primary/5 transition-colors"
+                bodyRowClassName="border-b border-slate-200 odd:bg-white even:bg-slate-50 hover:bg-primary/10 transition-colors"
                 bodyCellClassName="py-3 text-sm"
                 headerCellClassName="text-center first:text-left"
               />
@@ -321,7 +265,10 @@ export default function MaintenanceSchedulePage() {
                 <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">
                   N
                 </span>
-                MOP / EOP / SOP Count
+                {t("legend_procedure_totals")}
+              </Typography>
+              <Typography variant="caption" className="text-slate-500">
+                {t("legend_row_click")}
               </Typography>
             </div>
 

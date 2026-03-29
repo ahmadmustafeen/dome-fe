@@ -1,104 +1,116 @@
-'use client'
-import { useState } from "react"
-import { Navbar, NavItem } from "@/constants/data"
-import { useRouter } from "next/navigation"
-import { authService } from "@/services/auth-service"
-import { toast } from "react-toastify"
+"use client";
 
-const SideBarNavigation = ({ currentPath }: { currentPath: string }) => {
-  const router = useRouter()
-  const [openItem, setOpenItem] = useState<number | null>(null)
+import { ChevronDown, ChevronUp, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "react-toastify";
+
+import { Navbar, NavItem } from "@/constants/data";
+import { authService } from "@/services/auth-service";
+
+import { Typography } from "./Typography";
+
+type SideBarNavigationProps = {
+  currentPath: string;
+  onClose?: () => void;
+};
+
+const SideBarNavigation = ({ currentPath, onClose }: SideBarNavigationProps) => {
+  const router = useRouter();
+  const [openItem, setOpenItem] = useState<number | null>(null);
 
   const navigateToLink = (path: string) => {
-    router.push(`/en/dashboard/${path}`)
-  }
+    router.push(`/en/dashboard/${path}`);
+    onClose?.();
+  };
 
   const handleParentClick = (item: NavItem) => {
     if (item.subItems && item.subItems.length > 0) {
-      // toggle dropdown
-      setOpenItem(prev => (prev === item.id ? null : item.id))
+      setOpenItem((prev) => (prev === item.id ? null : item.id));
     } else {
-      // normal navigation
-      navigateToLink(item.link)
+      navigateToLink(item.link);
     }
-  }
+  };
 
   const handleLogout = async () => {
     try {
       await authService.logout();
-      toast.success('Logged out successfully');
-      window.location.replace('/en/sign-in');
-      // Redirect to login page or perform other actions after logout
+      toast.success("Logged out successfully");
+      window.location.replace("/en/sign-in");
     } catch (error) {
-      console.log({ error });
-
-      toast.error('An error occurred during logout');
+      console.error({ error });
+      toast.error("An error occurred during logout");
     }
-  }
+  };
 
   return (
-    <div className="my-3 w-full flex flex-col gap-y-2 relative">
-
+    <div className="my-3 flex w-full flex-col gap-y-1">
       {Navbar.map((item: NavItem) => {
-
-
-        const isOpen = openItem === item.id
+        const isOpen = openItem === item.id;
         const isParentActive =
-          item.subItems?.some(sub => sub.link === currentPath)
+          item.subItems?.some((sub) => sub.link === currentPath) ??
+          currentPath === item.link;
 
         return (
           <div key={item.id} className="w-full">
-
-            {/* Parent */}
+            {/* Parent item */}
             <div
-              className={`py-3 text-white cursor-pointer hover:bg-secondary w-11/12 mx-auto text-center rounded-lg flex justify-between items-center px-4 ${isParentActive ? "bg-secondary" : ""
-                }`}
+              className={`mx-auto flex w-11/12 cursor-pointer items-center justify-between rounded-lg px-4 py-2.5 text-white transition-colors hover:bg-white/10 ${
+                isParentActive ? "bg-white/20" : ""
+              }`}
               onClick={() => handleParentClick(item)}
             >
-              <span>{item.title}</span>
+              <Typography variant="p" className="font-medium text-white">
+                {item.title}
+              </Typography>
 
-              {/* Arrow if has subItems */}
-              {item.subItems && (
-                <span className="text-sm">
-                  {isOpen ? "▲" : "▼"}
-                </span>
-              )}
+              {item.subItems &&
+                (isOpen ? (
+                  <ChevronUp className="h-4 w-4 shrink-0 text-white/70" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 shrink-0 text-white/70" />
+                ))}
             </div>
 
-            {/* Sub Items */}
+            {/* Sub items */}
             {item.subItems && isOpen && (
-              <div className="flex flex-col gap-y-1 mt-1">
-
-                {item.subItems.map(sub => {
-                  const isSubActive = currentPath === sub.link
+              <div className="mt-0.5 ml-3 flex flex-col gap-y-0.5">
+                {item.subItems.map((sub) => {
+                  const isSubActive = currentPath === sub.link;
 
                   return (
                     <div
                       key={sub.id}
-                      className={`py-2 text-sm text-white cursor-pointer hover:bg-secondary w-9/12 mx-auto px-4 rounded-lg ${isSubActive ? "bg-secondary" : ""
-                        }`}
+                      className={`mx-auto w-10/12 cursor-pointer rounded-lg px-4 py-2 transition-colors hover:bg-white/10 ${
+                        isSubActive ? "bg-white/20" : ""
+                      }`}
                       onClick={() => navigateToLink(sub.link)}
                     >
-                      {sub.title}
+                      <Typography variant="caption" className="font-medium text-white/90">
+                        {sub.title}
+                      </Typography>
                     </div>
-                  )
+                  );
                 })}
-
               </div>
             )}
-
           </div>
-        )
+        );
       })}
-      <div
-        className={`py-3 text-white cursor-pointer bg-secondary/50 w-11/12 mx-auto text-center rounded-lg flex justify-start gap-x-3 items-center px-4`}
-        onClick={() => handleLogout()}
+
+      {/* Logout */}
+      <button
+        type="button"
+        className="mx-auto flex w-11/12 cursor-pointer items-center gap-x-2 rounded-lg px-4 py-2.5 text-white transition-colors hover:bg-white/10"
+        onClick={handleLogout}
       >
-        Logout
-      </div>
-
+        <LogOut className="h-4 w-4 shrink-0" />
+        <Typography variant="p" className="font-medium text-white">
+          Logout
+        </Typography>
+      </button>
     </div>
-  )
-}
+  );
+};
 
-export { SideBarNavigation }
+export { SideBarNavigation };

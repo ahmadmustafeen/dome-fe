@@ -1,7 +1,10 @@
-export * from "./InputWithLabel";
-export * from "./Typography";
 export * from "./Button";
-export * from "./ScreenLoader";
 export * from "./DeleteConfirmation";
-export * from "./Sidebar";
 export * from "./EmptyState";
+export * from "./InputWithLabel";
+export * from "./Pagination";
+export * from "./ScreenLoader";
+export { default as SectionWrapper } from "./SectionWrapper";
+export * from "./Sidebar";
+export { default as StateIndicator } from "./StateIndicator";
+export * from "./Typography";

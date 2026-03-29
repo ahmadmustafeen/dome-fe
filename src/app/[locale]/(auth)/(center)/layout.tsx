@@ -1,4 +1,5 @@
-import { setRequestLocale } from 'next-intl/server';
+import { setRequestLocale } from "next-intl/server";
+import * as React from "react";
 
 export default async function CenterLayout(props: {
   children: React.ReactNode;
@@ -7,9 +8,5 @@ export default async function CenterLayout(props: {
   const { locale } = await props.params;
   setRequestLocale(locale);
 
-  return (
-    <div className="flex min-h-screen items-center justify-center">
-        <div >{props.children}</div>
-    </div>
-  );
+  return <>{props.children}</>;
 }

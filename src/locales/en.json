@@ -75,6 +75,8 @@
   },
   "AssetsManagement": {
     "title": "Assets",
+    "upload_loader_heading": "Uploading XLSX",
+    "upload_loader_description": "Please wait, while we upload and bulk create.",
     "assets_found_one": "{count} asset found",
     "assets_found_other": "{count} assets found",
     "btn_delete_selected": "Delete Asset(s)",
@@ -111,6 +113,8 @@
   },
   "DocumentManagement": {
     "title": "Document Management",
+    "loader_heading": "Loading",
+    "loader_description": "Documents are loading, please wait",
     "btn_upload": "Upload Document",
     "search_placeholder": "Search documents...",
     "filter_all_types": "All Types",
@@ -136,6 +140,8 @@
   },
   "MaintenanceSchedule": {
     "title": "Maintenance Schedule",
+    "loader_heading": "Generating Schedule",
+    "loader_description": "AI is analysing your uploaded assets and documents…",
     "subtitle": "Maintenance Schedule",
     "btn_generate": "Generate Schedule",
     "btn_regenerate": "Regenerate Schedule",
@@ -156,17 +162,59 @@
     "col_total_eops": "Total EOPs",
     "col_total_sops": "Total SOPs",
     "col_details": "Details",
+    "col_view_details": "Category",
     "details_mops": "MOP Requirements",
     "details_eops": "EOP Requirements",
     "details_sops": "SOP Requirements",
     "no_requirements": "None required",
     "btn_show_details": "Show Details",
     "btn_hide_details": "Hide Details",
+    "btn_view_details": "View Details",
     "summary_generated": "Generated",
     "summary_groups": "Equipment Groups",
     "summary_assets": "Total Assets",
     "summary_mops": "Total MOPs",
     "summary_eops": "Total EOPs",
     "summary_sops": "Total SOPs"
+  },
+  "MaintenanceCategoryDetail": {
+    "back": "Back to Schedule",
+    "assets_count_one": "{count} asset",
+    "assets_count_other": "{count} assets",
+    "search_placeholder": "Search assets...",
+    "col_asset_id": "Asset ID",
+    "col_asset_name": "Asset Name",
+    "col_location": "Location",
+    "col_serial": "Serial Number",
+    "col_mops": "MOPs",
+    "col_eops": "EOPs",
+    "col_sops": "SOPs",
+    "empty_heading": "No assets found",
+    "empty_description": "No assets are assigned to this category yet."
+  },
+  "MaintenanceAssetDetail": {
+    "back": "Back to Category",
+    "placeholder_heading": "Asset Detail",
+    "placeholder_description": "Full asset detail content will be built in the next UI phase."
+  },
+  "MaintenanceGenerate": {
+    "back": "Back",
+    "heading_mop": "Generate MOP",
+    "heading_eop": "Generate EOP",
+    "heading_sop": "Generate SOP",
+    "description": "Document generation will run here in a later phase. Use the button below to confirm the flow (placeholder).",
+    "btn_generate_document": "Generate document",
+    "context_category": "Category",
+    "context_procedure": "Procedure",
+    "context_asset": "Asset",
+    "toast_placeholder": "Generation will be wired in the next phase."
+  },
+  "SitePage": {
+    "loader_heading": "Loading",
+    "loader_description": "Sites are loading, please wait"
+  },
+  "ClientPage": {
+    "loader_heading": "Loading",
+    "loader_description": "Clients are loading, please wait"
   }
 }

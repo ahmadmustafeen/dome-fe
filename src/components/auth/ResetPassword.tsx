@@ -5,6 +5,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 import { Button, InputWithLabel, Typography } from "@/components";
+import { AUTH_ROUTES } from "@/constants/routes";
 import { authService } from "@/services/auth-service";
 
 import { AuthWrapper } from "./AuthWrapper";
@@ -61,7 +62,7 @@ const ResetPassword = () => {
         </Typography>
         <Button
           text="Request New Link"
-          onClick={() => router.push("/en/forget-password")}
+          onClick={() => router.push(AUTH_ROUTES.FORGET_PASSWORD)}
           variant="my-4"
         />
       </AuthWrapper>
@@ -98,7 +99,7 @@ const ResetPassword = () => {
 
           <Button
             text="Back to Sign In"
-            onClick={() => router.push("/en/sign-in")}
+            onClick={() => router.push(AUTH_ROUTES.SIGN_IN)}
             variant="my-4"
           />
         </>

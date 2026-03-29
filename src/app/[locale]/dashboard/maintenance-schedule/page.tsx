@@ -8,8 +8,9 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import {
   AppButton,
@@ -21,54 +22,27 @@ import {
 } from "@/components/common";
 import { DataTable } from "@/components/DataTable";
 import { getMaintenanceColumns } from "@/components/sections/maintenance/MaintenanceTableColumns";
+import { RequirementSection } from "@/components/sections/maintenance/RequirementSection";
 import { DUMMY_MAINTENANCE_SCHEDULE } from "@/constants/maintenance-schedule";
+import {
+  maintenanceCategoryRoute,
+  maintenanceGenerateProcedureRoute,
+} from "@/constants/routes";
 import { useAppContext } from "@/context/AppContext";
 import type {
   MaintenanceRow,
   MaintenanceScheduleData,
+  ProcedureItem,
+  ProcedureKind,
 } from "@/types/maintenance-schedule";
 import { formatDate } from "@/utils/formatters";
-
-// ── Requirement list sub-component (used in renderSubRow) ─────────────────────
-
-const RequirementList = ({
-  label,
-  items,
-  color,
-}: {
-  label: string;
-  items: string[];
-  color: string;
-}) => (
-  <div className={`rounded-lg border ${color} p-4`}>
-    <p
-      className={`mb-3 text-xs font-bold tracking-wider uppercase ${color
-        .replace("border-", "text-")
-        .replace("-200", "-700")}`}
-    >
-      {label}
-    </p>
-    {items.length === 0 ? (
-      <p className="text-xs text-gray-400 italic">None required</p>
-    ) : (
-      <ol className="list-inside list-decimal space-y-1.5">
-        {items.map((req) => (
-          <li key={req} className="text-xs leading-relaxed text-gray-700">
-            {req}
-          </li>
-        ))}
-      </ol>
-    )}
-  </div>
-);
-
-// ── Main page ────────────────────────────────────────────────────────────────
 
 const MS_PAGE_SIZE = 5;
 
 export default function MaintenanceSchedulePage() {
   const t = useTranslations("MaintenanceSchedule");
   const { site } = useAppContext();
+  const router = useRouter();
 
   const [schedule, setSchedule] = useState<MaintenanceScheduleData | null>(
     null,
@@ -108,6 +82,25 @@ export default function MaintenanceSchedulePage() {
     setMsPage(1);
   };
 
+  const handleViewDetails = useCallback(
+    (categoryId: string) => {
+      router.push(maintenanceCategoryRoute(categoryId));
+    },
+    [router],
+  );
+
+  const handleProcedureGenerate = useCallback(
+    (item: ProcedureItem, kind: ProcedureKind, categoryId: string) => {
+      router.push(
+        maintenanceGenerateProcedureRoute(kind, {
+          categoryId,
+          procedureId: item.id,
+        }),
+      );
+    },
+    [router],
+  );
+
   const filteredRows = useMemo<MaintenanceRow[]>(() => {
     if (!schedule) {
       return [];
@@ -142,43 +135,60 @@ export default function MaintenanceSchedulePage() {
   const columns = useMemo(
     () =>
       getMaintenanceColumns({
-        colCategory: t("col_category"),
-        colAssets: t("col_assets"),
-        colMonthly: t("col_monthly"),
-        colQuarterly: t("col_quarterly"),
-        colSemiAnnual: t("col_semi_annual"),
-        colAnnual: t("col_annual"),
-        colTwoYear: t("col_two_year"),
-        colThreeYear: t("col_three_year"),
-        colFiveYear: t("col_five_year"),
-        colTotalMops: t("col_total_mops"),
-        colTotalEops: t("col_total_eops"),
-        colTotalSops: t("col_total_sops"),
-        colDetails: t("col_details"),
-        btnShowDetails: t("btn_show_details"),
-        btnHideDetails: t("btn_hide_details"),
+        onViewDetails: handleViewDetails,
+        labels: {
+          colCategory: t("col_category"),
+          colAssets: t("col_assets"),
+          colMonthly: t("col_monthly"),
+          colQuarterly: t("col_quarterly"),
+          colSemiAnnual: t("col_semi_annual"),
+          colAnnual: t("col_annual"),
+          colTwoYear: t("col_two_year"),
+          colThreeYear: t("col_three_year"),
+          colFiveYear: t("col_five_year"),
+          colTotalMops: t("col_total_mops"),
+          colTotalEops: t("col_total_eops"),
+          colTotalSops: t("col_total_sops"),
+          colDetails: t("col_details"),
+          colViewDetails: t("col_view_details"),
+          btnShowDetails: t("btn_show_details"),
+          btnHideDetails: t("btn_hide_details"),
+          btnViewDetails: t("btn_view_details"),
+        },
       }),
-    [t],
+    [t, handleViewDetails],
   );
 
-  const renderSubRow = (row: Row<MaintenanceRow>) => (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-      <RequirementList
-        label={t("details_mops")}
-        items={row.original.mopRequirements}
-        color="border-blue-200"
-      />
-      <RequirementList
-        label={t("details_eops")}
-        items={row.original.eopRequirements}
-        color="border-red-200"
-      />
-      <RequirementList
-        label={t("details_sops")}
-        items={row.original.sopRequirements}
-        color="border-green-200"
-      />
-    </div>
+  const renderSubRow = useCallback(
+    (row: Row<MaintenanceRow>) => (
+      <div className="grid grid-cols-3 gap-4">
+        <RequirementSection
+          label={t("details_mops")}
+          items={row.original.mopRequirements}
+          colorClass="border-blue-200"
+          onGenerate={(item) => {
+            handleProcedureGenerate(item, "mop", row.original.id);
+          }}
+        />
+        <RequirementSection
+          label={t("details_eops")}
+          items={row.original.eopRequirements}
+          colorClass="border-red-200"
+          onGenerate={(item) => {
+            handleProcedureGenerate(item, "eop", row.original.id);
+          }}
+        />
+        <RequirementSection
+          label={t("details_sops")}
+          items={row.original.sopRequirements}
+          colorClass="border-green-200"
+          onGenerate={(item) => {
+            handleProcedureGenerate(item, "sop", row.original.id);
+          }}
+        />
+      </div>
+    ),
+    [t, handleProcedureGenerate],
   );
 
   if (!site?._id) {
@@ -195,8 +205,8 @@ export default function MaintenanceSchedulePage() {
     <div className="h-full">
       {isGenerating && (
         <ScreenLoader
-          heading="Generating Schedule"
-          description="AI is analysing your uploaded assets and documents…"
+          heading={t("loader_heading")}
+          description={t("loader_description")}
         />
       )}
 
@@ -237,7 +247,6 @@ export default function MaintenanceSchedulePage() {
         </div>
 
         {!schedule ? (
-          /* ── Empty state ── */
           <EmptyState
             icon={<CalendarDays className="h-10 w-10" />}
             heading={t("empty_heading")}

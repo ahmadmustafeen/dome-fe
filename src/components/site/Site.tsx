@@ -1,7 +1,8 @@
 "use client";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 
 import type { Site } from "@/components";
 import {
@@ -12,10 +13,12 @@ import {
   ScreenLoader,
   SiteInfoCard,
 } from "@/components";
+import { DASHBOARD_ROUTES } from "@/constants/routes";
 import { useAppContext } from "@/context/AppContext";
 import { siteService } from "@/services/site-service";
 
 function SitePage() {
+  const t = useTranslations("SitePage");
   const { setSite, client } = useAppContext();
   const router = useRouter();
   const [sites, setSites] = useState<Site[]>([]);
@@ -80,7 +83,7 @@ function SitePage() {
 
   const selectSite = (id: string) => {
     setSite(sites.find((item) => item._id === id) || null);
-    router.push(`/en/dashboard/assets-management`);
+    router.push(DASHBOARD_ROUTES.ASSETS_MANAGEMENT);
   };
 
   return (
@@ -95,8 +98,8 @@ function SitePage() {
       )}
       {isSiteLoading && (
         <ScreenLoader
-          heading="Loading"
-          description="Sites are loading, please wait"
+          heading={t("loader_heading")}
+          description={t("loader_description")}
         />
       )}
       {showCreateSiteModal && client?._id && (

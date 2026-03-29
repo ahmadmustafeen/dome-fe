@@ -6,6 +6,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 import { Navbar, NavItem } from "@/constants/data";
+import { AUTH_ROUTES, DASHBOARD_ROUTES } from "@/constants/routes";
 import { authService } from "@/services/auth-service";
 
 import { Typography } from "./Typography";
@@ -20,7 +21,7 @@ const SideBarNavigation = ({ currentPath, onClose }: SideBarNavigationProps) => 
   const [openItem, setOpenItem] = useState<number | null>(null);
 
   const navigateToLink = (path: string) => {
-    router.push(`/en/dashboard/${path}`);
+    router.push(`${DASHBOARD_ROUTES.ROOT}/${path}`);
     onClose?.();
   };
 
@@ -36,7 +37,7 @@ const SideBarNavigation = ({ currentPath, onClose }: SideBarNavigationProps) => 
     try {
       await authService.logout();
       toast.success("Logged out successfully");
-      window.location.replace("/en/sign-in");
+      window.location.replace(AUTH_ROUTES.SIGN_IN);
     } catch (error) {
       console.error({ error });
       toast.error("An error occurred during logout");

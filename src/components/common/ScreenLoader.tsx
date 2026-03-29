@@ -1,27 +1,40 @@
 import Image from "next/image";
 
-interface iScreenLoader {
+import { Typography } from "./Typography";
+
+interface ScreenLoaderProps {
   heading: string;
   description: string;
   containerClass?: string;
 }
-const ScreenLoader = ({ heading, description, containerClass }: iScreenLoader) => {
-  return <div className={`fixed z-30 h-screen w-screen top-0 left-0 bg-black/30 flex justify-center items-center `}>
-    <div className={`min-w-xl min-h-60 rounded-2xl p-3 bg-white flex items-center flex-col ${containerClass}`}>
-      <div className="border-b-2 border-gray-200 w-full text-center">
-        <h1 className="mb-2 text-lg font-bold tracking-tight text-heading md:text-xl lg:text-3xl">{heading}</h1>
-      </div>
-      <div className="h-40 flex justify-center items-center flex-col">
-        <p className="text-base font-normal text-body lg:text-lg ">{description}</p>
-        <Image
-          src="/assets/gifs/Loading.gif"
-          alt="Loading..."
-          width={100}
-          height={100}
-        />
+
+const ScreenLoader = ({
+  heading,
+  description,
+  containerClass,
+}: ScreenLoaderProps) => {
+  return (
+    <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/30 px-4">
+      <div
+        className={`flex w-full max-w-lg flex-col items-center rounded-2xl bg-white shadow-xl ${containerClass ?? ""}`}
+      >
+        <div className="w-full border-b border-gray-200 px-6 py-4 text-center sm:px-8 sm:py-5">
+          <Typography variant="h2">{heading}</Typography>
+        </div>
+        <div className="flex flex-col items-center gap-3 px-6 py-6 sm:px-8 sm:py-8">
+          <Typography variant="p" className="text-center text-gray-500">
+            {description}
+          </Typography>
+          <Image
+            src="/assets/gifs/Loading.gif"
+            alt="Loading..."
+            width={80}
+            height={80}
+          />
+        </div>
       </div>
     </div>
-  </div>
-}
+  );
+};
 
-export { ScreenLoader }
+export { ScreenLoader };

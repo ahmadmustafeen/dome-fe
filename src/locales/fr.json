@@ -75,6 +75,8 @@
   },
   "AssetsManagement": {
     "title": "Actifs",
+    "upload_loader_heading": "Importation du fichier XLSX",
+    "upload_loader_description": "Veuillez patienter pendant l'importation en masse.",
     "assets_found_one": "{count} actif trouvé",
     "assets_found_other": "{count} actifs trouvés",
     "btn_delete_selected": "Supprimer les actifs",
@@ -111,6 +113,8 @@
   },
   "DocumentManagement": {
     "title": "Gestion des documents",
+    "loader_heading": "Chargement",
+    "loader_description": "Les documents se chargent, veuillez patienter",
     "btn_upload": "Téléverser un document",
     "search_placeholder": "Rechercher des documents...",
     "filter_all_types": "Tous les types",
@@ -136,6 +140,8 @@
   },
   "MaintenanceSchedule": {
     "title": "Planning de Maintenance",
+    "loader_heading": "Génération du planning",
+    "loader_description": "L'IA analyse vos actifs et documents téléversés…",
     "subtitle": "Planning de Maintenance",
     "btn_generate": "Générer le planning",
     "btn_regenerate": "Régénérer le planning",
@@ -156,17 +162,59 @@
     "col_total_eops": "Total EOPs",
     "col_total_sops": "Total SOPs",
     "col_details": "Détails",
+    "col_view_details": "Catégorie",
     "details_mops": "Exigences MOP",
     "details_eops": "Exigences EOP",
     "details_sops": "Exigences SOP",
     "no_requirements": "Aucune exigence",
     "btn_show_details": "Voir les détails",
     "btn_hide_details": "Masquer les détails",
+    "btn_view_details": "Voir les détails",
     "summary_generated": "Généré le",
     "summary_groups": "Groupes d'équipements",
     "summary_assets": "Total des actifs",
     "summary_mops": "Total MOPs",
     "summary_eops": "Total EOPs",
     "summary_sops": "Total SOPs"
+  },
+  "MaintenanceCategoryDetail": {
+    "back": "Retour au planning",
+    "assets_count_one": "{count} actif",
+    "assets_count_other": "{count} actifs",
+    "search_placeholder": "Rechercher des actifs...",
+    "col_asset_id": "ID actif",
+    "col_asset_name": "Nom de l'actif",
+    "col_location": "Emplacement",
+    "col_serial": "Numéro de série",
+    "col_mops": "MOPs",
+    "col_eops": "EOPs",
+    "col_sops": "SOPs",
+    "empty_heading": "Aucun actif trouvé",
+    "empty_description": "Aucun actif n'est affecté à cette catégorie pour l'instant."
+  },
+  "MaintenanceAssetDetail": {
+    "back": "Retour à la catégorie",
+    "placeholder_heading": "Détail de l'actif",
+    "placeholder_description": "Le contenu complet du détail de l'actif sera développé lors de la prochaine phase."
+  },
+  "MaintenanceGenerate": {
+    "back": "Retour",
+    "heading_mop": "Générer un MOP",
+    "heading_eop": "Générer un EOP",
+    "heading_sop": "Générer un SOP",
+    "description": "La génération de documents sera branchée ici dans une phase ultérieure. Utilisez le bouton ci-dessous pour valider le flux (placeholder).",
+    "btn_generate_document": "Générer le document",
+    "context_category": "Catégorie",
+    "context_procedure": "Procédure",
+    "context_asset": "Actif",
+    "toast_placeholder": "La génération sera connectée lors de la prochaine phase."
+  },
+  "SitePage": {
+    "loader_heading": "Chargement",
+    "loader_description": "Les sites se chargent, veuillez patienter"
+  },
+  "ClientPage": {
+    "loader_heading": "Chargement",
+    "loader_description": "Les clients se chargent, veuillez patienter"
   }
 }

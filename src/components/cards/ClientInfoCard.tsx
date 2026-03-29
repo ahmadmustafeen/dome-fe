@@ -1,7 +1,8 @@
-import { formatPhoneNumber } from '@/utils/Helpers';
-import { Edit2Icon, Trash } from 'lucide-react'
-import { AppButton } from '../common';
+import { Edit2Icon, Trash } from "lucide-react";
 
+import { formatPhoneNumber } from "@/utils/Helpers";
+
+import { AppButton, Typography } from "../common";
 
 export interface Client {
   _id: string;
@@ -11,37 +12,66 @@ export interface Client {
   email: string;
 }
 
-const ClientInfoCard = ({ client, handleDelete, handleEdit, onSelectClient }: { client: Client, handleDelete: () => void, handleEdit: () => void, onSelectClient: () => void }) => {
+type ClientInfoCardProps = {
+  client: Client;
+  handleDelete: () => void;
+  handleEdit: () => void;
+  onSelectClient: () => void;
+};
+
+const ClientInfoCard = ({
+  client,
+  handleDelete,
+  handleEdit,
+  onSelectClient,
+}: ClientInfoCardProps) => {
   return (
-    <div className='border relative rounded-xl py-10 w-1/2 md:w-[32.2%] lg:w-[30%] bg-primary flex justify-center items-center flex-col'>
-      <div onClick={onSelectClient} className='absolute underline cursor-pointer top-2 right-2 text-white text-sm'>
+    <div className="relative flex w-full flex-col items-center justify-center rounded-xl border bg-primary px-4 py-8">
+      <button
+        onClick={onSelectClient}
+        className="absolute top-3 right-3 cursor-pointer text-xs text-white underline underline-offset-2 transition-opacity hover:opacity-80"
+      >
         Continue
+      </button>
+
+      {/* Avatar */}
+      <div className="mb-3 flex h-20 w-20 items-center justify-center rounded-full bg-white text-2xl font-bold text-primary sm:h-24 sm:w-24 sm:text-3xl">
+        {client.name[0]?.toUpperCase()}
       </div>
-      <div className='bg-white text-primary w-24 h-24 rounded-full flex justify-center items-center text-3xl mb-2'>
-        <p>{client.name.split("")?.[0]}</p>
+
+      {/* Info */}
+      <div className="flex w-full flex-col items-center gap-y-1 text-center">
+        <Typography variant="h4" className="my-1 text-white">
+          {client.name}
+        </Typography>
+        <Typography variant="caption" className="text-white/90">
+          Address: {client.address}
+        </Typography>
+        <Typography variant="caption" className="text-white/90">
+          Phone: {formatPhoneNumber(client.phone)}
+        </Typography>
+        <Typography variant="caption" className="text-white/90">
+          Email: {client.email}
+        </Typography>
       </div>
-      <div className='w-11/12 mx-auto flex flex-col justify-center items-center text-center gap-y-1'>
-        <p className='text-white text-xl my-2'>{client.name}</p>
-        <p className='text-white text-xs'>Address: {client.address}</p>
-        <p className="text-white text-xs">Phone: {formatPhoneNumber(client.phone)}</p>
-        <p className="text-white text-xs">Email: {client.email}</p>
-      </div>
-      <div className='flex gap-x-2 mt-5'>
+
+      {/* Actions */}
+      <div className="mt-5 flex flex-wrap justify-center gap-2">
         <AppButton
           onClick={handleEdit}
-          variant='secondary'
+          variant="secondary"
           icon={<Edit2Icon size={14} />}
-          title='Edit'
+          title="Edit"
         />
         <AppButton
           onClick={handleDelete}
-          variant='default'
+          variant="default"
           icon={<Trash size={14} />}
-          title='Delete'
+          title="Delete"
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
 export { ClientInfoCard };

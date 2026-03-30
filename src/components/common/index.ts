@@ -1,4 +1,5 @@
 export * from "./Button";
+export * from "./CountBadge";
 export * from "./DeleteConfirmation";
 export * from "./EmptyState";
 export * from "./InputWithLabel";

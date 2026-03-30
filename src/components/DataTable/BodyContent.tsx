@@ -12,6 +12,7 @@ import StateIndicator from "../common/StateIndicator";
 interface BodyContentProps<TData> {
   table: Table<TData>;
   handleTableRowClick?: (data: TData) => void;
+  onRowActivate?: (row: Row<TData>) => void;
   columnsLength: number;
   cellClassName?: string;
   loading?: boolean;
@@ -25,6 +26,7 @@ interface BodyContentProps<TData> {
 export function BodyContent<TData>({
   table,
   handleTableRowClick,
+  onRowActivate,
   columnsLength,
   cellClassName,
   loading,
@@ -62,10 +64,16 @@ export function BodyContent<TData>({
         <Fragment key={row.id}>
           <TableRow
             data-state={row.getIsSelected() ? "selected" : undefined}
-            onClick={() => handleTableRowClick?.(row.original)}
+            onClick={() => {
+              if (onRowActivate) {
+                onRowActivate(row);
+                return;
+              }
+              handleTableRowClick?.(row.original);
+            }}
             className={cn(
               "transition-colors",
-              handleTableRowClick && "cursor-pointer",
+              (onRowActivate || handleTableRowClick) && "cursor-pointer",
               row.getIsSelected() && "bg-primary/10",
               bodyRowClassName,
             )}

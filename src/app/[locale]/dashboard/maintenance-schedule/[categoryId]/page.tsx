@@ -1,4 +1,5 @@
 "use client";
+import type { Row } from "@tanstack/react-table";
 import { ArrowLeft, Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -12,15 +13,19 @@ import {
   Typography,
 } from "@/components/common";
 import { DataTable } from "@/components/DataTable";
+import { CategoryAssetProcedurePanel } from "@/components/sections/maintenance/CategoryAssetProcedurePanel";
 import { getCategoryAssetColumns } from "@/components/sections/maintenance/CategoryAssetsTableColumns";
 import { DUMMY_MAINTENANCE_SCHEDULE } from "@/constants/maintenance-schedule";
-import { MOCK_CATEGORY_ASSETS } from "@/constants/maintenance-schedule-assets";
 import {
   DASHBOARD_ROUTES,
-  maintenanceAssetRoute,
   maintenanceGenerateProcedureRoute,
 } from "@/constants/routes";
-import type { CategoryAsset, ProcedureKind } from "@/types/maintenance-schedule";
+import type {
+  CategoryAsset,
+  ProcedureItem,
+  ProcedureKind,
+} from "@/types/maintenance-schedule";
+import { buildCategoryAssetsForRow } from "@/utils/maintenance-category-assets";
 
 const PAGE_SIZE = 10;
 
@@ -42,8 +47,8 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
   );
 
   const allAssets: CategoryAsset[] = useMemo(
-    () => MOCK_CATEGORY_ASSETS[categoryId] ?? [],
-    [categoryId],
+    () => (categoryRow ? buildCategoryAssetsForRow(categoryRow) : []),
+    [categoryRow],
   );
 
   const filteredAssets = useMemo(() => {
@@ -70,42 +75,47 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
     [filteredAssets, currentPage],
   );
 
-  const handleGenerate = useCallback(
-    (assetId: string, type: ProcedureKind) => {
+  const handleProcedureGenerate = useCallback(
+    (item: ProcedureItem, kind: ProcedureKind, assetRecordId: string) => {
       router.push(
-        maintenanceGenerateProcedureRoute(type, {
+        maintenanceGenerateProcedureRoute(kind, {
           categoryId,
-          assetId,
+          assetId: assetRecordId,
+          procedureId: item.id,
         }),
       );
     },
     [router, categoryId],
   );
 
-  const handleRowClick = useCallback(
-    (asset: CategoryAsset) => {
-      router.push(
-        maintenanceAssetRoute(categoryId, asset.id),
-      );
-    },
-    [router, categoryId],
+  const renderAssetSubRow = useCallback(
+    (row: Row<CategoryAsset>) => (
+      <CategoryAssetProcedurePanel
+        asset={row.original}
+        labels={{
+          mops: t("details_mops"),
+          eops: t("details_eops"),
+          sops: t("details_sops"),
+        }}
+        onProcedureGenerate={handleProcedureGenerate}
+      />
+    ),
+    [handleProcedureGenerate, t],
   );
 
   const columns = useMemo(
     () =>
       getCategoryAssetColumns({
-        onGenerate: handleGenerate,
-        labels: {
-          colAssetId: t("col_asset_id"),
-          colAssetName: t("col_asset_name"),
-          colLocation: t("col_location"),
-          colSerial: t("col_serial"),
-          colMops: t("col_mops"),
-          colEops: t("col_eops"),
-          colSops: t("col_sops"),
-        },
+        colAssetId: t("col_asset_id"),
+        colAssetName: t("col_asset_name"),
+        colLocation: t("col_location"),
+        colSerial: t("col_serial"),
+        colMops: t("col_mops"),
+        colEops: t("col_eops"),
+        colSops: t("col_sops"),
+        colExpandHint: t("col_expand_hint"),
       }),
-    [t, handleGenerate],
+    [t],
   );
 
   const assetCount = filteredAssets.length;
@@ -113,7 +123,6 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
   return (
     <div className="h-full">
       <SectionWrapper>
-        {/* ── Back button ── */}
         <div className="mb-4">
           <AppButton
             title={t("back")}
@@ -123,7 +132,6 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
           />
         </div>
 
-        {/* ── Page header ── */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>
             <Typography variant="h1">
@@ -137,7 +145,6 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* ── Search ── */}
         <div className="mb-4">
           <div className="relative max-w-sm min-w-[220px]">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
@@ -151,8 +158,9 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
               placeholder={t("search_placeholder")}
               className="w-full rounded-lg border border-gray-300 py-2 pr-8 pl-9 text-sm focus:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none"
             />
-            {searchQuery && (
+            {searchQuery ? (
               <button
+                type="button"
                 onClick={() => {
                   setSearchQuery("");
                   setCurrentPage(1);
@@ -161,11 +169,10 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
               >
                 <X className="size-4" />
               </button>
-            )}
+            ) : null}
           </div>
         </div>
 
-        {/* ── Table ── */}
         {filteredAssets.length === 0 ? (
           <EmptyState
             icon={<Search className="size-9" />}
@@ -178,16 +185,18 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
               columns={columns}
               data={pagedAssets}
               getRowId={(row) => row.id}
-              handleRowClick={handleRowClick}
+              onRowActivate={(row) => {
+                row.toggleExpanded();
+              }}
               noDataMessage={t("empty_heading")}
-              bodyRowClassName="border-b border-slate-200 odd:bg-white even:bg-slate-50 hover:bg-primary/5 transition-colors cursor-pointer"
+              renderSubRow={renderAssetSubRow}
+              bodyRowClassName="border-b border-slate-200 odd:bg-white even:bg-slate-50 hover:bg-primary/10 transition-colors"
               bodyCellClassName="py-3 text-sm"
               headerCellClassName="text-center first:text-left"
             />
           </div>
         )}
 
-        {/* ── Pagination ── */}
         <Pagination
           totalPages={totalPages}
           currentPage={currentPage}

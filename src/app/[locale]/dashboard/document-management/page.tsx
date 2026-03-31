@@ -240,7 +240,7 @@ export default function DocumentManagementPage() {
 
         {/* Controls: Search + Type Filter */}
         <div className="mb-4 flex flex-wrap items-center gap-3">
-          <div className="relative max-w-sm min-w-[200px] flex-1">
+          <div className="relative max-w-sm min-w-50 flex-1">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
@@ -330,13 +330,13 @@ export default function DocumentManagementPage() {
         )}
 
         {/* Pagination */}
-        <Pagination
+        {filteredDocuments.length ? <Pagination
           totalPages={totalPages}
           currentPage={currentPage}
           onPageChange={handlePageChange}
           totalCount={totalCount}
           pageSize={PAGE_LIMIT}
-        />
+        /> : null}
       </SectionWrapper>
     </div>
   );

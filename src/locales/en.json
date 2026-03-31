@@ -150,6 +150,7 @@
     "empty_heading": "No schedule generated yet",
     "empty_description": "Click Generate Schedule to let AI analyse your uploaded assets and build a structured maintenance plan.",
     "col_category": "Category",
+    "col_subCategory": "Subcategory",
     "col_assets": "Assets",
     "col_monthly": "Monthly",
     "col_quarterly": "Quarterly",

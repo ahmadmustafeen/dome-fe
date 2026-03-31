@@ -18,12 +18,14 @@ export const isProcedureKind = (value: string): value is ProcedureKind =>
   (PROCEDURE_KINDS as readonly string[]).includes(value);
 
 /** A single MOP / EOP / SOP procedure with its generation status. */
-export type ProcedureItem = {
-  id: string;
-  description: string;
-  generated: boolean;
-  documentUrl?: string;
-};
+// export type ProcedureItem = {
+//   id: string;
+//   description: string;
+//   generated: boolean;
+//   documentUrl?: string;
+// };
+
+export type ProcedureItem = string
 
 /** A single asset inside a category, with per-asset procedure items. */
 export type CategoryAsset = {
@@ -41,18 +43,33 @@ export type CategoryAsset = {
 export type MaintenanceRow = {
   id: string;
   category: string;
+  subCategory: string;
   assetCount: number;
-  frequency: MaintenanceFrequency;
+  monthly: boolean;
+  quarterly: boolean;
+  semiAnnual: boolean;
+  annual: boolean;
+  twoYear: boolean;
+  threeYear: boolean;
+  fiveYear: boolean;
   totalMOPs: number;
   totalEOPs: number;
   totalSOPs: number;
-  mopRequirements: ProcedureItem[];
-  eopRequirements: ProcedureItem[];
-  sopRequirements: ProcedureItem[];
+  MOPs: ProcedureItem[];
+  EOPs: ProcedureItem[];
+  SOPs: ProcedureItem[];
 };
+
+
 
 /** The full generated schedule for a site. */
 export type MaintenanceScheduleData = {
   generatedAt: string;
   rows: MaintenanceRow[];
 };
+
+
+export interface MaintenanceScheduleApiResponse {
+  success: boolean;
+  data: MaintenanceRow[];
+}

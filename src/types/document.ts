@@ -36,6 +36,7 @@ export interface DocumentListApiResponse {
   };
 }
 
+
 export interface DocumentCreateApiResponse {
   success: boolean;
   message: string;

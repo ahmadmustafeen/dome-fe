@@ -1,7 +1,7 @@
 "use client";
+import type { Row } from "@tanstack/react-table";
 import {
   CalendarDays,
-  Check,
   RefreshCw,
   Search,
   Trash2,
@@ -9,71 +9,71 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   AppButton,
   EmptyState,
-  Pagination,
   ScreenLoader,
   SectionWrapper,
   Typography,
 } from "@/components/common";
 import { DataTable } from "@/components/DataTable";
 import { getMaintenanceColumns } from "@/components/sections/maintenance/MaintenanceTableColumns";
-import { DUMMY_MAINTENANCE_SCHEDULE } from "@/constants/maintenance-schedule";
-import { maintenanceCategoryRoute } from "@/constants/routes";
+import { RequirementSection } from "@/components/sections/maintenance/RequirementSection";
+import {
+  maintenanceCategoryRoute,
+  maintenanceGenerateProcedureRoute,
+} from "@/constants/routes";
 import { useAppContext } from "@/context/AppContext";
 import type {
   MaintenanceRow,
   MaintenanceScheduleData,
+  ProcedureItem,
+  ProcedureKind,
 } from "@/types/maintenance-schedule";
-import { formatDate } from "@/utils/formatters";
+import { toast } from "react-toastify";
+import { maintenanceScheduleService } from "@/services/maintenance-schedule-service";
 
-const MS_PAGE_SIZE = 5;
 
 export default function MaintenanceSchedulePage() {
-  const t = useTranslations("MaintenanceSchedule");
   const { site } = useAppContext();
   const router = useRouter();
 
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [data, setData] = useState<MaintenanceRow[]>([])
   const [schedule, setSchedule] = useState<MaintenanceScheduleData | null>(
     null,
   );
-  const [isGenerating, setIsGenerating] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [msPage, setMsPage] = useState(1);
 
-  const simulate = (data: MaintenanceScheduleData) =>
-    new Promise<void>((resolve) =>
-      setTimeout(() => {
-        setSchedule(data);
-        resolve();
-      }, 1800),
-    );
+  const t = useTranslations("MaintenanceSchedule");
 
-  const handleGenerate = async () => {
-    setIsGenerating(true);
-    await simulate(DUMMY_MAINTENANCE_SCHEDULE);
-    setMsPage(1);
-    setIsGenerating(false);
-  };
 
-  const handleRegenerate = async () => {
-    setIsGenerating(true);
-    await simulate({
-      ...DUMMY_MAINTENANCE_SCHEDULE,
-      generatedAt: new Date().toISOString(),
-    });
-    setMsPage(1);
-    setIsGenerating(false);
-  };
+  const fetchMaintenanceSchedule = useCallback(async (siteId: string) => {
+    setIsLoading(true);
+    try {
+      const response = await maintenanceScheduleService.getMaintenanceScheduleBySiteId(siteId);
+      console.log({response});
+      
+      setData(response.data);
+      setSchedule({ generatedAt: new Date().toDateString(), rows: response.data })
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Failed to load maintenance schedule.",
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
-  const handleClear = () => {
-    setSchedule(null);
-    setSearchQuery("");
-    setMsPage(1);
-  };
+  useEffect(() => {
+    if (site) {
+      fetchMaintenanceSchedule(site._id)
+    }
+  }, [site])
+
 
   const handleViewDetails = useCallback(
     (categoryId: string) => {
@@ -82,55 +82,76 @@ export default function MaintenanceSchedulePage() {
     [router],
   );
 
-  const filteredRows = useMemo<MaintenanceRow[]>(() => {
-    if (!schedule) {
-      return [];
-    }
-    const q = searchQuery.trim().toLowerCase();
-    return q
-      ? schedule.rows.filter((r) => r.category.toLowerCase().includes(q))
-      : schedule.rows;
-  }, [schedule, searchQuery]);
-
-  const msTotalPages = Math.max(
-    1,
-    Math.ceil(filteredRows.length / MS_PAGE_SIZE),
-  );
-
-  const pagedRows = useMemo(
-    () =>
-      filteredRows.slice((msPage - 1) * MS_PAGE_SIZE, msPage * MS_PAGE_SIZE),
-    [filteredRows, msPage],
-  );
-
-  const totals = useMemo(
-    () => ({
-      assets: filteredRows.reduce((s, r) => s + r.assetCount, 0),
-      mops: filteredRows.reduce((s, r) => s + r.totalMOPs, 0),
-      eops: filteredRows.reduce((s, r) => s + r.totalEOPs, 0),
-      sops: filteredRows.reduce((s, r) => s + r.totalSOPs, 0),
-    }),
-    [filteredRows],
+  const handleProcedureGenerate = useCallback(
+    (item: ProcedureItem, kind: ProcedureKind, categoryId: string) => {
+      router.push(
+        maintenanceGenerateProcedureRoute(kind, {
+          categoryId,
+          procedureId: item,
+        }),
+      );
+    },
+    [router],
   );
 
   const columns = useMemo(
     () =>
       getMaintenanceColumns({
-        colCategory: t("col_category"),
-        colAssets: t("col_assets"),
-        colMonthly: t("col_monthly"),
-        colQuarterly: t("col_quarterly"),
-        colSemiAnnual: t("col_semi_annual"),
-        colAnnual: t("col_annual"),
-        colTwoYear: t("col_two_year"),
-        colThreeYear: t("col_three_year"),
-        colFiveYear: t("col_five_year"),
-        colTotalMops: t("col_total_mops"),
-        colTotalEops: t("col_total_eops"),
-        colTotalSops: t("col_total_sops"),
-        colOpenCategory: t("col_open_category"),
+        onViewDetails: handleViewDetails,
+        labels: {
+          colCategory: t("col_category"),
+          colSubCategory: t("col_subCategory"),
+          colAssets: t("col_assets"),
+          colMonthly: t("col_monthly"),
+          colQuarterly: t("col_quarterly"),
+          colSemiAnnual: t("col_semi_annual"),
+          colAnnual: t("col_annual"),
+          colTwoYear: t("col_two_year"),
+          colThreeYear: t("col_three_year"),
+          colFiveYear: t("col_five_year"),
+          colTotalMops: t("col_total_mops"),
+          colTotalEops: t("col_total_eops"),
+          colTotalSops: t("col_total_sops"),
+          colDetails: t("col_details"),
+          colViewDetails: t("col_view_details"),
+          btnShowDetails: t("btn_show_details"),
+          btnHideDetails: t("btn_hide_details"),
+          btnViewDetails: t("btn_view_details"),
+        },
       }),
-    [t],
+    [t, handleViewDetails],
+  );
+
+  const renderSubRow = useCallback(
+    (row: Row<MaintenanceRow>) => (
+      <div className="grid grid-cols-3 gap-4">
+        <RequirementSection
+          label={t("details_mops")}
+          items={row.original.MOPs}
+          colorClass="border-blue-200"
+          onGenerate={(item) => {
+            handleProcedureGenerate(item, "mop", row.original.id);
+          }}
+        />
+        <RequirementSection
+          label={t("details_eops")}
+          items={row.original.EOPs}
+          colorClass="border-red-200"
+          onGenerate={(item) => {
+            handleProcedureGenerate(item, "eop", row.original.id);
+          }}
+        />
+        <RequirementSection
+          label={t("details_sops")}
+          items={row.original.SOPs}
+          colorClass="border-green-200"
+          onGenerate={(item) => {
+            handleProcedureGenerate(item, "sop", row.original.id);
+          }}
+        />
+      </div>
+    ),
+    [t, handleProcedureGenerate],
   );
 
   if (!site?._id) {
@@ -142,26 +163,27 @@ export default function MaintenanceSchedulePage() {
       </div>
     );
   }
+  if (isLoading) {
+    return <ScreenLoader
+      heading={t("loader_heading")}
+      description={t("loader_description")}
+    />
+  }
+
+  const handleGenerate = () => { }
+  const handleRegenerate = () => { }
+  const handleClear = () => { }
+
+  console.log({data});
+  
 
   return (
     <div className="h-full">
-      {isGenerating && (
-        <ScreenLoader
-          heading={t("loader_heading")}
-          description={t("loader_description")}
-        />
-      )}
-
       <SectionWrapper>
         {/* ── Page header ── */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>
             <Typography variant="h1">{t("title")}</Typography>
-            <Typography variant="p" className="mt-1 text-gray-500">
-              {schedule
-                ? `${filteredRows.length} ${filteredRows.length !== 1 ? "categories" : "category"} · ${totals.assets} assets`
-                : "Generate a schedule to view your maintenance plan"}
-            </Typography>
           </div>
           {!schedule ? (
             <AppButton
@@ -188,7 +210,7 @@ export default function MaintenanceSchedulePage() {
           )}
         </div>
 
-        {!schedule ? (
+        {!data?.length ? (
           <EmptyState
             icon={<CalendarDays className="h-10 w-10" />}
             heading={t("empty_heading")}
@@ -196,16 +218,14 @@ export default function MaintenanceSchedulePage() {
           />
         ) : (
           <>
-            {/* ── Search ── */}
             <div className="mb-4">
-              <div className="relative max-w-sm min-w-[220px]">
+              <div className="relative max-w-sm min-w-55">
                 <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
-                    setMsPage(1);
                   }}
                   placeholder={t("search_placeholder")}
                   className="w-full rounded-lg border border-gray-300 py-2 pr-8 pl-9 text-sm focus:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none"
@@ -214,7 +234,6 @@ export default function MaintenanceSchedulePage() {
                   <button
                     onClick={() => {
                       setSearchQuery("");
-                      setMsPage(1);
                     }}
                     className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
@@ -224,125 +243,26 @@ export default function MaintenanceSchedulePage() {
               </div>
             </div>
 
-            {/* ── DataTable ── */}
             <div className="overflow-hidden rounded-lg border border-slate-800 shadow-xl shadow-black/20">
               <DataTable
                 columns={columns}
-                data={pagedRows}
+                data={data}
                 getRowId={(row) => row.id}
-                handleRowClick={(row) => {
-                  handleViewDetails(row.id);
-                }}
                 noDataMessage="No categories match your search."
-                bodyRowClassName="border-b border-slate-200 odd:bg-white even:bg-slate-50 hover:bg-primary/10 transition-colors"
+                renderSubRow={renderSubRow}
+                bodyRowClassName="border-b border-slate-200 odd:bg-white even:bg-slate-50 hover:bg-primary/5 transition-colors"
                 bodyCellClassName="py-3 text-sm"
                 headerCellClassName="text-center first:text-left"
               />
             </div>
 
-            {/* ── Pagination ── */}
-            <Pagination
-              totalPages={msTotalPages}
+            {/* <Pagination
+              // totalPages={msTotalPages}
               currentPage={msPage}
               onPageChange={setMsPage}
-              totalCount={filteredRows.length}
+              // totalCount={filteredRows.length}
               pageSize={MS_PAGE_SIZE}
-            />
-
-            {/* ── Legend ── */}
-            <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 rounded-lg border border-slate-200 bg-slate-50 px-5 py-3">
-              <Typography
-                variant="caption"
-                className="flex items-center gap-1.5 text-slate-500"
-              >
-                <Check className="h-3.5 w-3.5 text-teal-500" strokeWidth={3} />
-                Scheduled Maintenance Frequency
-              </Typography>
-              <Typography
-                variant="caption"
-                className="flex items-center gap-1.5 text-slate-500"
-              >
-                <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">
-                  N
-                </span>
-                {t("legend_procedure_totals")}
-              </Typography>
-              <Typography variant="caption" className="text-slate-500">
-                {t("legend_row_click")}
-              </Typography>
-            </div>
-
-            {/* ── Summary footer ── */}
-            <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 px-6 py-4">
-              <div className="grid grid-cols-2 gap-x-8 gap-y-3 sm:grid-cols-3 md:grid-cols-6">
-                <div>
-                  <Typography variant="h6" className="text-slate-400">
-                    {t("summary_generated")}
-                  </Typography>
-                  <Typography
-                    variant="p"
-                    className="mt-0.5 font-medium text-slate-700"
-                  >
-                    {formatDate(schedule.generatedAt)}
-                  </Typography>
-                </div>
-                <div>
-                  <Typography variant="h6" className="text-slate-400">
-                    {t("summary_groups")}
-                  </Typography>
-                  <Typography
-                    variant="p"
-                    className="mt-0.5 font-medium text-slate-700"
-                  >
-                    {filteredRows.length}
-                  </Typography>
-                </div>
-                <div>
-                  <Typography variant="h6" className="text-slate-400">
-                    {t("summary_assets")}
-                  </Typography>
-                  <Typography
-                    variant="p"
-                    className="mt-0.5 font-medium text-slate-700"
-                  >
-                    {totals.assets}
-                  </Typography>
-                </div>
-                <div>
-                  <Typography variant="h6" className="text-slate-400">
-                    {t("summary_mops")}
-                  </Typography>
-                  <Typography
-                    variant="p"
-                    className="mt-0.5 font-medium text-slate-700"
-                  >
-                    {totals.mops}
-                  </Typography>
-                </div>
-                <div>
-                  <Typography variant="h6" className="text-slate-400">
-                    {t("summary_eops")}
-                  </Typography>
-                  <Typography
-                    variant="p"
-                    className="mt-0.5 font-medium text-slate-700"
-                  >
-                    {totals.eops}
-                  </Typography>
-                </div>
-                <div>
-                  <Typography variant="h6" className="text-slate-400">
-                    {t("summary_sops")}
-                  </Typography>
-                  <Typography
-                    variant="p"
-                    className="mt-0.5 font-medium text-slate-700"
-                  >
-                    {totals.sops}
-                  </Typography>
-                </div>
-              </div>
-            </div>
+            /> */}
           </>
         )}
       </SectionWrapper>

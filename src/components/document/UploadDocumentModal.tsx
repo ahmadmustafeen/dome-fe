@@ -15,6 +15,7 @@ const ACCEPTED_MIME = ".pdf,.doc,.docx,.txt";
 
 interface UploadDocumentModalProps {
   siteId: string;
+  clientId: string;
   onClose: () => void;
   onSuccess: (doc: DocumentApiRecord) => void;
 }
@@ -22,8 +23,11 @@ interface UploadDocumentModalProps {
 const UploadDocumentModal = ({
   siteId,
   onClose,
+  clientId,
   onSuccess,
 }: UploadDocumentModalProps) => {
+  console.log({ clientId });
+
   const [documentType, setDocumentType] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -97,7 +101,14 @@ const UploadDocumentModal = ({
         siteId,
         documentType,
         file!,
+        clientId
       );
+      await documentService.ingestDocument(
+        response.data._id,
+        documentType,
+        file!,
+        clientId)
+
       toast.success("Document uploaded successfully");
       onSuccess(response.data);
       onClose();
@@ -171,13 +182,12 @@ const UploadDocumentModal = ({
                   inputRef.current?.click();
                 }
               }}
-              className={`relative cursor-pointer rounded-xl border-2 border-dashed transition-all duration-200 select-none ${
-                file
-                  ? "cursor-default border-primary/40 bg-primary/5"
-                  : isDragging
-                    ? "scale-[1.01] border-secondary bg-secondary/5"
-                    : "border-gray-300 bg-gray-50 hover:border-primary hover:bg-primary/5"
-              }`}
+              className={`relative cursor-pointer rounded-xl border-2 border-dashed transition-all duration-200 select-none ${file
+                ? "cursor-default border-primary/40 bg-primary/5"
+                : isDragging
+                  ? "scale-[1.01] border-secondary bg-secondary/5"
+                  : "border-gray-300 bg-gray-50 hover:border-primary hover:bg-primary/5"
+                }`}
             >
               <div className="p-6">
                 {file ? (

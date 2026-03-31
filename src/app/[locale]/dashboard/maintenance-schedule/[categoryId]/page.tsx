@@ -3,12 +3,13 @@ import type { Row } from "@tanstack/react-table";
 import { ArrowLeft, Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { use, useCallback, useMemo, useState } from "react";
+import { use, useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   AppButton,
   EmptyState,
   Pagination,
+  ScreenLoader,
   SectionWrapper,
   Typography,
 } from "@/components/common";
@@ -22,10 +23,16 @@ import {
 } from "@/constants/routes";
 import type {
   CategoryAsset,
+  MaintenanceRow,
+  MaintenanceScheduleData,
   ProcedureItem,
   ProcedureKind,
 } from "@/types/maintenance-schedule";
 import { buildCategoryAssetsForRow } from "@/utils/maintenance-category-assets";
+import { useAppContext } from "@/context/AppContext";
+import { maintenanceScheduleService } from "@/services/maintenance-schedule-service";
+import * as assetService from "@/services/asset-service";
+import { toast } from "react-toastify";
 
 const PAGE_SIZE = 10;
 
@@ -37,32 +44,57 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
   const { categoryId } = use(params);
   const t = useTranslations("MaintenanceCategoryDetail");
   const router = useRouter();
+  const [categoryRow, setCategoryRow] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [data, setData] = useState<MaintenanceRow[]>([])
+  const [schedule, setSchedule] = useState<MaintenanceScheduleData | null>(
+    null,
+  );
+  const { site } = useAppContext()
+
+
+  const fetchMaintenanceSchedule = useCallback(async (siteId: string) => {
+    setIsLoading(true);
+    try {
+      const response = await maintenanceScheduleService.getMaintenanceScheduleBySiteId(siteId);
+      console.log({ response });
+
+      setData(response.data);
+      const category = response.data.find(item => item._id === categoryId)
+      const data = await assetService.assetService.getAllAssetsByCategoryAndSubCategory(category?.category!, category?.subCategory!)
+      setCategoryRow(data?.data?.assets?.map((item: any) => ({ ...item, mops: category?.MOPs, sops: category?.SOPs, eops: category?.EOPs })) || [])
+
+      setSchedule({ generatedAt: new Date().toDateString(), rows: response.data })
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Failed to load maintenance schedule.",
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (site) {
+      fetchMaintenanceSchedule(site._id)
+    }
+  }, [site])
 
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const categoryRow = useMemo(
-    () => DUMMY_MAINTENANCE_SCHEDULE.rows.find((r) => r.id === categoryId),
-    [categoryId],
-  );
 
-  const allAssets: CategoryAsset[] = useMemo(
-    () => (categoryRow ? buildCategoryAssetsForRow(categoryRow) : []),
-    [categoryRow],
-  );
 
   const filteredAssets = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
-    if (!q) {
-      return allAssets;
-    }
-    return allAssets.filter(
-      (a) =>
-        a.assetName.toLowerCase().includes(q) ||
-        a.assetId.toLowerCase().includes(q) ||
-        a.location.toLowerCase().includes(q),
-    );
-  }, [allAssets, searchQuery]);
+    return categoryRow;
+    // return categoryRow.filter(
+    //   (a) =>
+    //     // a.assetName.toLowerCase().includes(q) ||
+    //     a.assetId.toLowerCase().includes(q) ||
+    //     a.location.toLowerCase().includes(q),
+    // );
+  }, [categoryRow, searchQuery]);
 
   const totalPages = Math.max(1, Math.ceil(filteredAssets.length / PAGE_SIZE));
 
@@ -81,7 +113,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
         maintenanceGenerateProcedureRoute(kind, {
           categoryId,
           assetId: assetRecordId,
-          procedureId: item.id,
+          procedureId: item,
         }),
       );
     },
@@ -120,6 +152,13 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
 
   const assetCount = filteredAssets.length;
 
+
+  if (isLoading) {
+    return <ScreenLoader
+      heading={t("loader_heading")}
+      description={t("loader_description")}
+    />
+  }
   return (
     <div className="h-full">
       <SectionWrapper>

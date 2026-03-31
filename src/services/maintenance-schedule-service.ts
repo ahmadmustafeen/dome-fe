@@ -29,6 +29,13 @@ export const maintenanceScheduleService = {
     );
   },
 
+  generateMaintenanceSchedule: (siteId: string) => {
+    return apiFetch<MaintenanceScheduleApiResponse>(
+      `/maintenance-schedule/generate/${siteId}`,
+      { method: "GET" },
+    );
+  },
+
   // createDocument: (siteId: string, type: string, file: File) => {
   //   const formData = new FormData();
   //   formData.append("siteId", siteId);

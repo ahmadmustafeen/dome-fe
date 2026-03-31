@@ -39,11 +39,11 @@ export const formatDate = (iso: string): string => {
  */
 export const extractDocumentName = (url: string): string => {
   try {
-    const path = new URL(url).pathname;
-    const segment = path.split("/").filter(Boolean).pop() ?? "";
+    const path = new URL(url)?.pathname;
+    const segment = path?.split("/").filter(Boolean).pop() ?? "";
     return decodeURIComponent(segment) || url;
   } catch {
-    const segment = url.split("/").pop()?.split("?")[0] ?? "";
+    const segment = url?.split("/")?.pop()?.split("?")[0] ?? "";
     return decodeURIComponent(segment) || url;
   }
 };
@@ -55,7 +55,9 @@ export const extractDocumentName = (url: string): string => {
  * @param url
  */
 export const extractFileExtension = (url: string): string => {
-  const name = extractDocumentName(url);
-  const ext = name.split(".").pop()?.toLowerCase() ?? "";
+  console.log({ url });
+
+  const name = extractDocumentName?.(url);
+  const ext = name?.split(".")?.pop()?.toLowerCase() ?? "";
   return ext || "pdf";
 };

@@ -55,8 +55,8 @@ export default function MaintenanceSchedulePage() {
     setIsLoading(true);
     try {
       const response = await maintenanceScheduleService.getMaintenanceScheduleBySiteId(siteId);
-      console.log({response});
-      
+      console.log({ response });
+
       setData(response.data);
       setSchedule({ generatedAt: new Date().toDateString(), rows: response.data })
     } catch (err) {
@@ -170,12 +170,16 @@ export default function MaintenanceSchedulePage() {
     />
   }
 
-  const handleGenerate = () => { }
-  const handleRegenerate = () => { }
+  const handleGenerate = async () => {
+    await maintenanceScheduleService.generateMaintenanceSchedule(site._id);
+    fetchMaintenanceSchedule(site?._id)
+  }
+  const handleRegenerate = async () => {
+    await maintenanceScheduleService.generateMaintenanceSchedule(site._id);
+    fetchMaintenanceSchedule(site?._id)
+  }
   const handleClear = () => { }
 
-  console.log({data});
-  
 
   return (
     <div className="h-full">
@@ -185,7 +189,7 @@ export default function MaintenanceSchedulePage() {
           <div>
             <Typography variant="h1">{t("title")}</Typography>
           </div>
-          {!schedule ? (
+          {!schedule?.rows?.length ? (
             <AppButton
               title={t("btn_generate")}
               onClick={handleGenerate}

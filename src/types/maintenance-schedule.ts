@@ -41,6 +41,7 @@ export type CategoryAsset = {
 
 /** One row in the maintenance schedule table. */
 export type MaintenanceRow = {
+  _id: string;
   id: string;
   category: string;
   subCategory: string;

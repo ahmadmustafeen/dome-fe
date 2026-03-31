@@ -183,6 +183,8 @@
   },
   "MaintenanceCategoryDetail": {
     "back": "Back to Schedule",
+    "loader_heading": "Loading Schedule",
+    "loader_description": "Loading, Please wait!",
     "assets_count_one": "{count} asset",
     "assets_count_other": "{count} assets",
     "search_placeholder": "Search assets...",

@@ -27,7 +27,7 @@ const PAGE_LIMIT = 10;
 
 export default function DocumentManagementPage() {
   const t = useTranslations("DocumentManagement");
-  const { site } = useAppContext();
+  const { site, client } = useAppContext();
 
   const [documents, setDocuments] = useState<DocumentApiRecord[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -79,10 +79,12 @@ export default function DocumentManagementPage() {
   // ── Client-side filter on current page ────────────────────────────────────
   const filteredDocuments = useMemo(() => {
     return documents.filter((doc) => {
+      console.log({ doc });
+
       const q = searchQuery.trim().toLowerCase();
-      const name = extractDocumentName(doc.documentUrl).toLowerCase();
+      const name = extractDocumentName(doc?.documentUrl)?.toLowerCase() || "";
       const matchesSearch =
-        q === "" || name.includes(q) || doc.type.toLowerCase().includes(q);
+        q === "" || name?.includes(q) || doc?.type?.toLowerCase()?.includes(q);
       const matchesType = typeFilter === "all" || doc.type === typeFilter;
       return matchesSearch && matchesType;
     });
@@ -168,11 +170,11 @@ export default function DocumentManagementPage() {
     [isDeleting, t],
   );
 
-  if (!site?._id) {
+  if (!site?._id || !client?._id) {
     return (
       <div className="flex h-full items-center justify-center p-4 sm:p-6 lg:p-8">
         <Typography variant="caption" className="text-gray-400">
-          Select a site to view documents.
+          Select client and site to view documents.
         </Typography>
       </div>
     );
@@ -183,6 +185,7 @@ export default function DocumentManagementPage() {
       {showUpload && (
         <UploadDocumentModal
           siteId={site._id}
+          clientId={client._id}
           onClose={() => setShowUpload(false)}
           onSuccess={handleUploadSuccess}
         />

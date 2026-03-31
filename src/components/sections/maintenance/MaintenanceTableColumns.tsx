@@ -191,8 +191,8 @@ export const getMaintenanceColumns = ({
       <AppButton
         variant="secondary"
         icon={<ExternalLink className="size-5" />}
-        title={labels.btnViewDetails}
-        onClick={() => onViewDetails(row.original.id)}
+        title={'view'}
+        onClick={() => onViewDetails(row.original._id)}
       />
     ),
   },

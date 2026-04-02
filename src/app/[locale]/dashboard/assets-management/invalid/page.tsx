@@ -1,7 +1,7 @@
 "use client";
 import type { RowSelectionState } from "@tanstack/react-table";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 import type { Asset } from "@/components";
@@ -101,14 +101,14 @@ export default function InvalidAssetsPage() {
     }
   };
 
-  const handleEditPress = (id: string) => {
+  const handleEditPress = useCallback((id: string) => {
     const selected = assets.find((item) => item._id === id);
     if (!selected) {
       return;
     }
     setAsset(selected);
-    toggleCreateAsset();
-  };
+    setShowCreateAsset(true);
+  }, [assets]);
 
   const handleUpdateAsset = async (id: string, data: Asset) => {
     try {
@@ -193,7 +193,7 @@ export default function InvalidAssetsPage() {
           actionDelete: "Delete",
         },
       }),
-    [],
+    [handleEditPress],
   );
 
   return (

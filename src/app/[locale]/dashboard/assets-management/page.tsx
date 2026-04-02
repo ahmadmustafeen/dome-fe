@@ -159,14 +159,17 @@ export default function AssetManagementPage() {
     }
   };
 
-  const handleEditPress = (id: string) => {
-    const selected = assets.find((item) => item._id === id);
-    if (!selected) {
-      return;
-    }
-    setAsset(selected);
-    toggleCreateAsset();
-  };
+  const handleEditPress = useCallback(
+    (id: string) => {
+      const selected = assets.find((item) => item._id === id);
+      if (!selected) {
+        return;
+      }
+      setAsset(selected);
+      setShowCreateAsset(true);
+    },
+    [assets],
+  );
 
   const handleUpdateAsset = async (id: string, data: Asset) => {
     try {
@@ -236,7 +239,9 @@ export default function AssetManagementPage() {
     () =>
       getAssetColumns({
         onEdit: handleEditPress,
-        onDelete: (id) => setDeleteId(id),
+        onDelete: (id) => {
+          setDeleteId(id);
+        },
         labels: {
           colAssetId: "Asset Id",
           colAssetName: "Asset Name",
@@ -252,8 +257,7 @@ export default function AssetManagementPage() {
           actionDelete: "Delete",
         },
       }),
-
-    [],
+    [handleEditPress],
   );
 
   return (

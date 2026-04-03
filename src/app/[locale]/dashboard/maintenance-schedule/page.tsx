@@ -41,6 +41,7 @@ export default function MaintenanceSchedulePage() {
   const router = useRouter();
 
 
+  const [isGenerator, setIsGenerator] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [data, setData] = useState<MaintenanceRow[]>([])
   const [schedule, setSchedule] = useState<MaintenanceScheduleData | null>(
@@ -163,23 +164,41 @@ export default function MaintenanceSchedulePage() {
       </div>
     );
   }
-  if (isLoading) {
+
+
+  const handleGenerate = async () => {
+    try {
+      setIsGenerator(true)
+      await maintenanceScheduleService.generateMaintenanceSchedule(site._id);
+    } finally {
+      setIsGenerator(false)
+      fetchMaintenanceSchedule(site?._id)
+    }
+  }
+  const handleRegenerate = async () => {
+    try {
+      setIsGenerator(true)
+      await maintenanceScheduleService.generateMaintenanceSchedule(site._id);
+    } finally {
+      setIsGenerator(false)
+      fetchMaintenanceSchedule(site?._id)
+    }
+  }
+  const handleClear = () => { }
+
+
+  if (isGenerator) {
     return <ScreenLoader
       heading={t("loader_heading")}
       description={t("loader_description")}
     />
   }
-
-  const handleGenerate = async () => {
-    await maintenanceScheduleService.generateMaintenanceSchedule(site._id);
-    fetchMaintenanceSchedule(site?._id)
+  if (isLoading) {
+    return <ScreenLoader
+      heading={"Fetching Maintenance Schedule"}
+      description={"Please wait while we fetch the maintenance schedule"}
+    />
   }
-  const handleRegenerate = async () => {
-    await maintenanceScheduleService.generateMaintenanceSchedule(site._id);
-    fetchMaintenanceSchedule(site?._id)
-  }
-  const handleClear = () => { }
-
 
   return (
     <div className="h-full">

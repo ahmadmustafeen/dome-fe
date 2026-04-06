@@ -1,6 +1,4 @@
 "use client";
-import { Eye, FilePlus } from "lucide-react";
-
 import type { ProcedureItem } from "@/types/maintenance-schedule";
 
 type RequirementSectionProps = {
@@ -14,7 +12,6 @@ const RequirementSection = ({
   label,
   items,
   colorClass,
-  onGenerate,
 }: RequirementSectionProps) => {
   const textColorClass = colorClass
     .replace("border-", "text-")

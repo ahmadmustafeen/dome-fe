@@ -170,6 +170,7 @@ export default function MaintenanceSchedulePage() {
     try {
       setIsGenerator(true)
       await maintenanceScheduleService.generateMaintenanceSchedule(site._id);
+      toast.success("AI is working in background, refresh this page in 5 mins for latest changes")
     } finally {
       setIsGenerator(false)
       fetchMaintenanceSchedule(site?._id)
@@ -179,6 +180,7 @@ export default function MaintenanceSchedulePage() {
     try {
       setIsGenerator(true)
       await maintenanceScheduleService.generateMaintenanceSchedule(site._id);
+      toast.success("AI is working in background, refresh this page in 5 mins for latest changes")
     } finally {
       setIsGenerator(false)
       fetchMaintenanceSchedule(site?._id)

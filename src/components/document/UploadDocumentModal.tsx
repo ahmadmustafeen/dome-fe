@@ -109,7 +109,7 @@ const UploadDocumentModal = ({
         file!,
         clientId)
 
-      toast.success("Document uploaded successfully");
+      toast.success("Document uploaded successfully, wait for the document for processing");
       onSuccess(response.data);
       onClose();
     } catch (err) {

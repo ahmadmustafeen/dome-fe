@@ -16,6 +16,7 @@ export interface DocumentApiRecord {
   /** Publicly accessible S3 URL of the uploaded file. */
   documentUrl: string;
   siteId: string;
+  ingested: boolean;
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;

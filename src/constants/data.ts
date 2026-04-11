@@ -22,7 +22,15 @@ export const Navbar: NavItem[] = [
   { id: 5, title: "Document Generator", link: "document-generator" },
   { id: 6, title: "SOP Management", link: "sop-management" },
   { id: 7, title: "EOP Management", link: "eop-management" },
-  { id: 8, title: "MOP Management", link: "mop-management" },
+  {
+    id: 8,
+    title: "MOP Management",
+    link: "mop-management",
+    subItems: [
+      { id: 81, title: "Overview", link: "mop-management" },
+      { id: 82, title: "Create MOP", link: "mop-management/create" },
+    ],
+  },
 ];
 
 export interface iTableHeader {

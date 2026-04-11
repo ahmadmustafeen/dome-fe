@@ -2,11 +2,11 @@
   "name": "next-js-boilerplate",
   "author": "Ixartz (https://github.com/ixartz)",
   "engines": {
-   "node": "^22.22.0"
+    "node": "^22.22.0"
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build --webpack",
+    "build": "next build",
     "start": "next start",
     "clean": "rimraf .next out coverage",
     "lint": "eslint .",
@@ -24,7 +24,11 @@
     "@logtape/logtape": "^2.0.2",
     "@t3-oss/env-nextjs": "^0.13.10",
     "@tanstack/react-table": "^8.21.3",
+    "@tiptap/pm": "^3.22.1",
+    "@tiptap/react": "^3.22.1",
+    "@tiptap/starter-kit": "^3.22.1",
     "clsx": "^2.1.1",
+    "html2pdf.js": "^0.14.0",
     "lucide-react": "^0.575.0",
     "next": "^16.1.6",
     "next-intl": "^4.8.2",

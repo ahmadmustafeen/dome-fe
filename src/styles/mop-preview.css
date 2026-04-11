@@ -1,0 +1,79 @@
+/* Printable-style live preview */
+.mop-preview-document {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: #111827;
+  background: #ffffff;
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.08),
+    0 10px 15px -3px rgb(0 0 0 / 0.08);
+  border: 1px solid #e5e7eb;
+  border-radius: 0.25rem;
+  padding: 1.75rem 2rem;
+  max-width: 48rem;
+  margin: 0 auto;
+  min-height: 280px;
+}
+
+.mop-preview-document h1 {
+  font-size: 1.375rem;
+  font-weight: 700;
+  text-align: center;
+  margin: 0 0 1rem;
+}
+
+.mop-preview-document h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 1rem 0 0.5rem;
+}
+
+.mop-preview-document p {
+  margin: 0 0 0.35rem;
+}
+
+.mop-preview-document hr {
+  border: none;
+  border-top: 1px solid #d1d5db;
+  margin: 0.85rem 0;
+}
+
+.mop-preview-document em {
+  color: inherit;
+  font-style: italic;
+}
+
+.mop-preview-document ul {
+  list-style-type: disc;
+  list-style-position: outside;
+  margin: 0.35rem 0 0.65rem;
+  padding-left: 1.5rem;
+}
+
+.mop-preview-document ol {
+  list-style-type: decimal;
+  list-style-position: outside;
+  margin: 0.35rem 0 0.65rem;
+  padding-left: 1.5rem;
+}
+
+.mop-preview-document ul ul {
+  list-style-type: circle;
+}
+
+.mop-preview-document li {
+  display: list-item;
+  margin: 0 0 0.2rem;
+}
+
+.mop-preview-document li > p {
+  margin: 0 0 0.15rem;
+}
+
+.mop-preview-scroll {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}

@@ -12,7 +12,11 @@ export interface NavItem {
 export const Navbar: NavItem[] = [
   { id: 1, title: "Client Management", link: "" },
   { id: 2, title: "Site Management", link: "client" },
-  { id: 3, title: "Assets Management", link: "assets-management", subItems: [
+  {
+    id: 3,
+    title: "Assets Management",
+    link: "assets-management",
+    subItems: [
       { id: 31, title: "Assets Listing", link: "assets-management" },
       { id: 32, title: "Invalid Assets", link: "assets-management/invalid" },
     ],
@@ -22,15 +26,7 @@ export const Navbar: NavItem[] = [
   { id: 5, title: "Document Generator", link: "document-generator" },
   { id: 6, title: "SOP Management", link: "sop-management" },
   { id: 7, title: "EOP Management", link: "eop-management" },
-  {
-    id: 8,
-    title: "MOP Management",
-    link: "mop-management",
-    subItems: [
-      { id: 81, title: "Overview", link: "mop-management" },
-      { id: 82, title: "Create MOP", link: "mop-management/create" },
-    ],
-  },
+  { id: 8, title: "MOP Management", link: "mop-management" },
 ];
 
 export interface iTableHeader {

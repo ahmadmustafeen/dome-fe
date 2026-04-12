@@ -20,6 +20,9 @@ export enum DASHBOARD_ROUTES {
   MOP_MANAGEMENT_CREATE = "/en/dashboard/mop-management/create",
 }
 
+export const mopEditRoute = (mopId: string): string =>
+  `${DASHBOARD_ROUTES.MOP_MANAGEMENT}/${mopId}`;
+
 export const maintenanceCategoryRoute = (categoryId: string): string =>
   `${DASHBOARD_ROUTES.MAINTENANCE_SCHEDULE}/${categoryId}`;
 

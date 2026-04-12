@@ -9,6 +9,18 @@ export const MOP_STATUS_OPTIONS: MopStatus[] = [
   "Revision Needed",
 ];
 
+export type MopStatusStyle = {
+  label: MopStatus;
+  badgeClass: string;
+};
+
+export const MOP_STATUS_STYLES: Record<MopStatus, MopStatusStyle> = {
+  Draft: { label: "Draft", badgeClass: "bg-gray-100 text-gray-700" },
+  "Ready to Deliver": { label: "Ready to Deliver", badgeClass: "bg-blue-100 text-blue-700" },
+  "Delivered to Client": { label: "Delivered to Client", badgeClass: "bg-green-100 text-green-700" },
+  "Revision Needed": { label: "Revision Needed", badgeClass: "bg-orange-100 text-orange-700" },
+};
+
 export const MOP_RISK_LEVELS: MopRiskLevel[] = [
   "Low",
   "Medium",

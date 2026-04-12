@@ -1,5 +1,6 @@
 "use client";
 
+import { History } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -18,6 +19,7 @@ import { downloadMopPdf } from "@/utils/mop-pdf";
 import { MopDocumentForm } from "./MopDocumentForm";
 import { MopDocumentPreview } from "./MopDocumentPreview";
 import { MopVersionHistory } from "./MopVersionHistory";
+import { MopVersionHistoryDrawer } from "./MopVersionHistoryDrawer";
 
 interface MopManagementClientProps {
   mopId?: string;
@@ -49,6 +51,7 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
   const [isSaving, setIsSaving] = useState(false);
   const [isExportingPdf, setIsExportingPdf] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [showHistoryDrawer, setShowHistoryDrawer] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<MopApiRecord | null>(null);
   const [history, setHistory] = useState<MopArchiveApiRecord[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
@@ -87,6 +90,7 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
     (record: MopApiRecord | MopArchiveApiRecord) => {
       loadFromRecord(record);
       setActiveVersionId(record._id);
+      setShowHistoryDrawer(false);
     },
     [loadFromRecord],
   );
@@ -145,6 +149,8 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
     }
   }, []);
 
+  const totalVersions = history.length + (currentRecord ? 1 : 0);
+
   return (
     <>
       {showClearConfirm && (
@@ -158,10 +164,35 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
         />
       )}
 
+      {showHistoryDrawer && mopId && (
+        <MopVersionHistoryDrawer
+          onClose={() => setShowHistoryDrawer(false)}
+          versionCount={totalVersions}
+        >
+          <MopVersionHistory
+            currentRecord={currentRecord}
+            history={history}
+            activeVersionId={activeVersionId}
+            onLoadVersion={handleLoadVersion}
+            isLoading={historyLoading}
+            showTitle={false}
+          />
+        </MopVersionHistoryDrawer>
+      )}
+
       <SectionWrapper className="flex min-h-0 flex-1 flex-col">
-        <Typography variant="h1" className="mb-6">
-          Method of Procedure (MOP)
-        </Typography>
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <Typography variant="h1">Method of Procedure (MOP)</Typography>
+          {mopId && (
+            <AppButton
+              variant="default"
+              icon={<History className="h-4 w-4" />}
+              title="Version History"
+              onClick={() => setShowHistoryDrawer(true)}
+            />
+          )}
+        </div>
+
         <div className="flex min-h-0 flex-1 flex-col gap-6 lg:h-[calc(100vh-14rem)] lg:flex-row">
           <section className="flex min-h-[420px] min-w-0 flex-1 flex-col gap-2 lg:min-h-0">
             <Typography variant="h3" className="text-primary">
@@ -182,8 +213,7 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
             <div className="flex shrink-0 flex-wrap gap-2 pt-2">
               <AppButton
                 variant="secondary"
-                title="Save"
-                isLoading={isSaving}
+                title={isSaving ? "Saving…" : "Save"}
                 onClick={handleSave}
                 disabled={isSaving}
               />
@@ -195,8 +225,7 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
               />
               <AppButton
                 variant="default"
-                title="Export PDF"
-                isLoading={isExportingPdf}
+                title={isExportingPdf ? "Exporting…" : "Export PDF"}
                 onClick={handleExportPdf}
                 disabled={isExportingPdf || isSaving}
               />
@@ -216,18 +245,6 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
               />
             </div>
           </section>
-
-          {mopId && (
-            <section className="w-full shrink-0 lg:w-56 xl:w-64">
-              <MopVersionHistory
-                currentRecord={currentRecord}
-                history={history}
-                activeVersionId={activeVersionId}
-                onLoadVersion={handleLoadVersion}
-                isLoading={historyLoading}
-              />
-            </section>
-          )}
         </div>
       </SectionWrapper>
     </>

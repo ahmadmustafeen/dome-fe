@@ -14,6 +14,7 @@ interface MopVersionHistoryProps {
   activeVersionId: string | null;
   onLoadVersion: (record: MopApiRecord | MopArchiveApiRecord) => void;
   isLoading?: boolean;
+  showTitle?: boolean;
 }
 
 const formatDate = (iso: string) =>
@@ -82,6 +83,7 @@ export const MopVersionHistory = ({
   activeVersionId,
   onLoadVersion,
   isLoading = false,
+  showTitle = true,
 }: MopVersionHistoryProps) => {
   const entries: VersionEntry[] = [
     ...(currentRecord
@@ -92,9 +94,11 @@ export const MopVersionHistory = ({
 
   return (
     <div className="flex h-full flex-col gap-3">
-      <Typography variant="h6" className="text-gray-500">
-        Version History
-      </Typography>
+      {showTitle && (
+        <Typography variant="h6" className="text-gray-500">
+          Version History
+        </Typography>
+      )}
 
       {isLoading ? (
         <Typography variant="p" className="text-gray-400">

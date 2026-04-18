@@ -1,4 +1,4 @@
-import type { MopFormValues, MopRiskLevel, MopStatus, MopStep } from "@/types/mop-form";
+import type { MopRiskLevel, MopStatus, MopStep } from "@/types/mop-form";
 
 export const MOP_EMPTY_EDITOR_HTML = "<p></p>";
 
@@ -15,10 +15,19 @@ export type MopStatusStyle = {
 };
 
 export const MOP_STATUS_STYLES: Record<MopStatus, MopStatusStyle> = {
-  Draft: { label: "Draft", badgeClass: "bg-gray-100 text-gray-700" },
-  "Ready to Deliver": { label: "Ready to Deliver", badgeClass: "bg-blue-100 text-blue-700" },
-  "Delivered to Client": { label: "Delivered to Client", badgeClass: "bg-green-100 text-green-700" },
-  "Revision Needed": { label: "Revision Needed", badgeClass: "bg-orange-100 text-orange-700" },
+  "Draft": { label: "Draft", badgeClass: "bg-gray-100 text-gray-700" },
+  "Ready to Deliver": {
+    label: "Ready to Deliver",
+    badgeClass: "bg-blue-100 text-blue-700",
+  },
+  "Delivered to Client": {
+    label: "Delivered to Client",
+    badgeClass: "bg-green-100 text-green-700",
+  },
+  "Revision Needed": {
+    label: "Revision Needed",
+    badgeClass: "bg-orange-100 text-orange-700",
+  },
 };
 
 export const MOP_RISK_LEVELS: MopRiskLevel[] = [
@@ -62,31 +71,4 @@ export const MOP_RISK_STYLES: Record<MopRiskLevel, MopRiskStyle> = {
 export const createNewMopStep = (): MopStep => ({
   id: crypto.randomUUID(),
   html: MOP_EMPTY_EDITOR_HTML,
-});
-
-export const createInitialMopFormValues = (): MopFormValues => ({
-  mopTitle: "",
-  mopIdentifier: "",
-  versionNumber: "1.0",
-  status: "Draft",
-  equipmentAssetName: "",
-  equipmentType: "",
-  manufacturer: "",
-  modelNumber: "",
-  serialNumber: "",
-  equipmentNumber: "",
-  locationSite: "",
-  workDescriptionHtml: MOP_EMPTY_EDITOR_HTML,
-  duration: "",
-  levelOfRisk: "",
-  cetLevelRequired: "",
-  specialPermitsRequired: "",
-  specialPermitsNotes: "",
-  steps: [createNewMopStep(), createNewMopStep(), createNewMopStep()],
-  safetyPrecautions: "",
-  requiredPpe: "",
-  toolsAndMaterials: "",
-  preparedBy: "",
-  reviewedBy: "",
-  approvedBy: "",
 });

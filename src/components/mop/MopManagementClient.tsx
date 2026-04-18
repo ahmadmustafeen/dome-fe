@@ -1,7 +1,7 @@
 "use client";
 
 import { History } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "react-toastify";
 
 import {
@@ -11,13 +11,10 @@ import {
   Typography,
 } from "@/components/common";
 import { useAppContext } from "@/context/AppContext";
-import { useMopForm } from "@/hooks/useMopForm";
-import { mopService } from "@/services/mop-service";
-import type { MopApiRecord, MopArchiveApiRecord } from "@/types/mop-api";
-import { downloadMopPdf } from "@/utils/mop-pdf";
+import { useMopMockDocument } from "@/hooks/useMopMockDocument";
+import { useMopVersionHistoryPanel } from "@/hooks/useMopVersionHistoryPanel";
 
 import { MopDocumentForm } from "./MopDocumentForm";
-import { MopDocumentPreview } from "./MopDocumentPreview";
 import { MopVersionHistory } from "./MopVersionHistory";
 import { MopVersionHistoryDrawer } from "./MopVersionHistoryDrawer";
 
@@ -25,223 +22,137 @@ interface MopManagementClientProps {
   mopId?: string;
 }
 
-const buildPdfFilename = () => {
-  const d = new Date();
-  return `mop-${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}.pdf`;
-};
-
 export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
   const { site, client } = useAppContext();
   const {
-    form,
-    formNonce,
-    createdAtIso,
-    lastModifiedIso,
-    patch,
-    setWorkDescriptionHtml,
-    updateStepHtml,
-    addStep,
-    resetForm,
-    loadFromRecord,
-    payload,
-    setStatus,
-    setRisk,
-  } = useMopForm();
+    mop,
+    isBootstrapping,
+    patchDocument,
+    patchEquipment,
+    patchProcedure,
+    patchSignOff,
+    patchSite,
+    resetMop,
+    persistMop,
+  } = useMopMockDocument({
+    clientName: client?.name,
+    siteName: site?.name,
+    siteId: site?._id,
+  });
+
+  const {
+    historyOpen,
+    setHistoryOpen,
+    historyLoading,
+    historyError,
+    currentRecord,
+    archives,
+    activeVersionId,
+    versionCount,
+    handleLoadVersion,
+  } = useMopVersionHistoryPanel(mopId);
 
   const [isSaving, setIsSaving] = useState(false);
-  const [isExportingPdf, setIsExportingPdf] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
-  const [showHistoryDrawer, setShowHistoryDrawer] = useState(false);
-  const [currentRecord, setCurrentRecord] = useState<MopApiRecord | null>(null);
-  const [history, setHistory] = useState<MopArchiveApiRecord[]>([]);
-  const [historyLoading, setHistoryLoading] = useState(false);
-  const [activeVersionId, setActiveVersionId] = useState<string | null>(null);
-  const previewRef = useRef<HTMLDivElement>(null);
-
-  const loadMopData = useCallback(
-    async (id: string) => {
-      setHistoryLoading(true);
-      try {
-        const [mopRes, histRes] = await Promise.all([
-          mopService.getById(id),
-          mopService.getHistory(id),
-        ]);
-        setCurrentRecord(mopRes.data);
-        setHistory(histRes.data);
-        loadFromRecord(mopRes.data);
-        setActiveVersionId(mopRes.data._id);
-      } catch (err: unknown) {
-        toast.error(err instanceof Error ? err.message : "Failed to load MOP.");
-      } finally {
-        setHistoryLoading(false);
-      }
-    },
-    [loadFromRecord],
-  );
-
-  useEffect(() => {
-    if (!mopId) {
-      return;
-    }
-    loadMopData(mopId);
-  }, [mopId, loadMopData]);
-
-  const handleLoadVersion = useCallback(
-    (record: MopApiRecord | MopArchiveApiRecord) => {
-      loadFromRecord(record);
-      setActiveVersionId(record._id);
-      setShowHistoryDrawer(false);
-    },
-    [loadFromRecord],
-  );
 
   const handleSave = useCallback(async () => {
-    if (!site?._id) {
-      toast.error("Please select a site first.");
-      return;
-    }
     setIsSaving(true);
     try {
-      if (mopId) {
-        const res = await mopService.update(mopId, payload);
-        setCurrentRecord(res.data);
-        setActiveVersionId(res.data._id);
-        const histRes = await mopService.getHistory(mopId);
-        setHistory(histRes.data);
-        toast.success(`Saved as v${res.data.versionNumber}`);
-      } else {
-        const res = await mopService.create({
-          ...payload,
-          siteId: site._id,
-          clientId: client?._id,
-        });
-        setCurrentRecord(res.data);
-        setActiveVersionId(res.data._id);
-        toast.success("MOP created successfully.");
+      const res = await persistMop();
+      if (res.success) {
+        toast.success("Saved (mock service).");
       }
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : "Save failed.");
     } finally {
       setIsSaving(false);
     }
-  }, [mopId, payload, site, client]);
+  }, [persistMop]);
 
   const handleClearConfirmed = useCallback(() => {
-    resetForm();
+    resetMop();
     setShowClearConfirm(false);
-  }, [resetForm]);
-
-  const handleExportPdf = useCallback(async () => {
-    const el = previewRef.current;
-    if (!el) {
-      toast.error("Preview is not ready yet.");
-      return;
-    }
-    setIsExportingPdf(true);
-    try {
-      await downloadMopPdf({ sourceElement: el, filename: buildPdfFilename() });
-    } catch (err: unknown) {
-      toast.error(
-        err instanceof Error ? err.message : "Could not generate the PDF.",
-      );
-    } finally {
-      setIsExportingPdf(false);
-    }
-  }, []);
-
-  const totalVersions = history.length + (currentRecord ? 1 : 0);
+    toast.info("Form reset to mock defaults.");
+  }, [resetMop]);
 
   return (
     <>
-      {showClearConfirm && (
+      {showClearConfirm ? (
         <DeleteConfirmationScreen
           heading="Reset MOP Form"
-          description="All entered data will be lost and the form will return to its defaults. This cannot be undone."
+          description="All entered data will be lost and the form will reload mock defaults. This cannot be undone."
           confirmLabel="Reset"
           confirmVariant="danger"
           handleCancel={() => setShowClearConfirm(false)}
           handleContinue={handleClearConfirmed}
         />
-      )}
+      ) : null}
 
-      {showHistoryDrawer && mopId && (
+      {historyOpen ? (
         <MopVersionHistoryDrawer
-          onClose={() => setShowHistoryDrawer(false)}
-          versionCount={totalVersions}
+          versionCount={versionCount}
+          onClose={() => setHistoryOpen(false)}
         >
-          <MopVersionHistory
-            currentRecord={currentRecord}
-            history={history}
-            activeVersionId={activeVersionId}
-            onLoadVersion={handleLoadVersion}
-            isLoading={historyLoading}
-            showTitle={false}
-          />
+          {historyError ? (
+            <Typography variant="p" className="text-red-600">
+              {historyError}
+            </Typography>
+          ) : mopId ? (
+            <MopVersionHistory
+              currentRecord={currentRecord}
+              history={archives}
+              activeVersionId={activeVersionId}
+              onLoadVersion={handleLoadVersion}
+              isLoading={historyLoading}
+              showTitle={false}
+            />
+          ) : (
+            <Typography variant="p" className="text-gray-600">
+              Open a saved MOP from the list to load server version history. The
+              form below still uses the mock document layer.
+            </Typography>
+          )}
         </MopVersionHistoryDrawer>
-      )}
+      ) : null}
 
       <SectionWrapper className="flex min-h-0 flex-1 flex-col">
-        <div className="mb-6 flex items-center justify-between gap-4">
-          <Typography variant="h1">Method of Procedure (MOP)</Typography>
-          {mopId && (
-            <AppButton
-              variant="default"
-              icon={<History className="h-4 w-4" />}
-              title="Version History"
-              onClick={() => setShowHistoryDrawer(true)}
-            />
-          )}
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 sm:mb-6">
+          <Typography variant="h1" className="min-w-0 flex-1">
+            Method of Procedure (MOP)
+          </Typography>
+          <AppButton
+            variant="default"
+            icon={<History className="h-4 w-4" />}
+            title="Version History"
+            onClick={() => setHistoryOpen(true)}
+            disabled={isBootstrapping}
+            className="shrink-0"
+          />
         </div>
 
-        <div className="flex min-h-0 flex-1 flex-col gap-6 lg:h-[calc(100vh-14rem)] lg:flex-row">
-          <section className="flex min-h-[420px] min-w-0 flex-1 flex-col gap-2 lg:min-h-0">
-            <Typography variant="h3" className="text-primary">
-              MOP Editor
-            </Typography>
+        <div className="flex min-h-0 flex-1 flex-col lg:h-[calc(100vh-12rem)]">
+          <section className="flex min-h-0 min-w-0 flex-1 flex-col gap-3">
             <MopDocumentForm
-              form={form}
-              formNonce={formNonce}
-              createdAtIso={createdAtIso}
-              lastModifiedIso={lastModifiedIso}
-              patch={patch}
-              setWorkDescriptionHtml={setWorkDescriptionHtml}
-              updateStepHtml={updateStepHtml}
-              addStep={addStep}
-              setStatus={setStatus}
-              setRisk={setRisk}
+              mop={mop}
+              isBootstrapping={isBootstrapping}
+              patchDocument={patchDocument}
+              patchEquipment={patchEquipment}
+              patchProcedure={patchProcedure}
+              patchSignOff={patchSignOff}
+              patchSite={patchSite}
             />
-            <div className="flex shrink-0 flex-wrap gap-2 pt-2">
+            <div className="flex shrink-0 flex-wrap gap-2 pt-1">
               <AppButton
                 variant="secondary"
                 title={isSaving ? "Saving…" : "Save"}
                 onClick={handleSave}
-                disabled={isSaving}
+                disabled={isSaving || isBootstrapping}
               />
               <AppButton
                 variant="ghost"
                 title="Clear"
-                disabled={isSaving || isExportingPdf}
+                disabled={isSaving || isBootstrapping}
                 onClick={() => setShowClearConfirm(true)}
-              />
-              <AppButton
-                variant="default"
-                title={isExportingPdf ? "Exporting…" : "Export PDF"}
-                onClick={handleExportPdf}
-                disabled={isExportingPdf || isSaving}
-              />
-            </div>
-          </section>
-
-          <section className="flex min-h-[420px] min-w-0 flex-1 flex-col gap-2 lg:min-h-0">
-            <Typography variant="h3" className="text-primary">
-              Preview
-            </Typography>
-            <div className="min-h-0 flex-1 overflow-hidden">
-              <MopDocumentPreview
-                ref={previewRef}
-                form={form}
-                createdAtIso={createdAtIso}
-                lastModifiedIso={lastModifiedIso}
               />
             </div>
           </section>

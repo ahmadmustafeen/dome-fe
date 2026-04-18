@@ -2,77 +2,53 @@
 
 import "@/styles/mop-document.css";
 
-import type { MopFormValues, MopRiskLevel, MopStatus } from "@/types/mop-form";
+import { Typography } from "@/components/common";
+import { MOP_PAGE_SUBTITLE } from "@/constants/mop-section01-schedule";
+import type { MOP } from "@/types/mop";
 
-import { FormDocumentHeader } from "./form/FormDocumentHeader";
-import { FormEquipment } from "./form/FormEquipment";
-import { FormProcedureDetails } from "./form/FormProcedureDetails";
-import { FormProcedureSteps } from "./form/FormProcedureSteps";
-import { FormSafety } from "./form/FormSafety";
-import { FormSignOff } from "./form/FormSignOff";
+import { MopPortalShell } from "./MopPortalShell";
+import { MopSection01Schedule } from "./MopSection01Schedule";
+import { MopSection02Site } from "./MopSection02Site";
 
 type MopDocumentFormProps = {
-  form: MopFormValues;
-  formNonce: number;
-  createdAtIso: string;
-  lastModifiedIso: string;
-  patch: (p: Partial<MopFormValues>) => void;
-  setWorkDescriptionHtml: (html: string) => void;
-  updateStepHtml: (stepId: string, html: string) => void;
-  addStep: () => void;
-  setStatus: (s: MopStatus) => void;
-  setRisk: (r: MopRiskLevel | "") => void;
-};
-
-const formatStamp = (iso: string) => {
-  try {
-    return new Date(iso).toLocaleString(undefined, {
-      dateStyle: "medium",
-      timeStyle: "short",
-    });
-  } catch {
-    return iso;
-  }
+  mop: MOP;
+  isBootstrapping: boolean;
+  patchDocument: (p: Partial<MOP["document"]>) => void;
+  patchEquipment: (p: Partial<MOP["equipment"]>) => void;
+  patchProcedure: (p: Partial<MOP["procedure"]>) => void;
+  patchSignOff: (p: Partial<MOP["signOff"]>) => void;
+  patchSite: (p: Partial<MOP["site"]>) => void;
 };
 
 export const MopDocumentForm = ({
-  form,
-  formNonce,
-  createdAtIso,
-  lastModifiedIso,
-  patch,
-  setWorkDescriptionHtml,
-  updateStepHtml,
-  addStep,
-  setStatus,
-  setRisk,
+  mop,
+  isBootstrapping,
+  patchDocument,
+  patchEquipment,
+  patchProcedure,
+  patchSignOff,
+  patchSite,
 }: MopDocumentFormProps) => {
   return (
-    <div className="mop-doc-page min-h-0 flex-1 overflow-y-auto pr-1">
-      <FormDocumentHeader
-        form={form}
-        createdAtIso={createdAtIso}
-        lastModifiedIso={lastModifiedIso}
-        patch={patch}
-        setStatus={setStatus}
-        formatStamp={formatStamp}
-      />
-      <FormEquipment form={form} patch={patch} />
-      <FormProcedureDetails
-        form={form}
-        formNonce={formNonce}
-        patch={patch}
-        setWorkDescriptionHtml={setWorkDescriptionHtml}
-        setRisk={setRisk}
-      />
-      <FormProcedureSteps
-        form={form}
-        formNonce={formNonce}
-        updateStepHtml={updateStepHtml}
-        addStep={addStep}
-      />
-      <FormSafety form={form} patch={patch} />
-      <FormSignOff form={form} patch={patch} />
+    <div className="mop-portal-form-root min-h-0 flex-1 overflow-y-auto bg-linear-to-b from-white to-[#f9fafb] py-2 pr-1 pb-6">
+      <MopPortalShell bannerSubtitle={MOP_PAGE_SUBTITLE}>
+        {isBootstrapping ? (
+          <Typography variant="p" className="text-gray-500">
+            Loading example MOP…
+          </Typography>
+        ) : (
+          <>
+            <MopSection01Schedule
+              mop={mop}
+              patchDocument={patchDocument}
+              patchEquipment={patchEquipment}
+              patchProcedure={patchProcedure}
+              patchSignOff={patchSignOff}
+            />
+            <MopSection02Site site={mop.site} patchSite={patchSite} />
+          </>
+        )}
+      </MopPortalShell>
     </div>
   );
 };

@@ -1,8 +1,27 @@
-import type { MOP, MOPGenerateContext } from "@/types/mop";
+import type { MOP, MOPGenerateContext, MOPSection03Overview } from "@/types/mop";
 import { getTodayDateInputValue } from "@/utils/mop-dates";
 
 const delay = (ms: number) =>
   new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+const emptyOverview = (): MOPSection03Overview => ({
+  mopTitle: "",
+  workArea: "",
+  buildingFloorRoom: "",
+  accessRequirements: "",
+  workDeliveryType: "self_delivered",
+  contractors1Count: "",
+  subcontractorCompany1: "",
+  subcontractorPersonnel1: "",
+  subcontractorContact1: "",
+  contractors2Count: "",
+  subcontractorCompany2: "",
+  subcontractorPersonnel2: "",
+  subcontractorContact2: "",
+  qualificationsRequired: "",
+  advanceNotifications: "",
+  postNotifications: "",
+});
 
 export const createEmptyMop = (): MOP => ({
   document: {
@@ -52,15 +71,11 @@ export const createEmptyMop = (): MOP => ({
   site: {
     customer: "",
     siteName: "",
-    contact: "",
-    street: "",
-    city: "",
-    state: "",
-    zip: "",
-    serviceTicket: "",
-    levelOfRiskNumeric: "",
-    mbm: "",
+    dataCenterLocation: "",
+    siteAddress: "",
+    siteContact: "",
   },
+  overview: emptyOverview(),
 });
 
 /**
@@ -89,6 +104,11 @@ export const getAutoFilledContext = (params: {
       siteName: params.siteName ?? "",
       siteId: params.siteId ?? "",
       assetId: params.assetId ?? "mock-asset",
+    },
+    site: {
+      ...m.site,
+      customer: params.clientName ?? "",
+      siteName: params.siteName ?? "",
     },
   };
 };
@@ -174,16 +194,32 @@ export const MOCK_GENERATED_MOP: MOP = {
     assetId: "asset_ups_001",
   },
   site: {
-    customer: "",
-    siteName: "",
-    contact: "",
-    street: "",
-    city: "",
-    state: "",
-    zip: "",
-    serviceTicket: "",
-    levelOfRiskNumeric: "",
-    mbm: "",
+    customer: "Acme Corp",
+    siteName: "Downtown Data Center",
+    dataCenterLocation: "MISSING",
+    siteAddress: "123 Data Center Way, Metro City, CA 90210",
+    siteContact: "",
+  },
+  overview: {
+    mopTitle: "CRACs Annual Preventative Maintenance",
+    workArea: "Data center white floor",
+    buildingFloorRoom: "Hall A / Raised floor",
+    accessRequirements: "Badge access per site security policy; escort if required.",
+    workDeliveryType: "self_delivered",
+    contractors1Count: "",
+    subcontractorCompany1: "",
+    subcontractorPersonnel1: "",
+    subcontractorContact1: "",
+    contractors2Count: "",
+    subcontractorCompany2: "",
+    subcontractorPersonnel2: "",
+    subcontractorContact2: "",
+    qualificationsRequired:
+      "CET-2 or equivalent; OEM familiarization recommended for coil and filter service.",
+    advanceNotifications:
+      "Operations and security per site policy (typically 48 hours).",
+    postNotifications:
+      "Operations confirmation of stable temperatures and alarms cleared.",
   },
 };
 

@@ -10,6 +10,7 @@ import type {
   MOPDocument,
   MOPEquipment,
   MOPProcedure,
+  MOPSection03Overview,
   MOPSignOff,
   MOPSiteSection,
 } from "@/types/mop";
@@ -102,6 +103,15 @@ export const useMopMockDocument = (ctx: MopMockContextParams) => {
     );
   }, []);
 
+  const patchOverview = useCallback((partial: Partial<MOPSection03Overview>) => {
+    setMop((prev) =>
+      bumpModified({
+        ...prev,
+        overview: { ...prev.overview, ...partial },
+      }),
+    );
+  }, []);
+
   const resetMop = useCallback(() => {
     setLoadedBootstrapKey(null);
     void generateMOP(siteId || "mock-asset", {
@@ -124,6 +134,7 @@ export const useMopMockDocument = (ctx: MopMockContextParams) => {
     patchProcedure,
     patchSignOff,
     patchSite,
+    patchOverview,
     resetMop,
     persistMop,
   };

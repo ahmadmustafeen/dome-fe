@@ -1,6 +1,6 @@
 /**
  * Canonical MOP document shape (frontend ↔ future API contract).
- * Aligns with `prompt.md` plus data-centre portal Section 01–02 extras.
+ * Aligns with `prompt.md` plus data-centre portal Section 01–03 extras.
  */
 
 export type MOPStatus =
@@ -12,8 +12,6 @@ export type MOPStatus =
 export type RiskLevel = "low" | "medium" | "high" | "critical";
 
 export type RiskLevelOrEmpty = RiskLevel | "";
-
-export type MOPMbm = "" | "Yes" | "No" | "N/A";
 
 export type MOPStep = {
   id: string;
@@ -75,18 +73,42 @@ export type MOPContext = {
   assetId: string;
 };
 
-/** Data-centre portal Section 02 — Site Information. */
+/**
+ * Data-centre portal Section 02 — Site Information
+ * (`generateSection02` in `section-generators.js`).
+ */
 export type MOPSiteSection = {
   customer: string;
   siteName: string;
-  contact: string;
-  street: string;
-  city: string;
-  state: string;
-  zip: string;
-  serviceTicket: string;
-  levelOfRiskNumeric: string;
-  mbm: MOPMbm;
+  dataCenterLocation: string;
+  siteAddress: string;
+  siteContact: string;
+};
+
+/** Portal `workType` → `Self Delivered / Vendor` row (`generateSection03`). */
+export type MOPWorkDeliveryType = "self_delivered" | "subcontractor";
+
+/**
+ * Data-centre portal Section 03 — MOP Overview
+ * (`generateSection03` in `section-generators.js`).
+ */
+export type MOPSection03Overview = {
+  mopTitle: string;
+  workArea: string;
+  buildingFloorRoom: string;
+  accessRequirements: string;
+  workDeliveryType: MOPWorkDeliveryType;
+  contractors1Count: string;
+  subcontractorCompany1: string;
+  subcontractorPersonnel1: string;
+  subcontractorContact1: string;
+  contractors2Count: string;
+  subcontractorCompany2: string;
+  subcontractorPersonnel2: string;
+  subcontractorContact2: string;
+  qualificationsRequired: string;
+  advanceNotifications: string;
+  postNotifications: string;
 };
 
 export type MOP = {
@@ -98,6 +120,7 @@ export type MOP = {
   signOff: MOPSignOff;
   context: MOPContext;
   site: MOPSiteSection;
+  overview: MOPSection03Overview;
 };
 
 export type MOPGenerateContext = Partial<

@@ -1,7 +1,7 @@
 "use client";
 
 import { Typography } from "@/components/common";
-import { MOP_SECTION_01_HEADING } from "@/constants/mop-section01-schedule";
+import { MOP_SECTION_01_HEADING } from "@/constants/mop-form";
 import type { MOP } from "@/types/mop";
 
 import { MopSection01FieldRows } from "./MopSection01FieldRows";

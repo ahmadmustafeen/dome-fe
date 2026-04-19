@@ -1,6 +1,13 @@
+/* eslint-disable style/quote-props */
 import type { MopRiskLevel, MopStatus, MopStep } from "@/types/mop-form";
 
 export const MOP_EMPTY_EDITOR_HTML = "<p></p>";
+
+/** Plain heading above the form card (portal-style schedule title). */
+export const MOP_PAGE_SUBTITLE = "Annual Preventative Maintenance";
+
+/** Section heading above fields (data centre portal wording). */
+export const MOP_SECTION_01_HEADING = "Section 01 - MOP Schedule Information";
 
 export const MOP_STATUS_OPTIONS: MopStatus[] = [
   "Draft",
@@ -15,7 +22,7 @@ export type MopStatusStyle = {
 };
 
 export const MOP_STATUS_STYLES: Record<MopStatus, MopStatusStyle> = {
-  "Draft": { label: "Draft", badgeClass: "bg-gray-100 text-gray-700" },
+  Draft: { label: "Draft", badgeClass: "bg-gray-100 text-gray-700" },
   "Ready to Deliver": {
     label: "Ready to Deliver",
     badgeClass: "bg-blue-100 text-blue-700",

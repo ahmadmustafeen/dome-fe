@@ -1,4 +1,10 @@
-import type { MopPermitAnswer, MopRiskLevel, MopStatus, MopStep } from "./mop-form";
+import type {
+  MopMbmRequired,
+  MopPermitAnswer,
+  MopRiskLevel,
+  MopStatus,
+  MopStep,
+} from "./mop-form";
 
 export interface MopApiRecord {
   _id: string;
@@ -8,6 +14,10 @@ export interface MopApiRecord {
   mopIdentifier: string;
   versionNumber: string;
   status: MopStatus;
+  mopInformation: string;
+  authorCetLevel: string;
+  mopCreationDate: string;
+  mopRevisionDate: string;
   equipmentAssetName: string;
   equipmentType: string;
   manufacturer: string;
@@ -28,6 +38,16 @@ export interface MopApiRecord {
   preparedBy: string;
   reviewedBy: string;
   approvedBy: string;
+  siteCustomer: string;
+  siteFacilityName: string;
+  siteContact: string;
+  siteAddressStreet: string;
+  siteAddressCity: string;
+  siteAddressState: string;
+  siteAddressZip: string;
+  serviceTicketNumber: string;
+  siteLevelOfRiskNumeric: string;
+  mbmRequired: MopMbmRequired;
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;

@@ -44,6 +44,7 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
   const {
     historyOpen,
     setHistoryOpen,
+    resetHistoryPanel,
     historyLoading,
     historyError,
     currentRecord,
@@ -92,7 +93,10 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
       {historyOpen ? (
         <MopVersionHistoryDrawer
           versionCount={versionCount}
-          onClose={() => setHistoryOpen(false)}
+          onClose={() => {
+            resetHistoryPanel();
+            setHistoryOpen(false);
+          }}
         >
           {historyError ? (
             <Typography variant="p" className="text-red-600">

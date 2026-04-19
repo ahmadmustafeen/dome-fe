@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import { mopService } from "@/services/mop-service";
@@ -6,24 +6,30 @@ import type { MopApiRecord, MopArchiveApiRecord } from "@/types/mop-api";
 
 export const useMopVersionHistoryPanel = (mopId?: string) => {
   const [historyOpen, setHistoryOpen] = useState(false);
-  const [historyLoading, setHistoryLoading] = useState(false);
   const [historyError, setHistoryError] = useState<string | null>(null);
   const [currentRecord, setCurrentRecord] = useState<MopApiRecord | null>(null);
   const [archives, setArchives] = useState<MopArchiveApiRecord[]>([]);
   const [activeVersionId, setActiveVersionId] = useState<string | null>(null);
+  /** When this matches `mopId`, the latest fetch for that id has finished (success or error). */
+  const [settledHistoryMopId, setSettledHistoryMopId] = useState<string | null>(
+    null,
+  );
+
+  const hasMopId = Boolean(mopId);
+  const historyLoading =
+    historyOpen && hasMopId && settledHistoryMopId !== mopId;
 
   useEffect(() => {
     if (!historyOpen || !mopId) {
       return;
     }
     let cancelled = false;
-    setHistoryLoading(true);
-    setHistoryError(null);
     void Promise.all([mopService.getById(mopId), mopService.getHistory(mopId)])
       .then(([single, hist]) => {
         if (cancelled) {
           return;
         }
+        setHistoryError(null);
         if (single.success && single.data) {
           setCurrentRecord(single.data);
           setActiveVersionId(single.data._id);
@@ -32,6 +38,7 @@ export const useMopVersionHistoryPanel = (mopId?: string) => {
           setActiveVersionId(null);
         }
         setArchives(hist.success ? hist.data : []);
+        setSettledHistoryMopId(mopId);
       })
       .catch((err: unknown) => {
         if (!cancelled) {
@@ -43,17 +50,18 @@ export const useMopVersionHistoryPanel = (mopId?: string) => {
           setCurrentRecord(null);
           setArchives([]);
           setActiveVersionId(null);
-        }
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setHistoryLoading(false);
+          setSettledHistoryMopId(mopId);
         }
       });
     return () => {
       cancelled = true;
     };
   }, [historyOpen, mopId]);
+
+  const resetHistoryPanel = useCallback(() => {
+    setSettledHistoryMopId(null);
+    setHistoryError(null);
+  }, []);
 
   const versionCount = (currentRecord ? 1 : 0) + archives.length;
 
@@ -74,5 +82,6 @@ export const useMopVersionHistoryPanel = (mopId?: string) => {
     activeVersionId,
     versionCount,
     handleLoadVersion,
+    resetHistoryPanel,
   };
 };

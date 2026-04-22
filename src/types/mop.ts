@@ -1,6 +1,6 @@
 /**
  * Canonical MOP document shape (frontend ↔ future API contract).
- * Aligns with `prompt.md` plus data-centre portal Section 01–03 extras.
+ * Aligns with `prompt.md` plus data-centre portal Section 01–04 extras.
  */
 
 export type MOPStatus =
@@ -111,6 +111,36 @@ export type MOPSection03Overview = {
   postNotifications: string;
 };
 
+/** Stable keys for Section 04 rows (`MOPTemplateModal` facility table). */
+export type MopFacilitySystemKey =
+  | "electricalUtility"
+  | "emergencyGenerator"
+  | "criticalCooling"
+  | "ventilationSystem"
+  | "mechanicalSystem"
+  | "ups"
+  | "criticalPowerDist"
+  | "epo"
+  | "fireDetection"
+  | "fireSuppression"
+  | "disableFireSystem"
+  | "monitoringSystem"
+  | "controlSystem"
+  | "securitySystem"
+  | "generalPower"
+  | "lockoutTagout"
+  | "workHot"
+  | "radioInterference"
+  | "waterLeakDetection";
+
+export type MopFacilityEffectChoice = "yes" | "no" | "na";
+
+export type MopFacilityEffectRow = {
+  systemKey: MopFacilitySystemKey;
+  choice: MopFacilityEffectChoice;
+  details: string;
+};
+
 export type MOP = {
   document: MOPDocument;
   equipment: MOPEquipment;
@@ -121,6 +151,7 @@ export type MOP = {
   context: MOPContext;
   site: MOPSiteSection;
   overview: MOPSection03Overview;
+  facilityEffects: MopFacilityEffectRow[];
 };
 
 export type MOPGenerateContext = Partial<

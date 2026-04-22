@@ -13,6 +13,8 @@ import type {
   MOPSection03Overview,
   MOPSignOff,
   MOPSiteSection,
+  MopFacilityEffectRow,
+  MopFacilitySystemKey,
 } from "@/types/mop";
 
 export type MopMockContextParams = {
@@ -112,6 +114,23 @@ export const useMopMockDocument = (ctx: MopMockContextParams) => {
     );
   }, []);
 
+  const patchFacilityRow = useCallback(
+    (
+      systemKey: MopFacilitySystemKey,
+      partial: Partial<Pick<MopFacilityEffectRow, "choice" | "details">>,
+    ) => {
+      setMop((prev) =>
+        bumpModified({
+          ...prev,
+          facilityEffects: prev.facilityEffects.map((row) =>
+            row.systemKey === systemKey ? { ...row, ...partial } : row,
+          ),
+        }),
+      );
+    },
+    [],
+  );
+
   const resetMop = useCallback(() => {
     setLoadedBootstrapKey(null);
     void generateMOP(siteId || "mock-asset", {
@@ -135,6 +154,7 @@ export const useMopMockDocument = (ctx: MopMockContextParams) => {
     patchSignOff,
     patchSite,
     patchOverview,
+    patchFacilityRow,
     resetMop,
     persistMop,
   };

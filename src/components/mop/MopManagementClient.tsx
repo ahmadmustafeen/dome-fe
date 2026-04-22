@@ -33,6 +33,7 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
     patchSignOff,
     patchSite,
     patchOverview,
+    patchFacilityRow,
     resetMop,
     persistMop,
   } = useMopMockDocument({
@@ -146,6 +147,7 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
               patchSignOff={patchSignOff}
               patchSite={patchSite}
               patchOverview={patchOverview}
+              patchFacilityRow={patchFacilityRow}
             />
             <div className="flex shrink-0 flex-wrap gap-2 pt-1">
               <AppButton

@@ -1,3 +1,4 @@
+import { buildDefaultMopSection04Rows } from "@/constants/mop-section04-facility";
 import type { MOP, MOPGenerateContext, MOPSection03Overview } from "@/types/mop";
 import { getTodayDateInputValue } from "@/utils/mop-dates";
 
@@ -76,6 +77,7 @@ export const createEmptyMop = (): MOP => ({
     siteContact: "",
   },
   overview: emptyOverview(),
+  facilityEffects: buildDefaultMopSection04Rows(),
 });
 
 /**
@@ -221,6 +223,7 @@ export const MOCK_GENERATED_MOP: MOP = {
     postNotifications:
       "Operations confirmation of stable temperatures and alarms cleared.",
   },
+  facilityEffects: buildDefaultMopSection04Rows(),
 };
 
 export const generateMOP = async (

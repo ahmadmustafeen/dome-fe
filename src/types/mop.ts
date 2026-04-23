@@ -54,10 +54,48 @@ export type MOPProcedure = {
   specialPermitsNotes: string;
 };
 
+/** Section 05 — PPE table row (JSON/API supplies one object per row). */
+export type MopPpeRequirementRow = {
+  id: string;
+  category: string;
+  specification: string;
+  whenRequired: string;
+};
+
+/** Section 05 — tools table; `specificToolsList` is newline-separated bullet list text. */
+export type MopToolRequirementRow = {
+  id: string;
+  toolCategory: string;
+  specificToolsList: string;
+  purpose: string;
+};
+
+/** Section 05 — safety procedures checklist row. */
+export type MopSafetyProcedureRow = {
+  id: string;
+  procedure: string;
+  requirements: string;
+  initials: string;
+  time: string;
+};
+
+/** Section 05 — emergency contacts row. */
+export type MopEmergencyContactRow = {
+  id: string;
+  emergencyType: string;
+  contact: string;
+  phoneNumber: string;
+};
+
 export type MOPSafety = {
   precautions: string;
   requiredPPE: string;
   toolsAndMaterials: string;
+  /** Dynamic-length tables: default empty rows, or one row per API/autofill item. */
+  ppeRequirementRows: MopPpeRequirementRow[];
+  toolRequirementRows: MopToolRequirementRow[];
+  safetyProcedureRows: MopSafetyProcedureRow[];
+  emergencyContactRows: MopEmergencyContactRow[];
 };
 
 export type MOPSignOff = {

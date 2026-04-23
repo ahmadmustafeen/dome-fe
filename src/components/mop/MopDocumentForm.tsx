@@ -8,6 +8,7 @@ import type {
   MOP,
   MopFacilityEffectRow,
   MopFacilitySystemKey,
+  MOPSafety,
 } from "@/types/mop";
 
 import { MopPortalShell } from "./MopPortalShell";
@@ -15,6 +16,7 @@ import { MopSection01Schedule } from "./MopSection01Schedule";
 import { MopSection02Site } from "./MopSection02Site";
 import { MopSection03Overview } from "./MopSection03Overview";
 import { MopSection04Facility } from "./MopSection04Facility";
+import { MopSection05Safety } from "./MopSection05Safety";
 
 type MopDocumentFormProps = {
   mop: MOP;
@@ -25,6 +27,7 @@ type MopDocumentFormProps = {
   patchSignOff: (p: Partial<MOP["signOff"]>) => void;
   patchSite: (p: Partial<MOP["site"]>) => void;
   patchOverview: (p: Partial<MOP["overview"]>) => void;
+  patchSafety: (p: Partial<MOPSafety>) => void;
   patchFacilityRow: (
     systemKey: MopFacilitySystemKey,
     partial: Partial<Pick<MopFacilityEffectRow, "choice" | "details">>,
@@ -40,6 +43,7 @@ export const MopDocumentForm = ({
   patchSignOff,
   patchSite,
   patchOverview,
+  patchSafety,
   patchFacilityRow,
 }: MopDocumentFormProps) => {
   return (
@@ -67,6 +71,7 @@ export const MopDocumentForm = ({
               facilityEffects={mop.facilityEffects}
               patchFacilityRow={patchFacilityRow}
             />
+            <MopSection05Safety safety={mop.safety} patchSafety={patchSafety} />
           </>
         )}
       </MopPortalShell>

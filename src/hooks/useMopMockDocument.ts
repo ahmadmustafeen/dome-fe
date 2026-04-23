@@ -11,6 +11,7 @@ import type {
   MOPEquipment,
   MOPProcedure,
   MOPSection03Overview,
+  MOPSafety,
   MOPSignOff,
   MOPSiteSection,
   MopFacilityEffectRow,
@@ -114,6 +115,15 @@ export const useMopMockDocument = (ctx: MopMockContextParams) => {
     );
   }, []);
 
+  const patchSafety = useCallback((partial: Partial<MOPSafety>) => {
+    setMop((prev) =>
+      bumpModified({
+        ...prev,
+        safety: { ...prev.safety, ...partial },
+      }),
+    );
+  }, []);
+
   const patchFacilityRow = useCallback(
     (
       systemKey: MopFacilitySystemKey,
@@ -154,6 +164,7 @@ export const useMopMockDocument = (ctx: MopMockContextParams) => {
     patchSignOff,
     patchSite,
     patchOverview,
+    patchSafety,
     patchFacilityRow,
     resetMop,
     persistMop,

@@ -1,4 +1,15 @@
 import { buildDefaultMopSection04Rows } from "@/constants/mop-section04-facility";
+import {
+  buildDefaultEmergencyContactRows,
+  buildDefaultPpeRows,
+  buildDefaultSafetyProcedureRows,
+  buildDefaultToolRows,
+  MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT,
+  resolveEmergencyContactRows,
+  resolvePpeRequirementRows,
+  resolveSafetyProcedureRows,
+  resolveToolRequirementRows,
+} from "@/constants/mop-section05-safety";
 import type { MOP, MOPGenerateContext, MOPSection03Overview } from "@/types/mop";
 import { getTodayDateInputValue } from "@/utils/mop-dates";
 
@@ -57,6 +68,14 @@ export const createEmptyMop = (): MOP => ({
     precautions: "",
     requiredPPE: "",
     toolsAndMaterials: "",
+    ppeRequirementRows: buildDefaultPpeRows(MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT),
+    toolRequirementRows: buildDefaultToolRows(MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT),
+    safetyProcedureRows: buildDefaultSafetyProcedureRows(
+      MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT,
+    ),
+    emergencyContactRows: buildDefaultEmergencyContactRows(
+      MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT,
+    ),
   },
   signOff: {
     preparedBy: "",
@@ -183,6 +202,84 @@ export const MOCK_GENERATED_MOP: MOP = {
     requiredPPE: "Insulated gloves, safety glasses, steel-toed boots.",
     toolsAndMaterials:
       "Replacement battery kit, insulated screwdriver set, multimeter.",
+    ppeRequirementRows: [
+      {
+        id: "ppe-mock-eye",
+        category: "Eye / face",
+        specification: "ANSI Z87.1 safety glasses with side shields",
+        whenRequired: "Whenever entering the generator set enclosure or adjacent service zones.",
+      },
+      {
+        id: "ppe-mock-hearing",
+        category: "Hearing",
+        specification: "Ear plugs or earmuffs rated for engine-room noise levels",
+        whenRequired: "During engine start, load bank, or any running-generator maintenance tests.",
+      },
+      {
+        id: "ppe-mock-hands",
+        category: "Hand",
+        specification: "Insulated gloves appropriate for DC/AC exposure class per site LOTO",
+        whenRequired: "When working on batteries, alternator leads, or live control circuits.",
+      },
+      {
+        id: "ppe-mock-foot",
+        category: "Foot",
+        specification: "Dielectric or safety-toe footwear per site electrical PPE policy",
+        whenRequired: "At all times inside the generator yard and electrical service areas.",
+      },
+    ],
+    toolRequirementRows: [
+      {
+        id: "tool-mock-torque",
+        toolCategory: "Torque & fasteners",
+        specificToolsList:
+          "Torque wrench (calibrated)\nSocket set (metric/SAE per unit)\nAnti-seize compound",
+        purpose: "Re-torque critical connections per Cummins maintenance interval chart.",
+      },
+      {
+        id: "tool-mock-electrical",
+        toolCategory: "Electrical test",
+        specificToolsList: "Digital multimeter\nMegohmmeter (if required by site)\nInsulated tools set",
+        purpose: "Verify winding insulation, battery voltage, and control circuit integrity.",
+      },
+    ],
+    safetyProcedureRows: [
+      {
+        id: "proc-mock-loto",
+        procedure: "Lockout / tagout",
+        requirements: "Isolate starting system and prime mover per site LOTO; verify zero energy.",
+        initials: "",
+        time: "",
+      },
+      {
+        id: "proc-mock-fire",
+        procedure: "Fire protection awareness",
+        requirements: "Confirm suppression status with facility; no hot work without permit.",
+        initials: "",
+        time: "",
+      },
+      {
+        id: "proc-mock-fuel",
+        procedure: "Fuel / coolant handling",
+        requirements: "Contain spills; use absorbent; follow site hazmat disposal rules.",
+        initials: "",
+        time: "",
+      },
+    ],
+    emergencyContactRows: [
+      {
+        id: "emg-mock-site",
+        emergencyType: "Site security / access",
+        contact: "Data center operations desk",
+        phoneNumber: "",
+      },
+      {
+        id: "emg-mock-fire",
+        emergencyType: "Fire / medical",
+        contact: "Local emergency services",
+        phoneNumber: "911",
+      },
+    ],
   },
   signOff: {
     preparedBy: "",
@@ -243,6 +340,13 @@ export const generateMOP = async (
     data.context.siteId = ctx.siteId;
   }
   data.document.lastModified = new Date().toISOString();
+  data.safety = {
+    ...data.safety,
+    ppeRequirementRows: resolvePpeRequirementRows(data.safety.ppeRequirementRows),
+    toolRequirementRows: resolveToolRequirementRows(data.safety.toolRequirementRows),
+    safetyProcedureRows: resolveSafetyProcedureRows(data.safety.safetyProcedureRows),
+    emergencyContactRows: resolveEmergencyContactRows(data.safety.emergencyContactRows),
+  };
   return data;
 };
 

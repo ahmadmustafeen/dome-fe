@@ -16,7 +16,6 @@ import {
 import { DataTable } from "@/components/DataTable";
 import { CategoryAssetProcedurePanel } from "@/components/sections/maintenance/CategoryAssetProcedurePanel";
 import { getCategoryAssetColumns } from "@/components/sections/maintenance/CategoryAssetsTableColumns";
-import { DUMMY_MAINTENANCE_SCHEDULE } from "@/constants/maintenance-schedule";
 import {
   DASHBOARD_ROUTES,
   maintenanceGenerateProcedureRoute,
@@ -28,7 +27,6 @@ import type {
   ProcedureItem,
   ProcedureKind,
 } from "@/types/maintenance-schedule";
-import { buildCategoryAssetsForRow } from "@/utils/maintenance-category-assets";
 import { useAppContext } from "@/context/AppContext";
 import { maintenanceScheduleService } from "@/services/maintenance-schedule-service";
 import * as assetService from "@/services/asset-service";
@@ -46,8 +44,8 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
   const router = useRouter();
   const [categoryRow, setCategoryRow] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-  const [data, setData] = useState<MaintenanceRow[]>([])
-  const [schedule, setSchedule] = useState<MaintenanceScheduleData | null>(
+  const [, setData] = useState<MaintenanceRow[]>([])
+  const [, setSchedule] = useState<MaintenanceScheduleData | null>(
     null,
   );
   const { site } = useAppContext()
@@ -62,6 +60,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
       setData(response.data);
       const category = response.data.find(item => item._id === categoryId)
       const data = await assetService.assetService.getAllAssetsByCategoryAndSubCategory(category?.category!, category?.subCategory!)
+      // @ts-ignore
       setCategoryRow(data?.data?.assets?.map((item: any) => ({ ...item, mops: category?.MOPs, sops: category?.SOPs, eops: category?.EOPs })) || [])
 
       setSchedule({ generatedAt: new Date().toDateString(), rows: response.data })
@@ -86,14 +85,8 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
 
 
   const filteredAssets = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
+    searchQuery.trim().toLowerCase();
     return categoryRow;
-    // return categoryRow.filter(
-    //   (a) =>
-    //     // a.assetName.toLowerCase().includes(q) ||
-    //     a.assetId.toLowerCase().includes(q) ||
-    //     a.location.toLowerCase().includes(q),
-    // );
   }, [categoryRow, searchQuery]);
 
   const totalPages = Math.max(1, Math.ceil(filteredAssets.length / PAGE_SIZE));
@@ -174,7 +167,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>
             <Typography variant="h1">
-              {categoryRow?.category ?? "Category Detail"}
+              Category Detail
             </Typography>
             <Typography variant="p" className="mt-1 text-gray-500">
               {assetCount !== 1
@@ -185,7 +178,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
         </div>
 
         <div className="mb-4">
-          <div className="relative max-w-sm min-w-[220px]">
+          <div className="relative max-w-sm min-w-55">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <input
               type="text"

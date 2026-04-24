@@ -1,6 +1,5 @@
 import type { AssetPayload } from "@/types/payload";
 import { apiFetch } from "@/libs/fetcher";
-import { id } from "zod/v4/locales";
 
 export const assetService = {
   getAllAssets: () =>
@@ -33,12 +32,6 @@ export const assetService = {
   getAllAssetsByCategoryAndSubCategory: (
     category: string,
     subCategory: string,
-    params?: {
-      page?: number;
-      search?: string;
-      sortBy?: string;
-      sortOrder?: "asc" | "desc";
-    },
   ) => {
     return apiFetch(`/assets/fetchByCategoryAndSubCategory`, {
       method: "POST",

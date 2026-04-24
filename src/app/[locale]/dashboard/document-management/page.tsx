@@ -161,6 +161,7 @@ export default function DocumentManagementPage() {
           colName: t("col_name"),
           colType: t("col_type"),
           colDate: t("col_date"),
+          ingested: "Ingested",
           colActions: t("col_actions"),
           actionView: t("action_view"),
           actionDownload: t("action_download"),

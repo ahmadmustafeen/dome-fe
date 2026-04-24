@@ -34,11 +34,21 @@ type iAppButton = {
   onClick: () => void;
   icon?: ReactNode;
   title?: string;
-  variant: "primary" | "default" | "secondary" | "danger";
+  variant: "primary" | "default" | "secondary" | "danger" | "ghost";
   disabled?: boolean;
+  className?: string;
+  isLoading?: boolean;
 };
 
-const AppButton = ({ onClick, icon, title, variant, disabled }: iAppButton) => {
+const AppButton = ({
+  onClick,
+  icon,
+  title,
+  variant,
+  disabled,
+  className,
+  isLoading,
+}: iAppButton) => {
   let variantClass =
     "bg-white text-primary border-primary hover:bg-primary hover:text-white hover:border-white border";
   if (variant === "secondary") {
@@ -49,13 +59,17 @@ const AppButton = ({ onClick, icon, title, variant, disabled }: iAppButton) => {
     variantClass =
       "bg-red-500 hover:border-red-500 text-white border border-white hover:bg-white hover:text-red-500";
   }
+  if (variant === "ghost") {
+    variantClass =
+      " hover:bg-primary/10 border border-transparent font-medium text-blue-600";
+  }
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`mr-2 flex cursor-pointer! items-center justify-center gap-x-2 rounded-lg px-4 py-2 text-sm transition-all duration-500 disabled:cursor-not-allowed disabled:border-none disabled:bg-gray-400 disabled:text-white ${variantClass}`}
+      className={`mr-2 flex cursor-pointer! items-center justify-center gap-x-2 rounded-lg px-4 py-2 text-sm transition-all duration-500 disabled:cursor-not-allowed disabled:border-none disabled:bg-gray-400 disabled:text-white ${variantClass} ${className ?? ""}`}
     >
-      {icon} {title}
+      {icon} {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : title}
     </button>
   );
 };

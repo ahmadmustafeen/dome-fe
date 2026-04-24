@@ -85,7 +85,7 @@ const SignIn = () => {
             variant="underline bg-transparent hover:bg-transparent !w-fit !px-0 !py-1 !text-secondary text-xs"
           />
         </div>
-        <div className="text-right">
+        {/* <div className="text-right">
           <Typography variant="caption">Don&apos;t have an account?</Typography>
           <div className="flex justify-end">
             <Button
@@ -94,7 +94,7 @@ const SignIn = () => {
               variant="underline bg-transparent hover:bg-transparent !w-fit !px-0 !py-1 !text-secondary text-xs"
             />
           </div>
-        </div>
+        </div> */}
       </div>
     </AuthWrapper>
   );

@@ -22,8 +22,7 @@ export const downloadMopPdf = async ({
         scale: 2,
         useCORS: true,
         backgroundColor: "#ffffff",
-        // @ts-expect-error
-        onclone: (clonedDoc, clonedElement) => {
+        onclone: (clonedDoc: Document, clonedElement: HTMLElement) => {
           const root =
             clonedElement instanceof HTMLElement
               ? clonedElement

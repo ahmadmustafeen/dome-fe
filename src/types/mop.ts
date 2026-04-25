@@ -96,6 +96,26 @@ export type MopLocalEmergencyServiceRow = {
   address: string;
 };
 
+/** Section 06 — Key project assumptions (Category / Assumption). */
+export type MopAssumptionRow = {
+  id: string;
+  category: string;
+  assumption: string;
+};
+
+/** Section 06 — bullet under Critical Decision Points. */
+export type MopCriticalDecisionPointItem = {
+  id: string;
+  text: string;
+};
+
+export type MOPAssumptions = {
+  assumptionRows: MopAssumptionRow[];
+  /** Shown in the critical-decision heading, e.g. "GENERATOR 1". */
+  criticalDecisionUnitLabel: string;
+  criticalDecisionPointItems: MopCriticalDecisionPointItem[];
+};
+
 export type MOPSafety = {
   precautions: string;
   requiredPPE: string;
@@ -197,6 +217,7 @@ export type MOP = {
   procedure: MOPProcedure;
   steps: MOPStep[];
   safety: MOPSafety;
+  assumptions: MOPAssumptions;
   signOff: MOPSignOff;
   context: MOPContext;
   site: MOPSiteSection;

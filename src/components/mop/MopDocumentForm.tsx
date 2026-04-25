@@ -6,6 +6,7 @@ import { Typography } from "@/components/common";
 import { MOP_PAGE_SUBTITLE } from "@/constants/mop-form";
 import type {
   MOP,
+  MOPAssumptions,
   MopFacilityEffectRow,
   MopFacilitySystemKey,
   MOPSafety,
@@ -17,6 +18,7 @@ import { MopSection02Site } from "./MopSection02Site";
 import { MopSection03Overview } from "./MopSection03Overview";
 import { MopSection04Facility } from "./MopSection04Facility";
 import { MopSection05Safety } from "./MopSection05Safety";
+import { MopSection06Assumptions } from "./MopSection06Assumptions";
 
 type MopDocumentFormProps = {
   mop: MOP;
@@ -28,6 +30,7 @@ type MopDocumentFormProps = {
   patchSite: (p: Partial<MOP["site"]>) => void;
   patchOverview: (p: Partial<MOP["overview"]>) => void;
   patchSafety: (p: Partial<MOPSafety>) => void;
+  patchAssumptions: (p: Partial<MOPAssumptions>) => void;
   patchFacilityRow: (
     systemKey: MopFacilitySystemKey,
     partial: Partial<Pick<MopFacilityEffectRow, "choice" | "details">>,
@@ -44,6 +47,7 @@ export const MopDocumentForm = ({
   patchSite,
   patchOverview,
   patchSafety,
+  patchAssumptions,
   patchFacilityRow,
 }: MopDocumentFormProps) => {
   return (
@@ -72,6 +76,10 @@ export const MopDocumentForm = ({
               patchFacilityRow={patchFacilityRow}
             />
             <MopSection05Safety safety={mop.safety} patchSafety={patchSafety} />
+            <MopSection06Assumptions
+              assumptions={mop.assumptions}
+              patchAssumptions={patchAssumptions}
+            />
           </>
         )}
       </MopPortalShell>

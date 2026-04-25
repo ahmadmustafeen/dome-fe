@@ -13,6 +13,15 @@ import {
   resolveSafetyProcedureRows,
   resolveToolRequirementRows,
 } from "@/constants/mop-section05-safety";
+import {
+  buildDefaultAssumptionRows,
+  buildDefaultCriticalDecisionItems,
+  MOP_SECTION_06_DEFAULT_DECISION_LIST_COUNT,
+  MOP_SECTION_06_DEFAULT_TABLE_ROW_COUNT,
+  MOP_SECTION_06_DEFAULT_UNIT_LABEL,
+  resolveAssumptionRows,
+  resolveCriticalDecisionItems,
+} from "@/constants/mop-section06-assumptions";
 import type { MOP, MOPGenerateContext, MOPSection03Overview } from "@/types/mop";
 import { getTodayDateInputValue } from "@/utils/mop-dates";
 
@@ -82,6 +91,13 @@ export const createEmptyMop = (): MOP => ({
     ),
     localEmergencyServiceRows: buildDefaultLocalEmergencyServiceRows(
       MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT,
+    ),
+  },
+  assumptions: {
+    assumptionRows: buildDefaultAssumptionRows(MOP_SECTION_06_DEFAULT_TABLE_ROW_COUNT),
+    criticalDecisionUnitLabel: MOP_SECTION_06_DEFAULT_UNIT_LABEL,
+    criticalDecisionPointItems: buildDefaultCriticalDecisionItems(
+      MOP_SECTION_06_DEFAULT_DECISION_LIST_COUNT,
     ),
   },
   signOff: {
@@ -312,6 +328,44 @@ export const MOCK_GENERATED_MOP: MOP = {
       },
     ],
   },
+  assumptions: {
+    criticalDecisionUnitLabel: MOP_SECTION_06_DEFAULT_UNIT_LABEL,
+    assumptionRows: [
+      {
+        id: "asm-mock-1",
+        category: "Site access",
+        assumption: "Badge and escort policy remains unchanged for the work window listed on the work order.",
+      },
+      {
+        id: "asm-mock-2",
+        category: "Utilities",
+        assumption: "Normal utility power and building services are available unless noted in the facility event log.",
+      },
+      {
+        id: "asm-mock-3",
+        category: "OEM & parts",
+        assumption: "Required filters, lubricants, and OEM consumables are on hand before the maintenance start.",
+      },
+    ],
+    criticalDecisionPointItems: [
+      {
+        id: "cdp-mock-1",
+        text: "Confirm generator is offline / isolated and tagged per site LOTO before opening enclosures.",
+      },
+      {
+        id: "cdp-mock-2",
+        text: "Verify battery system voltage and charger status before any cranking or control testing.",
+      },
+      {
+        id: "cdp-mock-3",
+        text: "Obtain hot-work and fuel-handling clearance if the task plan includes those activities.",
+      },
+      {
+        id: "cdp-mock-4",
+        text: "Document load-transfer criteria with operations before return-to-service and witness transfer steps.",
+      },
+    ],
+  },
   signOff: {
     preparedBy: "",
     reviewedBy: "",
@@ -380,6 +434,15 @@ export const generateMOP = async (
     emergencyContactRows: resolveEmergencyContactRows(data.safety.emergencyContactRows),
     localEmergencyServiceRows: resolveLocalEmergencyServiceRows(
       data.safety.localEmergencyServiceRows,
+    ),
+  };
+  data.assumptions = {
+    ...data.assumptions,
+    criticalDecisionUnitLabel:
+      data.assumptions.criticalDecisionUnitLabel ?? MOP_SECTION_06_DEFAULT_UNIT_LABEL,
+    assumptionRows: resolveAssumptionRows(data.assumptions.assumptionRows),
+    criticalDecisionPointItems: resolveCriticalDecisionItems(
+      data.assumptions.criticalDecisionPointItems,
     ),
   };
   return data;

@@ -7,6 +7,7 @@ import {
 } from "@/services/mop-mock-service";
 import type {
   MOP,
+  MOPAssumptions,
   MOPDocument,
   MOPEquipment,
   MOPProcedure,
@@ -124,6 +125,15 @@ export const useMopMockDocument = (ctx: MopMockContextParams) => {
     );
   }, []);
 
+  const patchAssumptions = useCallback((partial: Partial<MOPAssumptions>) => {
+    setMop((prev) =>
+      bumpModified({
+        ...prev,
+        assumptions: { ...prev.assumptions, ...partial },
+      }),
+    );
+  }, []);
+
   const patchFacilityRow = useCallback(
     (
       systemKey: MopFacilitySystemKey,
@@ -165,6 +175,7 @@ export const useMopMockDocument = (ctx: MopMockContextParams) => {
     patchSite,
     patchOverview,
     patchSafety,
+    patchAssumptions,
     patchFacilityRow,
     resetMop,
     persistMop,

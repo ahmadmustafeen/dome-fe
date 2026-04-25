@@ -87,15 +87,27 @@ export type MopEmergencyContactRow = {
   phoneNumber: string;
 };
 
+/** Section 05 — local emergency services (researched site-specific directory). */
+export type MopLocalEmergencyServiceRow = {
+  id: string;
+  service: string;
+  contactName: string;
+  phoneNumber: string;
+  address: string;
+};
+
 export type MOPSafety = {
   precautions: string;
   requiredPPE: string;
   toolsAndMaterials: string;
+  /** Research location line for the local services table (API/autofill or manual). */
+  localEmergencyServicesAddress: string;
   /** Dynamic-length tables: default empty rows, or one row per API/autofill item. */
   ppeRequirementRows: MopPpeRequirementRow[];
   toolRequirementRows: MopToolRequirementRow[];
   safetyProcedureRows: MopSafetyProcedureRow[];
   emergencyContactRows: MopEmergencyContactRow[];
+  localEmergencyServiceRows: MopLocalEmergencyServiceRow[];
 };
 
 export type MOPSignOff = {

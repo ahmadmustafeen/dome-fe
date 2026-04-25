@@ -2,6 +2,7 @@ export * from "./Button";
 export * from "./CountBadge";
 export * from "./DeleteConfirmation";
 export * from "./EmptyState";
+export * from "./InfoBanner";
 export * from "./InputWithLabel";
 export * from "./Pagination";
 export * from "./ScreenLoader";

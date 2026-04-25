@@ -1,11 +1,14 @@
 import { buildDefaultMopSection04Rows } from "@/constants/mop-section04-facility";
 import {
   buildDefaultEmergencyContactRows,
+  buildDefaultLocalEmergencyServiceRows,
   buildDefaultPpeRows,
   buildDefaultSafetyProcedureRows,
   buildDefaultToolRows,
+  MOP_LOCAL_EMERGENCY_SAMPLE_ADDRESS,
   MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT,
   resolveEmergencyContactRows,
+  resolveLocalEmergencyServiceRows,
   resolvePpeRequirementRows,
   resolveSafetyProcedureRows,
   resolveToolRequirementRows,
@@ -68,12 +71,16 @@ export const createEmptyMop = (): MOP => ({
     precautions: "",
     requiredPPE: "",
     toolsAndMaterials: "",
+    localEmergencyServicesAddress: "",
     ppeRequirementRows: buildDefaultPpeRows(MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT),
     toolRequirementRows: buildDefaultToolRows(MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT),
     safetyProcedureRows: buildDefaultSafetyProcedureRows(
       MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT,
     ),
     emergencyContactRows: buildDefaultEmergencyContactRows(
+      MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT,
+    ),
+    localEmergencyServiceRows: buildDefaultLocalEmergencyServiceRows(
       MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT,
     ),
   },
@@ -280,6 +287,30 @@ export const MOCK_GENERATED_MOP: MOP = {
         phoneNumber: "911",
       },
     ],
+    localEmergencyServicesAddress: MOP_LOCAL_EMERGENCY_SAMPLE_ADDRESS,
+    localEmergencyServiceRows: [
+      {
+        id: "les-mock-pd",
+        service: "Police (non-emergency)",
+        contactName: "Austin Police Department",
+        phoneNumber: "311",
+        address: "715 E 8th St, Austin, TX 78701",
+      },
+      {
+        id: "les-mock-fd",
+        service: "Fire & EMS (emergency)",
+        contactName: "Austin-Travis County EMS / AFD",
+        phoneNumber: "911",
+        address: "As dispatched — verify coverage for site ZIP",
+      },
+      {
+        id: "les-mock-er",
+        service: "Nearest hospital ER (verify)",
+        contactName: "St. David's North Austin Medical Center (example)",
+        phoneNumber: "",
+        address: "12221 N Mopac Expy, Austin, TX 78758",
+      },
+    ],
   },
   signOff: {
     preparedBy: "",
@@ -342,10 +373,14 @@ export const generateMOP = async (
   data.document.lastModified = new Date().toISOString();
   data.safety = {
     ...data.safety,
+    localEmergencyServicesAddress: data.safety.localEmergencyServicesAddress ?? "",
     ppeRequirementRows: resolvePpeRequirementRows(data.safety.ppeRequirementRows),
     toolRequirementRows: resolveToolRequirementRows(data.safety.toolRequirementRows),
     safetyProcedureRows: resolveSafetyProcedureRows(data.safety.safetyProcedureRows),
     emergencyContactRows: resolveEmergencyContactRows(data.safety.emergencyContactRows),
+    localEmergencyServiceRows: resolveLocalEmergencyServiceRows(
+      data.safety.localEmergencyServiceRows,
+    ),
   };
   return data;
 };

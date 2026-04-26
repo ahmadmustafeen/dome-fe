@@ -40,11 +40,87 @@ import {
 import { buildDefaultBackOutStepRows, resolveBackOutStepRows } from "@/constants/mop-section08-backout";
 import { buildDefaultMopApproval, resolveMopApproval } from "@/constants/mop-section09-approval";
 import { buildDefaultMopComments, resolveMopComments } from "@/constants/mop-section10-comments";
-import type { MOP, MOPGenerateContext, MOPSection03Overview, MOPStep } from "@/types/mop";
+import { buildDefaultMopReferences, resolveMopReferences } from "@/constants/mop-section11-references";
+import type { MOP, MOPGenerateContext, MOPSection03Overview, MOPSection11References, MOPStep } from "@/types/mop";
 import { getTodayDateInputValue } from "@/utils/mop-dates";
 
 const delay = (ms: number) =>
   new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+const mockSampleMopReferences = (): MOPSection11References => ({
+  policyDocumentRows: [
+    {
+      id: "mock-pol-1",
+      policyDocument: "Data Center Electrical Safety Policy",
+      uploadDate: "2025-08-15",
+      type: "Company Policy",
+    },
+    {
+      id: "mock-pol-2",
+      policyDocument: "LOTO Program Standard",
+      uploadDate: "2025-03-01",
+      type: "Company Policy",
+    },
+    { id: "mock-pol-3", policyDocument: "", uploadDate: "", type: "Company Policy" },
+  ],
+  equipmentDocumentRows: [
+    {
+      id: "mock-eq-1",
+      title: "LIEBERT DA085DP1AD833B Installation and Operation Manual",
+      type: "Technical Manual",
+      linkUrl: "https://www.vertiv.com/en-us/support/software-download/",
+      internalAccess: "",
+    },
+    {
+      id: "mock-eq-2",
+      title: "Battery System Documentation",
+      type: "Technical Manual",
+      linkUrl: "",
+      internalAccess: "Internal Document — Request from Site Manager",
+    },
+  ],
+  safetyStandardRows: [
+    {
+      id: "mock-sf-1",
+      safetyStandard: "NFPA 70E - Electrical Safety in the Workplace",
+      authority: "NFPA",
+      linkUrl:
+        "https://www.nfpa.org/codes-and-standards/all-codes-and-standards/list-of-codes-and-standards/detail?code=70E",
+      internalAccess: "",
+    },
+    {
+      id: "mock-sf-2",
+      safetyStandard: "OSHA 29 CFR 1910.147 - Control of Hazardous Energy",
+      authority: "OSHA",
+      linkUrl: "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.147",
+      internalAccess: "",
+    },
+    { id: "mock-sf-3", safetyStandard: "", authority: "", linkUrl: "", internalAccess: "" },
+  ],
+  additionalResourceRows: [
+    {
+      id: "mock-ar-1",
+      title: "Site-Specific Emergency Response Plan",
+      type: "Internal Document",
+      linkUrl: "",
+      internalAccess: "Internal Document — Request from Site Manager",
+    },
+    {
+      id: "mock-ar-2",
+      title: "Safety Data Sheets (SDS) Information",
+      type: "Chemical Safety",
+      linkUrl: "https://www.osha.gov/safety-data-sheets",
+      internalAccess: "",
+    },
+    {
+      id: "mock-ar-3",
+      title: "Equipment History and Maintenance Records",
+      type: "CMMS Database",
+      linkUrl: "",
+      internalAccess: "Internal Document — Request from Site Manager",
+    },
+  ],
+});
 
 /** Shared by legacy `steps` and Section 08 detailed procedure grid in mock data. */
 const MOCK_GENERATED_STEPS: MOPStep[] = [
@@ -171,6 +247,7 @@ export const createEmptyMop = (): MOP => ({
   },
   mopApproval: buildDefaultMopApproval(),
   mopComments: buildDefaultMopComments(),
+  references: buildDefaultMopReferences(),
   signOff: {
     preparedBy: "",
     reviewedBy: "",
@@ -469,6 +546,7 @@ export const MOCK_GENERATED_MOP: MOP = {
     ...buildDefaultMopComments(),
     additionalNotes: "Log CMMS work order number here after upload.",
   },
+  references: mockSampleMopReferences(),
   signOff: {
     preparedBy: "",
     reviewedBy: "",
@@ -569,6 +647,7 @@ export const generateMOP = async (
   };
   data.mopApproval = resolveMopApproval(data.mopApproval);
   data.mopComments = resolveMopComments(data.mopComments);
+  data.references = resolveMopReferences(data.references);
   return data;
 };
 

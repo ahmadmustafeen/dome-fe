@@ -14,6 +14,7 @@ import type {
   MOPSection08BackOut,
   MOPSection09MopApproval,
   MOPSection10MopComments,
+  MOPSection11References,
 } from "@/types/mop";
 
 import { MopPortalShell } from "./MopPortalShell";
@@ -27,6 +28,7 @@ import { MopSection07MopDetails } from "./MopSection07MopDetails";
 import { MopSection08BackOut as MopSection08BackOutForm } from "./MopSection08BackOut";
 import { MopSection09MopApproval as MopSection09MopApprovalForm } from "./MopSection09MopApproval";
 import { MopSection10MopComments as MopSection10MopCommentsForm } from "./MopSection10MopComments";
+import { MopSection11ReferencesBlock } from "./MopSection11References";
 
 type MopDocumentFormProps = {
   mop: MOP;
@@ -43,6 +45,7 @@ type MopDocumentFormProps = {
   patchBackOut: (p: Partial<MOPSection08BackOut>) => void;
   patchMopApproval: (p: Partial<MOPSection09MopApproval>) => void;
   patchMopComments: (p: Partial<MOPSection10MopComments>) => void;
+  patchMopReferences: (p: Partial<MOPSection11References>) => void;
   patchFacilityRow: (
     systemKey: MopFacilitySystemKey,
     partial: Partial<Pick<MopFacilityEffectRow, "choice" | "details">>,
@@ -64,6 +67,7 @@ export const MopDocumentForm = ({
   patchBackOut,
   patchMopApproval,
   patchMopComments,
+  patchMopReferences,
   patchFacilityRow,
 }: MopDocumentFormProps) => {
   return (
@@ -111,6 +115,10 @@ export const MopDocumentForm = ({
             <MopSection10MopCommentsForm
               mopComments={mop.mopComments}
               patchMopComments={patchMopComments}
+            />
+            <MopSection11ReferencesBlock
+              references={mop.references}
+              patchMopReferences={patchMopReferences}
             />
           </>
         )}

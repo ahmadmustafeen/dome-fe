@@ -19,6 +19,7 @@ import type {
   MOPSection08BackOut,
   MOPSection09MopApproval,
   MOPSection10MopComments,
+  MOPSection11References,
   MOPSignOff,
   MOPSiteSection,
 } from "@/types/mop";
@@ -177,6 +178,15 @@ export const useMopMockDocument = (ctx: MopMockContextParams) => {
     );
   }, []);
 
+  const patchMopReferences = useCallback((partial: Partial<MOPSection11References>) => {
+    setMop((prev) =>
+      bumpModified({
+        ...prev,
+        references: { ...prev.references, ...partial },
+      }),
+    );
+  }, []);
+
   const patchFacilityRow = useCallback(
     (
       systemKey: MopFacilitySystemKey,
@@ -223,6 +233,7 @@ export const useMopMockDocument = (ctx: MopMockContextParams) => {
     patchBackOut,
     patchMopApproval,
     patchMopComments,
+    patchMopReferences,
     patchFacilityRow,
     resetMop,
     persistMop,

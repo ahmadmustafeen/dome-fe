@@ -75,6 +75,42 @@ export type MOPSection10MopComments = {
   additionalNotes: string;
 };
 
+/** Section 11 — company policy table row (`generateSection11` in `section-generators.js`). */
+export type MopReferencePolicyRow = {
+  id: string;
+  policyDocument: string;
+  uploadDate: string;
+  type: string;
+};
+
+/**
+ * Section 11 — document title / type / access (equipment docs & additional resources).
+ * When `linkUrl` is a valid `http(s)` URL, "View" opens in a new tab; otherwise show `internalAccess`.
+ */
+export type MopReferenceLinkRow = {
+  id: string;
+  title: string;
+  type: string;
+  linkUrl: string;
+  internalAccess: string;
+};
+
+/** Section 11 — safety standards table row. */
+export type MopReferenceSafetyRow = {
+  id: string;
+  safetyStandard: string;
+  authority: string;
+  linkUrl: string;
+  internalAccess: string;
+};
+
+export type MOPSection11References = {
+  policyDocumentRows: MopReferencePolicyRow[];
+  equipmentDocumentRows: MopReferenceLinkRow[];
+  safetyStandardRows: MopReferenceSafetyRow[];
+  additionalResourceRows: MopReferenceLinkRow[];
+};
+
 /** Section 01 schedule / document header (portal + prompt `document`). */
 export type MOPDocument = {
   title: string;
@@ -319,6 +355,7 @@ export type MOP = {
   backOut: MOPSection08BackOut;
   mopApproval: MOPSection09MopApproval;
   mopComments: MOPSection10MopComments;
+  references: MOPSection11References;
   signOff: MOPSignOff;
   context: MOPContext;
   site: MOPSiteSection;

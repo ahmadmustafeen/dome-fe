@@ -39,6 +39,7 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
     patchBackOut,
     patchMopApproval,
     patchMopComments,
+    patchMopReferences,
     patchFacilityRow,
     resetMop,
     persistMop,
@@ -159,6 +160,7 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
               patchBackOut={patchBackOut}
               patchMopApproval={patchMopApproval}
               patchMopComments={patchMopComments}
+              patchMopReferences={patchMopReferences}
               patchFacilityRow={patchFacilityRow}
             />
             <div className="flex shrink-0 flex-wrap gap-2 pt-1">

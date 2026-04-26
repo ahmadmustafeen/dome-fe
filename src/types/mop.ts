@@ -3,6 +3,11 @@
  * Aligns with `prompt.md` plus data-centre portal Section 01–04 extras.
  */
 
+import type { MopImportantIndicatorId } from "@/constants/mop-section07-important-indicators";
+
+/** Stored on each detailed procedure row — `MopImportantIndicatorId` or none. */
+export type MopDetailProcedureStepIndicator = MopImportantIndicatorId | "";
+
 export type MOPStatus =
   | "draft"
   | "ready_to_deliver"
@@ -17,6 +22,22 @@ export type MOPStep = {
   id: string;
   stepNumber: number;
   description: string;
+};
+
+/** Section 07 subsection — one row in Detailed Procedure Steps. */
+export type MopDetailedProcedureStepRow = {
+  id: string;
+  stepNumber: number;
+  detailedProcedure: string;
+  /** Important Indicators id from Section 7 legend (e.g. `loto`, `safetyAlert`), or empty. */
+  indicator: MopDetailProcedureStepIndicator;
+  initials: string;
+  time: string;
+};
+
+export type MOPSection07DetailedProcedures = {
+  stepRows: MopDetailedProcedureStepRow[];
+  criticalStepNotes: string;
 };
 
 /** Section 01 schedule / document header (portal + prompt `document`). */
@@ -114,6 +135,47 @@ export type MOPAssumptions = {
   /** Shown in the critical-decision heading, e.g. "GENERATOR 1". */
   criticalDecisionUnitLabel: string;
   criticalDecisionPointItems: MopCriticalDecisionPointItem[];
+};
+
+/** Section 07 — one row in the generator operational data log (labels/units per template). */
+export type MopGeneratorOperationalDataRow = {
+  rowId: string;
+  parameter: string;
+  asFound: string;
+  asLeft: string;
+  units: string;
+  acceptableRange: string;
+};
+
+/** Section 07 — engine performance (Hours of Operation, last/next service). */
+export type MopEnginePerformanceDataRow = {
+  rowId: string;
+  parameter: string;
+  reading: string;
+  units: string;
+  status: string;
+};
+
+/** Section 07 — system fault / alarm (fully user/API populated). */
+export type MopFaultAlarmHistoryRow = {
+  id: string;
+  dateTime: string;
+  faultCode: string;
+  description: string;
+  actionTaken: string;
+  initials: string;
+};
+
+export type MOPSection07Details = {
+  datePerformed: string;
+  timeBegun: string;
+  timeCompleted: string;
+  facilitiesPersonnel: string;
+  contractorPersonnel: string;
+  generatorOperationalRows: MopGeneratorOperationalDataRow[];
+  enginePerformanceRows: MopEnginePerformanceDataRow[];
+  faultAlarmHistoryRows: MopFaultAlarmHistoryRow[];
+  detailedProcedures: MOPSection07DetailedProcedures;
 };
 
 export type MOPSafety = {
@@ -218,6 +280,7 @@ export type MOP = {
   steps: MOPStep[];
   safety: MOPSafety;
   assumptions: MOPAssumptions;
+  mopDetails: MOPSection07Details;
   signOff: MOPSignOff;
   context: MOPContext;
   site: MOPSiteSection;

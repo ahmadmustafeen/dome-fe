@@ -10,6 +10,7 @@ import type {
   MopFacilityEffectRow,
   MopFacilitySystemKey,
   MOPSafety,
+  MOPSection07Details,
 } from "@/types/mop";
 
 import { MopPortalShell } from "./MopPortalShell";
@@ -19,6 +20,7 @@ import { MopSection03Overview } from "./MopSection03Overview";
 import { MopSection04Facility } from "./MopSection04Facility";
 import { MopSection05Safety } from "./MopSection05Safety";
 import { MopSection06Assumptions } from "./MopSection06Assumptions";
+import { MopSection07MopDetails } from "./MopSection07MopDetails";
 
 type MopDocumentFormProps = {
   mop: MOP;
@@ -31,6 +33,7 @@ type MopDocumentFormProps = {
   patchOverview: (p: Partial<MOP["overview"]>) => void;
   patchSafety: (p: Partial<MOPSafety>) => void;
   patchAssumptions: (p: Partial<MOPAssumptions>) => void;
+  patchMopDetails: (p: Partial<MOPSection07Details>) => void;
   patchFacilityRow: (
     systemKey: MopFacilitySystemKey,
     partial: Partial<Pick<MopFacilityEffectRow, "choice" | "details">>,
@@ -48,6 +51,7 @@ export const MopDocumentForm = ({
   patchOverview,
   patchSafety,
   patchAssumptions,
+  patchMopDetails,
   patchFacilityRow,
 }: MopDocumentFormProps) => {
   return (
@@ -79,6 +83,10 @@ export const MopDocumentForm = ({
             <MopSection06Assumptions
               assumptions={mop.assumptions}
               patchAssumptions={patchAssumptions}
+            />
+            <MopSection07MopDetails
+              details={mop.mopDetails}
+              patchMopDetails={patchMopDetails}
             />
           </>
         )}

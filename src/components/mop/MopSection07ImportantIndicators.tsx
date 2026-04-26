@@ -9,7 +9,10 @@ import { MopSection07IndicatorIcon } from "./MopSection07IndicatorIcons";
 export const MopSection07ImportantIndicators = () => {
   return (
     <div>
-      <Typography variant="h6" className="mb-3 text-base font-semibold text-gray-900">
+      <Typography
+        variant="h6"
+        className="mb-3 text-base font-semibold text-gray-900"
+      >
         {MOP_SECTION_07_IMPORTANT_SUBHEADING}
       </Typography>
       <div className="overflow-x-auto">

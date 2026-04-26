@@ -5,9 +5,5 @@ export default async function MopEditPage(props: {
 }) {
   const { mopId } = await props.params;
 
-  return (
-    <div className="h-full min-h-0">
-      <MopManagementClient mopId={mopId} />
-    </div>
-  );
+  return <MopManagementClient mopId={mopId} />;
 }

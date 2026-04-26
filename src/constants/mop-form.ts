@@ -1,4 +1,3 @@
-/* eslint-disable style/quote-props */
 import type { MopRiskLevel, MopStatus, MopStep } from "@/types/mop-form";
 
 export const MOP_EMPTY_EDITOR_HTML = "<p></p>";

@@ -11,6 +11,9 @@ import type {
   MopFacilitySystemKey,
   MOPSafety,
   MOPSection07Details,
+  MOPSection08BackOut,
+  MOPSection09MopApproval,
+  MOPSection10MopComments,
 } from "@/types/mop";
 
 import { MopPortalShell } from "./MopPortalShell";
@@ -21,6 +24,9 @@ import { MopSection04Facility } from "./MopSection04Facility";
 import { MopSection05Safety } from "./MopSection05Safety";
 import { MopSection06Assumptions } from "./MopSection06Assumptions";
 import { MopSection07MopDetails } from "./MopSection07MopDetails";
+import { MopSection08BackOut as MopSection08BackOutForm } from "./MopSection08BackOut";
+import { MopSection09MopApproval as MopSection09MopApprovalForm } from "./MopSection09MopApproval";
+import { MopSection10MopComments as MopSection10MopCommentsForm } from "./MopSection10MopComments";
 
 type MopDocumentFormProps = {
   mop: MOP;
@@ -34,6 +40,9 @@ type MopDocumentFormProps = {
   patchSafety: (p: Partial<MOPSafety>) => void;
   patchAssumptions: (p: Partial<MOPAssumptions>) => void;
   patchMopDetails: (p: Partial<MOPSection07Details>) => void;
+  patchBackOut: (p: Partial<MOPSection08BackOut>) => void;
+  patchMopApproval: (p: Partial<MOPSection09MopApproval>) => void;
+  patchMopComments: (p: Partial<MOPSection10MopComments>) => void;
   patchFacilityRow: (
     systemKey: MopFacilitySystemKey,
     partial: Partial<Pick<MopFacilityEffectRow, "choice" | "details">>,
@@ -52,6 +61,9 @@ export const MopDocumentForm = ({
   patchSafety,
   patchAssumptions,
   patchMopDetails,
+  patchBackOut,
+  patchMopApproval,
+  patchMopComments,
   patchFacilityRow,
 }: MopDocumentFormProps) => {
   return (
@@ -87,6 +99,18 @@ export const MopDocumentForm = ({
             <MopSection07MopDetails
               details={mop.mopDetails}
               patchMopDetails={patchMopDetails}
+            />
+            <MopSection08BackOutForm
+              backOut={mop.backOut}
+              patchBackOut={patchBackOut}
+            />
+            <MopSection09MopApprovalForm
+              mopApproval={mop.mopApproval}
+              patchMopApproval={patchMopApproval}
+            />
+            <MopSection10MopCommentsForm
+              mopComments={mop.mopComments}
+              patchMopComments={patchMopComments}
             />
           </>
         )}

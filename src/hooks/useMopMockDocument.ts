@@ -10,14 +10,17 @@ import type {
   MOPAssumptions,
   MOPDocument,
   MOPEquipment,
-  MOPProcedure,
-  MOPSection03Overview,
-  MOPSection07Details,
-  MOPSafety,
-  MOPSignOff,
-  MOPSiteSection,
   MopFacilityEffectRow,
   MopFacilitySystemKey,
+  MOPProcedure,
+  MOPSafety,
+  MOPSection03Overview,
+  MOPSection07Details,
+  MOPSection08BackOut,
+  MOPSection09MopApproval,
+  MOPSection10MopComments,
+  MOPSignOff,
+  MOPSiteSection,
 } from "@/types/mop";
 
 export type MopMockContextParams = {
@@ -144,6 +147,36 @@ export const useMopMockDocument = (ctx: MopMockContextParams) => {
     );
   }, []);
 
+  const patchBackOut = useCallback((partial: Partial<MOPSection08BackOut>) => {
+    setMop((prev) =>
+      bumpModified({
+        ...prev,
+        backOut: { ...prev.backOut, ...partial },
+      }),
+    );
+  }, []);
+
+  const patchMopApproval = useCallback(
+    (partial: Partial<MOPSection09MopApproval>) => {
+      setMop((prev) =>
+        bumpModified({
+          ...prev,
+          mopApproval: { ...prev.mopApproval, ...partial },
+        }),
+      );
+    },
+    [],
+  );
+
+  const patchMopComments = useCallback((partial: Partial<MOPSection10MopComments>) => {
+    setMop((prev) =>
+      bumpModified({
+        ...prev,
+        mopComments: { ...prev.mopComments, ...partial },
+      }),
+    );
+  }, []);
+
   const patchFacilityRow = useCallback(
     (
       systemKey: MopFacilitySystemKey,
@@ -187,6 +220,9 @@ export const useMopMockDocument = (ctx: MopMockContextParams) => {
     patchSafety,
     patchAssumptions,
     patchMopDetails,
+    patchBackOut,
+    patchMopApproval,
+    patchMopComments,
     patchFacilityRow,
     resetMop,
     persistMop,

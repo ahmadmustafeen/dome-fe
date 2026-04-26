@@ -40,6 +40,41 @@ export type MOPSection07DetailedProcedures = {
   criticalStepNotes: string;
 };
 
+/** Section 08 — one row in Back-out Procedures (portal `generateSection08`). */
+export type MopBackOutProcedureRow = {
+  id: string;
+  stepNumber: number;
+  backOutProcedure: string;
+  initials: string;
+  time: string;
+};
+
+export type MOPSection08BackOut = {
+  stepRows: MopBackOutProcedureRow[];
+};
+
+/** Section 09 — one review row (`generateSection09` in `section-generators.js`). */
+export type MopApprovalReviewRow = {
+  id: string;
+  reviewStage: string;
+  reviewersName: string;
+  reviewersTitle: string;
+  date: string;
+};
+
+export type MOPSection09MopApproval = {
+  reviewRows: MopApprovalReviewRow[];
+  mopEffectiveDate: string;
+  mopExpirationDate: string;
+};
+
+/** Section 10 — MOP Comments (`generateSection10` in `section-11-comments/route.js`). */
+export type MOPSection10MopComments = {
+  /** All MOP comment lines in one field (replaces per-line inputs). */
+  mopCommentsText: string;
+  additionalNotes: string;
+};
+
 /** Section 01 schedule / document header (portal + prompt `document`). */
 export type MOPDocument = {
   title: string;
@@ -281,6 +316,9 @@ export type MOP = {
   safety: MOPSafety;
   assumptions: MOPAssumptions;
   mopDetails: MOPSection07Details;
+  backOut: MOPSection08BackOut;
+  mopApproval: MOPSection09MopApproval;
+  mopComments: MOPSection10MopComments;
   signOff: MOPSignOff;
   context: MOPContext;
   site: MOPSiteSection;

@@ -37,6 +37,9 @@ import {
   MOP_SECTION_07_DEFAULT_DETAILED_STEP_COUNT,
   resolveDetailedProcedureStepRows,
 } from "@/constants/mop-section07-procedure-steps";
+import { buildDefaultBackOutStepRows, resolveBackOutStepRows } from "@/constants/mop-section08-backout";
+import { buildDefaultMopApproval, resolveMopApproval } from "@/constants/mop-section09-approval";
+import { buildDefaultMopComments, resolveMopComments } from "@/constants/mop-section10-comments";
 import type { MOP, MOPGenerateContext, MOPSection03Overview, MOPStep } from "@/types/mop";
 import { getTodayDateInputValue } from "@/utils/mop-dates";
 
@@ -163,6 +166,11 @@ export const createEmptyMop = (): MOP => ({
       criticalStepNotes: "",
     },
   },
+  backOut: {
+    stepRows: buildDefaultBackOutStepRows(),
+  },
+  mopApproval: buildDefaultMopApproval(),
+  mopComments: buildDefaultMopComments(),
   signOff: {
     preparedBy: "",
     reviewedBy: "",
@@ -449,6 +457,18 @@ export const MOCK_GENERATED_MOP: MOP = {
         "Torque: verify battery inter-cell connections to OEM values. Megger: attach separate log if insulation testing is in scope for this MOP.",
     },
   },
+  backOut: {
+    stepRows: buildDefaultBackOutStepRows(),
+  },
+  mopApproval: {
+    ...buildDefaultMopApproval(),
+    mopEffectiveDate: "2026-01-12",
+    mopExpirationDate: "2026-12-31",
+  },
+  mopComments: {
+    ...buildDefaultMopComments(),
+    additionalNotes: "Log CMMS work order number here after upload.",
+  },
   signOff: {
     preparedBy: "",
     reviewedBy: "",
@@ -543,6 +563,12 @@ export const generateMOP = async (
       criticalStepNotes: data.mopDetails?.detailedProcedures?.criticalStepNotes ?? "",
     },
   };
+  const baseBackOut = createEmptyMop().backOut;
+  data.backOut = {
+    stepRows: resolveBackOutStepRows(data.backOut?.stepRows ?? baseBackOut.stepRows),
+  };
+  data.mopApproval = resolveMopApproval(data.mopApproval);
+  data.mopComments = resolveMopComments(data.mopComments);
   return data;
 };
 

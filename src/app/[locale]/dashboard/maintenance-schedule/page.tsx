@@ -56,7 +56,6 @@ export default function MaintenanceSchedulePage() {
     setIsLoading(true);
     try {
       const response = await maintenanceScheduleService.getMaintenanceScheduleBySiteId(siteId);
-      console.log({ response });
 
       setData(response.data);
       setSchedule({ generatedAt: new Date().toDateString(), rows: response.data })

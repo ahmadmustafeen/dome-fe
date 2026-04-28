@@ -65,7 +65,7 @@ export const getAssetColumns = ({
     header: labels.colAssetId,
     cell: ({ row }) => (
       <span
-        className="block max-w-[120px] truncate text-sm text-gray-700"
+        className="block max-w-30 truncate text-sm text-gray-700"
         title={row.original.assetId}
       >
         {row.original.assetId || (

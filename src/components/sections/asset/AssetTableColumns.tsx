@@ -1,6 +1,6 @@
 "use client";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Pencil, Trash2 } from "lucide-react";
+import { Check, Pencil, Trash2 } from "lucide-react";
 
 import type { Asset } from "@/components/asset/CreateAssetModal";
 
@@ -55,16 +55,17 @@ export const getAssetColumns = ({
 
       cell: ({ row }) => {
         const selected = row.getIsSelected();
+        if (selected) {
+          return <div className="w-5 h-5 cursor-pointer rounded-md flex justify-center items-center border border-black"
+            onClick={() => row.toggleSelected()}>
+            <Check className="w-4 h-4" />
+          </div>
+        }
 
-        return (
-          <input
-            type="checkbox"
-            checked={selected ?? false}
-            onChange={() => row.toggleSelected()}
-            onClick={(e) => e.stopPropagation()}
-            className="h-4 w-4 cursor-pointer rounded border-gray-500 accent-primary"
-          />
-        );
+        return <div className="w-5 h-5 cursor-pointer rounded-md flex justify-center items-center border border-black"
+          onClick={() => row.toggleSelected()}>
+
+        </div>
       },
 
       enableSorting: false,

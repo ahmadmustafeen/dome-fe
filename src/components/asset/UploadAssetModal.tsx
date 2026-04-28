@@ -105,13 +105,12 @@ const UploadAssetModal = ({
             onClick={() => !file && inputRef.current?.click()}
             className={`
             relative mt-6 cursor-pointer rounded-xl border-2 border-dashed transition-all duration-300 select-none
-            ${
-              file
+            ${file
                 ? "cursor-default border-stone-600 bg-primary"
                 : isDragging
                   ? "scale-[1.01] border-amber-400 bg-amber-400/5"
                   : "border-stone-700 bg-primary hover:border-stone-500 hover:bg-primary/80"
-            }
+              }
           `}
           >
             {/* Glow effect when dragging */}
@@ -188,6 +187,25 @@ const UploadAssetModal = ({
               />
             </div>
           ) : null}
+          <div className="my-4 rounded-2xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-800">
+            <p className="font-semibold mb-2">
+              Required file format
+            </p>
+
+            <p className="mb-3 text-gray-600">
+              Your uploaded file must include the following columns:
+            </p>
+
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-1 list-disc list-inside text-gray-700">
+              <li>Asset ID</li>
+              <li>Asset Name</li>
+              <li>Category</li>
+              <li>Make</li>
+              <li>Model</li>
+              <li>Sub Category</li>
+              <li>Serial Number</li>
+            </ul>
+          </div>
         </div>
       </div>
     </>

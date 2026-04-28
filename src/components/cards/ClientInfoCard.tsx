@@ -7,9 +7,14 @@ import { AppButton, Typography } from "../common";
 export interface Client {
   _id: string;
   name: string;
-  address: string;
   phone: string;
   email: string;
+  state: string;
+  zipCode: string;
+  country: string;
+  city: string;
+  address1: string;
+  address2: string;
 }
 
 type ClientInfoCardProps = {
@@ -45,7 +50,10 @@ const ClientInfoCard = ({
           {client.name}
         </Typography>
         <Typography variant="caption" className="text-white/90">
-          Address: {client.address}
+          Address line 1: {client.address1}
+        </Typography>
+        <Typography variant="caption" className="text-white/90">
+          Address line 2: {client.address2}
         </Typography>
         <Typography variant="caption" className="text-white/90">
           Phone: {formatPhoneNumber(client.phone)}

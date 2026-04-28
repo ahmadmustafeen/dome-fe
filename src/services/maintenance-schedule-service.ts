@@ -35,6 +35,12 @@ export const maintenanceScheduleService = {
       { method: "GET" },
     );
   },
+    clearMaintenanceScheduleBySiteId: (siteId: string) => {
+    return apiFetch<MaintenanceScheduleApiResponse>(
+      `/maintenance-schedule/clear/${siteId}`,
+      { method: "DELETE" },
+    );
+  },
 
   // createDocument: (siteId: string, type: string, file: File) => {
   //   const formData = new FormData();

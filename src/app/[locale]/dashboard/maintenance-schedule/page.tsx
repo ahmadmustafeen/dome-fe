@@ -186,7 +186,19 @@ export default function MaintenanceSchedulePage() {
       fetchMaintenanceSchedule(site?._id)
     }
   }
-  const handleClear = () => { }
+  const handleClear = async () => {
+    try {
+      setIsLoading(true)
+      await maintenanceScheduleService.clearMaintenanceScheduleBySiteId(site._id);
+      toast.success("All previous schedule deleted successfully")
+      fetchMaintenanceSchedule(site._id)
+    } catch (err) {
+
+    }
+    finally {
+      setIsLoading(false)
+    }
+  }
 
 
   if (isGenerator) {

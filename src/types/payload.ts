@@ -15,7 +15,13 @@ export interface ClientPayload {
   name: string
   email: string
   phone: string
-  address: string
+  address1: string
+  address2: string
+  state: string
+  country: string
+  zipCode: string
+  city: string
+
 }
 
 export interface SitePayload {
@@ -23,7 +29,12 @@ export interface SitePayload {
   name: string
   timeline: string
   startDate: string
-  address: string
+  address1: string
+  address2: string
+  country: string
+  city: string
+  zipCode: string
+  state: string
 }
 
 export interface AssetPayload {

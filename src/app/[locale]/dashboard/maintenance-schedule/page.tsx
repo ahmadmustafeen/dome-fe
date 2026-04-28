@@ -43,7 +43,7 @@ export default function MaintenanceSchedulePage() {
 
   const [isGenerator, setIsGenerator] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [data, setData] = useState<MaintenanceRow[]>([])
+  const [maintenanceData, setMaintenanceData] = useState<any[]>([]);
   const [schedule, setSchedule] = useState<MaintenanceScheduleData | null>(
     null,
   );
@@ -56,9 +56,8 @@ export default function MaintenanceSchedulePage() {
     setIsLoading(true);
     try {
       const response = await maintenanceScheduleService.getMaintenanceScheduleBySiteId(siteId);
-      console.log({ response });
 
-      setData(response.data);
+      setMaintenanceData(response.data);
       setSchedule({ generatedAt: new Date().toDateString(), rows: response.data })
     } catch (err) {
       toast.error(
@@ -166,35 +165,68 @@ export default function MaintenanceSchedulePage() {
   }
 
 
-  const handleGenerate = async () => {
-    try {
-      setIsGenerator(true)
-      await maintenanceScheduleService.generateMaintenanceSchedule(site._id);
-      toast.success("AI is working in background, refresh this page in 5 mins for latest changes")
-    } finally {
-      setIsGenerator(false)
-      fetchMaintenanceSchedule(site?._id)
-    }
-  }
-  const handleRegenerate = async () => {
-    try {
-      setIsGenerator(true)
-      await maintenanceScheduleService.generateMaintenanceSchedule(site._id);
-      toast.success("AI is working in background, refresh this page in 5 mins for latest changes")
-    } finally {
-      setIsGenerator(false)
-      fetchMaintenanceSchedule(site?._id)
-    }
-  }
-  const handleClear = () => { }
+
+  const handleRegenerate = () => {
+    if (!site?._id) return;
 
 
-  if (isGenerator) {
-    return <ScreenLoader
-      heading={t("loader_heading")}
-      description={t("loader_description")}
-    />
+    setIsGenerator(true);
+    setMaintenanceData([])
+
+    const es = new EventSource(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/maintenance-schedule/generateByStream/${site?._id}`
+    );
+
+    es.onmessage = (event) => {
+      try {
+        const parsed = JSON.parse(event.data);
+
+        if (parsed.type === "chunk") {
+          const newItem = parsed.data;
+
+          setMaintenanceData((prev: any[]) => [
+            ...prev,
+            newItem,
+          ]);
+        }
+
+        if (parsed.type === "done") {
+          toast.success("Maintenance schedule generated successfully");
+          es.close();
+          setIsGenerator(false);
+        }
+
+        if (parsed.type === "error") {
+          toast.error(parsed.message || "Something went wrong");
+          es.close();
+          setIsGenerator(false);
+        }
+      } catch (err) {
+        console.error("Stream parse error:", err);
+      }
+    };
+
+    es.onerror = () => {
+      toast.error("Streaming connection failed");
+      es.close();
+      setIsGenerator(false);
+    };
+  };
+
+  const handleClear = async () => {
+    try {
+      setIsLoading(true)
+      await maintenanceScheduleService.clearMaintenanceScheduleBySiteId(site._id);
+      toast.success("All previous schedule deleted successfully")
+      fetchMaintenanceSchedule(site._id)
+    } catch (err) {
+
+    }
+    finally {
+      setIsLoading(false)
+    }
   }
+
   if (isLoading) {
     return <ScreenLoader
       heading={"Fetching Maintenance Schedule"}
@@ -204,6 +236,13 @@ export default function MaintenanceSchedulePage() {
 
   return (
     <div className="h-full">
+      {
+        isGenerator ? <ScreenLoader
+          heading={t("loader_heading")}
+          description={t("loader_description")}
+        /> : null
+      }
+
       <SectionWrapper>
         {/* ── Page header ── */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
@@ -213,7 +252,7 @@ export default function MaintenanceSchedulePage() {
           {!schedule?.rows?.length ? (
             <AppButton
               title={t("btn_generate")}
-              onClick={handleGenerate}
+              onClick={handleRegenerate}
               variant="secondary"
               icon={<CalendarDays className="h-4 w-4" />}
             />
@@ -235,7 +274,7 @@ export default function MaintenanceSchedulePage() {
           )}
         </div>
 
-        {!data?.length ? (
+        {!maintenanceData?.length ? (
           <EmptyState
             icon={<CalendarDays className="h-10 w-10" />}
             heading={t("empty_heading")}
@@ -271,7 +310,7 @@ export default function MaintenanceSchedulePage() {
             <div className="overflow-hidden rounded-lg border border-slate-800 shadow-xl shadow-black/20">
               <DataTable
                 columns={columns}
-                data={data}
+                data={maintenanceData}
                 getRowId={(row) => row.id}
                 noDataMessage="No categories match your search."
                 renderSubRow={renderSubRow}
@@ -280,14 +319,6 @@ export default function MaintenanceSchedulePage() {
                 headerCellClassName="text-center first:text-left"
               />
             </div>
-
-            {/* <Pagination
-              // totalPages={msTotalPages}
-              currentPage={msPage}
-              onPageChange={setMsPage}
-              // totalCount={filteredRows.length}
-              pageSize={MS_PAGE_SIZE}
-            /> */}
           </>
         )}
       </SectionWrapper>

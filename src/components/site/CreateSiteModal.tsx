@@ -80,6 +80,7 @@ const CreateSiteModal = ({ editData, toggleModal, refetchClients, updateSite, cl
     }
     finally {
       setLoading(false);
+      return true
     }
   }
 

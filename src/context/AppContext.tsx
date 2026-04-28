@@ -11,7 +11,11 @@ import {
 export interface Site {
   _id: string;
   name: string;
-  address: string;
+  address1: string;
+  address2: string;
+  city: string;
+  country: string;
+  state: string;
   startDate: string;
   timeline: string;
 }
@@ -19,7 +23,11 @@ export interface Site {
 export interface Client {
   _id: string;
   name: string;
-  address: string;
+  address2: string;
+  address1: string;
+  city: string;
+  country: string;
+  state: string;
   phone: string;
   email: string;
 }

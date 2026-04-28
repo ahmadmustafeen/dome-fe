@@ -79,6 +79,7 @@ const CreateClientModal = ({ editData, toggleModal, refetchClients, updateClient
     }
     finally {
       setLoading(false);
+      return true
     }
   }
 

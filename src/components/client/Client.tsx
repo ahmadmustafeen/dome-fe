@@ -76,7 +76,7 @@ function ClientPage() {
   }, []);
 
   const selectClient = (id: string) => {
-    setClient(clients.find((client) => client._id === id) ?? null);
+    setClient(clients?.find((client) => client._id === id) ?? null);
     router.push(DASHBOARD_ROUTES.CLIENT);
   };
 

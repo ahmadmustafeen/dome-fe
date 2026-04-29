@@ -114,6 +114,8 @@ export function DataTable<TData, TValue>({
     state: { sorting, columnFilters, columnVisibility, rowSelection, expanded },
   });
 
+
+
   useEffect(() => {
     const selectedRows = table
       .getSelectedRowModel()
@@ -162,7 +164,7 @@ export function DataTable<TData, TValue>({
         </TableHeader>
         <TableBody>
           <BodyContent
-            table={table}
+            table={{ ...table }}
             cellClassName={cellClassName}
             columnsLength={columns.length}
             handleTableRowClick={handleRowClick}

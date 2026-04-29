@@ -33,8 +33,7 @@ import { BodyContent } from "./BodyContent";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  /** Optional: provide a stable row ID from the data (e.g. (row) => row._id) */
-  getRowId?: (originalRow: TData, index: number, parent?: Row<TData>) => string;
+  getRowId: (originalRow: TData, index: number, parent?: Row<TData>) => string;
   onRowSelectionChange?: (selectedRows: TData[]) => void;
   setTablesState?: React.Dispatch<
     React.SetStateAction<TanStackTable<TData> | null>
@@ -119,14 +118,10 @@ export function DataTable<TData, TValue>({
       .getSelectedRowModel()
       .flatRows.map((row) => row.original);
     onRowSelectionChange?.(selectedRows);
-  }, [rowSelection, onRowSelectionChange, table]);
+  }, [rowSelection, onRowSelectionChange]);
 
   useEffect(() => {
-    if (setTablesState) {
-      const timer = setTimeout(() => setTablesState(table), 500);
-      return () => clearTimeout(timer);
-    }
-    return undefined;
+    setTablesState?.(table);
   }, [table, setTablesState]);
 
   return (

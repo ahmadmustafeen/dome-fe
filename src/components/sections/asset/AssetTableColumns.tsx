@@ -122,7 +122,7 @@ export const getAssetColumns = ({
       header: labels.colSubCategory,
       cell: ({ row }) => (
         <span
-          className="block max-w-[140px] truncate text-sm text-gray-700"
+          className="block max-w-35 truncate text-sm text-gray-700"
           title={row.original.subCategory}
         >
           {row.original.subCategory || (
@@ -137,7 +137,7 @@ export const getAssetColumns = ({
       header: labels.colEquipmentName,
       cell: ({ row }) => (
         <span
-          className="block max-w-[160px] truncate text-sm text-gray-700"
+          className="block max-w-40 truncate text-sm text-gray-700"
           title={row.original.equipmentName}
         >
           {row.original.equipmentName || (

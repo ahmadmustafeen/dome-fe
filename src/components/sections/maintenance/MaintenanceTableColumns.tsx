@@ -26,14 +26,8 @@ const CountBadge = ({ count }: { count: number }) =>
 type Labels = {
   colCategory: string;
   colSubCategory: string;
-  colAssets: string;
-  colMonthly: string;
-  colQuarterly: string;
-  colSemiAnnual: string;
-  colAnnual: string;
-  colTwoYear: string;
-  colThreeYear: string;
-  colFiveYear: string;
+  colCount: string;
+  colMake: string;
   colTotalMops: string;
   colTotalEops: string;
   colTotalSops: string;
@@ -53,147 +47,110 @@ export const getMaintenanceColumns = ({
   labels,
   onViewDetails,
 }: MaintenanceColumnsConfig): ColumnDef<MaintenanceRow>[] => [
-  {
-    id: "category",
-    accessorKey: "category",
-    header: labels.colCategory,
-    cell: ({ row }) => (
-      <div className="max-w-60 text-ellipsis overflow-clip font-medium text-left whitespace-nowrap text-gray-900">
-        {row.original.category}
-      </div>
-    ),
-  },
-  {
-    id: "subCategory",
-    accessorKey: "subCategory",
-    header: labels.colSubCategory,
-    cell: ({ row }) => (
-      <div className="max-w-60 text-ellipsis overflow-clip font-medium text-left whitespace-nowrap text-gray-900">
-        {row.original.subCategory}
-      </div>
-    ),
-  },
-  {
-    id: "assetCount",
-    accessorKey: "assetCount",
-    header: labels.colAssets,
-    cell: ({ row }) => (
-      <span className="block text-center font-semibold text-gray-700">
-        {row.original.assetCount}
-      </span>
-    ),
-  },
-  // ── Frequency columns ───────────────────────────────────────────────────────
-  {
-    id: "monthly",
-    header: labels.colMonthly,
-    cell: ({ row }) => (
-      <FrequencyCell active={row.original.monthly} />
-    ),
-  },
-  {
-    id: "quarterly",
-    header: labels.colQuarterly,
-    cell: ({ row }) => (
-      <FrequencyCell active={row.original.quarterly} />
-    ),
-  },
-  {
-    id: "semiAnnual",
-    header: labels.colSemiAnnual,
-    cell: ({ row }) => (
-      <FrequencyCell active={row.original.semiAnnual} />
-    ),
-  },
-  {
-    id: "annual",
-    header: labels.colAnnual,
-    cell: ({ row }) => <FrequencyCell active={row.original.annual} />,
-  },
-  {
-    id: "twoYear",
-    header: labels.colTwoYear,
-    cell: ({ row }) => (
-      <FrequencyCell active={row.original.twoYear} />
-    ),
-  },
-  {
-    id: "threeYear",
-    header: labels.colThreeYear,
-    cell: ({ row }) => (
-      <FrequencyCell active={row.original.threeYear} />
-    ),
-  },
-  {
-    id: "fiveYear",
-    header: labels.colFiveYear,
-    cell: ({ row }) => (
-      <FrequencyCell active={row.original.fiveYear} />
-    ),
-  },
-  // ── Total counts ────────────────────────────────────────────────────────────
-  {
-    id: "totalMOPs",
-    accessorKey: "totalMOPs",
-    header: labels.colTotalMops,
-    cell: ({ row }) => (
-      <div className="flex justify-center">
-        <CountBadge count={row.original.MOPs.length} />
-      </div>
-    ),
-  },
-  {
-    id: "totalEOPs",
-    accessorKey: "totalEOPs",
-    header: labels.colTotalEops,
-    cell: ({ row }) => (
-      <div className="flex justify-center">
-        <CountBadge count={row.original.EOPs.length} />
-      </div>
-    ),
-  },
-  {
-    id: "totalSOPs",
-    accessorKey: "totalSOPs",
-    header: labels.colTotalSops,
-    cell: ({ row }) => (
-      <div className="flex justify-center">
-        <CountBadge count={row.original.SOPs.length} />
-      </div>
-    ),
-  },
-  // ── Expand toggle ─────────────────────────────────────────────────────────
-  {
-    id: "details",
-    header: labels.colDetails,
-    cell: ({ row }) => (
-      <AppButton
-        variant="default"
-        icon={
-          row.getIsExpanded() ? (
-            <ChevronUp className="size-5" />
-          ) : (
-            <ChevronDown className="size-5" />
-          )
-        }
-        title={
-          row.getIsExpanded() ? labels.btnHideDetails : labels.btnShowDetails
-        }
-        onClick={() => row.toggleExpanded()}
-      />
-    ),
-  },
-  // ── View Details navigation ──────────────────────────────────────────────
-  {
-    id: "viewDetails",
-    header: labels.colViewDetails,
-    cell: ({ row }) => (
-      <AppButton
-        variant="secondary"
-        icon={<ExternalLink className="size-5" />}
-        title={'view'}
-        onClick={() => onViewDetails(row.original._id)}
-      />
-    ),
-  },
-];
+    {
+      id: "category",
+      accessorKey: "category",
+      header: labels.colCategory,
+      cell: ({ row }) => (
+        <div className="max-w-60 text-ellipsis overflow-clip font-medium text-left whitespace-nowrap text-gray-900">
+          {row.original.category}
+        </div>
+      ),
+    },
+    {
+      id: "subCategory",
+      accessorKey: "subCategory",
+      header: labels.colSubCategory,
+      cell: ({ row }) => (
+        <div className="max-w-60 text-ellipsis overflow-clip font-medium text-left whitespace-nowrap text-gray-900">
+          {row.original.subCategory}
+        </div>
+      ),
+    },
+    {
+      id: "make",
+      accessorKey: "make",
+      header: labels.colMake,
+      cell: ({ row }) => (
+        <div className="max-w-60 overflow-clip font-medium whitespace-nowrap text-gray-900">
+          {row.original.make}
+        </div>
+      ),
+    },
+    {
+      id: "assetCount",
+      accessorKey: "count",
+      header: labels.colCount,
+      cell: ({ row }) => (
+        <span className="block text-center font-semibold text-gray-700">
+          {row.original.count}
+        </span>
+      ),
+    },
+
+    // ── Total counts ────────────────────────────────────────────────────────────
+    {
+      id: "totalMOPs",
+      accessorKey: "totalMOPs",
+      header: labels.colTotalMops,
+      cell: ({ row }) => (
+        <div className="flex justify-center">
+          <CountBadge count={row.original.MOPs.length} />
+        </div>
+      ),
+    },
+    {
+      id: "totalEOPs",
+      accessorKey: "totalEOPs",
+      header: labels.colTotalEops,
+      cell: ({ row }) => (
+        <div className="flex justify-center">
+          <CountBadge count={row.original.EOPs.length} />
+        </div>
+      ),
+    },
+    {
+      id: "totalSOPs",
+      accessorKey: "totalSOPs",
+      header: labels.colTotalSops,
+      cell: ({ row }) => (
+        <div className="flex justify-center">
+          <CountBadge count={row.original.SOPs.length} />
+        </div>
+      ),
+    },
+    // ── Expand toggle ─────────────────────────────────────────────────────────
+    {
+      id: "details",
+      header: labels.colDetails,
+      cell: ({ row }) => (
+        <AppButton
+          variant="default"
+          icon={
+            row.getIsExpanded() ? (
+              <ChevronUp className="size-5" />
+            ) : (
+              <ChevronDown className="size-5" />
+            )
+          }
+          title={
+            row.getIsExpanded() ? labels.btnHideDetails : labels.btnShowDetails
+          }
+          onClick={() => row.toggleExpanded()}
+        />
+      ),
+    },
+    // ── View Details navigation ──────────────────────────────────────────────
+    {
+      id: "viewDetails",
+      header: labels.colViewDetails,
+      cell: ({ row }) => (
+        <AppButton
+          variant="secondary"
+          icon={<ExternalLink className="size-5" />}
+          title={'view'}
+          onClick={() => onViewDetails(row.original._id)}
+        />
+      ),
+    },
+  ];

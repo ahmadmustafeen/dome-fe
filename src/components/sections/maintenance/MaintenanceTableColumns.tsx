@@ -1,16 +1,11 @@
 "use client";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Check, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
+import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 
 import { AppButton } from "@/components/common";
 import type { MaintenanceRow } from "@/types/maintenance-schedule";
 
 // ── Small cell helpers ────────────────────────────────────────────────────────
-
-const FrequencyCell = ({ active }: { active: boolean }) =>
-  active ? (
-    <Check className="mx-auto h-4 w-4 text-teal-500" strokeWidth={3} />
-  ) : null;
 
 const CountBadge = ({ count }: { count: number }) =>
   count > 0 ? (

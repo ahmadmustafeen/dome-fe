@@ -46,6 +46,7 @@ export function BodyContent<TData>({
   }
 
   if (!table.getRowModel().rows?.length) {
+    
     return (
       <TableRow>
         <TableCell colSpan={columnsLength} className="h-24 text-center">
@@ -61,8 +62,10 @@ export function BodyContent<TData>({
   return (
     <>
       {table.getRowModel().rows.map((row) => (
+        
         <Fragment key={row.id}>
           <TableRow
+            key={row.id}
             data-state={row.getIsSelected() ? "selected" : undefined}
             onClick={() => {
               if (onRowActivate) {

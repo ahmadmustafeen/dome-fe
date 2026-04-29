@@ -95,10 +95,11 @@ export function DataTable<TData, TValue>({
 
   const rowSelection = externalRowSelection ?? internalRowSelection;
   const setRowSelection = onRowSelectionStateChange ?? setInternalRowSelection;
-
+  const memoData = React.useMemo(() => data, [data]);
+  const memoColumns = React.useMemo(() => columns, [columns]);
   const table = useReactTable({
-    data,
-    columns,
+    data: memoData,
+    columns: memoColumns,
     enableRowSelection: true,
     getRowId,
     onSortingChange: setSorting,
@@ -120,9 +121,12 @@ export function DataTable<TData, TValue>({
     onRowSelectionChange?.(selectedRows);
   }, [rowSelection, onRowSelectionChange]);
 
-  useEffect(() => {
+  const tableRef = React.useRef(table);
+  tableRef.current = table; // always in sync, no effect needed
+
+  React.useLayoutEffect(() => {
     setTablesState?.(table);
-  }, [table, setTablesState]);
+  });
 
   return (
     <div className={cn("w-full overflow-x-auto", className)}>

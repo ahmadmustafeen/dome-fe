@@ -55,8 +55,6 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
     setIsLoading(true);
     try {
       const response = await maintenanceScheduleService.getMaintenanceScheduleBySiteId(siteId);
-      console.log({ response });
-
       setData(response.data);
       const category = response.data.find(item => item._id === categoryId)
       const data = await assetService.assetService.getAllAssetsByCategoryAndSubCategory(category?.category!, category?.subCategory!)

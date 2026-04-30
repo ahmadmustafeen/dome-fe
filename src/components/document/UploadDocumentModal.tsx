@@ -26,8 +26,6 @@ const UploadDocumentModal = ({
   clientId,
   onSuccess,
 }: UploadDocumentModalProps) => {
-  console.log({ clientId });
-
   const [documentType, setDocumentType] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);

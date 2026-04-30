@@ -8,6 +8,12 @@ export interface Site {
   address: string;
   startDate: string;
   timeline: string;
+  zipCode: string;
+  country: string;
+  city: string;
+  state: string;
+  address1: string;
+  address2: string
 }
 
 export interface iSiteInfoCard {
@@ -27,9 +33,10 @@ const SiteInfoCard = ({ site, handleDelete, handleEdit, onSelectSite }: iSiteInf
       </div>
       <div className='w-11/12 mx-auto flex flex-col items-center text-center gap-y-1'>
         <p className='text-white text-xl my-2'>{site.name}</p>
-        <p className='text-white text-xs'>Site Address: {site.address}</p>
+        <p className='text-white text-xs'>Site Address: {site.address1}</p>
+        {site.address2 ? <p className='text-white text-xs'>{site.address2}</p> : null}
         <p className="text-white text-xs">Start From: {site.startDate}</p>
-        <p className="text-white text-xs">Timeline: {site.timeline}</p>
+        <p className="text-white text-xs">Timeline: {site.timeline} weeks</p>
       </div>
       <div className='flex gap-x-2 mt-5'>
         <AppButton

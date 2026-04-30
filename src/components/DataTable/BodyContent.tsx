@@ -45,7 +45,10 @@ export function BodyContent<TData>({
     );
   }
 
+
+
   if (!table.getRowModel().rows?.length) {
+
     return (
       <TableRow>
         <TableCell colSpan={columnsLength} className="h-24 text-center">
@@ -58,50 +61,53 @@ export function BodyContent<TData>({
     );
   }
 
-  return (
-    <>
-      {table.getRowModel().rows.map((row) => (
-        <Fragment key={row.id}>
-          <TableRow
-            data-state={row.getIsSelected() ? "selected" : undefined}
-            onClick={() => {
-              if (onRowActivate) {
-                onRowActivate(row);
-                return;
-              }
-              handleTableRowClick?.(row.original);
-            }}
+  const rows = table.getRowModel().rows
+
+
+  return rows.map((row) => (
+
+    <Fragment key={row.id}>
+      <TableRow
+        key={row.id}
+        data-state={row.getIsSelected() ? "selected" : undefined}
+        onClick={() => {
+          if (onRowActivate) {
+            onRowActivate(row);
+            return;
+          }
+          handleTableRowClick?.(row.original);
+        }}
+        className={cn(
+          "transition-colors",
+          (onRowActivate || handleTableRowClick) && "cursor-pointer",
+          row.getIsSelected() && "bg-primary/10",
+          bodyRowClassName,
+        )}
+      >
+        {row.getVisibleCells().map((cell) => (
+          <TableCell
+            key={cell.id}
             className={cn(
-              "transition-colors",
-              (onRowActivate || handleTableRowClick) && "cursor-pointer",
-              row.getIsSelected() && "bg-primary/10",
-              bodyRowClassName,
+              "px-4 py-3 text-sm",
+              cellClassName,
+              bodyCellClassName,
             )}
           >
-            {row.getVisibleCells().map((cell) => (
-              <TableCell
-                key={cell.id}
-                className={cn(
-                  "px-4 py-3 text-sm",
-                  cellClassName,
-                  bodyCellClassName,
-                )}
-              >
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </TableCell>
-            ))}
-          </TableRow>
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </TableCell>
+        ))}
+      </TableRow>
 
-          {/* Expanded sub-row */}
-          {renderSubRow && row.getIsExpanded() && (
-            <TableRow className="bg-slate-50 hover:bg-slate-50">
-              <TableCell colSpan={columnsLength} className="px-6 py-5">
-                {renderSubRow(row)}
-              </TableCell>
-            </TableRow>
-          )}
-        </Fragment>
-      ))}
-    </>
-  );
+      {/* Expanded sub-row */}
+      {renderSubRow && row.getIsExpanded() && (
+        <TableRow className="bg-slate-50 hover:bg-slate-50">
+          <TableCell colSpan={columnsLength} className="px-6 py-5">
+            {renderSubRow(row)}
+          </TableCell>
+        </TableRow>
+      )}
+    </Fragment>
+  ))
+
+
 }

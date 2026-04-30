@@ -79,8 +79,6 @@ export default function DocumentManagementPage() {
   // ── Client-side filter on current page ────────────────────────────────────
   const filteredDocuments = useMemo(() => {
     return documents.filter((doc) => {
-      console.log({ doc });
-
       const q = searchQuery.trim().toLowerCase();
       const name = extractDocumentName(doc?.documentUrl)?.toLowerCase() || "";
       const matchesSearch =

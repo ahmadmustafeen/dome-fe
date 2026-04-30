@@ -33,8 +33,7 @@ import { BodyContent } from "./BodyContent";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  /** Optional: provide a stable row ID from the data (e.g. (row) => row._id) */
-  getRowId?: (originalRow: TData, index: number, parent?: Row<TData>) => string;
+  getRowId: (originalRow: TData, index: number, parent?: Row<TData>) => string;
   onRowSelectionChange?: (selectedRows: TData[]) => void;
   setTablesState?: React.Dispatch<
     React.SetStateAction<TanStackTable<TData> | null>
@@ -96,10 +95,12 @@ export function DataTable<TData, TValue>({
 
   const rowSelection = externalRowSelection ?? internalRowSelection;
   const setRowSelection = onRowSelectionStateChange ?? setInternalRowSelection;
-
+  const memoData = React.useMemo(() => data, [data]);
+  const memoColumns = React.useMemo(() => columns, [columns]);
   const table = useReactTable({
-    data,
-    columns,
+    data: memoData,
+    columns: memoColumns,
+    enableRowSelection: true,
     getRowId,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -113,20 +114,21 @@ export function DataTable<TData, TValue>({
     state: { sorting, columnFilters, columnVisibility, rowSelection, expanded },
   });
 
+
+
   useEffect(() => {
     const selectedRows = table
       .getSelectedRowModel()
       .flatRows.map((row) => row.original);
     onRowSelectionChange?.(selectedRows);
-  }, [rowSelection, onRowSelectionChange, table]);
+  }, [rowSelection, onRowSelectionChange]);
 
-  useEffect(() => {
-    if (setTablesState) {
-      const timer = setTimeout(() => setTablesState(table), 500);
-      return () => clearTimeout(timer);
-    }
-    return undefined;
-  }, [table, setTablesState]);
+  const tableRef = React.useRef(table);
+  tableRef.current = table; // always in sync, no effect needed
+
+  React.useLayoutEffect(() => {
+    setTablesState?.(table);
+  });
 
   return (
     <div className={cn("w-full overflow-x-auto", className)}>
@@ -152,9 +154,9 @@ export function DataTable<TData, TValue>({
                   {header.isPlaceholder
                     ? null
                     : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
                 </TableHead>
               ))}
             </TableRow>
@@ -162,7 +164,7 @@ export function DataTable<TData, TValue>({
         </TableHeader>
         <TableBody>
           <BodyContent
-            table={table}
+            table={{ ...table }}
             cellClassName={cellClassName}
             columnsLength={columns.length}
             handleTableRowClick={handleRowClick}

@@ -12,6 +12,7 @@ export const authService = {
     apiFetch("/users/login", {
       method: "POST",
       body: JSON.stringify(data),
+      credentials: "include",
     }),
 
   register: (data: RegisterPayload) =>

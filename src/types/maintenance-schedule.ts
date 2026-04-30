@@ -45,14 +45,8 @@ export type MaintenanceRow = {
   id: string;
   category: string;
   subCategory: string;
-  assetCount: number;
-  monthly: boolean;
-  quarterly: boolean;
-  semiAnnual: boolean;
-  annual: boolean;
-  twoYear: boolean;
-  threeYear: boolean;
-  fiveYear: boolean;
+  count: number;
+  make: string;
   totalMOPs: number;
   totalEOPs: number;
   totalSOPs: number;

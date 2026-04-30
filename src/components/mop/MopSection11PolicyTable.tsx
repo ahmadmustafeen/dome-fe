@@ -1,14 +1,20 @@
-"use client";
+'use client';
 
-import { Typography } from "@/components/common";
-import { Input } from "@/components/ui/Input";
+import type { MopReferencePolicyRow, MOPSection11References } from '@/types/mop';
+import { Typography } from '@/components/common';
+import { Input } from '@/components/ui/Input';
+import { MOP_DYNAMIC_TABLE_MIN_ROWS } from '@/constants/mop-dynamic-table';
 import {
   MOP_SECTION_11_COMPANY_POLICY_INTRO,
   MOP_SECTION_11_POLICY_BANNER_TEXT,
   MOP_SECTION_11_POLICY_NOTE_LABEL,
   MOP_SECTION_11_POLICY_TABLE_HEADERS,
-} from "@/constants/mop-section11-references";
-import type { MopReferencePolicyRow, MOPSection11References } from "@/types/mop";
+  newMopReferencePolicyRow,
+} from '@/constants/mop-section11-references';
+
+import { insertRowAfterId, removeRowById } from '@/utils/mop-dynamic-table-mutations';
+
+import { MopDynamicTableRowControls } from './MopDynamicTableRowControls';
 
 type MopSection11PolicyTableProps = {
   rows: MopReferencePolicyRow[];
@@ -19,11 +25,11 @@ type MopSection11PolicyTableProps = {
 const patchRow = (
   current: MOPSection11References,
   id: string,
-  partial: Partial<Pick<MopReferencePolicyRow, "policyDocument" | "uploadDate" | "type">>,
-  patch: MopSection11PolicyTableProps["patchMopReferences"],
+  partial: Partial<Pick<MopReferencePolicyRow, 'policyDocument' | 'uploadDate' | 'type'>>,
+  patch: MopSection11PolicyTableProps['patchMopReferences'],
 ) => {
   patch({
-    policyDocumentRows: current.policyDocumentRows.map((r) => (r.id === id ? { ...r, ...partial } : r)),
+    policyDocumentRows: current.policyDocumentRows.map(r => (r.id === id ? { ...r, ...partial } : r)),
   });
 };
 
@@ -53,15 +59,18 @@ export const MopSection11PolicyTable = ({
               <th className="w-32 px-2 py-2 text-left font-semibold">
                 {MOP_SECTION_11_POLICY_TABLE_HEADERS.type}
               </th>
+              <th scope="col" className="w-[4.25rem] px-1 py-2 text-center text-xs font-semibold">
+                ±
+              </th>
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
+            {rows.map(row => (
               <tr key={row.id} className="bg-white">
                 <td className="border border-gray-200 px-2 py-1 align-top">
                   <Input
                     value={row.policyDocument}
-                    onChange={(e) =>
+                    onChange={e =>
                       patchRow(references, row.id, { policyDocument: e.target.value }, patchMopReferences)}
                     className="w-full text-sm"
                     aria-label="Policy document name"
@@ -71,7 +80,7 @@ export const MopSection11PolicyTable = ({
                   <Input
                     type="date"
                     value={row.uploadDate}
-                    onChange={(e) => patchRow(references, row.id, { uploadDate: e.target.value }, patchMopReferences)}
+                    onChange={e => patchRow(references, row.id, { uploadDate: e.target.value }, patchMopReferences)}
                     className="w-full min-w-0 text-sm"
                     aria-label="Policy upload date"
                   />
@@ -79,9 +88,26 @@ export const MopSection11PolicyTable = ({
                 <td className="border border-gray-200 px-2 py-1 align-top">
                   <Input
                     value={row.type}
-                    onChange={(e) => patchRow(references, row.id, { type: e.target.value }, patchMopReferences)}
+                    onChange={e => patchRow(references, row.id, { type: e.target.value }, patchMopReferences)}
                     className="w-full text-sm"
                     aria-label="Policy type"
+                  />
+                </td>
+                <td className="border border-gray-200 px-1 align-middle">
+                  <MopDynamicTableRowControls
+                    ariaLabelGroup="Company policy documents row controls"
+                    rowCount={rows.length}
+                    onAddBelow={() =>
+                      patchMopReferences({
+                        policyDocumentRows: insertRowAfterId(rows, row.id, newMopReferencePolicyRow()),
+                      })}
+                    onRemove={() => {
+                      const next = removeRowById(rows, row.id, MOP_DYNAMIC_TABLE_MIN_ROWS);
+                      if (!next) {
+                        return;
+                      }
+                      patchMopReferences({ policyDocumentRows: next });
+                    }}
                   />
                 </td>
               </tr>
@@ -91,7 +117,9 @@ export const MopSection11PolicyTable = ({
       </div>
       <div className="mt-2 rounded-r-md border-l-4 border-blue-600 bg-sky-100 p-3">
         <p className="m-0 text-sm text-sky-950">
-          <strong>{MOP_SECTION_11_POLICY_NOTE_LABEL}</strong> {MOP_SECTION_11_POLICY_BANNER_TEXT}
+          <strong>{MOP_SECTION_11_POLICY_NOTE_LABEL}</strong>
+          {' '}
+          {MOP_SECTION_11_POLICY_BANNER_TEXT}
         </p>
       </div>
     </div>

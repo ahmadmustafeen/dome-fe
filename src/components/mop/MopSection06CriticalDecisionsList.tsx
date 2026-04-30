@@ -1,13 +1,18 @@
-"use client";
+'use client';
 
-import { Input } from "@/components/ui/Input";
-import { Textarea } from "@/components/ui/Textarea";
+import type { MOPAssumptions, MopCriticalDecisionPointItem } from '@/types/mop';
+import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
+import { MOP_DYNAMIC_TABLE_MIN_ROWS } from '@/constants/mop-dynamic-table';
 import {
   MOP_SECTION_06_CRITICAL_PREFIX,
   MOP_SECTION_06_CRITICAL_SUFFIX,
-} from "@/constants/mop-section06-assumptions";
+  newCriticalDecisionItem,
+} from '@/constants/mop-section06-assumptions';
 
-import type { MOPAssumptions, MopCriticalDecisionPointItem } from "@/types/mop";
+import { insertRowAfterId, removeRowById } from '@/utils/mop-dynamic-table-mutations';
+
+import { MopDynamicTableRowControls } from './MopDynamicTableRowControls';
 
 type MopSection06CriticalDecisionsListProps = {
   unitLabel: string;
@@ -19,10 +24,10 @@ const patchItemText = (
   list: MopCriticalDecisionPointItem[],
   id: string,
   text: string,
-  patchAssumptions: MopSection06CriticalDecisionsListProps["patchAssumptions"],
+  patchAssumptions: MopSection06CriticalDecisionsListProps['patchAssumptions'],
 ) => {
   patchAssumptions({
-    criticalDecisionPointItems: list.map((item) => (item.id === id ? { ...item, text } : item)),
+    criticalDecisionPointItems: list.map(item => (item.id === id ? { ...item, text } : item)),
   });
 };
 
@@ -37,11 +42,10 @@ export const MopSection06CriticalDecisionsList = ({
         <span className="shrink-0">{MOP_SECTION_06_CRITICAL_PREFIX}</span>
         <Input
           value={unitLabel}
-          onChange={(e) =>
-            patchAssumptions({ criticalDecisionUnitLabel: e.target.value })
-          }
+          onChange={e =>
+            patchAssumptions({ criticalDecisionUnitLabel: e.target.value })}
           placeholder="Unit label"
-          className="h-8 min-w-40 max-w-xs"
+          className="h-8 max-w-xs min-w-40"
           aria-label="Generator unit label for critical decision points"
         />
         <span className="shrink-0">{MOP_SECTION_06_CRITICAL_SUFFIX}</span>
@@ -53,14 +57,35 @@ export const MopSection06CriticalDecisionsList = ({
               className="mt-2 w-6 shrink-0 text-right text-sm text-gray-600"
               aria-hidden
             >
-              {index + 1}.
+              {index + 1}
+              .
             </span>
             <Textarea
               value={item.text}
-              onChange={(e) => patchItemText(items, item.id, e.target.value, patchAssumptions)}
+              onChange={e => patchItemText(items, item.id, e.target.value, patchAssumptions)}
               placeholder="Decision point or verification step"
               className="min-h-20 w-full flex-1"
             />
+            <div className="mt-2 shrink-0">
+              <MopDynamicTableRowControls
+                ariaLabelGroup={`Critical decision point ${String(index + 1)}`}
+                rowCount={items.length}
+                onAddBelow={() =>
+                  patchAssumptions({
+                    criticalDecisionPointItems: insertRowAfterId(
+                      items,
+                      item.id,
+                      newCriticalDecisionItem(),
+                    ),
+                  })}
+                onRemove={() => {
+                  const next = removeRowById(items, item.id, MOP_DYNAMIC_TABLE_MIN_ROWS);
+                  if (next) {
+                    patchAssumptions({ criticalDecisionPointItems: next });
+                  }
+                }}
+              />
+            </div>
           </li>
         ))}
       </ul>

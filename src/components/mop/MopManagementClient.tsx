@@ -34,6 +34,12 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
     patchSite,
     patchOverview,
     patchSafety,
+    patchAssumptions,
+    patchMopDetails,
+    patchBackOut,
+    patchMopApproval,
+    patchMopComments,
+    patchMopReferences,
     patchFacilityRow,
     resetMop,
     persistMop,
@@ -137,7 +143,7 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
           />
         </div>
 
-        <div className="flex min-h-0 flex-1 flex-col lg:h-[calc(100vh-12rem)]">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col">
           <section className="flex min-h-0 min-w-0 flex-1 flex-col gap-3">
             <MopDocumentForm
               mop={mop}
@@ -149,6 +155,12 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
               patchSite={patchSite}
               patchOverview={patchOverview}
               patchSafety={patchSafety}
+              patchAssumptions={patchAssumptions}
+              patchMopDetails={patchMopDetails}
+              patchBackOut={patchBackOut}
+              patchMopApproval={patchMopApproval}
+              patchMopComments={patchMopComments}
+              patchMopReferences={patchMopReferences}
               patchFacilityRow={patchFacilityRow}
             />
             <div className="flex shrink-0 flex-wrap gap-2 pt-1">

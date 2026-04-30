@@ -1,20 +1,160 @@
 import { buildDefaultMopSection04Rows } from "@/constants/mop-section04-facility";
 import {
   buildDefaultEmergencyContactRows,
+  buildDefaultLocalEmergencyServiceRows,
   buildDefaultPpeRows,
   buildDefaultSafetyProcedureRows,
   buildDefaultToolRows,
+  MOP_LOCAL_EMERGENCY_SAMPLE_ADDRESS,
   MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT,
   resolveEmergencyContactRows,
+  resolveLocalEmergencyServiceRows,
   resolvePpeRequirementRows,
   resolveSafetyProcedureRows,
   resolveToolRequirementRows,
 } from "@/constants/mop-section05-safety";
-import type { MOP, MOPGenerateContext, MOPSection03Overview } from "@/types/mop";
+import {
+  buildDefaultAssumptionRows,
+  buildDefaultCriticalDecisionItems,
+  MOP_SECTION_06_DEFAULT_DECISION_LIST_COUNT,
+  MOP_SECTION_06_DEFAULT_TABLE_ROW_COUNT,
+  MOP_SECTION_06_DEFAULT_UNIT_LABEL,
+  resolveAssumptionRows,
+  resolveCriticalDecisionItems,
+} from "@/constants/mop-section06-assumptions";
+import {
+  buildDefaultEnginePerformanceRows,
+  buildDefaultFaultAlarmRows,
+  buildDefaultGeneratorOperationalRows,
+  MOP_SECTION_07_DEFAULT_FAULT_ROW_COUNT,
+  resolveEnginePerformanceRows,
+  resolveFaultAlarmHistoryRows,
+  resolveGeneratorOperationalRows,
+} from "@/constants/mop-section07-details";
+import {
+  buildDefaultDetailedProcedureRows,
+  mapMopStepsToDetailedProcedureRows,
+  MOP_SECTION_07_DEFAULT_DETAILED_STEP_COUNT,
+  resolveDetailedProcedureStepRows,
+} from "@/constants/mop-section07-procedure-steps";
+import { buildDefaultBackOutStepRows, resolveBackOutStepRows } from "@/constants/mop-section08-backout";
+import { buildDefaultMopApproval, resolveMopApproval } from "@/constants/mop-section09-approval";
+import { buildDefaultMopComments, resolveMopComments } from "@/constants/mop-section10-comments";
+import { buildDefaultMopReferences, resolveMopReferences } from "@/constants/mop-section11-references";
+import type { MOP, MOPGenerateContext, MOPSection03Overview, MOPSection11References, MOPStep } from "@/types/mop";
 import { getTodayDateInputValue } from "@/utils/mop-dates";
 
 const delay = (ms: number) =>
   new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+const mockSampleMopReferences = (): MOPSection11References => ({
+  policyDocumentRows: [
+    {
+      id: "mock-pol-1",
+      policyDocument: "Data Center Electrical Safety Policy",
+      uploadDate: "2025-08-15",
+      type: "Company Policy",
+    },
+    {
+      id: "mock-pol-2",
+      policyDocument: "LOTO Program Standard",
+      uploadDate: "2025-03-01",
+      type: "Company Policy",
+    },
+    { id: "mock-pol-3", policyDocument: "", uploadDate: "", type: "Company Policy" },
+  ],
+  equipmentDocumentRows: [
+    {
+      id: "mock-eq-1",
+      title: "LIEBERT DA085DP1AD833B Installation and Operation Manual",
+      type: "Technical Manual",
+      linkUrl: "https://www.vertiv.com/en-us/support/software-download/",
+      internalAccess: "",
+    },
+    {
+      id: "mock-eq-2",
+      title: "Battery System Documentation",
+      type: "Technical Manual",
+      linkUrl: "",
+      internalAccess: "Internal Document — Request from Site Manager",
+    },
+  ],
+  safetyStandardRows: [
+    {
+      id: "mock-sf-1",
+      safetyStandard: "NFPA 70E - Electrical Safety in the Workplace",
+      authority: "NFPA",
+      linkUrl:
+        "https://www.nfpa.org/codes-and-standards/all-codes-and-standards/list-of-codes-and-standards/detail?code=70E",
+      internalAccess: "",
+    },
+    {
+      id: "mock-sf-2",
+      safetyStandard: "OSHA 29 CFR 1910.147 - Control of Hazardous Energy",
+      authority: "OSHA",
+      linkUrl: "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.147",
+      internalAccess: "",
+    },
+    { id: "mock-sf-3", safetyStandard: "", authority: "", linkUrl: "", internalAccess: "" },
+  ],
+  additionalResourceRows: [
+    {
+      id: "mock-ar-1",
+      title: "Site-Specific Emergency Response Plan",
+      type: "Internal Document",
+      linkUrl: "",
+      internalAccess: "Internal Document — Request from Site Manager",
+    },
+    {
+      id: "mock-ar-2",
+      title: "Safety Data Sheets (SDS) Information",
+      type: "Chemical Safety",
+      linkUrl: "https://www.osha.gov/safety-data-sheets",
+      internalAccess: "",
+    },
+    {
+      id: "mock-ar-3",
+      title: "Equipment History and Maintenance Records",
+      type: "CMMS Database",
+      linkUrl: "",
+      internalAccess: "Internal Document — Request from Site Manager",
+    },
+  ],
+});
+
+/** Shared by legacy `steps` and Section 08 detailed procedure grid in mock data. */
+const MOCK_GENERATED_STEPS: MOPStep[] = [
+  {
+    id: "1",
+    stepNumber: 1,
+    description: "Notify all affected personnel and obtain work permit.",
+  },
+  {
+    id: "2",
+    stepNumber: 2,
+    description: "Power down non-critical loads connected to UPS.",
+  },
+  {
+    id: "3",
+    stepNumber: 3,
+    description: "Put UPS in bypass mode using front panel controls.",
+  },
+  {
+    id: "4",
+    stepNumber: 4,
+    description: "Remove old battery modules carefully.",
+  },
+  {
+    id: "5",
+    stepNumber: 5,
+    description: "Install new battery modules and secure connections.",
+  },
+  {
+    id: "6",
+    stepNumber: 6,
+    description: "Return UPS to normal operation and verify runtime.",
+  },
+];
 
 const emptyOverview = (): MOPSection03Overview => ({
   mopTitle: "",
@@ -68,6 +208,7 @@ export const createEmptyMop = (): MOP => ({
     precautions: "",
     requiredPPE: "",
     toolsAndMaterials: "",
+    localEmergencyServicesAddress: "",
     ppeRequirementRows: buildDefaultPpeRows(MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT),
     toolRequirementRows: buildDefaultToolRows(MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT),
     safetyProcedureRows: buildDefaultSafetyProcedureRows(
@@ -76,7 +217,37 @@ export const createEmptyMop = (): MOP => ({
     emergencyContactRows: buildDefaultEmergencyContactRows(
       MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT,
     ),
+    localEmergencyServiceRows: buildDefaultLocalEmergencyServiceRows(
+      MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT,
+    ),
   },
+  assumptions: {
+    assumptionRows: buildDefaultAssumptionRows(MOP_SECTION_06_DEFAULT_TABLE_ROW_COUNT),
+    criticalDecisionUnitLabel: MOP_SECTION_06_DEFAULT_UNIT_LABEL,
+    criticalDecisionPointItems: buildDefaultCriticalDecisionItems(
+      MOP_SECTION_06_DEFAULT_DECISION_LIST_COUNT,
+    ),
+  },
+  mopDetails: {
+    datePerformed: "",
+    timeBegun: "",
+    timeCompleted: "",
+    facilitiesPersonnel: "",
+    contractorPersonnel: "",
+    generatorOperationalRows: buildDefaultGeneratorOperationalRows(),
+    enginePerformanceRows: buildDefaultEnginePerformanceRows(),
+    faultAlarmHistoryRows: buildDefaultFaultAlarmRows(MOP_SECTION_07_DEFAULT_FAULT_ROW_COUNT),
+    detailedProcedures: {
+      stepRows: buildDefaultDetailedProcedureRows(MOP_SECTION_07_DEFAULT_DETAILED_STEP_COUNT),
+      criticalStepNotes: "",
+    },
+  },
+  backOut: {
+    stepRows: buildDefaultBackOutStepRows(),
+  },
+  mopApproval: buildDefaultMopApproval(),
+  mopComments: buildDefaultMopComments(),
+  references: buildDefaultMopReferences(),
   signOff: {
     preparedBy: "",
     reviewedBy: "",
@@ -164,38 +335,7 @@ export const MOCK_GENERATED_MOP: MOP = {
     specialPermitsRequired: false,
     specialPermitsNotes: "",
   },
-  steps: [
-    {
-      id: "1",
-      stepNumber: 1,
-      description: "Notify all affected personnel and obtain work permit.",
-    },
-    {
-      id: "2",
-      stepNumber: 2,
-      description: "Power down non-critical loads connected to UPS.",
-    },
-    {
-      id: "3",
-      stepNumber: 3,
-      description: "Put UPS in bypass mode using front panel controls.",
-    },
-    {
-      id: "4",
-      stepNumber: 4,
-      description: "Remove old battery modules carefully.",
-    },
-    {
-      id: "5",
-      stepNumber: 5,
-      description: "Install new battery modules and secure connections.",
-    },
-    {
-      id: "6",
-      stepNumber: 6,
-      description: "Return UPS to normal operation and verify runtime.",
-    },
-  ],
+  steps: MOCK_GENERATED_STEPS,
   safety: {
     precautions:
       "Risk of electric shock. Do not short circuit battery terminals.",
@@ -280,7 +420,133 @@ export const MOCK_GENERATED_MOP: MOP = {
         phoneNumber: "911",
       },
     ],
+    localEmergencyServicesAddress: MOP_LOCAL_EMERGENCY_SAMPLE_ADDRESS,
+    localEmergencyServiceRows: [
+      {
+        id: "les-mock-pd",
+        service: "Police (non-emergency)",
+        contactName: "Austin Police Department",
+        phoneNumber: "311",
+        address: "715 E 8th St, Austin, TX 78701",
+      },
+      {
+        id: "les-mock-fd",
+        service: "Fire & EMS (emergency)",
+        contactName: "Austin-Travis County EMS / AFD",
+        phoneNumber: "911",
+        address: "As dispatched — verify coverage for site ZIP",
+      },
+      {
+        id: "les-mock-er",
+        service: "Nearest hospital ER (verify)",
+        contactName: "St. David's North Austin Medical Center (example)",
+        phoneNumber: "",
+        address: "12221 N Mopac Expy, Austin, TX 78758",
+      },
+    ],
   },
+  assumptions: {
+    criticalDecisionUnitLabel: MOP_SECTION_06_DEFAULT_UNIT_LABEL,
+    assumptionRows: [
+      {
+        id: "asm-mock-1",
+        category: "Site access",
+        assumption: "Badge and escort policy remains unchanged for the work window listed on the work order.",
+      },
+      {
+        id: "asm-mock-2",
+        category: "Utilities",
+        assumption: "Normal utility power and building services are available unless noted in the facility event log.",
+      },
+      {
+        id: "asm-mock-3",
+        category: "OEM & parts",
+        assumption: "Required filters, lubricants, and OEM consumables are on hand before the maintenance start.",
+      },
+    ],
+    criticalDecisionPointItems: [
+      {
+        id: "cdp-mock-1",
+        text: "Confirm generator is offline / isolated and tagged per site LOTO before opening enclosures.",
+      },
+      {
+        id: "cdp-mock-2",
+        text: "Verify battery system voltage and charger status before any cranking or control testing.",
+      },
+      {
+        id: "cdp-mock-3",
+        text: "Obtain hot-work and fuel-handling clearance if the task plan includes those activities.",
+      },
+      {
+        id: "cdp-mock-4",
+        text: "Document load-transfer criteria with operations before return-to-service and witness transfer steps.",
+      },
+    ],
+  },
+  mopDetails: {
+    datePerformed: "2026-01-20",
+    timeBegun: "08:00",
+    timeCompleted: "14:30",
+    facilitiesPersonnel: "Data center operations + assigned electrical tech",
+    contractorPersonnel: "OEM or subcontractor as referenced in Section 3",
+    generatorOperationalRows: (() => {
+      const g = buildDefaultGeneratorOperationalRows();
+      if (g.length === 0) {
+        return g;
+      }
+      const n = [...g];
+      const first = n[0];
+      if (first) {
+        n[0] = { ...first, asFound: "478", asLeft: "480" };
+      }
+      return n;
+    })(),
+    enginePerformanceRows: (() => {
+      const e = buildDefaultEnginePerformanceRows();
+      return e.map((row) => {
+        if (row.rowId === "eng-hours") {
+          return { ...row, reading: "1,240", status: "OK — within PM window" };
+        }
+        if (row.rowId === "eng-last") {
+          return { ...row, reading: "2025-11-10", status: "Verified" };
+        }
+        if (row.rowId === "eng-next") {
+          return { ...row, reading: "1,500 hrs / 2026-07-14", status: "Scheduled" };
+        }
+        return row;
+      });
+    })(),
+    faultAlarmHistoryRows: [
+      {
+        id: "fl-mock-1",
+        dateTime: "2026-01-20 09:15",
+        faultCode: "WARN-CLT",
+        description: "Transient coolant high — cleared after inspection",
+        actionTaken: "Verified thermostat; no leak",
+        initials: "JS",
+      },
+      { id: "fl-mock-2", dateTime: "", faultCode: "", description: "", actionTaken: "", initials: "" },
+      { id: "fl-mock-3", dateTime: "", faultCode: "", description: "", actionTaken: "", initials: "" },
+    ],
+    detailedProcedures: {
+      stepRows: mapMopStepsToDetailedProcedureRows(MOCK_GENERATED_STEPS),
+      criticalStepNotes:
+        "Torque: verify battery inter-cell connections to OEM values. Megger: attach separate log if insulation testing is in scope for this MOP.",
+    },
+  },
+  backOut: {
+    stepRows: buildDefaultBackOutStepRows(),
+  },
+  mopApproval: {
+    ...buildDefaultMopApproval(),
+    mopEffectiveDate: "2026-01-12",
+    mopExpirationDate: "2026-12-31",
+  },
+  mopComments: {
+    ...buildDefaultMopComments(),
+    additionalNotes: "Log CMMS work order number here after upload.",
+  },
+  references: mockSampleMopReferences(),
   signOff: {
     preparedBy: "",
     reviewedBy: "",
@@ -342,11 +608,46 @@ export const generateMOP = async (
   data.document.lastModified = new Date().toISOString();
   data.safety = {
     ...data.safety,
+    localEmergencyServicesAddress: data.safety.localEmergencyServicesAddress ?? "",
     ppeRequirementRows: resolvePpeRequirementRows(data.safety.ppeRequirementRows),
     toolRequirementRows: resolveToolRequirementRows(data.safety.toolRequirementRows),
     safetyProcedureRows: resolveSafetyProcedureRows(data.safety.safetyProcedureRows),
     emergencyContactRows: resolveEmergencyContactRows(data.safety.emergencyContactRows),
+    localEmergencyServiceRows: resolveLocalEmergencyServiceRows(
+      data.safety.localEmergencyServiceRows,
+    ),
   };
+  data.assumptions = {
+    ...data.assumptions,
+    criticalDecisionUnitLabel:
+      data.assumptions.criticalDecisionUnitLabel ?? MOP_SECTION_06_DEFAULT_UNIT_LABEL,
+    assumptionRows: resolveAssumptionRows(data.assumptions.assumptionRows),
+    criticalDecisionPointItems: resolveCriticalDecisionItems(
+      data.assumptions.criticalDecisionPointItems,
+    ),
+  };
+  const baseMop = createEmptyMop().mopDetails;
+  data.mopDetails = {
+    ...(data.mopDetails ?? baseMop),
+    generatorOperationalRows: resolveGeneratorOperationalRows(
+      data.mopDetails?.generatorOperationalRows,
+    ),
+    enginePerformanceRows: resolveEnginePerformanceRows(data.mopDetails?.enginePerformanceRows),
+    faultAlarmHistoryRows: resolveFaultAlarmHistoryRows(data.mopDetails?.faultAlarmHistoryRows),
+    detailedProcedures: {
+      stepRows: resolveDetailedProcedureStepRows(
+        data.mopDetails?.detailedProcedures?.stepRows,
+      ),
+      criticalStepNotes: data.mopDetails?.detailedProcedures?.criticalStepNotes ?? "",
+    },
+  };
+  const baseBackOut = createEmptyMop().backOut;
+  data.backOut = {
+    stepRows: resolveBackOutStepRows(data.backOut?.stepRows ?? baseBackOut.stepRows),
+  };
+  data.mopApproval = resolveMopApproval(data.mopApproval);
+  data.mopComments = resolveMopComments(data.mopComments);
+  data.references = resolveMopReferences(data.references);
   return data;
 };
 

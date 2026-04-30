@@ -3,6 +3,11 @@
  * Aligns with `prompt.md` plus data-centre portal Section 01–04 extras.
  */
 
+import type { MopImportantIndicatorId } from "@/constants/mop-section07-important-indicators";
+
+/** Stored on each detailed procedure row — `MopImportantIndicatorId` or none. */
+export type MopDetailProcedureStepIndicator = MopImportantIndicatorId | "";
+
 export type MOPStatus =
   | "draft"
   | "ready_to_deliver"
@@ -17,6 +22,93 @@ export type MOPStep = {
   id: string;
   stepNumber: number;
   description: string;
+};
+
+/** Section 07 subsection — one row in Detailed Procedure Steps. */
+export type MopDetailedProcedureStepRow = {
+  id: string;
+  stepNumber: number;
+  detailedProcedure: string;
+  /** Important Indicators id from Section 7 legend (e.g. `loto`, `safetyAlert`), or empty. */
+  indicator: MopDetailProcedureStepIndicator;
+  initials: string;
+  time: string;
+};
+
+export type MOPSection07DetailedProcedures = {
+  stepRows: MopDetailedProcedureStepRow[];
+  criticalStepNotes: string;
+};
+
+/** Section 08 — one row in Back-out Procedures (portal `generateSection08`). */
+export type MopBackOutProcedureRow = {
+  id: string;
+  stepNumber: number;
+  backOutProcedure: string;
+  initials: string;
+  time: string;
+};
+
+export type MOPSection08BackOut = {
+  stepRows: MopBackOutProcedureRow[];
+};
+
+/** Section 09 — one review row (`generateSection09` in `section-generators.js`). */
+export type MopApprovalReviewRow = {
+  id: string;
+  reviewStage: string;
+  reviewersName: string;
+  reviewersTitle: string;
+  date: string;
+};
+
+export type MOPSection09MopApproval = {
+  reviewRows: MopApprovalReviewRow[];
+  mopEffectiveDate: string;
+  mopExpirationDate: string;
+};
+
+/** Section 10 — MOP Comments (`generateSection10` in `section-11-comments/route.js`). */
+export type MOPSection10MopComments = {
+  /** All MOP comment lines in one field (replaces per-line inputs). */
+  mopCommentsText: string;
+  additionalNotes: string;
+};
+
+/** Section 11 — company policy table row (`generateSection11` in `section-generators.js`). */
+export type MopReferencePolicyRow = {
+  id: string;
+  policyDocument: string;
+  uploadDate: string;
+  type: string;
+};
+
+/**
+ * Section 11 — document title / type / access (equipment docs & additional resources).
+ * When `linkUrl` is a valid `http(s)` URL, "View" opens in a new tab; otherwise show `internalAccess`.
+ */
+export type MopReferenceLinkRow = {
+  id: string;
+  title: string;
+  type: string;
+  linkUrl: string;
+  internalAccess: string;
+};
+
+/** Section 11 — safety standards table row. */
+export type MopReferenceSafetyRow = {
+  id: string;
+  safetyStandard: string;
+  authority: string;
+  linkUrl: string;
+  internalAccess: string;
+};
+
+export type MOPSection11References = {
+  policyDocumentRows: MopReferencePolicyRow[];
+  equipmentDocumentRows: MopReferenceLinkRow[];
+  safetyStandardRows: MopReferenceSafetyRow[];
+  additionalResourceRows: MopReferenceLinkRow[];
 };
 
 /** Section 01 schedule / document header (portal + prompt `document`). */
@@ -87,15 +179,88 @@ export type MopEmergencyContactRow = {
   phoneNumber: string;
 };
 
+/** Section 05 — local emergency services (researched site-specific directory). */
+export type MopLocalEmergencyServiceRow = {
+  id: string;
+  service: string;
+  contactName: string;
+  phoneNumber: string;
+  address: string;
+};
+
+/** Section 06 — Key project assumptions (Category / Assumption). */
+export type MopAssumptionRow = {
+  id: string;
+  category: string;
+  assumption: string;
+};
+
+/** Section 06 — bullet under Critical Decision Points. */
+export type MopCriticalDecisionPointItem = {
+  id: string;
+  text: string;
+};
+
+export type MOPAssumptions = {
+  assumptionRows: MopAssumptionRow[];
+  /** Shown in the critical-decision heading, e.g. "GENERATOR 1". */
+  criticalDecisionUnitLabel: string;
+  criticalDecisionPointItems: MopCriticalDecisionPointItem[];
+};
+
+/** Section 07 — one row in the generator operational data log (labels/units per template). */
+export type MopGeneratorOperationalDataRow = {
+  rowId: string;
+  parameter: string;
+  asFound: string;
+  asLeft: string;
+  units: string;
+  acceptableRange: string;
+};
+
+/** Section 07 — engine performance (Hours of Operation, last/next service). */
+export type MopEnginePerformanceDataRow = {
+  rowId: string;
+  parameter: string;
+  reading: string;
+  units: string;
+  status: string;
+};
+
+/** Section 07 — system fault / alarm (fully user/API populated). */
+export type MopFaultAlarmHistoryRow = {
+  id: string;
+  dateTime: string;
+  faultCode: string;
+  description: string;
+  actionTaken: string;
+  initials: string;
+};
+
+export type MOPSection07Details = {
+  datePerformed: string;
+  timeBegun: string;
+  timeCompleted: string;
+  facilitiesPersonnel: string;
+  contractorPersonnel: string;
+  generatorOperationalRows: MopGeneratorOperationalDataRow[];
+  enginePerformanceRows: MopEnginePerformanceDataRow[];
+  faultAlarmHistoryRows: MopFaultAlarmHistoryRow[];
+  detailedProcedures: MOPSection07DetailedProcedures;
+};
+
 export type MOPSafety = {
   precautions: string;
   requiredPPE: string;
   toolsAndMaterials: string;
+  /** Research location line for the local services table (API/autofill or manual). */
+  localEmergencyServicesAddress: string;
   /** Dynamic-length tables: default empty rows, or one row per API/autofill item. */
   ppeRequirementRows: MopPpeRequirementRow[];
   toolRequirementRows: MopToolRequirementRow[];
   safetyProcedureRows: MopSafetyProcedureRow[];
   emergencyContactRows: MopEmergencyContactRow[];
+  localEmergencyServiceRows: MopLocalEmergencyServiceRow[];
 };
 
 export type MOPSignOff = {
@@ -185,6 +350,12 @@ export type MOP = {
   procedure: MOPProcedure;
   steps: MOPStep[];
   safety: MOPSafety;
+  assumptions: MOPAssumptions;
+  mopDetails: MOPSection07Details;
+  backOut: MOPSection08BackOut;
+  mopApproval: MOPSection09MopApproval;
+  mopComments: MOPSection10MopComments;
+  references: MOPSection11References;
   signOff: MOPSignOff;
   context: MOPContext;
   site: MOPSiteSection;

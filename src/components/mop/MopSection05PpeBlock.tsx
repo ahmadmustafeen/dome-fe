@@ -1,13 +1,18 @@
-"use client";
+'use client';
 
-import { Typography } from "@/components/common";
-import { Input } from "@/components/ui/Input";
+import type { MopPpeRequirementRow, MOPSafety } from '@/types/mop';
+import { Typography } from '@/components/common';
+import { Input } from '@/components/ui/Input';
+import { MOP_DYNAMIC_TABLE_MIN_ROWS } from '@/constants/mop-dynamic-table';
 import {
   MOP_SECTION_05_PPE_INTRO,
   MOP_SECTION_05_PPE_SUBHEADING,
-} from "@/constants/mop-section05-safety";
+  newPpeRequirementRow,
+} from '@/constants/mop-section05-safety';
 
-import type { MopPpeRequirementRow, MOPSafety } from "@/types/mop";
+import { insertRowAfterId, removeRowById } from '@/utils/mop-dynamic-table-mutations';
+
+import { MopDynamicTableRowControls } from './MopDynamicTableRowControls';
 
 type MopSection05PpeBlockProps = {
   rows: MopPpeRequirementRow[];
@@ -17,11 +22,11 @@ type MopSection05PpeBlockProps = {
 const patchPpeCell = (
   rows: MopPpeRequirementRow[],
   rowId: string,
-  partial: Partial<Pick<MopPpeRequirementRow, "category" | "specification" | "whenRequired">>,
-  patchSafety: MopSection05PpeBlockProps["patchSafety"],
+  partial: Partial<Pick<MopPpeRequirementRow, 'category' | 'specification' | 'whenRequired'>>,
+  patchSafety: MopSection05PpeBlockProps['patchSafety'],
 ) => {
   patchSafety({
-    ppeRequirementRows: rows.map((r) => (r.id === rowId ? { ...r, ...partial } : r)),
+    ppeRequirementRows: rows.map(r => (r.id === rowId ? { ...r, ...partial } : r)),
   });
 };
 
@@ -41,17 +46,19 @@ export const MopSection05PpeBlock = ({ rows, patchSafety }: MopSection05PpeBlock
               <th className="px-3 py-2 text-left font-semibold">PPE Category</th>
               <th className="px-3 py-2 text-left font-semibold">Specification</th>
               <th className="px-3 py-2 text-left font-semibold">When Required</th>
+              <th scope="col" className="w-[4.25rem] px-1 py-2 text-center text-xs font-semibold">
+                ±
+              </th>
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
+            {rows.map(row => (
               <tr key={row.id} className="bg-white">
                 <td className="border border-gray-200 px-2 py-1 align-top">
                   <Input
                     value={row.category}
-                    onChange={(e) =>
-                      patchPpeCell(rows, row.id, { category: e.target.value }, patchSafety)
-                    }
+                    onChange={e =>
+                      patchPpeCell(rows, row.id, { category: e.target.value }, patchSafety)}
                     placeholder="Category"
                     className="w-full"
                   />
@@ -59,9 +66,8 @@ export const MopSection05PpeBlock = ({ rows, patchSafety }: MopSection05PpeBlock
                 <td className="border border-gray-200 px-2 py-1 align-top">
                   <Input
                     value={row.specification}
-                    onChange={(e) =>
-                      patchPpeCell(rows, row.id, { specification: e.target.value }, patchSafety)
-                    }
+                    onChange={e =>
+                      patchPpeCell(rows, row.id, { specification: e.target.value }, patchSafety)}
                     placeholder="Specification"
                     className="w-full"
                   />
@@ -69,11 +75,26 @@ export const MopSection05PpeBlock = ({ rows, patchSafety }: MopSection05PpeBlock
                 <td className="border border-gray-200 px-2 py-1 align-top">
                   <Input
                     value={row.whenRequired}
-                    onChange={(e) =>
-                      patchPpeCell(rows, row.id, { whenRequired: e.target.value }, patchSafety)
-                    }
+                    onChange={e =>
+                      patchPpeCell(rows, row.id, { whenRequired: e.target.value }, patchSafety)}
                     placeholder="When required"
                     className="w-full"
+                  />
+                </td>
+                <td className="border border-gray-200 px-1 align-middle">
+                  <MopDynamicTableRowControls
+                    ariaLabelGroup="PPE table row controls"
+                    rowCount={rows.length}
+                    onAddBelow={() =>
+                      patchSafety({
+                        ppeRequirementRows: insertRowAfterId(rows, row.id, newPpeRequirementRow()),
+                      })}
+                    onRemove={() => {
+                      const next = removeRowById(rows, row.id, MOP_DYNAMIC_TABLE_MIN_ROWS);
+                      if (next) {
+                        patchSafety({ ppeRequirementRows: next });
+                      }
+                    }}
                   />
                 </td>
               </tr>

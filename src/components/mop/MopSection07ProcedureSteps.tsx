@@ -1,17 +1,25 @@
 "use client";
 
-import { Typography } from "@/components/common";
-import { Input } from "@/components/ui/Input";
-import { Textarea } from "@/components/ui/Textarea";
-import {
-  MOP_SECTION_07_CRITICAL_STEP_NOTES_HEADING,
-  MOP_SECTION_07_DETAILED_PROCEDURES_SUBHEADING,
-} from "@/constants/mop-section07-procedure-steps";
 import type {
   MopDetailedProcedureStepRow,
   MOPSection07Details,
 } from "@/types/mop";
+import { Typography } from "@/components/common";
+import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
+import { MOP_DYNAMIC_TABLE_MIN_ROWS } from "@/constants/mop-dynamic-table";
+import {
+  MOP_SECTION_07_CRITICAL_STEP_NOTES_HEADING,
+  MOP_SECTION_07_DETAILED_PROCEDURES_SUBHEADING,
+  newDetailedProcedureStepRow,
+} from "@/constants/mop-section07-procedure-steps";
 
+import {
+  insertRowAfterId,
+  removeRowById,
+} from "@/utils/mop-dynamic-table-mutations";
+
+import { MopDynamicTableRowControls } from "./MopDynamicTableRowControls";
 import { MopSection07IndicatorSelect } from "./MopSection07IndicatorSelect";
 
 type MopSection07ProcedureStepsProps = {
@@ -38,6 +46,11 @@ const patchStep = (
     },
   });
 };
+
+const renumberDetailedSteps = (
+  list: MopDetailedProcedureStepRow[],
+): MopDetailedProcedureStepRow[] =>
+  list.map((r, index) => ({ ...r, stepNumber: index + 1 }));
 
 export const MopSection07ProcedureSteps = ({
   details,
@@ -73,6 +86,12 @@ export const MopSection07ProcedureSteps = ({
                 Initials
               </th>
               <th className="w-24 px-3 py-2 text-left font-semibold">Time</th>
+              <th
+                scope="col"
+                className="w-[4.25rem] px-1 py-2 text-center text-xs font-semibold"
+              >
+                ±
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -138,6 +157,41 @@ export const MopSection07ProcedureSteps = ({
                     }
                     placeholder="Time"
                     className="w-full"
+                  />
+                </td>
+                <td className="border border-gray-200 px-1 align-middle">
+                  <MopDynamicTableRowControls
+                    ariaLabelGroup="Detailed procedure steps row controls"
+                    rowCount={stepRows.length}
+                    onAddBelow={() => {
+                      const merged = insertRowAfterId(
+                        stepRows,
+                        row.id,
+                        newDetailedProcedureStepRow(1),
+                      );
+                      patchMopDetails({
+                        detailedProcedures: {
+                          ...details.detailedProcedures,
+                          stepRows: renumberDetailedSteps(merged),
+                        },
+                      });
+                    }}
+                    onRemove={() => {
+                      const next = removeRowById(
+                        stepRows,
+                        row.id,
+                        MOP_DYNAMIC_TABLE_MIN_ROWS,
+                      );
+                      if (!next) {
+                        return;
+                      }
+                      patchMopDetails({
+                        detailedProcedures: {
+                          ...details.detailedProcedures,
+                          stepRows: renumberDetailedSteps(next),
+                        },
+                      });
+                    }}
                   />
                 </td>
               </tr>

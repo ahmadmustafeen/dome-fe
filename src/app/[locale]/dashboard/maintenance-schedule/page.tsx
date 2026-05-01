@@ -1,12 +1,6 @@
 "use client";
 import type { Row } from "@tanstack/react-table";
-import {
-  CalendarDays,
-  RefreshCw,
-  Search,
-  Trash2,
-  X,
-} from "lucide-react";
+import { CalendarDays, RefreshCw, Search, Trash2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -35,14 +29,12 @@ import type {
 import { toast } from "react-toastify";
 import { maintenanceScheduleService } from "@/services/maintenance-schedule-service";
 
-
 export default function MaintenanceSchedulePage() {
   const { site } = useAppContext();
   const router = useRouter();
 
-
-  const [isGenerator, setIsGenerator] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isGenerator, setIsGenerator] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [maintenanceData, setMaintenanceData] = useState<any[]>([]);
   const [schedule, setSchedule] = useState<MaintenanceScheduleData | null>(
     null,
@@ -51,17 +43,22 @@ export default function MaintenanceSchedulePage() {
 
   const t = useTranslations("MaintenanceSchedule");
 
-
   const fetchMaintenanceSchedule = useCallback(async (siteId: string) => {
     setIsLoading(true);
     try {
-      const response = await maintenanceScheduleService.getMaintenanceScheduleBySiteId(siteId);
+      const response =
+        await maintenanceScheduleService.getMaintenanceScheduleBySiteId(siteId);
 
       setMaintenanceData(response.data);
-      setSchedule({ generatedAt: new Date().toDateString(), rows: response.data })
+      setSchedule({
+        generatedAt: new Date().toDateString(),
+        rows: response.data,
+      });
     } catch (err) {
       toast.error(
-        err instanceof Error ? err.message : "Failed to load maintenance schedule.",
+        err instanceof Error
+          ? err.message
+          : "Failed to load maintenance schedule.",
       );
     } finally {
       setIsLoading(false);
@@ -70,10 +67,9 @@ export default function MaintenanceSchedulePage() {
 
   useEffect(() => {
     if (site) {
-      fetchMaintenanceSchedule(site._id)
+      fetchMaintenanceSchedule(site._id);
     }
-  }, [site])
-
+  }, [site]);
 
   const handleViewDetails = useCallback(
     (categoryId: string) => {
@@ -102,7 +98,7 @@ export default function MaintenanceSchedulePage() {
           colCategory: t("col_category"),
           colSubCategory: t("col_subCategory"),
           colCount: t("col_assets"),
-          colMake: 'Make',
+          colMake: "Make",
           colTotalMops: t("col_total_mops"),
           colTotalEops: t("col_total_eops"),
           colTotalSops: t("col_total_sops"),
@@ -158,17 +154,14 @@ export default function MaintenanceSchedulePage() {
     );
   }
 
-
-
   const handleRegenerate = () => {
     if (!site?._id) return;
 
-
     setIsGenerator(true);
-    setMaintenanceData([])
+    setMaintenanceData([]);
 
     const es = new EventSource(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/maintenance-schedule/generateByStream/${site?._id}`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/maintenance-schedule/generateByStream/${site?._id}`,
     );
 
     es.onmessage = (event) => {
@@ -178,10 +171,7 @@ export default function MaintenanceSchedulePage() {
         if (parsed.type === "chunk") {
           const newItem = parsed.data;
 
-          setMaintenanceData((prev: any[]) => [
-            ...prev,
-            newItem,
-          ]);
+          setMaintenanceData((prev: any[]) => [...prev, newItem]);
         }
 
         if (parsed.type === "done") {
@@ -209,33 +199,35 @@ export default function MaintenanceSchedulePage() {
 
   const handleClear = async () => {
     try {
-      setIsLoading(true)
-      await maintenanceScheduleService.clearMaintenanceScheduleBySiteId(site._id);
-      toast.success("All previous schedule deleted successfully")
-      fetchMaintenanceSchedule(site._id)
+      setIsLoading(true);
+      await maintenanceScheduleService.clearMaintenanceScheduleBySiteId(
+        site._id,
+      );
+      toast.success("All previous schedule deleted successfully");
+      fetchMaintenanceSchedule(site._id);
     } catch (err) {
-
+    } finally {
+      setIsLoading(false);
     }
-    finally {
-      setIsLoading(false)
-    }
-  }
+  };
 
   if (isLoading) {
-    return <ScreenLoader
-      heading={"Fetching Maintenance Schedule"}
-      description={"Please wait while we fetch the maintenance schedule"}
-    />
+    return (
+      <ScreenLoader
+        heading={"Fetching Maintenance Schedule"}
+        description={"Please wait while we fetch the maintenance schedule"}
+      />
+    );
   }
 
   return (
     <div className="h-full">
-      {
-        isGenerator ? <ScreenLoader
+      {isGenerator ? (
+        <ScreenLoader
           heading={t("loader_heading")}
           description={t("loader_description")}
-        /> : null
-      }
+        />
+      ) : null}
 
       <SectionWrapper>
         {/* ── Page header ── */}

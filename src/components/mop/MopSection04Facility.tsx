@@ -14,10 +14,7 @@ import type {
 
 type MopSection04FacilityProps = {
   facilityEffects: MopFacilityEffectRow[];
-  patchFacilityRow: (
-    systemKey: MopFacilitySystemKey,
-    partial: Partial<Pick<MopFacilityEffectRow, "choice" | "details">>,
-  ) => void;
+  patchFacilityEffects: (rows: MopFacilityEffectRow[]) => void;
 };
 
 const choiceForRow = (
@@ -36,21 +33,30 @@ const detailsForRow = (
   return found ? found.details : "";
 };
 
+const patchRow = (
+  rows: MopFacilityEffectRow[],
+  key: MopFacilitySystemKey,
+  partial: Partial<Pick<MopFacilityEffectRow, "choice" | "details">>,
+  patchFacilityEffects: MopSection04FacilityProps["patchFacilityEffects"],
+) => {
+  patchFacilityEffects(
+    rows.map((r) => (r.systemKey === key ? { ...r, ...partial } : r)),
+  );
+};
+
 const setFacilityChoice = (
+  rows: MopFacilityEffectRow[],
   key: MopFacilitySystemKey,
   choice: MopFacilityEffectChoice,
-  patchFacilityRow: MopSection04FacilityProps["patchFacilityRow"],
+  patchFacilityEffects: MopSection04FacilityProps["patchFacilityEffects"],
   priorDetails: string,
 ) => {
-  patchFacilityRow(key, {
-    choice,
-    details: choice === "yes" ? priorDetails : "",
-  });
+  patchRow(rows, key, { choice, details: choice === "yes" ? priorDetails : "" }, patchFacilityEffects);
 };
 
 export const MopSection04Facility = ({
   facilityEffects,
-  patchFacilityRow,
+  patchFacilityEffects,
 }: MopSection04FacilityProps) => {
   return (
     <div className="mt-5 rounded-lg border border-[#e0e0e0] bg-white px-3 py-4 shadow-sm sm:mt-6 sm:px-4 sm:py-5">
@@ -80,13 +86,13 @@ export const MopSection04Facility = ({
               const details = detailsForRow(facilityEffects, sys.key);
               const groupName = `mop-facility-${sys.key}`;
               const pickYes = () =>
-                setFacilityChoice(sys.key, "yes", patchFacilityRow, details);
+                setFacilityChoice(facilityEffects, sys.key, "yes", patchFacilityEffects, details);
               const pickNo = () =>
-                setFacilityChoice(sys.key, "no", patchFacilityRow, details);
+                setFacilityChoice(facilityEffects, sys.key, "no", patchFacilityEffects, details);
               const pickNa = () =>
-                setFacilityChoice(sys.key, "na", patchFacilityRow, details);
+                setFacilityChoice(facilityEffects, sys.key, "na", patchFacilityEffects, details);
               const onDetailsChange = (value: string) => {
-                patchFacilityRow(sys.key, { details: value });
+                patchRow(facilityEffects, sys.key, { details: value }, patchFacilityEffects);
               };
               return (
                 <tr key={sys.key} className="bg-white">

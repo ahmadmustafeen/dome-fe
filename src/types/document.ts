@@ -8,7 +8,11 @@ export type DocumentType =
   | "Site Diagrams and Documents"
   | "Outdated MOPs, SOPs and EOPs"
   | "Company Policies and Documents"
-  | "Asset List";
+  | "Asset List" |
+  'Basis of Design' |
+  'Electrical One-Line Diagram' |
+  'Mechanical One-Line Diagram'
+
 
 export interface DocumentApiRecord {
   _id: string;

@@ -83,7 +83,7 @@ export default function MaintenanceSchedulePage() {
       router.push(
         maintenanceGenerateProcedureRoute(kind, {
           categoryId,
-          procedureId: item,
+          procedureId: item.title,
         }),
       );
     },
@@ -119,6 +119,7 @@ export default function MaintenanceSchedulePage() {
           label={t("details_mops")}
           items={row.original.MOPs}
           colorClass="border-blue-200"
+          noIcon
           onGenerate={(item) => {
             handleProcedureGenerate(item, "mop", row.original.id);
           }}
@@ -127,6 +128,7 @@ export default function MaintenanceSchedulePage() {
           label={t("details_eops")}
           items={row.original.EOPs}
           colorClass="border-red-200"
+          noIcon
           onGenerate={(item) => {
             handleProcedureGenerate(item, "eop", row.original.id);
           }}
@@ -134,6 +136,7 @@ export default function MaintenanceSchedulePage() {
         <RequirementSection
           label={t("details_sops")}
           items={row.original.SOPs}
+          noIcon
           colorClass="border-green-200"
           onGenerate={(item) => {
             handleProcedureGenerate(item, "sop", row.original.id);

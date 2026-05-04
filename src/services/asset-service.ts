@@ -32,12 +32,16 @@ export const assetService = {
   getAllAssetsByCategoryAndSubCategory: (
     category: string,
     subCategory: string,
+    make: string,
+    siteId: string,
   ) => {
     return apiFetch(`/assets/fetchByCategoryAndSubCategory`, {
       method: "POST",
       body: JSON.stringify({
-        category: category,
-        subCategory: subCategory,
+        category,
+        subCategory,
+        make,
+        siteId,
       }),
     },);
   },

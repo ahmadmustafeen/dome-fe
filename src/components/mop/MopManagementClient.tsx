@@ -52,8 +52,7 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
   const {
     mop,
     isBootstrapping,
-    generateError,
-    retryGenerate,
+    createGenerateFailed,
     mopNotFound,
     isReadOnly,
     viewingArchivedVersionNumber,
@@ -193,18 +192,6 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
           />
         </div>
 
-        {mode === "create" && generateError !== null && isBootstrapping === false ? (
-          <div
-            role="alert"
-            className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-900"
-          >
-            <Typography variant="p" className="mb-2 font-medium">
-              {generateError}
-            </Typography>
-            <AppButton variant="secondary" title="Retry" onClick={() => void retryGenerate()} />
-          </div>
-        ) : null}
-
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">
           <section className="flex min-h-0 min-w-0 flex-1 flex-col gap-3 pb-24">
             {readOnlyForm === true && viewingArchivedVersionNumber !== null ? (
@@ -274,7 +261,7 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
                 isSaving ||
                 isBootstrapping ||
                 readOnlyForm ||
-                (mode === "create" && generateError !== null)
+                (mode === "create" && createGenerateFailed)
               }
             />
           </div>

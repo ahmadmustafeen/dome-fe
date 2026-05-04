@@ -46,7 +46,8 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
   const { mode, mopId, onAfterPersist, onCreateSaveSuccess } = ctx;
   const [mop, setMop] = useState<MOP>(() => createEmptyMop());
   const [loadedBootstrapKey, setLoadedBootstrapKey] = useState<string | null>(null);
-  const [generateError, setGenerateError] = useState<string | null>(null);
+  /** Create flow: true when initial (or reset) generate failed; keeps Save off until a successful generate. */
+  const [createGenerateFailed, setCreateGenerateFailed] = useState(false);
   const [mopNotFound, setMopNotFound] = useState(false);
   const [viewingArchivedVersionNumber, setViewingArchivedVersionNumber] = useState<number | null>(
     null,
@@ -60,7 +61,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
   const archiveSessionActiveRef = useRef(false);
 
   const runStandaloneGenerate = useCallback(async (): Promise<boolean> => {
-    setGenerateError(null);
+    setCreateGenerateFailed(false);
     try {
       const data = await generateMOP();
       setMop(data);
@@ -71,7 +72,9 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
       setMopNotFound(false);
       return true;
     } catch (err: unknown) {
-      setGenerateError(err instanceof Error ? err.message : "Generation failed.");
+      const msg = err instanceof Error ? err.message : "Generation failed.";
+      toast.error(msg);
+      setCreateGenerateFailed(true);
       return false;
     }
   }, []);
@@ -80,7 +83,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
     let cancelled = false;
     const run = async () => {
       setLoadedBootstrapKey(null);
-      setGenerateError(null);
+      setCreateGenerateFailed(false);
       setMopNotFound(false);
 
       if (mode === "create") {
@@ -299,12 +302,6 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
     }
   }, [mode, mopId, key, runStandaloneGenerate]);
 
-  const retryGenerate = useCallback(async () => {
-    setLoadedBootstrapKey(null);
-    await runStandaloneGenerate();
-    setLoadedBootstrapKey(key);
-  }, [key, runStandaloneGenerate]);
-
   const persistMop = useCallback(async (): Promise<{ success: boolean }> => {
     if (mode === "create") {
       const saved = await saveMOP(mop, "new");
@@ -367,8 +364,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
   return {
     mop,
     isBootstrapping,
-    generateError,
-    retryGenerate,
+    createGenerateFailed,
     mopNotFound,
     isReadOnly,
     viewingArchivedVersionNumber,

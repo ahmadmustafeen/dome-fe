@@ -42,29 +42,43 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
   const { categoryId } = use(params);
   const t = useTranslations("MaintenanceCategoryDetail");
   const router = useRouter();
-  const [categoryRow, setCategoryRow] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [, setData] = useState<MaintenanceRow[]>([])
-  const [, setSchedule] = useState<MaintenanceScheduleData | null>(
-    null,
-  );
-  const { site } = useAppContext()
-
+  const [categoryRow, setCategoryRow] = useState<CategoryAsset[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [, setData] = useState<MaintenanceRow[]>([]);
+  const [, setSchedule] = useState<MaintenanceScheduleData | null>(null);
+  const { site } = useAppContext();
 
   const fetchMaintenanceSchedule = useCallback(async (siteId: string) => {
     setIsLoading(true);
     try {
-      const response = await maintenanceScheduleService.getMaintenanceScheduleBySiteId(siteId);
+      const response =
+        await maintenanceScheduleService.getMaintenanceScheduleBySiteId(siteId);
       setData(response.data);
-      const category = response.data.find(item => item._id === categoryId)
-      const data = await assetService.assetService.getAllAssetsByCategoryAndSubCategory(category?.category!, category?.subCategory!)
-      // @ts-ignore
-      setCategoryRow(data?.data?.assets?.map((item: any) => ({ ...item, mops: category?.MOPs, sops: category?.SOPs, eops: category?.EOPs })) || [])
+      const category = response.data.find((item) => item._id === categoryId);
+      const envelope = (await assetService.assetService.getAllAssetsByCategoryAndSubCategory(
+        category?.category!,
+        category?.subCategory!,
+      )) as {
+        data?: { assets?: CategoryAsset[] };
+      };
+      setCategoryRow(
+        envelope.data?.assets?.map((item) => ({
+          ...item,
+          mops: category?.MOPs ?? [],
+          sops: category?.SOPs ?? [],
+          eops: category?.EOPs ?? [],
+        })) ?? [],
+      );
 
-      setSchedule({ generatedAt: new Date().toDateString(), rows: response.data })
+      setSchedule({
+        generatedAt: new Date().toDateString(),
+        rows: response.data,
+      });
     } catch (err) {
       toast.error(
-        err instanceof Error ? err.message : "Failed to load maintenance schedule.",
+        err instanceof Error
+          ? err.message
+          : "Failed to load maintenance schedule.",
       );
     } finally {
       setIsLoading(false);
@@ -73,14 +87,12 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
 
   useEffect(() => {
     if (site) {
-      fetchMaintenanceSchedule(site._id)
+      fetchMaintenanceSchedule(site._id);
     }
-  }, [site])
+  }, [site]);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-
-
 
   const filteredAssets = useMemo(() => {
     searchQuery.trim().toLowerCase();
@@ -143,12 +155,13 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
 
   const assetCount = filteredAssets.length;
 
-
   if (isLoading) {
-    return <ScreenLoader
-      heading={t("loader_heading")}
-      description={t("loader_description")}
-    />
+    return (
+      <ScreenLoader
+        heading={t("loader_heading")}
+        description={t("loader_description")}
+      />
+    );
   }
   return (
     <div className="h-full">
@@ -164,9 +177,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
 
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <Typography variant="h1">
-              Category Detail
-            </Typography>
+            <Typography variant="h1">Category Detail</Typography>
             <Typography variant="p" className="mt-1 text-gray-500">
               {assetCount !== 1
                 ? t("assets_count_other", { count: assetCount })

@@ -6,7 +6,8 @@ export async function apiFetch<T>(
 ): Promise<T> {
   const isFormData = options?.body instanceof FormData;
 
-  const response = await fetch(`${BASE_URL}${endpoint}`, {
+  const path = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+  const response = await fetch(`${BASE_URL}${path}`, {
     credentials: "include",
     ...options,
     headers: {

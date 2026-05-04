@@ -2,17 +2,22 @@
 
 import { AppButton, Typography } from "@/components/common";
 import { MopStatusBadge } from "@/components/mop/MopStatusBadge";
-import type { MopApiRecord, MopArchiveApiRecord } from "@/types/mop-api";
+import type {
+  MopVersionHistoryArchiveRecord,
+  MopVersionHistoryCurrentRecord,
+} from "@/types/mop-api";
 
 type VersionEntry =
-  | { kind: "current"; record: MopApiRecord }
-  | { kind: "archive"; record: MopArchiveApiRecord };
+  | { kind: "current"; record: MopVersionHistoryCurrentRecord }
+  | { kind: "archive"; record: MopVersionHistoryArchiveRecord };
 
 interface MopVersionHistoryProps {
-  currentRecord: MopApiRecord | null;
-  history: MopArchiveApiRecord[];
+  currentRecord: MopVersionHistoryCurrentRecord | null;
+  history: MopVersionHistoryArchiveRecord[];
   activeVersionId: string | null;
-  onLoadVersion: (record: MopApiRecord | MopArchiveApiRecord) => void;
+  onLoadVersion: (
+    record: MopVersionHistoryCurrentRecord | MopVersionHistoryArchiveRecord,
+  ) => void;
   isLoading?: boolean;
   showTitle?: boolean;
 }
@@ -48,11 +53,11 @@ const VersionCard = ({
         <Typography variant="span" className="font-semibold text-gray-800">
           v{record.versionNumber}
         </Typography>
-        {entry.kind === "current" && (
+        {entry.kind === "current" ? (
           <span className="rounded-full bg-blue-600 px-2 py-0.5 text-xs font-medium text-white">
             Latest
           </span>
-        )}
+        ) : null}
       </div>
 
       <MopStatusBadge status={record.status} className="mb-2" />
@@ -94,11 +99,11 @@ export const MopVersionHistory = ({
 
   return (
     <div className="flex h-full flex-col gap-3">
-      {showTitle && (
+      {showTitle ? (
         <Typography variant="h6" className="text-gray-500">
           Version History
         </Typography>
-      )}
+      ) : null}
 
       {isLoading ? (
         <Typography variant="p" className="text-gray-400">

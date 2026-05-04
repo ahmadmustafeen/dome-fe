@@ -31,7 +31,7 @@ const RequirementSection = ({
         <p className="text-xs text-gray-400 italic">None required</p>
       ) : (
         <ol className="list-inside list-decimal space-y-2">
-          {items.map((item,index) => (
+          {items.map((item, index) => (
             <li
               key={index}
               className="flex items-start gap-2 text-xs leading-relaxed text-gray-700"

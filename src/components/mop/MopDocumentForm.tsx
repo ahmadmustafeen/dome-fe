@@ -8,7 +8,6 @@ import type {
   MOP,
   MOPAssumptions,
   MopFacilityEffectRow,
-  MopFacilitySystemKey,
   MOPSafety,
   MOPSection07Details,
   MOPSection08BackOut,
@@ -46,10 +45,8 @@ type MopDocumentFormProps = {
   patchMopApproval: (p: Partial<MOPSection09MopApproval>) => void;
   patchMopComments: (p: Partial<MOPSection10MopComments>) => void;
   patchMopReferences: (p: Partial<MOPSection11References>) => void;
-  patchFacilityRow: (
-    systemKey: MopFacilitySystemKey,
-    partial: Partial<Pick<MopFacilityEffectRow, "choice" | "details">>,
-  ) => void;
+  patchFacilityEffects: (rows: MopFacilityEffectRow[]) => void;
+  patchSteps: (rows: MOP["steps"]) => void;
 };
 
 export const MopDocumentForm = ({
@@ -68,7 +65,8 @@ export const MopDocumentForm = ({
   patchMopApproval,
   patchMopComments,
   patchMopReferences,
-  patchFacilityRow,
+  patchFacilityEffects,
+  patchSteps,
 }: MopDocumentFormProps) => {
   return (
     <div className="mop-portal-form-root min-h-0 w-full flex-1 overflow-x-hidden bg-linear-to-b from-white to-[#f9fafb] py-2 pr-1 pb-6">
@@ -93,7 +91,7 @@ export const MopDocumentForm = ({
             />
             <MopSection04Facility
               facilityEffects={mop.facilityEffects}
-              patchFacilityRow={patchFacilityRow}
+              patchFacilityEffects={patchFacilityEffects}
             />
             <MopSection05Safety safety={mop.safety} patchSafety={patchSafety} />
             <MopSection06Assumptions
@@ -101,6 +99,8 @@ export const MopDocumentForm = ({
               patchAssumptions={patchAssumptions}
             />
             <MopSection07MopDetails
+              steps={mop.steps}
+              patchSteps={patchSteps}
               details={mop.mopDetails}
               patchMopDetails={patchMopDetails}
             />

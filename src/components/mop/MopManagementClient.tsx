@@ -31,7 +31,9 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
   const mode = isEdit ? "edit" : "create";
   const resolvedMopId = isEdit ? mopId.trim() : undefined;
 
-  const applyVersionRef = useRef<(row: CanonicalMopVersionApiRow) => void>(() => {});
+  const applyVersionRef = useRef<(row: CanonicalMopVersionApiRow) => void>(
+    () => {},
+  );
 
   const {
     historyOpen,
@@ -214,7 +216,9 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
             <fieldset
               disabled={readOnlyForm}
               className={
-                readOnlyForm === true ? "min-w-0 border-0 p-0 opacity-95" : "min-w-0 border-0 p-0"
+                readOnlyForm === true
+                  ? "min-w-0 border-0 p-0 opacity-95"
+                  : "min-w-0 border-0 p-0"
               }
             >
               <MopDocumentForm

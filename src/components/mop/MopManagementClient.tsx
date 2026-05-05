@@ -23,10 +23,9 @@ import { MopVersionHistoryDrawer } from "./MopVersionHistoryDrawer";
 
 interface MopManagementClientProps {
   mopId?: string;
-  id: string;
 }
 
-export const MopManagementClient = ({ mopId,id }: MopManagementClientProps) => {
+export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
   const router = useRouter();
   const isEdit = mopId !== undefined && mopId.trim() !== "";
   const mode = isEdit ? "edit" : "create";

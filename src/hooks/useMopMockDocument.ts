@@ -147,7 +147,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
         ...prev,
         safety: {
           ...prev?.safety,
-          ppeRequirementRows: data?.ppe || []
+          ppeRequirementRows: data || []
         },
       }));
     });
@@ -174,7 +174,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
         ...prev,
         safety: {
           ...prev?.safety,
-          safetyProcedureRows: data?.procedures || []
+          safetyProcedureRows: data || []
         }
       }))
     })
@@ -189,7 +189,40 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
         ...prev,
         safety: {
           ...prev?.safety,
-          toolRequirementRows: data?.tools || []
+          toolRequirementRows: data || []
+        }
+      }))
+    })
+
+
+    evtSource.addEventListener("sectionSixProjectKeyAssumptions", (e) => {
+      const data = JSON.parse(e.data);
+      if (data?.error) {
+        toast.error("sectionSixProjectKeyAssumptions failed")
+        return
+      }
+
+      setMop((prev: any) => ({
+        ...prev,
+        assumptions: {
+          ...prev.assumptions,
+          assumptionRows: data || []
+        }
+      }))
+    })
+
+    evtSource.addEventListener("sectionSixCriticalDecisionPoint", (e) => {
+      const data = JSON.parse(e.data);
+      if (data?.error) {
+        toast.error("sectionSixCriticalDecisionPoint failed")
+        return
+      }
+
+      setMop((prev: any) => ({
+        ...prev,
+        assumptions: {
+          ...prev.assumptions,
+          criticalDecisionPointItems: data || []
         }
       }))
     })
@@ -208,6 +241,9 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
       setGenerateError("Streaming failed");
       evtSource.close();
     });
+
+
+
   }, []);
 
   useEffect(() => {

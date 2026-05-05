@@ -39,22 +39,22 @@ export const MopSection06KeyAssumptionsTable = ({
         {MOP_SECTION_06_KEY_ASSUMPTIONS_SUBHEADING}
       </Typography>
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[560px] border-collapse text-sm">
+        <table className="w-full min-w-140 border-collapse text-sm">
           <thead>
             <tr className="bg-[#0f3456] text-white">
               <th className="min-w-40 px-3 py-2 text-left font-semibold">Category</th>
               <th className="px-3 py-2 text-left font-semibold">Assumption</th>
-              <th scope="col" className="w-[4.25rem] px-1 py-2 text-center text-xs font-semibold">
+              <th scope="col" className="w-17 px-1 py-2 text-center text-xs font-semibold">
                 ±
               </th>
             </tr>
           </thead>
           <tbody>
-            {rows.map(row => (
-              <tr key={row.id} className="bg-white">
+            {rows?.map((row,index) => (
+              <tr key={index} className="bg-white">
                 <td className="border border-gray-200 px-2 py-1 align-top">
                   <Input
-                    value={row.category}
+                    value={row.category || ""}
                     onChange={e =>
                       patchAssumptionCell(rows, row.id, { category: e.target.value }, patchAssumptions)}
                     placeholder="Category"
@@ -63,7 +63,7 @@ export const MopSection06KeyAssumptionsTable = ({
                 </td>
                 <td className="border border-gray-200 px-2 py-1 align-top">
                   <Input
-                    value={row.assumption}
+                    value={row.assumption || ""}
                     onChange={e =>
                       patchAssumptionCell(rows, row.id, { assumption: e.target.value }, patchAssumptions)}
                     placeholder="Assumption"

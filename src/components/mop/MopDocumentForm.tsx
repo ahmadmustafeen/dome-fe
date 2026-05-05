@@ -97,11 +97,12 @@ export const MopDocumentForm = ({
               patchFacilityEffects={patchFacilityEffects}
             />
             <MopSection05Safety safety={mop.safety}
-            mopTitle={mop.document.title}
-            patchSafety={patchSafety} assetName={asset?.name!} />
+              mopTitle={mop.document.title}
+              patchSafety={patchSafety} assetName={asset?.name!} />
             <MopSection06Assumptions
               assumptions={mop.assumptions}
               patchAssumptions={patchAssumptions}
+              assetName={asset?.name!}
             />
             <MopSection07MopDetails
               steps={mop.steps}

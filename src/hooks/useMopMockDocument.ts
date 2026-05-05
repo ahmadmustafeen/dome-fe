@@ -227,6 +227,19 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
       }))
     })
 
+    evtSource.addEventListener("sectionSevenProcedureSteps", (e) => {
+      const data = JSON.parse(e.data);
+      if (data?.error) {
+        toast.error("sectionSevenProcedureSteps failed")
+        return
+      }
+
+      setMop((prev: any) => ({
+        ...prev,
+        steps: data
+      }))
+    })
+
     evtSource.addEventListener("done", () => {
       alert("completed generating")
       // setMop((prev: any) => ({

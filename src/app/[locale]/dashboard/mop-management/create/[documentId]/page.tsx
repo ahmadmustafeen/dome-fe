@@ -5,7 +5,9 @@ import { Suspense } from "react";
 import { Typography } from "@/components/common";
 import { MopManagementClient } from "@/components/mop/MopManagementClient";
 
-export default function MopManagementCreatePage() {
+export default function MopManagementCreatePage({ params }: { params: { id: string } }) {
+  const id = params.id;
+
   return (
     <Suspense
       fallback={
@@ -14,7 +16,7 @@ export default function MopManagementCreatePage() {
         </Typography>
       }
     >
-      <MopManagementClient />
+      <MopManagementClient id={id} />
     </Suspense>
   );
 }

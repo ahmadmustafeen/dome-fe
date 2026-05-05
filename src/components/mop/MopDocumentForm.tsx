@@ -3,7 +3,6 @@
 import "@/styles/mop-document.css";
 
 import { Typography } from "@/components/common";
-import { MOP_PAGE_SUBTITLE } from "@/constants/mop-form";
 import type {
   MOP,
   MOPAssumptions,
@@ -70,7 +69,7 @@ export const MopDocumentForm = ({
 }: MopDocumentFormProps) => {
   return (
     <div className="mop-portal-form-root min-h-0 w-full flex-1 overflow-x-hidden bg-linear-to-b from-white to-[#f9fafb] py-2 pr-1 pb-6">
-      <MopPortalShell bannerSubtitle={MOP_PAGE_SUBTITLE}>
+      <MopPortalShell bannerSubtitle={mop.document.title || "Loading"}>
         {isBootstrapping ? (
           <Typography variant="p" className="text-gray-500">
             Loading example MOP…

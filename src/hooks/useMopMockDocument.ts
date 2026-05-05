@@ -62,7 +62,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
   const runStandaloneGenerate = useCallback(async (): Promise<boolean> => {
     setGenerateError(null);
     try {
-      const data = await generateMOP();
+      const data = await generateMOP({ documentId: "69f88d94118cad90ca6f60fb" });
       setMop(data);
       latestSavedCanonicalRef.current = null;
       setViewingArchivedVersionNumber(null);

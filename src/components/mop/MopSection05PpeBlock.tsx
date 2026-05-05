@@ -5,8 +5,6 @@ import { Typography } from '@/components/common';
 import { Input } from '@/components/ui/Input';
 import { MOP_DYNAMIC_TABLE_MIN_ROWS } from '@/constants/mop-dynamic-table';
 import {
-  MOP_SECTION_05_PPE_INTRO,
-  MOP_SECTION_05_PPE_SUBHEADING,
   newPpeRequirementRow,
 } from '@/constants/mop-section05-safety';
 
@@ -17,6 +15,7 @@ import { MopDynamicTableRowControls } from './MopDynamicTableRowControls';
 type MopSection05PpeBlockProps = {
   rows: MopPpeRequirementRow[];
   patchSafety: (p: Partial<MOPSafety>) => void;
+  assetName: string;
 };
 
 const patchPpeCell = (
@@ -30,23 +29,20 @@ const patchPpeCell = (
   });
 };
 
-export const MopSection05PpeBlock = ({ rows, patchSafety }: MopSection05PpeBlockProps) => {
+export const MopSection05PpeBlock = ({ rows, patchSafety, assetName }: MopSection05PpeBlockProps) => {
   return (
     <div className="mb-8 last:mb-0">
       <Typography variant="h6" className="mb-2 text-base font-semibold text-gray-900">
-        {MOP_SECTION_05_PPE_SUBHEADING}
-      </Typography>
-      <Typography variant="p" className="mb-4 text-sm text-gray-700">
-        {MOP_SECTION_05_PPE_INTRO}
+        PPE requirements specific to {assetName} maintenance:
       </Typography>
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[640px] border-collapse text-sm">
+        <table className="w-full min-w-160 border-collapse text-sm">
           <thead>
             <tr className="bg-[#0f3456] text-white">
               <th className="px-3 py-2 text-left font-semibold">PPE Category</th>
               <th className="px-3 py-2 text-left font-semibold">Specification</th>
               <th className="px-3 py-2 text-left font-semibold">When Required</th>
-              <th scope="col" className="w-[4.25rem] px-1 py-2 text-center text-xs font-semibold">
+              <th scope="col" className="w-17 px-1 py-2 text-center text-xs font-semibold">
                 ±
               </th>
             </tr>

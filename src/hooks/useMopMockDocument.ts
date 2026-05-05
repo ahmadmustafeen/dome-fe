@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-import { generateMOP, getLatestMOP, saveMOP } from "@/services/mop-service";
+import { getLatestMOP, saveMOP } from "@/services/mop-service";
 import { createEmptyMop } from "@/services/mop-mock-service";
 import type { CanonicalMopVersionApiRow } from "@/types/mop-api";
 import type {
@@ -45,6 +45,7 @@ const bootstrapKey = (mode: "create" | "edit", mopId: string | undefined) =>
 export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
   const { mode, mopId, onAfterPersist, onCreateSaveSuccess } = ctx;
   const [mop, setMop] = useState<MOP>(() => createEmptyMop());
+  const [asset, setAsset] = useState({ name: "" })
   const [loadedBootstrapKey, setLoadedBootstrapKey] = useState<string | null>(null);
   const [generateError, setGenerateError] = useState<string | null>(null);
   const [mopNotFound, setMopNotFound] = useState(false);
@@ -59,21 +60,154 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
   const preArchiveDraftRef = useRef<MOP | null>(null);
   const archiveSessionActiveRef = useRef(false);
 
-  const runStandaloneGenerate = useCallback(async (): Promise<boolean> => {
+  // const runStandaloneGenerate = useCallback(async (): Promise<boolean> => {
+  //   setGenerateError(null);
+  //   try {
+  //     const data = await generateMOP({ documentId: "69f88d94118cad90ca6f60fb" });
+  //     setMop(data);
+  //     latestSavedCanonicalRef.current = null;
+  //     setViewingArchivedVersionNumber(null);
+  //     archiveSessionActiveRef.current = false;
+  //     preArchiveDraftRef.current = null;
+  //     setMopNotFound(false);
+  //     return true;
+  //   } catch (err: unknown) {
+  //     setGenerateError(err instanceof Error ? err.message : "Generation failed.");
+  //     return false;
+  //   }
+  // }, []);
+
+  const runStandaloneGenerateStream = useCallback(() => {
     setGenerateError(null);
-    try {
-      const data = await generateMOP({ documentId: "69f88d94118cad90ca6f60fb" });
-      setMop(data);
-      latestSavedCanonicalRef.current = null;
-      setViewingArchivedVersionNumber(null);
-      archiveSessionActiveRef.current = false;
-      preArchiveDraftRef.current = null;
-      setMopNotFound(false);
-      return true;
-    } catch (err: unknown) {
-      setGenerateError(err instanceof Error ? err.message : "Generation failed.");
-      return false;
-    }
+
+    const evtSource = new EventSource(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/mop/generate?documentId=69f88d94118cad90ca6f60fb`
+    );
+
+    // initialize empty structure
+    setMop((prev: any) => ({
+      ...prev,
+      loading: true,
+    }));
+
+    evtSource.addEventListener("allData", (e) => {
+      const data = JSON.parse(e.data);
+
+      setMop((prev: any) => ({
+        ...prev,
+        ...data,
+        equipment: {},
+        procedure: {},
+        document: {},
+      }));
+    });
+
+    evtSource.addEventListener("sectionOne", (e) => {
+      const data = JSON.parse(e.data);
+
+      setMop((prev: any) => ({
+        ...prev,
+        equipment: data.equipment,
+        procedure: data.procedure,
+        document: data.document,
+      }));
+    });
+
+    evtSource.addEventListener("sectionThree", (e) => {
+      const data = JSON.parse(e.data);
+
+      setMop((prev: any) => ({
+        ...prev,
+        overview: {
+          ...prev?.overview,
+          ...data.overview,
+        },
+      }));
+    });
+
+    // evtSource.addEventListener("sectionFour", (e) => {
+    //   const data = JSON.parse(e.data);
+
+    //   setMop((prev: any) => ({
+    //     ...prev,
+    //     facilityEffects: data,
+    //   }));
+    // });
+
+
+    evtSource.addEventListener("sectionFivePPE", (e) => {
+      const data = JSON.parse(e.data);
+      if (data?.error) {
+        toast.error("sectionFivePPE failed")
+        return
+      }
+
+
+      setMop((prev: any) => ({
+        ...prev,
+        safety: {
+          ...prev?.safety,
+          ppeRequirementRows: data?.ppe || []
+        },
+      }));
+    });
+
+    evtSource.addEventListener('assetData', (e) => {
+      const data = JSON.parse(e.data);
+      if (data?.error) {
+        toast.error("assetData failed")
+        return
+      }
+
+
+      setAsset({ ...data, name: data.assetName })
+    })
+
+    evtSource.addEventListener("sectionFiveSafetyProcedure", (e) => {
+      const data = JSON.parse(e.data);
+      if (data?.error) {
+        toast.error("sectionFiveSafetyProcedure failed")
+        return
+      }
+
+      setMop((prev: any) => ({
+        ...prev,
+        safety: {
+          ...prev?.safety,
+          safetyProcedureRows: data?.procedures || []
+        }
+      }))
+    })
+
+    evtSource.addEventListener("sectionFiveToolsRequired", (e) => {
+      const data = JSON.parse(e.data);
+      if (data?.error) {
+        toast.error("sectionFiveToolsRequired failed")
+        return
+      }
+      setMop((prev: any) => ({
+        ...prev,
+        safety: {
+          ...prev?.safety,
+          toolRequirementRows: data?.tools || []
+        }
+      }))
+    })
+
+    evtSource.addEventListener("done", () => {
+      alert("completed generating")
+      // setMop((prev: any) => ({
+      //   ...prev,
+      //   loading: false,
+      // }));
+
+      evtSource.close();
+    });
+
+    evtSource.addEventListener("error", () => {
+      setGenerateError("Streaming failed");
+      evtSource.close();
+    });
   }, []);
 
   useEffect(() => {
@@ -84,7 +218,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
       setMopNotFound(false);
 
       if (mode === "create") {
-        await runStandaloneGenerate();
+        runStandaloneGenerateStream();
         if (!cancelled) {
           setLoadedBootstrapKey(key);
         }
@@ -134,7 +268,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
     return () => {
       cancelled = true;
     };
-  }, [mode, mopId, key, runStandaloneGenerate]);
+  }, [mode, mopId, key, runStandaloneGenerateStream]);
 
   const patchDocument = useCallback((partial: Partial<MOPDocument>) => {
     setMop((prev) =>
@@ -274,10 +408,11 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
   const resetMop = useCallback(async () => {
     if (mode === "create") {
       setLoadedBootstrapKey(null);
-      const ok = await runStandaloneGenerate();
-      if (ok) {
-        toast.info("Form reset to a fresh generated draft.");
-      }
+      runStandaloneGenerateStream()
+      // const ok = await runStandaloneGenerateStream();
+      // if (ok) {
+      //   toast.info("Form reset to a fresh generated draft.");
+      // }
       setLoadedBootstrapKey(key);
       return;
     }
@@ -297,13 +432,13 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
     } finally {
       setLoadedBootstrapKey(key);
     }
-  }, [mode, mopId, key, runStandaloneGenerate]);
+  }, [mode, mopId, key, runStandaloneGenerateStream]);
 
   const retryGenerate = useCallback(async () => {
     setLoadedBootstrapKey(null);
-    await runStandaloneGenerate();
+    await runStandaloneGenerateStream();
     setLoadedBootstrapKey(key);
-  }, [key, runStandaloneGenerate]);
+  }, [key, runStandaloneGenerateStream]);
 
   const persistMop = useCallback(async (): Promise<{ success: boolean }> => {
     if (mode === "create") {
@@ -376,6 +511,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
     resumeEditingLatestMop,
     patchDocument,
     patchEquipment,
+    asset,
     patchProcedure,
     patchSignOff,
     patchSite,

@@ -75,6 +75,7 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
     patchFacilityEffects,
     patchSteps,
     resetMop,
+    asset,
     persistMop,
   } = useMopMockDocument({
     mode,
@@ -232,6 +233,7 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
             >
               <MopDocumentForm
                 mop={mop}
+                asset={asset}
                 isBootstrapping={isBootstrapping}
                 patchDocument={patchDocument}
                 patchEquipment={patchEquipment}

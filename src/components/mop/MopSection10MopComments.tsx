@@ -2,10 +2,10 @@
 
 import { Typography } from "@/components/common";
 import { Textarea } from "@/components/ui/Textarea";
+import { X } from 'lucide-react'
 import {
   MOP_SECTION_10_ADDITIONAL_NOTES_LABEL,
   MOP_SECTION_10_MOP_COMMENTS_LABEL,
-  MOP_SECTION_10_POST_MAINTENANCE_BULLETS,
   MOP_SECTION_10_POST_MAINTENANCE_HEADING,
   MOP_SECTION_10_SUBHEADING,
 } from "@/constants/mop-section10-comments";
@@ -20,7 +20,7 @@ export const MopSection10MopComments = ({
   mopComments,
   patchMopComments,
 }: MopSection10MopCommentsProps) => {
-  const { mopCommentsText, additionalNotes } = mopComments;
+  const { mopCommentsText, additionalNotes, postMaintenanceBullets } = mopComments;
 
   return (
     <div className="mb-8 border-t border-gray-200 pt-6 last:mb-0">
@@ -35,7 +35,7 @@ export const MopSection10MopComments = ({
         value={mopCommentsText}
         onChange={(e) => patchMopComments({ mopCommentsText: e.target.value })}
         rows={12}
-        className="min-h-[200px] w-full"
+        className="min-h-50 w-full"
         aria-label={MOP_SECTION_10_MOP_COMMENTS_LABEL}
       />
 
@@ -44,9 +44,9 @@ export const MopSection10MopComments = ({
           {MOP_SECTION_10_POST_MAINTENANCE_HEADING}
         </Typography>
         <ul className="mb-0 list-inside list-disc space-y-1 pl-0 text-sm text-gray-800">
-          {MOP_SECTION_10_POST_MAINTENANCE_BULLETS.map((line) => (
-            <li key={line} className="pl-0">
-              {line}
+          {postMaintenanceBullets?.map((line: { index: string, title: string }) => (
+            <li key={line.index} className="pl-0">
+              {line.title}
             </li>
           ))}
         </ul>
@@ -64,7 +64,7 @@ export const MopSection10MopComments = ({
           value={additionalNotes}
           onChange={(e) => patchMopComments({ additionalNotes: e.target.value })}
           rows={5}
-          className="min-h-[100px] w-full"
+          className="min-h-25 w-full"
           placeholder="Space for technician notes, observations, or recommendations for future maintenance..."
           aria-label={MOP_SECTION_10_ADDITIONAL_NOTES_LABEL}
         />

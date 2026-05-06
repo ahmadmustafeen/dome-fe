@@ -275,6 +275,26 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
       }))
     })
 
+
+    evtSource.addEventListener("sectionTenComments", (e) => {
+      const data = JSON.parse(e.data);
+      if (data?.error) {
+        toast.error("sectionTenComments failed")
+        return
+      }
+
+      setMop((prev: any) => ({
+        ...prev,
+        mopComments: {
+          ...prev.mopComments,
+          postMaintenanceBullets: data.postmaintenenaceRequirements,
+          additionalNotes: data.additionalNotes,
+          mopCommentsText: data.mopComments
+        }
+
+      }))
+    })
+
     evtSource.addEventListener("done", () => {
       alert("completed generating")
       // setMop((prev: any) => ({

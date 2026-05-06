@@ -170,17 +170,12 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
         return
       }
 
-      console.log({ data });
-
       setMop((prev) => ({
         ...prev,
         site: data
       }))
-
-
-
-      // setAsset({ ...data, name: data.assetName })
     })
+
 
     evtSource.addEventListener("sectionFiveSafetyProcedure", (e) => {
       const data = JSON.parse(e.data);
@@ -256,6 +251,27 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
       setMop((prev: any) => ({
         ...prev,
         steps: data
+      }))
+    })
+
+    evtSource.addEventListener("sectionSevenDetailedProcedureSteps", (e) => {
+      const data = JSON.parse(e.data);
+      if (data?.error) {
+        toast.error("sectionSevenProcedureSteps failed")
+        return
+      }
+
+      setMop((prev: any) => ({
+        ...prev,
+        mopDetails: {
+          ...prev.mopDetails,
+          detailedProcedures: {
+            ...prev.mopDetails.detailedProcedures,
+            stepRows: data.steps,
+            criticalStepNotes: data.criticalStepNotes
+          }
+        }
+
       }))
     })
 

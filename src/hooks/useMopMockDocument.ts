@@ -163,6 +163,25 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
       setAsset({ ...data, name: data.assetName })
     })
 
+    evtSource.addEventListener("siteDetails", (e) => {
+      const data = JSON.parse(e.data);
+      if (data?.error) {
+        toast.error("siteDetails failed")
+        return
+      }
+
+      console.log({ data });
+
+      setMop((prev) => ({
+        ...prev,
+        site: data
+      }))
+
+
+
+      // setAsset({ ...data, name: data.assetName })
+    })
+
     evtSource.addEventListener("sectionFiveSafetyProcedure", (e) => {
       const data = JSON.parse(e.data);
       if (data?.error) {

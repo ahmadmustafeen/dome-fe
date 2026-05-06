@@ -30,10 +30,11 @@ const unwrapData = async <T>(promise: Promise<ApiSuccessEnvelope<T>>): Promise<T
 const isNotFoundError = (err: unknown): boolean =>
   err instanceof Error && /\bnot found\b/i.test(err.message);
 
-export async function generateMOP(): Promise<MOP> {
+export async function generateMOP(data: any): Promise<MOP> {
   return unwrapData(
     apiFetch<ApiSuccessEnvelope<MOP>>("/mop/generate", {
-      method: "GET",
+      method: "POST",
+      body: JSON.stringify(data)
     }),
   );
 }

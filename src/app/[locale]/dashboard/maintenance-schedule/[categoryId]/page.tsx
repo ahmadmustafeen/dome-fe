@@ -58,6 +58,8 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
       const envelope = (await assetService.assetService.getAllAssetsByCategoryAndSubCategory(
         category?.category!,
         category?.subCategory!,
+        category?.make!,
+        site?._id!,
       )) as {
         data?: { assets?: CategoryAsset[] };
       };
@@ -116,7 +118,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
         maintenanceGenerateProcedureRoute(kind, {
           categoryId,
           assetId: assetRecordId,
-          procedureId: item,
+          procedureId: item.title,
         }),
       );
     },

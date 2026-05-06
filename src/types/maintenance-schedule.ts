@@ -25,7 +25,10 @@ export const isProcedureKind = (value: string): value is ProcedureKind =>
 //   documentUrl?: string;
 // };
 
-export type ProcedureItem = string
+export type ProcedureItem = {
+  _id: string;
+  title: string
+}
 
 /** A single asset inside a category, with per-asset procedure items. */
 export type CategoryAsset = {

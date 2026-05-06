@@ -1,16 +1,21 @@
 "use client";
 import type { ProcedureItem } from "@/types/maintenance-schedule";
+import { PenIcon } from 'lucide-react'
 
 type RequirementSectionProps = {
   label: string;
   items: ProcedureItem[];
+  handleCreateClick?: (mopId: string) => void,
+  noIcon?: boolean;
   colorClass: string;
   onGenerate: (item: ProcedureItem) => void;
 };
 
 const RequirementSection = ({
   label,
+  handleCreateClick,
   items,
+  noIcon,
   colorClass,
 }: RequirementSectionProps) => {
   const textColorClass = colorClass
@@ -31,12 +36,16 @@ const RequirementSection = ({
         <p className="text-xs text-gray-400 italic">None required</p>
       ) : (
         <ol className="list-inside list-decimal space-y-2">
-          {items.map((item, index) => (
+          {items.map((item) => (
             <li
-              key={index}
+              key={item._id}
               className="flex items-start gap-2 text-xs leading-relaxed text-gray-700"
             >
-              <div className="flex-1 text-left">{item}</div>
+              <div className="flex-1 text-left">
+                {item.title}</div>
+              {!noIcon ? <PenIcon className="w-4 h-4 cursor-pointer" size={2}
+                onClick={() => handleCreateClick?.(item._id)}
+              /> : null}
             </li>
           ))}
         </ol>

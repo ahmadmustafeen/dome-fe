@@ -55,6 +55,7 @@ export const documentService = {
       body: formData,
     });
   },
+  
   ingestDocument: (documentId: string, type: string, file: File, clientId?: string) => {
     const formData = new FormData();
     if (clientId) {

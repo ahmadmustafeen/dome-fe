@@ -1,19 +1,50 @@
 "use client";
 
 import { History } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
+import { toast } from "react-toastify";
 
 import { AppButton, SectionWrapper, Typography } from "@/components/common";
 import { ProcedureVersionHistory } from "@/components/version-history/ProcedureVersionHistory";
 import { VersionHistoryDrawer } from "@/components/version-history/VersionHistoryDrawer";
+import { DASHBOARD_ROUTES } from "@/constants/routes";
+import { useEopDocument } from "@/hooks/use-eop-document";
 import { useEopVersionHistoryPanel } from "@/hooks/use-eop-version-history-panel";
+
+import { EopDocumentForm } from "./EopDocumentForm";
 
 type EopManagementClientProps = {
   eopId?: string;
 };
 
 export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
+  const router = useRouter();
   const isEdit = eopId !== undefined && eopId.trim() !== "";
   const resolvedEopId = isEdit ? eopId.trim() : undefined;
+  const [isSaving, setIsSaving] = useState(false);
+
+  const {
+    eop,
+    isBootstrapping,
+    eopNotFound,
+    patchDocument,
+    patchEquipment,
+    patchProcedure,
+    patchSignOff,
+    patchSite,
+    patchOverview,
+    resetEop,
+    persistEop,
+  } = useEopDocument({
+    mode: isEdit ? "edit" : "create",
+    eopId: resolvedEopId,
+    onCreateSaveSuccess: async () => {
+      toast.success("EOP saved successfully");
+      router.push(DASHBOARD_ROUTES.EOP_MANAGEMENT);
+    },
+  });
 
   const {
     historyOpen,
@@ -29,6 +60,54 @@ export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
   } = useEopVersionHistoryPanel(resolvedEopId);
 
   const showVersionHistory = isEdit && resolvedEopId !== undefined;
+  const readOnlyForm = false;
+
+  const handleSave = useCallback(async () => {
+    setIsSaving(true);
+    try {
+      await persistEop();
+      if (isEdit) {
+        toast.success("EOP updated successfully");
+      }
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Failed to save EOP.");
+    } finally {
+      setIsSaving(false);
+    }
+  }, [persistEop, isEdit]);
+
+  const handleClear = useCallback(() => {
+    void resetEop();
+  }, [resetEop]);
+
+  if (isEdit && eopNotFound === true && isBootstrapping === false) {
+    return (
+      <SectionWrapper className="flex min-h-0 flex-1 flex-col">
+        <Typography variant="h1" className="mb-2">
+          EOP not found
+        </Typography>
+        <Typography variant="p" className="mb-4 text-gray-600">
+          This EOP may have been deleted or the link is invalid.
+        </Typography>
+        <Link
+          href={DASHBOARD_ROUTES.EOP_MANAGEMENT}
+          className="font-medium text-primary underline"
+        >
+          Back to EOP listing
+        </Link>
+      </SectionWrapper>
+    );
+  }
+
+  if (eop === null) {
+    return (
+      <SectionWrapper>
+        <Typography variant="p" className="text-gray-500">
+          Loading EOP…
+        </Typography>
+      </SectionWrapper>
+    );
+  }
 
   return (
     <>
@@ -78,10 +157,21 @@ export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
 
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">
           <section className="flex min-h-0 min-w-0 flex-1 flex-col gap-3 pb-24">
-            <Typography variant="p" className="text-gray-600">
-              EOP form sections will be added in a follow-up. This page mirrors the MOP shell:
-              heading, sticky actions, and version history drawer.
-            </Typography>
+            <fieldset
+              disabled={readOnlyForm}
+              className="min-w-0 border-0 p-0"
+            >
+              <EopDocumentForm
+                eop={eop}
+                isBootstrapping={isBootstrapping}
+                patchDocument={patchDocument}
+                patchEquipment={patchEquipment}
+                patchProcedure={patchProcedure}
+                patchSignOff={patchSignOff}
+                patchSite={patchSite}
+                patchOverview={patchOverview}
+              />
+            </fieldset>
           </section>
         </div>
 
@@ -93,14 +183,16 @@ export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
             <AppButton
               variant="ghost"
               title="Clear"
-              disabled={true}
-              onClick={() => undefined}
+              disabled={isSaving || isBootstrapping}
+              onClick={handleClear}
             />
             <AppButton
               variant="secondary"
-              title="Save (coming soon)"
-              disabled={true}
-              onClick={() => undefined}
+              title={isSaving ? "Saving…" : "Save"}
+              disabled={isSaving || isBootstrapping}
+              onClick={() => {
+                void handleSave();
+              }}
             />
           </div>
         </footer>

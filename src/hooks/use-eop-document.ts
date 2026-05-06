@@ -1,0 +1,146 @@
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
+import { createEOP, generateEOP, getLatestEOP, saveEOP } from "@/services/eop-service";
+import type {
+  EOP,
+  EOPDocument,
+  EOPEquipment,
+  EOPProcedure,
+  EOPSection03Overview,
+  EOPSignOff,
+  EOPSiteSection,
+} from "@/types/eop";
+
+type EopDocumentContextParams = {
+  mode: "create" | "edit";
+  eopId?: string;
+  onCreateSaveSuccess?: (createdId: string) => void | Promise<void>;
+};
+
+const bumpVersionDate = (eop: EOP): EOP => ({
+  ...eop,
+  document: {
+    ...eop.document,
+    createdDate: eop.document.createdDate,
+  },
+});
+
+export const useEopDocument = (ctx: EopDocumentContextParams) => {
+  const { mode, eopId, onCreateSaveSuccess } = ctx;
+  const [eop, setEop] = useState<EOP | null>(null);
+  const [isBootstrapping, setIsBootstrapping] = useState(true);
+  const [eopNotFound, setEopNotFound] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const run = async () => {
+      setIsBootstrapping(true);
+      setEopNotFound(false);
+      try {
+        if (mode === "create") {
+          const generated = await generateEOP();
+          if (!cancelled) {
+            setEop(generated);
+          }
+          return;
+        }
+        const id = eopId?.trim() ?? "";
+        const loaded = await getLatestEOP(id);
+        if (cancelled) {
+          return;
+        }
+        if (loaded === null) {
+          setEopNotFound(true);
+          setEop(null);
+          return;
+        }
+        setEop(loaded);
+      } catch (err: unknown) {
+        if (!cancelled) {
+          toast.error(err instanceof Error ? err.message : "Could not load EOP.");
+        }
+      } finally {
+        if (!cancelled) {
+          setIsBootstrapping(false);
+        }
+      }
+    };
+    void run();
+    return () => {
+      cancelled = true;
+    };
+  }, [mode, eopId]);
+
+  const patchDocument = useCallback((partial: Partial<EOPDocument>) => {
+    setEop((prev) => (prev === null ? prev : bumpVersionDate({ ...prev, document: { ...prev.document, ...partial } })));
+  }, []);
+
+  const patchEquipment = useCallback((partial: Partial<EOPEquipment>) => {
+    setEop((prev) => (prev === null ? prev : bumpVersionDate({ ...prev, equipment: { ...prev.equipment, ...partial } })));
+  }, []);
+
+  const patchProcedure = useCallback((partial: Partial<EOPProcedure>) => {
+    setEop((prev) => (prev === null ? prev : bumpVersionDate({ ...prev, procedure: { ...prev.procedure, ...partial } })));
+  }, []);
+
+  const patchSignOff = useCallback((partial: Partial<EOPSignOff>) => {
+    setEop((prev) => (prev === null ? prev : bumpVersionDate({ ...prev, signOff: { ...prev.signOff, ...partial } })));
+  }, []);
+
+  const patchSite = useCallback((partial: Partial<EOPSiteSection>) => {
+    setEop((prev) => (prev === null ? prev : bumpVersionDate({ ...prev, site: { ...prev.site, ...partial } })));
+  }, []);
+
+  const patchOverview = useCallback((partial: Partial<EOPSection03Overview>) => {
+    setEop((prev) =>
+      prev === null ? prev : bumpVersionDate({ ...prev, overview: { ...prev.overview, ...partial } }),
+    );
+  }, []);
+
+  const resetEop = useCallback(async () => {
+    if (mode === "create") {
+      const generated = await generateEOP();
+      setEop(generated);
+      return;
+    }
+    const id = eopId?.trim() ?? "";
+    const loaded = await getLatestEOP(id);
+    if (loaded !== null) {
+      setEop(loaded);
+    }
+  }, [mode, eopId]);
+
+  const persistEop = useCallback(async () => {
+    if (eop === null) {
+      throw new Error("EOP is not loaded");
+    }
+    if (mode === "create") {
+      const created = await createEOP(eop);
+      setEop(created);
+      await onCreateSaveSuccess?.(created.id);
+      return created;
+    }
+    const id = eopId?.trim() ?? "";
+    if (id === "") {
+      throw new Error("EOP id is required to save");
+    }
+    const saved = await saveEOP(eop, id);
+    setEop(saved);
+    return saved;
+  }, [eop, mode, eopId, onCreateSaveSuccess]);
+
+  return {
+    eop,
+    isBootstrapping,
+    eopNotFound,
+    patchDocument,
+    patchEquipment,
+    patchProcedure,
+    patchSignOff,
+    patchSite,
+    patchOverview,
+    resetEop,
+    persistEop,
+  };
+};

@@ -1,4 +1,18 @@
 import {
+  EOP_SECTION_04_DEFAULT_PPE_INTRO,
+  EOP_SECTION_04_DEFAULT_PPE_ROWS,
+  EOP_SECTION_04_DEFAULT_SAFETY_CHECKLIST,
+  EOP_SECTION_04_DEFAULT_TOOL_ROWS,
+} from "@/constants/eop-section04-immediate-actions";
+import {
+  EOP_SECTION_04_DEFAULT_INTERNAL_DIAGNOSTIC_ROWS,
+  EOP_SECTION_04_INTERNAL_DIAGNOSTICS_INTRO,
+} from "@/constants/eop-section04-internal-diagnostics";
+import {
+  EOP_SECTION_05_DEFAULT_ACTION_ROWS,
+  EOP_SECTION_05_INTRO,
+} from "@/constants/eop-section05-external-actions";
+import {
   EOP_SECTION_06_DEFAULT_EMERGENCY_ROWS,
   EOP_SECTION_06_DEFAULT_ESCALATION_ROWS,
 } from "@/constants/eop-section06-communication";
@@ -60,6 +74,24 @@ const createBaseEop = (): EOP => ({
       "Priority 1 (0-5 minutes): Notify Shift Supervisor and on-call CET-3 technician with Air Handling Units expertise.\nPriority 2 (5-15 minutes): Notify Facilities Manager and the Customer technical contact for Element Critical.\nEscalation Path: If the issue is not resolved within 30 minutes or impacts critical load, escalate to the Operations Manager.",
     postNotifications:
       "Immediate (within 1 hour): Confirm with the Shift Supervisor that the AHU is stable or that the issue has been resolved.\nShort-term (1-4 hours): Notify the Operations Manager and customer technical contacts with a service restoration confirmation and preliminary cause.",
+  },
+  immediateActions: {
+    preActionSafety: {
+      ppeIntroText: EOP_SECTION_04_DEFAULT_PPE_INTRO,
+      ppeRows: EOP_SECTION_04_DEFAULT_PPE_ROWS.map((row) => ({ ...row })),
+      toolRows: EOP_SECTION_04_DEFAULT_TOOL_ROWS.map((row) => ({ ...row })),
+      safetyChecklistItems: EOP_SECTION_04_DEFAULT_SAFETY_CHECKLIST.map((it) => ({ ...it })),
+    },
+    internalDiagnostics: {
+      introText: EOP_SECTION_04_INTERNAL_DIAGNOSTICS_INTRO,
+      diagnosticRows: EOP_SECTION_04_DEFAULT_INTERNAL_DIAGNOSTIC_ROWS.map(
+        (row) => ({ ...row }),
+      ),
+    },
+  },
+  externalActions: {
+    introText: EOP_SECTION_05_INTRO,
+    actionRows: EOP_SECTION_05_DEFAULT_ACTION_ROWS.map((row) => ({ ...row })),
   },
   communication: {
     escalationMatrixRows: EOP_SECTION_06_DEFAULT_ESCALATION_ROWS.map((row) => ({

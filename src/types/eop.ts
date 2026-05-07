@@ -73,6 +73,72 @@ export type EOPSection06Communication = {
   verificationPhoneNumber: string;
 };
 
+export type EopSection04PpeRow = {
+  id: string;
+  ppeItem: string;
+  specification: string;
+  verified: boolean;
+};
+
+export type EopSection04ToolRow = {
+  id: string;
+  tool: string;
+  modelType: string;
+  available: boolean;
+};
+
+export type EopSection04SafetyChecklistItem = {
+  id: string;
+  text: string;
+  checked: boolean;
+};
+
+export type EOPSection04PreActionSafety = {
+  ppeIntroText: string;
+  ppeRows: EopSection04PpeRow[];
+  toolRows: EopSection04ToolRow[];
+  safetyChecklistItems: EopSection04SafetyChecklistItem[];
+};
+
+export type EopDiagnosticPassFail = "pass" | "fail" | "";
+
+export type EopSection04InternalDiagnosticRow = {
+  id: string;
+  stepNumber: number;
+  componentToCheck: string;
+  expectedCondition: string;
+  actualReading: string;
+  actualReadingPlaceholder: string;
+  passFail: EopDiagnosticPassFail;
+};
+
+export type EOPSection04InternalDiagnostics = {
+  introText: string;
+  diagnosticRows: EopSection04InternalDiagnosticRow[];
+};
+
+export type EOPSection04ImmediateActions = {
+  preActionSafety: EOPSection04PreActionSafety;
+  internalDiagnostics: EOPSection04InternalDiagnostics;
+};
+
+export type EopSection05ExternalActionRow = {
+  id: string;
+  stepNumber: number;
+  externalEquipment: string;
+  connectionToUnit: string;
+  potentialFailureMode: string;
+  verificationMethod: string;
+  actualStatus: string;
+  actualStatusPlaceholder: string;
+  passFail: EopDiagnosticPassFail;
+};
+
+export type EOPSection05ExternalActions = {
+  introText: string;
+  actionRows: EopSection05ExternalActionRow[];
+};
+
 export type EopApprovalReviewRow = {
   id: string;
   role: string;
@@ -93,6 +159,8 @@ export type EOP = {
   signOff: EOPSignOff;
   site: EOPSiteSection;
   overview: EOPSection03Overview;
+  immediateActions: EOPSection04ImmediateActions;
+  externalActions: EOPSection05ExternalActions;
   communication: EOPSection06Communication;
   approvalReview: EOPSection09ApprovalReview;
 };

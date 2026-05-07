@@ -8,6 +8,9 @@ import type {
   EOPEquipment,
   EOPProcedure,
   EOPSection03Overview,
+  EOPSection04InternalDiagnostics,
+  EOPSection04PreActionSafety,
+  EOPSection05ExternalActions,
   EOPSection06Communication,
   EOPSection09ApprovalReview,
   EOPSignOff,
@@ -100,6 +103,57 @@ export const useEopDocument = (ctx: EopDocumentContextParams) => {
     );
   }, []);
 
+  const patchPreActionSafety = useCallback((partial: Partial<EOPSection04PreActionSafety>) => {
+    setEop((prev) =>
+      prev === null
+        ? prev
+        : bumpVersionDate({
+            ...prev,
+            immediateActions: {
+              ...prev.immediateActions,
+              preActionSafety: {
+                ...prev.immediateActions.preActionSafety,
+                ...partial,
+              },
+            },
+          }),
+    );
+  }, []);
+
+  const patchInternalDiagnostics = useCallback(
+    (partial: Partial<EOPSection04InternalDiagnostics>) => {
+      setEop((prev) =>
+        prev === null
+          ? prev
+          : bumpVersionDate({
+              ...prev,
+              immediateActions: {
+                ...prev.immediateActions,
+                internalDiagnostics: {
+                  ...prev.immediateActions.internalDiagnostics,
+                  ...partial,
+                },
+              },
+            }),
+      );
+    },
+    [],
+  );
+
+  const patchExternalActions = useCallback(
+    (partial: Partial<EOPSection05ExternalActions>) => {
+      setEop((prev) =>
+        prev === null
+          ? prev
+          : bumpVersionDate({
+              ...prev,
+              externalActions: { ...prev.externalActions, ...partial },
+            }),
+      );
+    },
+    [],
+  );
+
   const patchCommunication = useCallback((partial: Partial<EOPSection06Communication>) => {
     setEop((prev) =>
       prev === null
@@ -164,6 +218,9 @@ export const useEopDocument = (ctx: EopDocumentContextParams) => {
     patchSignOff,
     patchSite,
     patchOverview,
+    patchPreActionSafety,
+    patchInternalDiagnostics,
+    patchExternalActions,
     patchCommunication,
     patchApprovalReview,
     resetEop,

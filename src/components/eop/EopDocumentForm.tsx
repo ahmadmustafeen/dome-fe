@@ -9,6 +9,8 @@ import type { EOP } from "@/types/eop";
 import { EopSection01Identification } from "./EopSection01Identification";
 import { EopSection02Site } from "./EopSection02Site";
 import { EopSection03Overview } from "./EopSection03Overview";
+import { EopSection04ImmediateActionsSection } from "./EopSection04ImmediateActions";
+import { EopSection05ExternalActions } from "./EopSection05ExternalActions";
 import { EopSection06Communication } from "./EopSection06Communication";
 import { EopSection09ApprovalReview } from "./EopSection09ApprovalReview";
 
@@ -21,6 +23,13 @@ type EopDocumentFormProps = {
   patchSignOff: (p: Partial<EOP["signOff"]>) => void;
   patchSite: (p: Partial<EOP["site"]>) => void;
   patchOverview: (p: Partial<EOP["overview"]>) => void;
+  patchPreActionSafety: (
+    p: Partial<EOP["immediateActions"]["preActionSafety"]>,
+  ) => void;
+  patchInternalDiagnostics: (
+    p: Partial<EOP["immediateActions"]["internalDiagnostics"]>,
+  ) => void;
+  patchExternalActions: (p: Partial<EOP["externalActions"]>) => void;
   patchCommunication: (p: Partial<EOP["communication"]>) => void;
   patchApprovalReview: (p: Partial<EOP["approvalReview"]>) => void;
 };
@@ -34,6 +43,9 @@ export const EopDocumentForm = ({
   patchSignOff,
   patchSite,
   patchOverview,
+  patchPreActionSafety,
+  patchInternalDiagnostics,
+  patchExternalActions,
   patchCommunication,
   patchApprovalReview,
 }: EopDocumentFormProps) => {
@@ -57,6 +69,15 @@ export const EopDocumentForm = ({
             <EopSection03Overview
               overview={eop.overview}
               patchOverview={patchOverview}
+            />
+            <EopSection04ImmediateActionsSection
+              immediateActions={eop.immediateActions}
+              patchPreActionSafety={patchPreActionSafety}
+              patchInternalDiagnostics={patchInternalDiagnostics}
+            />
+            <EopSection05ExternalActions
+              externalActions={eop.externalActions}
+              patchExternalActions={patchExternalActions}
             />
             <EopSection06Communication
               communication={eop.communication}

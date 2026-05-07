@@ -35,6 +35,9 @@ export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
     patchSignOff,
     patchSite,
     patchOverview,
+    patchPreActionSafety,
+    patchInternalDiagnostics,
+    patchExternalActions,
     patchCommunication,
     patchApprovalReview,
     resetEop,
@@ -172,6 +175,9 @@ export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
                 patchSignOff={patchSignOff}
                 patchSite={patchSite}
                 patchOverview={patchOverview}
+                patchPreActionSafety={patchPreActionSafety}
+                patchInternalDiagnostics={patchInternalDiagnostics}
+                patchExternalActions={patchExternalActions}
                 patchCommunication={patchCommunication}
                 patchApprovalReview={patchApprovalReview}
               />

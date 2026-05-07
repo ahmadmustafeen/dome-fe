@@ -6,8 +6,6 @@ import type {
   DocumentListApiResponse,
 } from "@/types/document";
 
-
-
 export type DocumentQueryParams = {
   page?: number;
   limit?: number;
@@ -42,7 +40,12 @@ export const documentService = {
     );
   },
 
-  createDocument: (siteId: string, type: string, file: File, clientId?: string) => {
+  createDocument: (
+    siteId: string,
+    type: string,
+    file: File,
+    clientId?: string,
+  ) => {
     const formData = new FormData();
     formData.append("siteId", siteId);
     if (clientId) {
@@ -55,18 +58,26 @@ export const documentService = {
       body: formData,
     });
   },
-  
-  ingestDocument: (documentId: string, type: string, file: File, clientId?: string) => {
+
+  ingestDocument: (
+    documentId: string,
+    type: string,
+    file: File,
+    clientId?: string,
+  ) => {
     const formData = new FormData();
     if (clientId) {
       formData.append("clientId", clientId);
     }
     formData.append("type", type);
     formData.append("file", file);
-    return apiFetch<DocumentCreateApiResponse>(`/company-policy/ingest/${documentId}/${clientId}/`, {
-      method: "POST",
-      body: formData,
-    })
+    return apiFetch<DocumentCreateApiResponse>(
+      `/company-policy/ingest/${documentId}/${clientId}/`,
+      {
+        method: "POST",
+        body: formData,
+      },
+    );
   },
 
   deleteDocument: (id: string) =>

@@ -14,6 +14,7 @@ export const Input = ({ ref, className, useMopStyles = true, ...rest }: InputPro
   <input
     ref={ref}
     className={cn(useMopStyles ? "mop-doc-input" : "", className)}
+    value={rest.value ?? ""}
     {...rest}
   />
 );

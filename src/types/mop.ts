@@ -73,6 +73,7 @@ export type MOPSection10MopComments = {
   /** All MOP comment lines in one field (replaces per-line inputs). */
   mopCommentsText: string;
   additionalNotes: string;
+  postMaintenanceBullets: [{ index: string, title: string }];
 };
 
 /** Section 11 — company policy table row (`generateSection11` in `section-generators.js`). */

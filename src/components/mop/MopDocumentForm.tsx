@@ -30,6 +30,9 @@ import { MopSection11ReferencesBlock } from "./MopSection11References";
 
 type MopDocumentFormProps = {
   mop: MOP;
+  asset: {
+    name: string
+  }
   isBootstrapping: boolean;
   patchDocument: (p: Partial<MOP["document"]>) => void;
   patchEquipment: (p: Partial<MOP["equipment"]>) => void;
@@ -50,6 +53,7 @@ type MopDocumentFormProps = {
 
 export const MopDocumentForm = ({
   mop,
+  asset,
   isBootstrapping,
   patchDocument,
   patchEquipment,
@@ -92,10 +96,13 @@ export const MopDocumentForm = ({
               facilityEffects={mop.facilityEffects}
               patchFacilityEffects={patchFacilityEffects}
             />
-            <MopSection05Safety safety={mop.safety} patchSafety={patchSafety} />
+            <MopSection05Safety safety={mop.safety}
+              mopTitle={mop.document.title}
+              patchSafety={patchSafety} assetName={asset?.name!} />
             <MopSection06Assumptions
               assumptions={mop.assumptions}
               patchAssumptions={patchAssumptions}
+              assetName={asset?.name!}
             />
             <MopSection07MopDetails
               steps={mop.steps}

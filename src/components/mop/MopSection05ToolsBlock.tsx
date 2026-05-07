@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { MOP_DYNAMIC_TABLE_MIN_ROWS } from '@/constants/mop-dynamic-table';
 import {
-  MOP_SECTION_05_TOOLS_INTRO,
   MOP_SECTION_05_TOOLS_SUBHEADING,
   newToolRequirementRow,
 } from '@/constants/mop-section05-safety';
@@ -18,6 +17,8 @@ import { MopDynamicTableRowControls } from './MopDynamicTableRowControls';
 type MopSection05ToolsBlockProps = {
   rows: MopToolRequirementRow[];
   patchSafety: (p: Partial<MOPSafety>) => void;
+  assetName: string
+  mopTitle: string
 };
 
 const patchToolCell = (
@@ -31,17 +32,17 @@ const patchToolCell = (
   });
 };
 
-export const MopSection05ToolsBlock = ({ rows, patchSafety }: MopSection05ToolsBlockProps) => {
+export const MopSection05ToolsBlock = ({ rows, patchSafety, assetName, mopTitle }: MopSection05ToolsBlockProps) => {
   return (
     <div className="mb-8 last:mb-0">
       <Typography variant="h6" className="mb-2 text-base font-semibold text-gray-900">
         {MOP_SECTION_05_TOOLS_SUBHEADING}
       </Typography>
       <Typography variant="p" className="mb-4 text-sm text-gray-700">
-        {MOP_SECTION_05_TOOLS_INTRO}
+        Specific tools required for {assetName} {mopTitle} based on equipment type and task:
       </Typography>
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[720px] border-collapse text-sm">
+        <table className="w-full min-w-180 border-collapse text-sm">
           <thead>
             <tr className="bg-[#0f3456] text-white">
               <th className="min-w-32 px-3 py-2 text-left font-semibold">Tool Category</th>
@@ -49,7 +50,7 @@ export const MopSection05ToolsBlock = ({ rows, patchSafety }: MopSection05ToolsB
                 Specific Tools (in the form of list)
               </th>
               <th className="min-w-40 px-3 py-2 text-left font-semibold">Purpose</th>
-              <th scope="col" className="w-[4.25rem] px-1 py-2 text-center text-xs font-semibold">
+              <th scope="col" className="w-17 px-1 py-2 text-center text-xs font-semibold">
                 ±
               </th>
             </tr>

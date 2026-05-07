@@ -14,9 +14,11 @@ import { MopSection05ToolsBlock } from "./MopSection05ToolsBlock";
 type MopSection05SafetyProps = {
   safety: MOPSafety;
   patchSafety: (p: Partial<MOPSafety>) => void;
+  assetName: string;
+  mopTitle: string;
 };
 
-export const MopSection05Safety = ({ safety, patchSafety }: MopSection05SafetyProps) => {
+export const MopSection05Safety = ({ safety, patchSafety, assetName, mopTitle }: MopSection05SafetyProps) => {
   return (
     <div className="mt-5 rounded-lg border border-[#e0e0e0] bg-white px-3 py-4 shadow-sm sm:mt-6 sm:px-4 sm:py-5">
       <Typography
@@ -25,8 +27,13 @@ export const MopSection05Safety = ({ safety, patchSafety }: MopSection05SafetyPr
       >
         {MOP_SECTION_05_HEADING}
       </Typography>
-      <MopSection05PpeBlock rows={safety.ppeRequirementRows} patchSafety={patchSafety} />
-      <MopSection05ToolsBlock rows={safety.toolRequirementRows} patchSafety={patchSafety} />
+      <MopSection05PpeBlock rows={safety.ppeRequirementRows} patchSafety={patchSafety}
+        assetName={assetName}
+      />
+      <MopSection05ToolsBlock rows={safety.toolRequirementRows} patchSafety={patchSafety}
+        assetName={assetName}
+        mopTitle={mopTitle}
+      />
       <MopSection05ProceduresBlock rows={safety.safetyProcedureRows} patchSafety={patchSafety} />
       <MopSection05EmergencyBlock rows={safety.emergencyContactRows} patchSafety={patchSafety} />
       <MopSection05LocalServicesBlock

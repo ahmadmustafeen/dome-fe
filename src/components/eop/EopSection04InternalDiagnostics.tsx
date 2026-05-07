@@ -7,10 +7,11 @@ import {
   EOP_SECTION_04_INTERNAL_DIAGNOSTICS_WARNING,
 } from "@/constants/eop-section04-internal-diagnostics";
 import type {
-  EopDiagnosticPassFail,
   EopSection04InternalDiagnosticRow,
   EOPSection04InternalDiagnostics,
 } from "@/types/eop";
+
+import { EopPassFailCheckboxes } from "./EopPassFailCheckboxes";
 
 type EopSection04InternalDiagnosticsProps = {
   internalDiagnostics: EOPSection04InternalDiagnostics;
@@ -27,46 +28,6 @@ const updateRow = (
   >,
 ): EopSection04InternalDiagnosticRow[] =>
   rows.map((row) => (row.id === rowId ? { ...row, ...partial } : row));
-
-const PassFailCheckboxes = ({
-  row,
-  rows,
-  patchInternalDiagnostics,
-}: {
-  row: EopSection04InternalDiagnosticRow;
-  rows: EopSection04InternalDiagnosticRow[];
-  patchInternalDiagnostics: EopSection04InternalDiagnosticsProps["patchInternalDiagnostics"];
-}) => {
-  const setPassFail = (value: EopDiagnosticPassFail): void => {
-    const nextValue = row.passFail === value ? "" : value;
-    patchInternalDiagnostics({
-      diagnosticRows: updateRow(rows, row.id, { passFail: nextValue }),
-    });
-  };
-
-  return (
-    <div className="flex flex-col gap-1 text-xs text-gray-700">
-      <label className="inline-flex items-center gap-1">
-        <input
-          type="checkbox"
-          className="h-4 w-4 accent-primary"
-          checked={row.passFail === "pass"}
-          onChange={() => setPassFail("pass")}
-        />
-        Pass
-      </label>
-      <label className="inline-flex items-center gap-1">
-        <input
-          type="checkbox"
-          className="h-4 w-4 accent-primary"
-          checked={row.passFail === "fail"}
-          onChange={() => setPassFail("fail")}
-        />
-        Fail
-      </label>
-    </div>
-  );
-};
 
 export const EopSection04InternalDiagnostics = ({
   internalDiagnostics,
@@ -125,10 +86,15 @@ export const EopSection04InternalDiagnostics = ({
                   />
                 </td>
                 <td className="border border-gray-200 px-2 py-2 align-top">
-                  <PassFailCheckboxes
-                    row={row}
-                    rows={rows}
-                    patchInternalDiagnostics={patchInternalDiagnostics}
+                  <EopPassFailCheckboxes
+                    value={row.passFail}
+                    onChange={(value) =>
+                      patchInternalDiagnostics({
+                        diagnosticRows: updateRow(rows, row.id, {
+                          passFail: value,
+                        }),
+                      })
+                    }
                   />
                 </td>
               </tr>

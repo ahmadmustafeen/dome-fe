@@ -4,10 +4,11 @@ import { Typography } from "@/components/common";
 import { Input } from "@/components/ui/Input";
 import { EOP_SECTION_05_HEADING } from "@/constants/eop-section05-external-actions";
 import type {
-  EopDiagnosticPassFail,
   EopSection05ExternalActionRow,
   EOPSection05ExternalActions,
 } from "@/types/eop";
+
+import { EopPassFailCheckboxes } from "./EopPassFailCheckboxes";
 
 type EopSection05ExternalActionsProps = {
   externalActions: EOPSection05ExternalActions;
@@ -22,46 +23,6 @@ const updateRow = (
   >,
 ): EopSection05ExternalActionRow[] =>
   rows.map((row) => (row.id === rowId ? { ...row, ...partial } : row));
-
-const PassFailCheckboxes = ({
-  row,
-  rows,
-  patchExternalActions,
-}: {
-  row: EopSection05ExternalActionRow;
-  rows: EopSection05ExternalActionRow[];
-  patchExternalActions: EopSection05ExternalActionsProps["patchExternalActions"];
-}) => {
-  const setPassFail = (value: EopDiagnosticPassFail): void => {
-    const next = row.passFail === value ? "" : value;
-    patchExternalActions({
-      actionRows: updateRow(rows, row.id, { passFail: next }),
-    });
-  };
-
-  return (
-    <div className="flex flex-col gap-1 text-xs text-gray-700">
-      <label className="inline-flex items-center gap-1">
-        <input
-          type="checkbox"
-          className="h-4 w-4 accent-primary"
-          checked={row.passFail === "pass"}
-          onChange={() => setPassFail("pass")}
-        />
-        Pass
-      </label>
-      <label className="inline-flex items-center gap-1">
-        <input
-          type="checkbox"
-          className="h-4 w-4 accent-primary"
-          checked={row.passFail === "fail"}
-          onChange={() => setPassFail("fail")}
-        />
-        Fail
-      </label>
-    </div>
-  );
-};
 
 export const EopSection05ExternalActions = ({
   externalActions,
@@ -134,10 +95,13 @@ export const EopSection05ExternalActions = ({
                   />
                 </td>
                 <td className="border border-gray-200 px-2 py-2 align-top">
-                  <PassFailCheckboxes
-                    row={row}
-                    rows={rows}
-                    patchExternalActions={patchExternalActions}
+                  <EopPassFailCheckboxes
+                    value={row.passFail}
+                    onChange={(value) =>
+                      patchExternalActions({
+                        actionRows: updateRow(rows, row.id, { passFail: value }),
+                      })
+                    }
                   />
                 </td>
               </tr>

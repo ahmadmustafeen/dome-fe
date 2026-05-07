@@ -39,6 +39,8 @@ export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
     patchInternalDiagnostics,
     patchExternalActions,
     patchCommunication,
+    patchRecovery,
+    patchSupportingInformation,
     patchApprovalReview,
     resetEop,
     persistEop,
@@ -179,6 +181,8 @@ export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
                 patchInternalDiagnostics={patchInternalDiagnostics}
                 patchExternalActions={patchExternalActions}
                 patchCommunication={patchCommunication}
+                patchRecovery={patchRecovery}
+                patchSupportingInformation={patchSupportingInformation}
                 patchApprovalReview={patchApprovalReview}
               />
             </fieldset>

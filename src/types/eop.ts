@@ -139,6 +139,74 @@ export type EOPSection05ExternalActions = {
   actionRows: EopSection05ExternalActionRow[];
 };
 
+export type EopSection07ChecklistItem = {
+  id: string;
+  text: string;
+  checked: boolean;
+};
+
+export type EopSection07FunctionalityRow = {
+  id: string;
+  parameter: string;
+  expectedRange: string;
+  actualReading: string;
+  actualReadingPlaceholder: string;
+  passFail: EopDiagnosticPassFail;
+};
+
+export type EOPSection07Recovery = {
+  introText: string;
+  resolutionVerificationItems: EopSection07ChecklistItem[];
+  disconnectVoltage: string;
+  preStartSafetyItems: EopSection07ChecklistItem[];
+  restartSequenceItems: EopSection07ChecklistItem[];
+  startupTime: string;
+  functionalityRows: EopSection07FunctionalityRow[];
+  loadTransferNote: string;
+  performanceValidationItems: EopSection07ChecklistItem[];
+  returnToNormalItems: EopSection07ChecklistItem[];
+  restorationCompletedBy: string;
+  restorationCompletedAt: string;
+};
+
+export type EopSection08PolicyDocumentRow = {
+  id: string;
+  documentName: string;
+  uploadDate: string;
+  documentType: string;
+};
+
+export type EopSection08InfrastructureRow = {
+  id: string;
+  infrastructureElement: string;
+  locationDetails: string;
+  accessRequirements: string;
+};
+
+export type EopSection08SparePartRow = {
+  id: string;
+  partDescription: string;
+  partNumber: string;
+  quantity: string;
+  storageLocation: string;
+};
+
+export type EopSection08RelatedDocument = {
+  id: string;
+  label: string;
+  description: string;
+  href: string;
+};
+
+export type EOPSection08SupportingInformation = {
+  policyDocuments: EopSection08PolicyDocumentRow[];
+  policyNote: string;
+  infrastructureLocations: EopSection08InfrastructureRow[];
+  sparePartsIntro: string;
+  spareParts: EopSection08SparePartRow[];
+  relatedDocuments: EopSection08RelatedDocument[];
+};
+
 export type EopApprovalReviewRow = {
   id: string;
   role: string;
@@ -162,5 +230,7 @@ export type EOP = {
   immediateActions: EOPSection04ImmediateActions;
   externalActions: EOPSection05ExternalActions;
   communication: EOPSection06Communication;
+  recovery: EOPSection07Recovery;
+  supportingInformation: EOPSection08SupportingInformation;
   approvalReview: EOPSection09ApprovalReview;
 };

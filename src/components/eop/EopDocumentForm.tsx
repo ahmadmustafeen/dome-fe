@@ -12,6 +12,8 @@ import { EopSection03Overview } from "./EopSection03Overview";
 import { EopSection04ImmediateActionsSection } from "./EopSection04ImmediateActions";
 import { EopSection05ExternalActions } from "./EopSection05ExternalActions";
 import { EopSection06Communication } from "./EopSection06Communication";
+import { EopSection07Recovery } from "./EopSection07Recovery";
+import { EopSection08SupportingInformationSection } from "./EopSection08SupportingInformation";
 import { EopSection09ApprovalReview } from "./EopSection09ApprovalReview";
 
 type EopDocumentFormProps = {
@@ -31,6 +33,10 @@ type EopDocumentFormProps = {
   ) => void;
   patchExternalActions: (p: Partial<EOP["externalActions"]>) => void;
   patchCommunication: (p: Partial<EOP["communication"]>) => void;
+  patchRecovery: (p: Partial<EOP["recovery"]>) => void;
+  patchSupportingInformation: (
+    p: Partial<EOP["supportingInformation"]>,
+  ) => void;
   patchApprovalReview: (p: Partial<EOP["approvalReview"]>) => void;
 };
 
@@ -47,6 +53,8 @@ export const EopDocumentForm = ({
   patchInternalDiagnostics,
   patchExternalActions,
   patchCommunication,
+  patchRecovery,
+  patchSupportingInformation,
   patchApprovalReview,
 }: EopDocumentFormProps) => {
   return (
@@ -82,6 +90,14 @@ export const EopDocumentForm = ({
             <EopSection06Communication
               communication={eop.communication}
               patchCommunication={patchCommunication}
+            />
+            <EopSection07Recovery
+              recovery={eop.recovery}
+              patchRecovery={patchRecovery}
+            />
+            <EopSection08SupportingInformationSection
+              supportingInformation={eop.supportingInformation}
+              patchSupportingInformation={patchSupportingInformation}
             />
             <EopSection09ApprovalReview
               approvalReview={eop.approvalReview}

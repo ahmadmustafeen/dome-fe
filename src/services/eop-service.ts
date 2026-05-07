@@ -16,6 +16,24 @@ import {
   EOP_SECTION_06_DEFAULT_EMERGENCY_ROWS,
   EOP_SECTION_06_DEFAULT_ESCALATION_ROWS,
 } from "@/constants/eop-section06-communication";
+import {
+  EOP_SECTION_07_FUNCTIONALITY_ROWS,
+  EOP_SECTION_07_INTRO,
+  EOP_SECTION_07_LOAD_TRANSFER_NOTE,
+  EOP_SECTION_07_PERFORMANCE_ITEMS,
+  EOP_SECTION_07_PRE_START_ITEMS,
+  EOP_SECTION_07_RESOLUTION_ITEMS,
+  EOP_SECTION_07_RESTART_ITEMS,
+  EOP_SECTION_07_RETURN_ITEMS,
+} from "@/constants/eop-section07-recovery";
+import {
+  EOP_SECTION_08_DEFAULT_INFRASTRUCTURE_ROWS,
+  EOP_SECTION_08_DEFAULT_POLICY_DOCUMENTS,
+  EOP_SECTION_08_DEFAULT_RELATED_DOCUMENTS,
+  EOP_SECTION_08_DEFAULT_SPARE_PARTS,
+  EOP_SECTION_08_POLICY_NOTE,
+  EOP_SECTION_08_SPARE_PARTS_INTRO,
+} from "@/constants/eop-section08-supporting-information";
 import { EOP_SECTION_09_DEFAULT_REVIEW_ROWS } from "@/constants/eop-section09-approval-review";
 import type { EOP } from "@/types/eop";
 import type { EopListSummaryRow } from "@/types/eop-api";
@@ -80,7 +98,9 @@ const createBaseEop = (): EOP => ({
       ppeIntroText: EOP_SECTION_04_DEFAULT_PPE_INTRO,
       ppeRows: EOP_SECTION_04_DEFAULT_PPE_ROWS.map((row) => ({ ...row })),
       toolRows: EOP_SECTION_04_DEFAULT_TOOL_ROWS.map((row) => ({ ...row })),
-      safetyChecklistItems: EOP_SECTION_04_DEFAULT_SAFETY_CHECKLIST.map((it) => ({ ...it })),
+      safetyChecklistItems: EOP_SECTION_04_DEFAULT_SAFETY_CHECKLIST.map(
+        (it) => ({ ...it }),
+      ),
     },
     internalDiagnostics: {
       introText: EOP_SECTION_04_INTERNAL_DIAGNOSTICS_INTRO,
@@ -102,6 +122,46 @@ const createBaseEop = (): EOP => ({
     })),
     verificationContactName: "",
     verificationPhoneNumber: "",
+  },
+  recovery: {
+    introText: EOP_SECTION_07_INTRO,
+    resolutionVerificationItems: EOP_SECTION_07_RESOLUTION_ITEMS.map((row) => ({
+      ...row,
+    })),
+    disconnectVoltage: "",
+    preStartSafetyItems: EOP_SECTION_07_PRE_START_ITEMS.map((row) => ({
+      ...row,
+    })),
+    restartSequenceItems: EOP_SECTION_07_RESTART_ITEMS.map((row) => ({
+      ...row,
+    })),
+    startupTime: "",
+    functionalityRows: EOP_SECTION_07_FUNCTIONALITY_ROWS.map((row) => ({
+      ...row,
+    })),
+    loadTransferNote: EOP_SECTION_07_LOAD_TRANSFER_NOTE,
+    performanceValidationItems: EOP_SECTION_07_PERFORMANCE_ITEMS.map((row) => ({
+      ...row,
+    })),
+    returnToNormalItems: EOP_SECTION_07_RETURN_ITEMS.map((row) => ({
+      ...row,
+    })),
+    restorationCompletedBy: "",
+    restorationCompletedAt: "",
+  },
+  supportingInformation: {
+    policyDocuments: EOP_SECTION_08_DEFAULT_POLICY_DOCUMENTS.map((row) => ({
+      ...row,
+    })),
+    policyNote: EOP_SECTION_08_POLICY_NOTE,
+    infrastructureLocations: EOP_SECTION_08_DEFAULT_INFRASTRUCTURE_ROWS.map(
+      (row) => ({ ...row }),
+    ),
+    sparePartsIntro: EOP_SECTION_08_SPARE_PARTS_INTRO,
+    spareParts: EOP_SECTION_08_DEFAULT_SPARE_PARTS.map((row) => ({ ...row })),
+    relatedDocuments: EOP_SECTION_08_DEFAULT_RELATED_DOCUMENTS.map((row) => ({
+      ...row,
+    })),
   },
   approvalReview: {
     reviewRows: EOP_SECTION_09_DEFAULT_REVIEW_ROWS.map((row) => ({ ...row })),

@@ -12,6 +12,8 @@ import type {
   EOPSection04PreActionSafety,
   EOPSection05ExternalActions,
   EOPSection06Communication,
+  EOPSection07Recovery,
+  EOPSection08SupportingInformation,
   EOPSection09ApprovalReview,
   EOPSignOff,
   EOPSiteSection,
@@ -165,6 +167,34 @@ export const useEopDocument = (ctx: EopDocumentContextParams) => {
     );
   }, []);
 
+  const patchRecovery = useCallback((partial: Partial<EOPSection07Recovery>) => {
+    setEop((prev) =>
+      prev === null
+        ? prev
+        : bumpVersionDate({
+            ...prev,
+            recovery: { ...prev.recovery, ...partial },
+          }),
+    );
+  }, []);
+
+  const patchSupportingInformation = useCallback(
+    (partial: Partial<EOPSection08SupportingInformation>) => {
+      setEop((prev) =>
+        prev === null
+          ? prev
+          : bumpVersionDate({
+              ...prev,
+              supportingInformation: {
+                ...prev.supportingInformation,
+                ...partial,
+              },
+            }),
+      );
+    },
+    [],
+  );
+
   const patchApprovalReview = useCallback((partial: Partial<EOPSection09ApprovalReview>) => {
     setEop((prev) =>
       prev === null
@@ -222,6 +252,8 @@ export const useEopDocument = (ctx: EopDocumentContextParams) => {
     patchInternalDiagnostics,
     patchExternalActions,
     patchCommunication,
+    patchRecovery,
+    patchSupportingInformation,
     patchApprovalReview,
     resetEop,
     persistEop,

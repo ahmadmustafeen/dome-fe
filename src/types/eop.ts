@@ -50,6 +50,41 @@ export type EOPSection03Overview = {
   postNotifications: string;
 };
 
+export type EopEscalationMatrixRow = {
+  id: string;
+  level: string;
+  title: string;
+  contactName: string;
+  phoneNumber: string;
+};
+
+export type EopEmergencyContactRow = {
+  id: string;
+  serviceType: string;
+  contactNameOrganization: string;
+  phoneNumber: string;
+  notesAddress: string;
+};
+
+export type EOPSection06Communication = {
+  escalationMatrixRows: EopEscalationMatrixRow[];
+  emergencyContactRows: EopEmergencyContactRow[];
+  verificationContactName: string;
+  verificationPhoneNumber: string;
+};
+
+export type EopApprovalReviewRow = {
+  id: string;
+  role: string;
+  name: string;
+  signature: string;
+  date: string;
+};
+
+export type EOPSection09ApprovalReview = {
+  reviewRows: EopApprovalReviewRow[];
+};
+
 export type EOP = {
   id: string;
   document: EOPDocument;
@@ -58,4 +93,6 @@ export type EOP = {
   signOff: EOPSignOff;
   site: EOPSiteSection;
   overview: EOPSection03Overview;
+  communication: EOPSection06Communication;
+  approvalReview: EOPSection09ApprovalReview;
 };

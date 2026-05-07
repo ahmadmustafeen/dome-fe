@@ -9,6 +9,8 @@ import type { EOP } from "@/types/eop";
 import { EopSection01Identification } from "./EopSection01Identification";
 import { EopSection02Site } from "./EopSection02Site";
 import { EopSection03Overview } from "./EopSection03Overview";
+import { EopSection06Communication } from "./EopSection06Communication";
+import { EopSection09ApprovalReview } from "./EopSection09ApprovalReview";
 
 type EopDocumentFormProps = {
   eop: EOP;
@@ -19,6 +21,8 @@ type EopDocumentFormProps = {
   patchSignOff: (p: Partial<EOP["signOff"]>) => void;
   patchSite: (p: Partial<EOP["site"]>) => void;
   patchOverview: (p: Partial<EOP["overview"]>) => void;
+  patchCommunication: (p: Partial<EOP["communication"]>) => void;
+  patchApprovalReview: (p: Partial<EOP["approvalReview"]>) => void;
 };
 
 export const EopDocumentForm = ({
@@ -30,6 +34,8 @@ export const EopDocumentForm = ({
   patchSignOff,
   patchSite,
   patchOverview,
+  patchCommunication,
+  patchApprovalReview,
 }: EopDocumentFormProps) => {
   return (
     <div className="mop-portal-form-root min-h-0 w-full flex-1 overflow-x-hidden bg-linear-to-b from-white to-[#f9fafb] py-2 pr-1 pb-6">
@@ -51,6 +57,14 @@ export const EopDocumentForm = ({
             <EopSection03Overview
               overview={eop.overview}
               patchOverview={patchOverview}
+            />
+            <EopSection06Communication
+              communication={eop.communication}
+              patchCommunication={patchCommunication}
+            />
+            <EopSection09ApprovalReview
+              approvalReview={eop.approvalReview}
+              patchApprovalReview={patchApprovalReview}
             />
           </>
         )}

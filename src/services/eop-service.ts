@@ -1,7 +1,13 @@
+import {
+  EOP_SECTION_06_DEFAULT_EMERGENCY_ROWS,
+  EOP_SECTION_06_DEFAULT_ESCALATION_ROWS,
+} from "@/constants/eop-section06-communication";
+import { EOP_SECTION_09_DEFAULT_REVIEW_ROWS } from "@/constants/eop-section09-approval-review";
 import type { EOP } from "@/types/eop";
 import type { EopListSummaryRow } from "@/types/eop-api";
 
-const getTodayDateInputValue = (): string => new Date().toISOString().slice(0, 10);
+const getTodayDateInputValue = (): string =>
+  new Date().toISOString().slice(0, 10);
 
 const cloneEop = (eop: EOP): EOP => {
   return JSON.parse(JSON.stringify(eop)) as EOP;
@@ -54,6 +60,19 @@ const createBaseEop = (): EOP => ({
       "Priority 1 (0-5 minutes): Notify Shift Supervisor and on-call CET-3 technician with Air Handling Units expertise.\nPriority 2 (5-15 minutes): Notify Facilities Manager and the Customer technical contact for Element Critical.\nEscalation Path: If the issue is not resolved within 30 minutes or impacts critical load, escalate to the Operations Manager.",
     postNotifications:
       "Immediate (within 1 hour): Confirm with the Shift Supervisor that the AHU is stable or that the issue has been resolved.\nShort-term (1-4 hours): Notify the Operations Manager and customer technical contacts with a service restoration confirmation and preliminary cause.",
+  },
+  communication: {
+    escalationMatrixRows: EOP_SECTION_06_DEFAULT_ESCALATION_ROWS.map((row) => ({
+      ...row,
+    })),
+    emergencyContactRows: EOP_SECTION_06_DEFAULT_EMERGENCY_ROWS.map((row) => ({
+      ...row,
+    })),
+    verificationContactName: "",
+    verificationPhoneNumber: "",
+  },
+  approvalReview: {
+    reviewRows: EOP_SECTION_09_DEFAULT_REVIEW_ROWS.map((row) => ({ ...row })),
   },
 });
 

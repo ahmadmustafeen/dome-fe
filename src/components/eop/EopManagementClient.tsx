@@ -35,6 +35,8 @@ export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
     patchSignOff,
     patchSite,
     patchOverview,
+    patchCommunication,
+    patchApprovalReview,
     resetEop,
     persistEop,
   } = useEopDocument({
@@ -170,6 +172,8 @@ export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
                 patchSignOff={patchSignOff}
                 patchSite={patchSite}
                 patchOverview={patchOverview}
+                patchCommunication={patchCommunication}
+                patchApprovalReview={patchApprovalReview}
               />
             </fieldset>
           </section>

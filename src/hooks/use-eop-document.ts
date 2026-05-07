@@ -8,6 +8,8 @@ import type {
   EOPEquipment,
   EOPProcedure,
   EOPSection03Overview,
+  EOPSection06Communication,
+  EOPSection09ApprovalReview,
   EOPSignOff,
   EOPSiteSection,
 } from "@/types/eop";
@@ -98,6 +100,28 @@ export const useEopDocument = (ctx: EopDocumentContextParams) => {
     );
   }, []);
 
+  const patchCommunication = useCallback((partial: Partial<EOPSection06Communication>) => {
+    setEop((prev) =>
+      prev === null
+        ? prev
+        : bumpVersionDate({
+            ...prev,
+            communication: { ...prev.communication, ...partial },
+          }),
+    );
+  }, []);
+
+  const patchApprovalReview = useCallback((partial: Partial<EOPSection09ApprovalReview>) => {
+    setEop((prev) =>
+      prev === null
+        ? prev
+        : bumpVersionDate({
+            ...prev,
+            approvalReview: { ...prev.approvalReview, ...partial },
+          }),
+    );
+  }, []);
+
   const resetEop = useCallback(async () => {
     if (mode === "create") {
       const generated = await generateEOP();
@@ -140,6 +164,8 @@ export const useEopDocument = (ctx: EopDocumentContextParams) => {
     patchSignOff,
     patchSite,
     patchOverview,
+    patchCommunication,
+    patchApprovalReview,
     resetEop,
     persistEop,
   };

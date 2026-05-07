@@ -3,7 +3,7 @@
 import { History } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 import { AppButton, SectionWrapper, Typography } from "@/components/common";
@@ -12,6 +12,7 @@ import { VersionHistoryDrawer } from "@/components/version-history/VersionHistor
 import { DASHBOARD_ROUTES } from "@/constants/routes";
 import { useEopDocument } from "@/hooks/use-eop-document";
 import { useEopVersionHistoryPanel } from "@/hooks/use-eop-version-history-panel";
+import type { CanonicalEopVersionApiRow } from "@/types/eop-api";
 
 import { EopDocumentForm } from "./EopDocumentForm";
 
@@ -25,10 +26,34 @@ export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
   const resolvedEopId = isEdit ? eopId.trim() : undefined;
   const [isSaving, setIsSaving] = useState(false);
 
+  const applyVersionRef = useRef<(row: CanonicalEopVersionApiRow) => void>(
+    () => {},
+  );
+
+  const {
+    historyOpen,
+    setHistoryOpen,
+    resetHistoryPanel,
+    historyLoading,
+    historyError,
+    currentRecord,
+    archives,
+    activeVersionId,
+    versionCount,
+    handleLoadVersion,
+    refetchVersionHistory,
+  } = useEopVersionHistoryPanel(resolvedEopId, {
+    onSelectCanonicalRow: (row) => applyVersionRef.current(row),
+  });
+
   const {
     eop,
     isBootstrapping,
     eopNotFound,
+    isReadOnly,
+    viewingArchivedVersionNumber,
+    applyCanonicalVersionRow,
+    resumeEditingLatestEop,
     patchDocument,
     patchEquipment,
     patchProcedure,
@@ -47,27 +72,17 @@ export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
   } = useEopDocument({
     mode: isEdit ? "edit" : "create",
     eopId: resolvedEopId,
+    onAfterPersist: () => void refetchVersionHistory(),
     onCreateSaveSuccess: async () => {
       toast.success("EOP saved successfully");
       router.push(DASHBOARD_ROUTES.EOP_MANAGEMENT);
     },
   });
 
-  const {
-    historyOpen,
-    setHistoryOpen,
-    resetHistoryPanel,
-    historyLoading,
-    historyError,
-    currentRecord,
-    archives,
-    activeVersionId,
-    versionCount,
-    handleLoadVersion,
-  } = useEopVersionHistoryPanel(resolvedEopId);
+  applyVersionRef.current = applyCanonicalVersionRow;
 
   const showVersionHistory = isEdit && resolvedEopId !== undefined;
-  const readOnlyForm = false;
+  const readOnlyForm = isReadOnly === true;
 
   const handleSave = useCallback(async () => {
     setIsSaving(true);
@@ -157,16 +172,37 @@ export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
             icon={<History className="h-4 w-4" />}
             title="Version History"
             onClick={() => setHistoryOpen(true)}
-            disabled={showVersionHistory === false}
+            disabled={isBootstrapping || showVersionHistory === false}
             className="shrink-0"
           />
         </div>
 
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">
           <section className="flex min-h-0 min-w-0 flex-1 flex-col gap-3 pb-24">
+            {readOnlyForm === true && viewingArchivedVersionNumber !== null ? (
+              <div
+                role="status"
+                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-950"
+              >
+                <Typography variant="span" className="font-medium">
+                  {`You are viewing Version ${viewingArchivedVersionNumber} — this version is read-only. Click Resume Editing to return to the latest version.`}
+                </Typography>
+                <button
+                  type="button"
+                  className="shrink-0 font-semibold underline decoration-amber-800 hover:text-amber-900"
+                  onClick={resumeEditingLatestEop}
+                >
+                  Resume Editing
+                </button>
+              </div>
+            ) : null}
             <fieldset
               disabled={readOnlyForm}
-              className="min-w-0 border-0 p-0"
+              className={
+                readOnlyForm === true
+                  ? "min-w-0 border-0 p-0 opacity-95"
+                  : "min-w-0 border-0 p-0"
+              }
             >
               <EopDocumentForm
                 eop={eop}
@@ -197,13 +233,13 @@ export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
             <AppButton
               variant="ghost"
               title="Clear"
-              disabled={isSaving || isBootstrapping}
+              disabled={isSaving || isBootstrapping || readOnlyForm}
               onClick={handleClear}
             />
             <AppButton
               variant="secondary"
               title={isSaving ? "Saving…" : "Save"}
-              disabled={isSaving || isBootstrapping}
+              disabled={isSaving || isBootstrapping || readOnlyForm}
               onClick={() => {
                 void handleSave();
               }}

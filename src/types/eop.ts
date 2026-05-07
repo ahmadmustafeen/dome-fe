@@ -1,4 +1,4 @@
-import type { RiskLevelOrEmpty } from "@/types/mop";
+import type { MOPStatus, RiskLevelOrEmpty } from "@/types/mop";
 
 export type EOPDocument = {
   title: string;
@@ -7,6 +7,8 @@ export type EOPDocument = {
   createdDate: string;
   author: string;
   authorCetLevel: string;
+  status: MOPStatus;
+  lastModified: string;
 };
 
 export type EOPEquipment = {

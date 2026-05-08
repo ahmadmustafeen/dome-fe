@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-import { getLatestMOP, saveMOP } from "@/services/mop-service";
 import { createEmptyMop } from "@/services/mop-mock-service";
-import type { CanonicalMopVersionApiRow } from "@/types/mop-api";
+import { getLatestMOP, saveMOP } from "@/services/mop-service";
 import type {
   MOP,
   MOPAssumptions,
@@ -22,6 +21,7 @@ import type {
   MOPSiteSection,
   MOPStep,
 } from "@/types/mop";
+import type { CanonicalMopVersionApiRow } from "@/types/mop-api";
 
 export type MopDocumentContextParams = {
   mode: "create" | "edit";
@@ -29,7 +29,7 @@ export type MopDocumentContextParams = {
   mopId?: string;
   onAfterPersist?: () => void | Promise<void>;
   onCreateSaveSuccess?: () => void | Promise<void>;
-  documentId: string
+  documentId: string;
 };
 
 const bumpModified = (m: MOP): MOP => ({
@@ -46,13 +46,14 @@ const bootstrapKey = (mode: "create" | "edit", mopId: string | undefined) =>
 export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
   const { mode, mopId, onAfterPersist, onCreateSaveSuccess, documentId } = ctx;
   const [mop, setMop] = useState<MOP>(() => createEmptyMop());
-  const [asset, setAsset] = useState({ name: "" })
-  const [loadedBootstrapKey, setLoadedBootstrapKey] = useState<string | null>(null);
-  const [generateError, setGenerateError] = useState<string | null>(null);
-  const [mopNotFound, setMopNotFound] = useState(false);
-  const [viewingArchivedVersionNumber, setViewingArchivedVersionNumber] = useState<number | null>(
+  const [asset, setAsset] = useState({ name: "" });
+  const [loadedBootstrapKey, setLoadedBootstrapKey] = useState<string | null>(
     null,
   );
+  const [generateError, setGenerateError] = useState<string | null>(null);
+  const [mopNotFound, setMopNotFound] = useState(false);
+  const [viewingArchivedVersionNumber, setViewingArchivedVersionNumber] =
+    useState<number | null>(null);
 
   const key = bootstrapKey(mode, mopId);
   const isBootstrapping = loadedBootstrapKey !== key;
@@ -65,7 +66,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
     setGenerateError(null);
 
     const evtSource = new EventSource(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/mop/generate?documentId=${documentId}`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/mop/generate?documentId=${documentId}`,
     );
 
     // initialize empty structure
@@ -118,131 +119,126 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
     //   }));
     // });
 
-
     evtSource.addEventListener("sectionFivePPE", (e) => {
       const data = JSON.parse(e.data);
       if (data?.error) {
-        toast.error("sectionFivePPE failed")
-        return
+        toast.error("sectionFivePPE failed");
+        return;
       }
-
 
       setMop((prev: any) => ({
         ...prev,
         safety: {
           ...prev?.safety,
-          ppeRequirementRows: data || []
+          ppeRequirementRows: data || [],
         },
       }));
     });
 
-    evtSource.addEventListener('assetData', (e) => {
+    evtSource.addEventListener("assetData", (e) => {
       const data = JSON.parse(e.data);
       if (data?.error) {
-        toast.error("assetData failed")
-        return
+        toast.error("assetData failed");
+        return;
       }
 
-
-      setAsset({ ...data, name: data.assetName })
-    })
+      setAsset({ ...data, name: data.assetName });
+    });
 
     evtSource.addEventListener("siteDetails", (e) => {
       const data = JSON.parse(e.data);
       if (data?.error) {
-        toast.error("siteDetails failed")
-        return
+        toast.error("siteDetails failed");
+        return;
       }
 
       setMop((prev) => ({
         ...prev,
-        site: data
-      }))
-    })
-
+        site: data,
+      }));
+    });
 
     evtSource.addEventListener("sectionFiveSafetyProcedure", (e) => {
       const data = JSON.parse(e.data);
       if (data?.error) {
-        toast.error("sectionFiveSafetyProcedure failed")
-        return
+        toast.error("sectionFiveSafetyProcedure failed");
+        return;
       }
 
       setMop((prev: any) => ({
         ...prev,
         safety: {
           ...prev?.safety,
-          safetyProcedureRows: data || []
-        }
-      }))
-    })
+          safetyProcedureRows: data || [],
+        },
+      }));
+    });
 
     evtSource.addEventListener("sectionFiveToolsRequired", (e) => {
       const data = JSON.parse(e.data);
       if (data?.error) {
-        toast.error("sectionFiveToolsRequired failed")
-        return
+        toast.error("sectionFiveToolsRequired failed");
+        return;
       }
       setMop((prev: any) => ({
         ...prev,
         safety: {
           ...prev?.safety,
-          toolRequirementRows: data || []
-        }
-      }))
-    })
-
+          toolRequirementRows: data || [],
+        },
+      }));
+    });
 
     evtSource.addEventListener("sectionSixProjectKeyAssumptions", (e) => {
       const data = JSON.parse(e.data);
       if (data?.error) {
-        toast.error("sectionSixProjectKeyAssumptions failed")
-        return
+        toast.error("sectionSixProjectKeyAssumptions failed");
+        return;
       }
 
       setMop((prev: any) => ({
         ...prev,
         assumptions: {
           ...prev.assumptions,
-          assumptionRows: data || []
-        }
-      }))
-    })
+          assumptionRows: data || [],
+        },
+      }));
+    });
 
     evtSource.addEventListener("sectionSixCriticalDecisionPoint", (e) => {
       const data = JSON.parse(e.data);
       if (data?.error) {
-        toast.error("sectionSixCriticalDecisionPoint failed")
-        return
+        toast.error("sectionSixCriticalDecisionPoint failed");
+        return;
       }
 
       setMop((prev: any) => ({
         ...prev,
         assumptions: {
           ...prev.assumptions,
-          criticalDecisionPointItems: data || []
-        }
-      }))
-    })
+          criticalDecisionPointItems: data || [],
+        },
+      }));
+    });
 
     evtSource.addEventListener("sectionSevenProcedureSteps", (e) => {
       const data = JSON.parse(e.data);
       if (data?.error) {
-        toast.error("sectionSevenProcedureSteps failed")
-        return
+        toast.error("sectionSevenProcedureSteps failed");
+        return;
       }
 
       setMop((prev: any) => ({
         ...prev,
-        steps: data
-      }))
-    })
+        steps: data,
+      }));
+    });
 
     evtSource.addEventListener("sectionSevenDetailedProcedureSteps", (e) => {
       const data = JSON.parse(e.data);
       if (data?.error) {
-        toast.error("sectionSevenProcedureSteps failed")
-        return
+        toast.error("sectionSevenProcedureSteps failed");
+        return;
       }
 
       setMop((prev: any) => ({
@@ -252,19 +248,17 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
           detailedProcedures: {
             ...prev.mopDetails.detailedProcedures,
             stepRows: data.steps,
-            criticalStepNotes: data.criticalStepNotes
-          }
-        }
-
-      }))
-    })
-
+            criticalStepNotes: data.criticalStepNotes,
+          },
+        },
+      }));
+    });
 
     evtSource.addEventListener("sectionTenComments", (e) => {
       const data = JSON.parse(e.data);
       if (data?.error) {
-        toast.error("sectionTenComments failed")
-        return
+        toast.error("sectionTenComments failed");
+        return;
       }
 
       setMop((prev: any) => ({
@@ -273,14 +267,13 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
           ...prev.mopComments,
           postMaintenanceBullets: data.postmaintenenaceRequirements,
           additionalNotes: data.additionalNotes,
-          mopCommentsText: data.mopComments
-        }
-
-      }))
-    })
+          mopCommentsText: data.mopComments,
+        },
+      }));
+    });
 
     evtSource.addEventListener("done", () => {
-      alert("completed generating")
+      alert("completed generating");
       // setMop((prev: any) => ({
       //   ...prev,
       //   loading: false,
@@ -293,9 +286,6 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
       setGenerateError("Streaming failed");
       evtSource.close();
     });
-
-
-
   }, []);
 
   useEffect(() => {
@@ -340,7 +330,9 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
         preArchiveDraftRef.current = null;
       } catch (err: unknown) {
         if (!cancelled) {
-          toast.error(err instanceof Error ? err.message : "Could not load MOP.");
+          toast.error(
+            err instanceof Error ? err.message : "Could not load MOP.",
+          );
           setMop(createEmptyMop());
           setMopNotFound(true);
           setLoadedBootstrapKey(key);
@@ -403,14 +395,17 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
     );
   }, []);
 
-  const patchOverview = useCallback((partial: Partial<MOPSection03Overview>) => {
-    setMop((prev) =>
-      bumpModified({
-        ...prev,
-        overview: { ...prev.overview, ...partial },
-      }),
-    );
-  }, []);
+  const patchOverview = useCallback(
+    (partial: Partial<MOPSection03Overview>) => {
+      setMop((prev) =>
+        bumpModified({
+          ...prev,
+          overview: { ...prev.overview, ...partial },
+        }),
+      );
+    },
+    [],
+  );
 
   const patchSafety = useCallback((partial: Partial<MOPSafety>) => {
     setMop((prev) =>
@@ -430,14 +425,17 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
     );
   }, []);
 
-  const patchMopDetails = useCallback((partial: Partial<MOPSection07Details>) => {
-    setMop((prev) =>
-      bumpModified({
-        ...prev,
-        mopDetails: { ...prev.mopDetails, ...partial },
-      }),
-    );
-  }, []);
+  const patchMopDetails = useCallback(
+    (partial: Partial<MOPSection07Details>) => {
+      setMop((prev) =>
+        bumpModified({
+          ...prev,
+          mopDetails: { ...prev.mopDetails, ...partial },
+        }),
+      );
+    },
+    [],
+  );
 
   const patchBackOut = useCallback((partial: Partial<MOPSection08BackOut>) => {
     setMop((prev) =>
@@ -448,32 +446,41 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
     );
   }, []);
 
-  const patchMopApproval = useCallback((partial: Partial<MOPSection09MopApproval>) => {
-    setMop((prev) =>
-      bumpModified({
-        ...prev,
-        mopApproval: { ...prev.mopApproval, ...partial },
-      }),
-    );
-  }, []);
+  const patchMopApproval = useCallback(
+    (partial: Partial<MOPSection09MopApproval>) => {
+      setMop((prev) =>
+        bumpModified({
+          ...prev,
+          mopApproval: { ...prev.mopApproval, ...partial },
+        }),
+      );
+    },
+    [],
+  );
 
-  const patchMopComments = useCallback((partial: Partial<MOPSection10MopComments>) => {
-    setMop((prev) =>
-      bumpModified({
-        ...prev,
-        mopComments: { ...prev.mopComments, ...partial },
-      }),
-    );
-  }, []);
+  const patchMopComments = useCallback(
+    (partial: Partial<MOPSection10MopComments>) => {
+      setMop((prev) =>
+        bumpModified({
+          ...prev,
+          mopComments: { ...prev.mopComments, ...partial },
+        }),
+      );
+    },
+    [],
+  );
 
-  const patchMopReferences = useCallback((partial: Partial<MOPSection11References>) => {
-    setMop((prev) =>
-      bumpModified({
-        ...prev,
-        references: { ...prev.references, ...partial },
-      }),
-    );
-  }, []);
+  const patchMopReferences = useCallback(
+    (partial: Partial<MOPSection11References>) => {
+      setMop((prev) =>
+        bumpModified({
+          ...prev,
+          references: { ...prev.references, ...partial },
+        }),
+      );
+    },
+    [],
+  );
 
   const patchFacilityEffects = useCallback((rows: MopFacilityEffectRow[]) => {
     setMop((prev) =>
@@ -496,7 +503,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
   const resetMop = useCallback(async () => {
     if (mode === "create") {
       setLoadedBootstrapKey(null);
-      runStandaloneGenerateStream()
+      runStandaloneGenerateStream();
       // const ok = await runStandaloneGenerateStream();
       // if (ok) {
       //   toast.info("Form reset to a fresh generated draft.");
@@ -528,49 +535,57 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
     setLoadedBootstrapKey(key);
   }, [key, runStandaloneGenerateStream]);
 
-  const persistMop = useCallback(async (documentId?: string): Promise<{ success: boolean }> => {
-    if (mode === "create") {
-      const saved = await saveMOP(mop, "new", documentId);
+  const persistMop = useCallback(
+    async (documentId?: string): Promise<{ success: boolean }> => {
+      if (mode === "create") {
+        const saved = await saveMOP(mop, "new", documentId);
+        setMop(saved);
+        latestSavedCanonicalRef.current = saved;
+        preArchiveDraftRef.current = saved;
+        setViewingArchivedVersionNumber(null);
+        archiveSessionActiveRef.current = false;
+        await onAfterPersist?.();
+        await onCreateSaveSuccess?.();
+        return { success: true };
+      }
+      const id = mopId?.trim() ?? "";
+      if (id === "") {
+        throw new Error("MOP id is required to save");
+      }
+      const saved = await saveMOP(mop, id);
       setMop(saved);
       latestSavedCanonicalRef.current = saved;
       preArchiveDraftRef.current = saved;
       setViewingArchivedVersionNumber(null);
       archiveSessionActiveRef.current = false;
       await onAfterPersist?.();
-      await onCreateSaveSuccess?.();
       return { success: true };
-    }
-    const id = mopId?.trim() ?? "";
-    if (id === "") {
-      throw new Error("MOP id is required to save");
-    }
-    const saved = await saveMOP(mop, id);
-    setMop(saved);
-    latestSavedCanonicalRef.current = saved;
-    preArchiveDraftRef.current = saved;
-    setViewingArchivedVersionNumber(null);
-    archiveSessionActiveRef.current = false;
-    await onAfterPersist?.();
-    return { success: true };
-  }, [mode, mop, mopId, onAfterPersist, onCreateSaveSuccess]);
+    },
+    [mode, mop, mopId, onAfterPersist, onCreateSaveSuccess],
+  );
 
-  const applyCanonicalVersionRow = useCallback((row: CanonicalMopVersionApiRow) => {
-    setMop((prev) => {
-      if (row.isLatest === true) {
-        archiveSessionActiveRef.current = false;
-        const stash = preArchiveDraftRef.current;
-        preArchiveDraftRef.current = null;
-        latestSavedCanonicalRef.current = row.mop;
-        return stash !== null ? stash : row.mop;
-      }
-      if (archiveSessionActiveRef.current === false) {
-        preArchiveDraftRef.current = prev;
-        archiveSessionActiveRef.current = true;
-      }
-      return row.mop;
-    });
-    setViewingArchivedVersionNumber(row.isLatest === true ? null : row.versionNumber);
-  }, []);
+  const applyCanonicalVersionRow = useCallback(
+    (row: CanonicalMopVersionApiRow) => {
+      setMop((prev) => {
+        if (row.isLatest === true) {
+          archiveSessionActiveRef.current = false;
+          const stash = preArchiveDraftRef.current;
+          preArchiveDraftRef.current = null;
+          latestSavedCanonicalRef.current = row.mop;
+          return stash !== null ? stash : row.mop;
+        }
+        if (archiveSessionActiveRef.current === false) {
+          preArchiveDraftRef.current = prev;
+          archiveSessionActiveRef.current = true;
+        }
+        return row.mop;
+      });
+      setViewingArchivedVersionNumber(
+        row.isLatest === true ? null : row.versionNumber,
+      );
+    },
+    [],
+  );
 
   const resumeEditingLatestMop = useCallback(() => {
     const stash = preArchiveDraftRef.current;
@@ -585,7 +600,8 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
   }, []);
 
   const isReadOnly =
-    viewingArchivedVersionNumber !== null && viewingArchivedVersionNumber !== undefined;
+    viewingArchivedVersionNumber !== null &&
+    viewingArchivedVersionNumber !== undefined;
 
   return {
     mop,

@@ -84,7 +84,10 @@ const textareaMinClass = (row: MopSection01FieldRow): string | undefined =>
     ? "min-h-28"
     : undefined;
 
-const renderControl = (row: MopSection01FieldRow, props: MopSection01FieldRowsProps) => {
+const renderControl = (
+  row: MopSection01FieldRow,
+  props: MopSection01FieldRowsProps,
+) => {
   if (row.control === "textarea") {
     const value = readRowValue(row, props.mop);
     const onChange = (next: string) => applyRowValue(row, next, props);
@@ -108,10 +111,14 @@ const renderControl = (row: MopSection01FieldRow, props: MopSection01FieldRowsPr
           onChange={(e) =>
             props.patchProcedure({
               levelOfRisk: e.target.value as RiskLevelOrEmpty,
-            })}
+            })
+          }
         >
           {MOP_SECTION_01_LOR_OPTIONS.map((o) => (
-            <option key={o.value === "" ? "lor-empty" : o.value} value={o.value}>
+            <option
+              key={o.value === "" ? "lor-empty" : o.value}
+              value={o.value}
+            >
               {o.label}
             </option>
           ))}

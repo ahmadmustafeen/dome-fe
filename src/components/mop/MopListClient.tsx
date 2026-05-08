@@ -12,6 +12,7 @@ import { MopStatusBadge } from "@/components/mop/MopStatusBadge";
 import { DASHBOARD_ROUTES, mopEditRoute } from "@/constants/routes";
 import { getMOPList } from "@/services/mop-service";
 import type { MopListSummaryRow } from "@/types/mop-api";
+import { useAppContext } from "@/context/AppContext";
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString("en-GB", {
@@ -70,11 +71,12 @@ export const MopListClient = () => {
   const router = useRouter();
   const [mops, setMops] = useState<MopListSummaryRow[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const {site} = useAppContext()
 
   const fetchMops = useCallback(async () => {
     setIsLoading(true);
     try {
-      const rows = await getMOPList();
+      const rows = await getMOPList(site?._id);
       setMops(rows);
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : "Failed to load MOPs.");

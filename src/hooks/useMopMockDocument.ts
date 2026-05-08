@@ -22,6 +22,7 @@ import type {
   MOPStep,
 } from "@/types/mop";
 import type { CanonicalMopVersionApiRow } from "@/types/mop-api";
+import { useAppContext } from "@/context/AppContext";
 
 export type MopDocumentContextParams = {
   mode: "create" | "edit";
@@ -29,7 +30,7 @@ export type MopDocumentContextParams = {
   mopId?: string;
   onAfterPersist?: () => void | Promise<void>;
   onCreateSaveSuccess?: () => void | Promise<void>;
-  documentId: string;
+  documentId?: string;
 };
 
 const bumpModified = (m: MOP): MOP => ({
@@ -50,6 +51,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
   const [loadedBootstrapKey, setLoadedBootstrapKey] = useState<string | null>(
     null,
   );
+  const [isGenerating, setIsGenerating] = useState(false)
   const [generateError, setGenerateError] = useState<string | null>(null);
   const [mopNotFound, setMopNotFound] = useState(false);
   const [viewingArchivedVersionNumber, setViewingArchivedVersionNumber] =
@@ -74,6 +76,8 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
       ...prev,
       loading: true,
     }));
+
+    setIsGenerating(true)
 
     evtSource.addEventListener("allData", (e) => {
       const data = JSON.parse(e.data);
@@ -109,15 +113,6 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
         },
       }));
     });
-
-    // evtSource.addEventListener("sectionFour", (e) => {
-    //   const data = JSON.parse(e.data);
-
-    //   setMop((prev: any) => ({
-    //     ...prev,
-    //     facilityEffects: data,
-    //   }));
-    // });
 
     evtSource.addEventListener("sectionFivePPE", (e) => {
       const data = JSON.parse(e.data);
@@ -273,7 +268,8 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
     });
 
     evtSource.addEventListener("done", () => {
-      alert("completed generating");
+      toast.success("Succesfully generated, Please save the document manually.");
+      setIsGenerating(false)
       // setMop((prev: any) => ({
       //   ...prev,
       //   loading: false,
@@ -481,6 +477,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
     },
     [],
   );
+  const { site } = useAppContext()
 
   const patchFacilityEffects = useCallback((rows: MopFacilityEffectRow[]) => {
     setMop((prev) =>
@@ -538,7 +535,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
   const persistMop = useCallback(
     async (documentId?: string): Promise<{ success: boolean }> => {
       if (mode === "create") {
-        const saved = await saveMOP(mop, "new", documentId);
+        const saved = await saveMOP(mop, "new", documentId, site?._id);
         setMop(saved);
         latestSavedCanonicalRef.current = saved;
         preArchiveDraftRef.current = saved;
@@ -552,7 +549,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
       if (id === "") {
         throw new Error("MOP id is required to save");
       }
-      const saved = await saveMOP(mop, id);
+      const saved = await saveMOP(mop, id, undefined, site?._id);
       setMop(saved);
       latestSavedCanonicalRef.current = saved;
       preArchiveDraftRef.current = saved;
@@ -628,6 +625,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
     patchMopComments,
     patchMopReferences,
     patchFacilityEffects,
+    isGenerating,
     patchSteps,
     resetMop,
     persistMop,

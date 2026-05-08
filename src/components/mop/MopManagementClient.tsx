@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import {
   AppButton,
   DeleteConfirmationScreen,
+  ScreenLoader,
   SectionWrapper,
   Typography,
 } from "@/components/common";
@@ -36,7 +37,7 @@ export const MopManagementClient = ({
   const resolvedMopId = isEdit ? mopId.trim() : undefined;
 
   const applyVersionRef = useRef<(row: CanonicalMopVersionApiRow) => void>(
-    () => {},
+    () => { },
   );
 
   const {
@@ -81,6 +82,7 @@ export const MopManagementClient = ({
     patchSteps,
     resetMop,
     asset,
+    isGenerating,
     persistMop,
   } = useMopMockDocument({
     mode,
@@ -141,6 +143,9 @@ export const MopManagementClient = ({
 
   return (
     <>
+      {
+        isGenerating ? <ScreenLoader heading="MOP is being generated" description="Selected MOP is being generated, do not switch or refresh the page, and once the document is generated, remember to save the generated document." /> : null
+      }
       {showClearConfirm ? (
         <DeleteConfirmationScreen
           heading="Reset MOP Form"
@@ -255,11 +260,11 @@ export const MopManagementClient = ({
           className="sticky bottom-0 z-10 -mx-4 mt-auto border-t border-gray-200 bg-white/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] shadow-[0_-4px_20px_rgba(0,0,0,0.06)] backdrop-blur-sm sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"
           aria-label="MOP form actions"
         >
-          <div className="flex flex-wrap items-center justify-end gap-2">
+          {isGenerating ? null : <div className="flex flex-wrap items-center justify-end gap-2">
             <AppButton
               variant="ghost"
               title="Clear"
-              disabled={isSaving || isBootstrapping || readOnlyForm}
+              disabled={isSaving || isBootstrapping || readOnlyForm || isGenerating}
               onClick={() => setShowClearConfirm(true)}
             />
             <AppButton
@@ -272,10 +277,12 @@ export const MopManagementClient = ({
                 isSaving ||
                 isBootstrapping ||
                 readOnlyForm ||
+                isGenerating
+                ||
                 (mode === "create" && createGenerateFailed)
               }
             />
-          </div>
+          </div>}
         </footer>
       </SectionWrapper>
     </>

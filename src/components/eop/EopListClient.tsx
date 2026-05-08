@@ -9,9 +9,9 @@ import { AppButton, Typography } from "@/components/common";
 import { ProcedureDocumentsListLayout } from "@/components/dashboard-procedure/ProcedureDocumentsListLayout";
 import { mopDocumentStatusToFormLabel } from "@/components/mop/mop-document-status";
 import { MopStatusBadge } from "@/components/mop/MopStatusBadge";
-import { DASHBOARD_ROUTES, mopEditRoute } from "@/constants/routes";
-import { getMOPList } from "@/services/mop-service";
-import type { MopListSummaryRow } from "@/types/mop-api";
+import { DASHBOARD_ROUTES, eopEditRoute } from "@/constants/routes";
+import { getEOPList } from "@/services/eop-service";
+import type { EopListSummaryRow } from "@/types/eop-api";
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString("en-GB", {
@@ -22,12 +22,12 @@ const formatDate = (iso: string) =>
     minute: "2-digit",
   });
 
-type MopTableRowProps = {
-  row: MopListSummaryRow;
-  onView: (mopId: string) => void;
+type EopTableRowProps = {
+  row: EopListSummaryRow;
+  onView: (eopId: string) => void;
 };
 
-const MopTableRow = ({ row, onView }: MopTableRowProps) => {
+const EopTableRow = ({ row, onView }: EopTableRowProps) => {
   return (
     <tr className="cursor-pointer bg-white transition-colors hover:bg-slate-50">
       <td className="px-4 py-3">
@@ -58,7 +58,7 @@ const MopTableRow = ({ row, onView }: MopTableRowProps) => {
           variant="ghost"
           icon={<Eye className="h-4 w-4" />}
           title="View"
-          onClick={() => onView(row.mopId)}
+          onClick={() => onView(row.eopId)}
           className="inline-flex"
         />
       </td>
@@ -66,34 +66,34 @@ const MopTableRow = ({ row, onView }: MopTableRowProps) => {
   );
 };
 
-export const MopListClient = () => {
+export const EopListClient = () => {
   const router = useRouter();
-  const [mops, setMops] = useState<MopListSummaryRow[]>([]);
+  const [eops, setEops] = useState<EopListSummaryRow[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchMops = useCallback(async () => {
+  const fetchEops = useCallback(async () => {
     setIsLoading(true);
     try {
-      const rows = await getMOPList();
-      setMops(rows);
+      const rows = await getEOPList();
+      setEops(rows);
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : "Failed to load MOPs.");
+      toast.error(err instanceof Error ? err.message : "Failed to load EOPs.");
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    void fetchMops();
-  }, [fetchMops]);
+    void fetchEops();
+  }, [fetchEops]);
 
   const goCreate = useCallback(() => {
-    router.push(DASHBOARD_ROUTES.MOP_MANAGEMENT_CREATE);
+    router.push(DASHBOARD_ROUTES.EOP_MANAGEMENT_CREATE);
   }, [router]);
 
   const handleView = useCallback(
-    (mopId: string) => {
-      router.push(mopEditRoute(mopId));
+    (eopId: string) => {
+      router.push(eopEditRoute(eopId));
     },
     [router],
   );
@@ -103,7 +103,7 @@ export const MopListClient = () => {
       <table className="w-full text-sm">
         <thead className="bg-slate-50 text-left uppercase">
           <tr>
-            {["MOP Title", "Asset", "Version", "Status", "Last Modified", "Actions"].map(
+            {["EOP Title", "Asset", "Version", "Status", "Last Modified", "Actions"].map(
               (col) => (
                 <th
                   key={col}
@@ -118,8 +118,8 @@ export const MopListClient = () => {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
-          {mops.map((row) => (
-            <MopTableRow key={row.mopId} row={row} onView={handleView} />
+          {eops.map((row) => (
+            <EopTableRow key={row.eopId} row={row} onView={handleView} />
           ))}
         </tbody>
       </table>
@@ -128,15 +128,15 @@ export const MopListClient = () => {
 
   return (
     <ProcedureDocumentsListLayout
-      title="MOP Management"
-      entitySingular="MOP"
-      entityPlural="MOPs"
-      totalCount={mops.length}
+      title="EOP Management"
+      entitySingular="EOP"
+      entityPlural="EOPs"
+      totalCount={eops.length}
       isLoading={isLoading}
-      createButtonTitle="Create MOP"
+      createButtonTitle="Create EOP"
       onCreate={goCreate}
-      emptyHeading="No MOPs yet"
-      emptyDescription="Create a Method of Procedure to see it listed here."
+      emptyHeading="No EOPs yet"
+      emptyDescription="Create an Emergency Operating Procedure to see it listed here."
       emptyIcon={<FileText className="h-9 w-9" />}
       table={table}
     />

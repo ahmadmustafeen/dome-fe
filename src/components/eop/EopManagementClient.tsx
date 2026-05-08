@@ -6,36 +6,27 @@ import { useRouter } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-import {
-  AppButton,
-  DeleteConfirmationScreen,
-  SectionWrapper,
-  Typography,
-} from "@/components/common";
+import { AppButton, SectionWrapper, Typography } from "@/components/common";
+import { ProcedureVersionHistory } from "@/components/version-history/ProcedureVersionHistory";
+import { VersionHistoryDrawer } from "@/components/version-history/VersionHistoryDrawer";
 import { DASHBOARD_ROUTES } from "@/constants/routes";
-import { useMopMockDocument } from "@/hooks/useMopMockDocument";
-import { useMopVersionHistoryPanel } from "@/hooks/useMopVersionHistoryPanel";
-import type { CanonicalMopVersionApiRow } from "@/types/mop-api";
+import { useEopDocument } from "@/hooks/use-eop-document";
+import { useEopVersionHistoryPanel } from "@/hooks/use-eop-version-history-panel";
+import type { CanonicalEopVersionApiRow } from "@/types/eop-api";
 
-import { MopDocumentForm } from "./MopDocumentForm";
-import { MopVersionHistory } from "./MopVersionHistory";
-import { MopVersionHistoryDrawer } from "./MopVersionHistoryDrawer";
+import { EopDocumentForm } from "./EopDocumentForm";
 
-interface MopManagementClientProps {
-  mopId?: string;
-  documentId?: string;
-}
+type EopManagementClientProps = {
+  eopId?: string;
+};
 
-export const MopManagementClient = ({
-  mopId,
-  documentId,
-}: MopManagementClientProps) => {
+export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
   const router = useRouter();
-  const isEdit = mopId !== undefined && mopId.trim() !== "";
-  const mode = isEdit ? "edit" : "create";
-  const resolvedMopId = isEdit ? mopId.trim() : undefined;
+  const isEdit = eopId !== undefined && eopId.trim() !== "";
+  const resolvedEopId = isEdit ? eopId.trim() : undefined;
+  const [isSaving, setIsSaving] = useState(false);
 
-  const applyVersionRef = useRef<(row: CanonicalMopVersionApiRow) => void>(
+  const applyVersionRef = useRef<(row: CanonicalEopVersionApiRow) => void>(
     () => {},
   );
 
@@ -51,125 +42,111 @@ export const MopManagementClient = ({
     versionCount,
     handleLoadVersion,
     refetchVersionHistory,
-  } = useMopVersionHistoryPanel(resolvedMopId, {
+  } = useEopVersionHistoryPanel(resolvedEopId, {
     onSelectCanonicalRow: (row) => applyVersionRef.current(row),
   });
 
   const {
-    mop,
+    eop,
     isBootstrapping,
-    createGenerateFailed,
-    mopNotFound,
+    eopNotFound,
     isReadOnly,
     viewingArchivedVersionNumber,
     applyCanonicalVersionRow,
-    resumeEditingLatestMop,
+    resumeEditingLatestEop,
     patchDocument,
     patchEquipment,
     patchProcedure,
     patchSignOff,
     patchSite,
     patchOverview,
-    patchSafety,
-    patchAssumptions,
-    patchMopDetails,
-    patchBackOut,
-    patchMopApproval,
-    patchMopComments,
-    patchMopReferences,
-    patchFacilityEffects,
-    patchSteps,
-    resetMop,
-    asset,
-    persistMop,
-  } = useMopMockDocument({
-    mode,
-    mopId: resolvedMopId,
-    documentId,
+    patchPreActionSafety,
+    patchInternalDiagnostics,
+    patchExternalActions,
+    patchCommunication,
+    patchRecovery,
+    patchSupportingInformation,
+    patchApprovalReview,
+    resetEop,
+    persistEop,
+  } = useEopDocument({
+    mode: isEdit ? "edit" : "create",
+    eopId: resolvedEopId,
     onAfterPersist: () => void refetchVersionHistory(),
     onCreateSaveSuccess: async () => {
-      toast.success("MOP saved successfully");
-      router.push(DASHBOARD_ROUTES.MOP_MANAGEMENT);
+      toast.success("EOP saved successfully");
+      router.push(DASHBOARD_ROUTES.EOP_MANAGEMENT);
     },
   });
 
   applyVersionRef.current = applyCanonicalVersionRow;
 
-  const [isSaving, setIsSaving] = useState(false);
-  const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const showVersionHistory = isEdit && resolvedEopId !== undefined;
+  const readOnlyForm = isReadOnly === true;
 
   const handleSave = useCallback(async () => {
     setIsSaving(true);
     try {
-      await persistMop(documentId);
+      await persistEop();
       if (isEdit) {
-        toast.success("MOP updated successfully");
+        toast.success("EOP updated successfully");
       }
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : "Save failed.");
+      toast.error(err instanceof Error ? err.message : "Failed to save EOP.");
     } finally {
       setIsSaving(false);
     }
-  }, [persistMop, isEdit]);
+  }, [persistEop, isEdit]);
 
-  const handleClearConfirmed = useCallback(() => {
-    void resetMop();
-    setShowClearConfirm(false);
-  }, [resetMop]);
+  const handleClear = useCallback(() => {
+    void resetEop();
+  }, [resetEop]);
 
-  const readOnlyForm = isReadOnly === true;
-  const showVersionHistory = isEdit && resolvedMopId !== undefined;
-
-  if (isEdit && mopNotFound === true && isBootstrapping === false) {
+  if (isEdit && eopNotFound === true && isBootstrapping === false) {
     return (
       <SectionWrapper className="flex min-h-0 flex-1 flex-col">
         <Typography variant="h1" className="mb-2">
-          MOP not found
+          EOP not found
         </Typography>
         <Typography variant="p" className="mb-4 text-gray-600">
-          This MOP may have been deleted or the link is invalid.
+          This EOP may have been deleted or the link is invalid.
         </Typography>
         <Link
-          href={DASHBOARD_ROUTES.MOP_MANAGEMENT}
+          href={DASHBOARD_ROUTES.EOP_MANAGEMENT}
           className="font-medium text-primary underline"
         >
-          Back to MOP listing
+          Back to EOP listing
         </Link>
+      </SectionWrapper>
+    );
+  }
+
+  if (eop === null) {
+    return (
+      <SectionWrapper>
+        <Typography variant="p" className="text-gray-500">
+          Loading EOP…
+        </Typography>
       </SectionWrapper>
     );
   }
 
   return (
     <>
-      {showClearConfirm ? (
-        <DeleteConfirmationScreen
-          heading="Reset MOP Form"
-          description={
-            mode === "create"
-              ? "Current form data will be discarded and replaced with a freshly generated MOP from the server."
-              : "Current unsaved edits will be discarded and the last saved version will be reloaded."
-          }
-          confirmLabel="Reset"
-          confirmVariant="danger"
-          handleCancel={() => setShowClearConfirm(false)}
-          handleContinue={handleClearConfirmed}
-        />
-      ) : null}
-
       {historyOpen ? (
-        <MopVersionHistoryDrawer
+        <VersionHistoryDrawer
           versionCount={versionCount}
           onClose={() => {
             resetHistoryPanel();
             setHistoryOpen(false);
           }}
         >
-          {historyError ? (
+          {historyError !== null ? (
             <Typography variant="p" className="text-red-600">
               {historyError}
             </Typography>
           ) : showVersionHistory ? (
-            <MopVersionHistory
+            <ProcedureVersionHistory
               currentRecord={currentRecord}
               history={archives}
               activeVersionId={activeVersionId}
@@ -179,16 +156,16 @@ export const MopManagementClient = ({
             />
           ) : (
             <Typography variant="p" className="text-gray-600">
-              Version history is available after you save a MOP.
+              Version history will be available after you save an EOP.
             </Typography>
           )}
-        </MopVersionHistoryDrawer>
+        </VersionHistoryDrawer>
       ) : null}
 
       <SectionWrapper className="flex min-h-full flex-col">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3 sm:mb-6">
           <Typography variant="h1" className="min-w-0 flex-1">
-            Method of Procedure (MOP)
+            Emergency Operating Procedure (EOP)
           </Typography>
           <AppButton
             variant="default"
@@ -213,7 +190,7 @@ export const MopManagementClient = ({
                 <button
                   type="button"
                   className="shrink-0 font-semibold underline decoration-amber-800 hover:text-amber-900"
-                  onClick={resumeEditingLatestMop}
+                  onClick={resumeEditingLatestEop}
                 >
                   Resume Editing
                 </button>
@@ -227,9 +204,8 @@ export const MopManagementClient = ({
                   : "min-w-0 border-0 p-0"
               }
             >
-              <MopDocumentForm
-                mop={mop}
-                asset={asset}
+              <EopDocumentForm
+                eop={eop}
                 isBootstrapping={isBootstrapping}
                 patchDocument={patchDocument}
                 patchEquipment={patchEquipment}
@@ -237,15 +213,13 @@ export const MopManagementClient = ({
                 patchSignOff={patchSignOff}
                 patchSite={patchSite}
                 patchOverview={patchOverview}
-                patchSafety={patchSafety}
-                patchAssumptions={patchAssumptions}
-                patchMopDetails={patchMopDetails}
-                patchBackOut={patchBackOut}
-                patchMopApproval={patchMopApproval}
-                patchMopComments={patchMopComments}
-                patchMopReferences={patchMopReferences}
-                patchFacilityEffects={patchFacilityEffects}
-                patchSteps={patchSteps}
+                patchPreActionSafety={patchPreActionSafety}
+                patchInternalDiagnostics={patchInternalDiagnostics}
+                patchExternalActions={patchExternalActions}
+                patchCommunication={patchCommunication}
+                patchRecovery={patchRecovery}
+                patchSupportingInformation={patchSupportingInformation}
+                patchApprovalReview={patchApprovalReview}
               />
             </fieldset>
           </section>
@@ -253,27 +227,22 @@ export const MopManagementClient = ({
 
         <footer
           className="sticky bottom-0 z-10 -mx-4 mt-auto border-t border-gray-200 bg-white/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] shadow-[0_-4px_20px_rgba(0,0,0,0.06)] backdrop-blur-sm sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"
-          aria-label="MOP form actions"
+          aria-label="EOP form actions"
         >
           <div className="flex flex-wrap items-center justify-end gap-2">
             <AppButton
               variant="ghost"
               title="Clear"
               disabled={isSaving || isBootstrapping || readOnlyForm}
-              onClick={() => setShowClearConfirm(true)}
+              onClick={handleClear}
             />
             <AppButton
               variant="secondary"
               title={isSaving ? "Saving…" : "Save"}
+              disabled={isSaving || isBootstrapping || readOnlyForm}
               onClick={() => {
                 void handleSave();
               }}
-              disabled={
-                isSaving ||
-                isBootstrapping ||
-                readOnlyForm ||
-                (mode === "create" && createGenerateFailed)
-              }
             />
           </div>
         </footer>

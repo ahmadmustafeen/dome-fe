@@ -6,8 +6,6 @@ import type {
   DocumentListApiResponse,
 } from "@/types/document";
 
-
-
 export type DocumentQueryParams = {
   page?: number;
   limit?: number;
@@ -42,7 +40,12 @@ export const documentService = {
     );
   },
 
-  createDocument: (siteId: string, type: string, file: File, clientId?: string) => {
+  createDocument: (
+    siteId: string,
+    type: string,
+    file: File,
+    clientId?: string,
+  ) => {
     const formData = new FormData();
     formData.append("siteId", siteId);
     if (clientId) {

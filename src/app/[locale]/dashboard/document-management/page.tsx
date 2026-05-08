@@ -22,6 +22,7 @@ import { useAppContext } from "@/context/AppContext";
 import { documentService } from "@/services/document-service";
 import type { DocumentApiRecord, DocumentType } from "@/types/document";
 import { extractDocumentName } from "@/utils/formatters";
+import { useRouter } from "next/navigation";
 
 const PAGE_LIMIT = 10;
 
@@ -138,6 +139,7 @@ export default function DocumentManagementPage() {
     setTypeFilter("all");
     setRowSelection({});
   };
+  const router = useRouter();
 
   const isFiltered = Boolean(searchQuery || typeFilter !== "all");
 
@@ -145,8 +147,10 @@ export default function DocumentManagementPage() {
   const columns = useMemo(
     () =>
       getDocumentColumns({
-        onView: (doc) =>
-          window.open(doc.documentUrl, "_blank", "noopener,noreferrer"),
+        onView: (doc) =>{
+        router.push(`/en/dashboard/document-management/${doc._id}`)
+
+        },
         onDownload: (doc) => {
           const link = window.document.createElement("a");
           link.href = doc.documentUrl;
@@ -160,6 +164,7 @@ export default function DocumentManagementPage() {
           colType: t("col_type"),
           colDate: t("col_date"),
           ingested: "Ingested",
+          verified: "Verified",
           colActions: t("col_actions"),
           actionView: t("action_view"),
           actionDownload: t("action_download"),

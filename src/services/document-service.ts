@@ -59,25 +59,18 @@ export const documentService = {
     });
   },
 
-  ingestDocument: (
-    documentId: string,
-    type: string,
-    file: File,
-    clientId?: string,
-  ) => {
+  ingestDocument: (documentId: string, type: string, file: File, clientId?: string, siteId?: string) => {
     const formData = new FormData();
     if (clientId) {
       formData.append("clientId", clientId);
     }
     formData.append("type", type);
+    formData.append("documentType", type);
     formData.append("file", file);
-    return apiFetch<DocumentCreateApiResponse>(
-      `/company-policy/ingest/${documentId}/${clientId}/`,
-      {
-        method: "POST",
-        body: formData,
-      },
-    );
+    return apiFetch<DocumentCreateApiResponse>(`/company-policy/ingest/${documentId}/${clientId}/${siteId}`, {
+      method: "POST",
+      body: formData,
+    })
   },
 
   deleteDocument: (id: string) =>
@@ -89,6 +82,17 @@ export const documentService = {
     apiFetch<DocumentDeleteApiResponse>("/documents/delete-many", {
       method: "POST",
       body: JSON.stringify({ ids }),
+    }),
+
+  fetchIngestedDocument: (id: string) =>
+    apiFetch<DocumentCreateApiResponse>(`/documents/fetch-extracted-data/${id}`, {
+      method: "GET",
+    }),
+
+  updateIngestedDocument: (id: string, body: any) =>
+    apiFetch<DocumentCreateApiResponse>(`/documents/update-extracted-data/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(body)
     }),
 };
 

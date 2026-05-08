@@ -4,7 +4,7 @@
 
 export type DocumentType =
   | "Asset Maintenance and Service Documents"
-  | "Asset Manuals and Diagrams"
+  | "Asset Manuals"
   | "Site Diagrams and Documents"
   | "Outdated MOPs, SOPs and EOPs"
   | "Company Policies and Documents"
@@ -21,6 +21,7 @@ export interface DocumentApiRecord {
   documentUrl: string;
   siteId: string;
   ingested: boolean;
+  verified: boolean;
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;

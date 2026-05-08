@@ -80,6 +80,17 @@ export const documentService = {
       method: "POST",
       body: JSON.stringify({ ids }),
     }),
+
+  fetchIngestedDocument: (id: string) =>
+    apiFetch<DocumentCreateApiResponse>(`/documents/fetch-extracted-data/${id}`, {
+      method: "GET",
+    }),
+
+  updateIngestedDocument: (id: string, body: any) =>
+    apiFetch<DocumentCreateApiResponse>(`/documents/update-extracted-data/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(body)
+    }),
 };
 
 // Re-export the API record type so callers can import from one place

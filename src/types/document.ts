@@ -21,6 +21,7 @@ export interface DocumentApiRecord {
   documentUrl: string;
   siteId: string;
   ingested: boolean;
+  verified: boolean;
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;

@@ -52,12 +52,12 @@ export async function getLatestMOP(mopId: string): Promise<MOP | null> {
   }
 }
 
-export async function saveMOP(mop: MOP, mopId: string): Promise<MOP> {
+export async function saveMOP(mop: MOP, mopId: string, documentId?: string): Promise<MOP> {
   const segment = encodeURIComponent(mopId.trim());
   return unwrapData(
     apiFetch<ApiSuccessEnvelope<MOP>>(`/mop/${segment}`, {
       method: "PUT",
-      body: JSON.stringify(mop),
+      body: JSON.stringify({ ...mop, documentId }),
     }),
   );
 }

@@ -27,7 +27,12 @@ export const generatedDocumentService = {
       assetId,
       siteId
     }
-    return apiFetch<DocumentCreateApiResponse>("generatedDocument/create", {
+    return apiFetch<{
+      data: {
+        _id: string;
+        mopId?: string;
+      }
+    }>("generatedDocument/create", {
       method: "POST",
       body: JSON.stringify(data),
     });

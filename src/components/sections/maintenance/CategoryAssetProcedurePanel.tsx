@@ -30,12 +30,18 @@ const CategoryAssetProcedurePanel = ({
 
 
   const handleCreateClick = async (mopId: string) => {
-    const resp = await generatedDocumentService.createGeneratedDocument(mopId, 'mop', asset.assetId, site?._id!);
+    const resp = await generatedDocumentService.createGeneratedDocument(mopId, 'mop', asset._id, site?._id!);
     if (resp) {
-      console.log(resp);
+      if (resp.data.mopId) {
+        return router.push(`/en/dashboard/mop-management/${resp.data.mopId}`)
+
+      }
       router.push(`/en/dashboard/mop-management/create/${resp.data._id}`)
     }
   }
+
+  console.log({ asset });
+
 
 
   return (
@@ -43,6 +49,7 @@ const CategoryAssetProcedurePanel = ({
       <RequirementSection
         label={labels.mops}
         items={asset.mops}
+        existing={asset.mop}
         colorClass="border-blue-200"
         onGenerate={(item) => {
           onProcedureGenerate(item, "mop", asset.id);

@@ -29,6 +29,7 @@ export type MopDocumentContextParams = {
   mopId?: string;
   onAfterPersist?: () => void | Promise<void>;
   onCreateSaveSuccess?: () => void | Promise<void>;
+  documentId: string
 };
 
 const bumpModified = (m: MOP): MOP => ({
@@ -43,7 +44,7 @@ const bootstrapKey = (mode: "create" | "edit", mopId: string | undefined) =>
   `${mode}|${mopId ?? ""}`;
 
 export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
-  const { mode, mopId, onAfterPersist, onCreateSaveSuccess } = ctx;
+  const { mode, mopId, onAfterPersist, onCreateSaveSuccess, documentId } = ctx;
   const [mop, setMop] = useState<MOP>(() => createEmptyMop());
   const [asset, setAsset] = useState({ name: "" })
   const [loadedBootstrapKey, setLoadedBootstrapKey] = useState<string | null>(null);
@@ -60,28 +61,11 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
   const preArchiveDraftRef = useRef<MOP | null>(null);
   const archiveSessionActiveRef = useRef(false);
 
-  // const runStandaloneGenerate = useCallback(async (): Promise<boolean> => {
-  //   setGenerateError(null);
-  //   try {
-  //     const data = await generateMOP({ documentId: "69f88d94118cad90ca6f60fb" });
-  //     setMop(data);
-  //     latestSavedCanonicalRef.current = null;
-  //     setViewingArchivedVersionNumber(null);
-  //     archiveSessionActiveRef.current = false;
-  //     preArchiveDraftRef.current = null;
-  //     setMopNotFound(false);
-  //     return true;
-  //   } catch (err: unknown) {
-  //     setGenerateError(err instanceof Error ? err.message : "Generation failed.");
-  //     return false;
-  //   }
-  // }, []);
-
   const runStandaloneGenerateStream = useCallback(() => {
     setGenerateError(null);
 
     const evtSource = new EventSource(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/mop/generate?documentId=69f88d94118cad90ca6f60fb`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/mop/generate?documentId=${documentId}`
     );
 
     // initialize empty structure
@@ -544,9 +528,9 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
     setLoadedBootstrapKey(key);
   }, [key, runStandaloneGenerateStream]);
 
-  const persistMop = useCallback(async (): Promise<{ success: boolean }> => {
+  const persistMop = useCallback(async (documentId?: string): Promise<{ success: boolean }> => {
     if (mode === "create") {
-      const saved = await saveMOP(mop, "new");
+      const saved = await saveMOP(mop, "new", documentId);
       setMop(saved);
       latestSavedCanonicalRef.current = saved;
       preArchiveDraftRef.current = saved;

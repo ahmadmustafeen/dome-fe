@@ -2,15 +2,29 @@
 
 import { Menu } from "lucide-react";
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Typography } from "@/components/common";
 import { cn } from "@/utils/Helpers";
 
 import { DashboardSidebar } from "./DashboardSidebar";
+import { useAppContext } from "@/context/AppContext";
+import { useRouter } from "next/navigation";
 
 const DashboardShell = ({ children }: { children: ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter();
+  const {site, client} = useAppContext()
+
+  useEffect(()=>{
+    if(!client?._id){
+      return router.push("/en/dashboard")
+    }
+    if(!site?._id){
+      return router.push("/en/dashboard/client")
+    }
+
+  },[site, client])
 
   return (
     <div className="flex h-screen overflow-hidden">

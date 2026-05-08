@@ -32,11 +32,13 @@ export type ProcedureItem = {
 
 /** A single asset inside a category, with per-asset procedure items. */
 export type CategoryAsset = {
+  _id: string;
   id: string;
   assetId: string;
   assetName: string;
   location: string;
   serialNumber: string;
+  mop: string[];
   mops: ProcedureItem[];
   eops: ProcedureItem[];
   sops: ProcedureItem[];

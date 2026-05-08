@@ -23,15 +23,16 @@ import { MopVersionHistoryDrawer } from "./MopVersionHistoryDrawer";
 
 interface MopManagementClientProps {
   mopId?: string;
+  documentId?: string
 }
 
-export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
+export const MopManagementClient = ({ mopId, documentId }: MopManagementClientProps) => {
   const router = useRouter();
   const isEdit = mopId !== undefined && mopId.trim() !== "";
   const mode = isEdit ? "edit" : "create";
   const resolvedMopId = isEdit ? mopId.trim() : undefined;
 
-  const applyVersionRef = useRef<(row: CanonicalMopVersionApiRow) => void>(() => {});
+  const applyVersionRef = useRef<(row: CanonicalMopVersionApiRow) => void>(() => { });
 
   const {
     historyOpen,
@@ -80,6 +81,7 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
   } = useMopMockDocument({
     mode,
     mopId: resolvedMopId,
+    documentId,
     onAfterPersist: () => void refetchVersionHistory(),
     onCreateSaveSuccess: async () => {
       toast.success("MOP saved successfully");
@@ -95,7 +97,7 @@ export const MopManagementClient = ({ mopId }: MopManagementClientProps) => {
   const handleSave = useCallback(async () => {
     setIsSaving(true);
     try {
-      await persistMop();
+      await persistMop(documentId);
       if (isEdit) {
         toast.success("MOP updated successfully");
       }

@@ -4,8 +4,12 @@ import { Suspense } from "react";
 
 import { Typography } from "@/components/common";
 import { MopManagementClient } from "@/components/mop/MopManagementClient";
+import { useParams } from "next/navigation";
 
 export default function MopManagementCreatePage() {
+  const params = useParams();
+
+  const documentId = params.documentId as string;
 
   return (
     <Suspense
@@ -15,7 +19,7 @@ export default function MopManagementCreatePage() {
         </Typography>
       }
     >
-      <MopManagementClient />
+      <MopManagementClient documentId={documentId} />
     </Suspense>
   );
 }

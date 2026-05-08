@@ -30,7 +30,7 @@ import { toast } from "react-toastify";
 import { maintenanceScheduleService } from "@/services/maintenance-schedule-service";
 
 export default function MaintenanceSchedulePage() {
-  const { site } = useAppContext();
+  const { site, client } = useAppContext();
   const router = useRouter();
 
   const [isGenerator, setIsGenerator] = useState(false);
@@ -66,10 +66,10 @@ export default function MaintenanceSchedulePage() {
   }, []);
 
   useEffect(() => {
-    if (site) {
+    if (client?._id && site?._id) {
       fetchMaintenanceSchedule(site._id);
     }
-  }, [site]);
+  }, [client, site]);
 
   const handleViewDetails = useCallback(
     (categoryId: string) => {

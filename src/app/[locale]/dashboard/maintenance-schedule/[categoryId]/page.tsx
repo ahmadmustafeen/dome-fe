@@ -46,7 +46,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [, setData] = useState<MaintenanceRow[]>([]);
   const [, setSchedule] = useState<MaintenanceScheduleData | null>(null);
-  const { site } = useAppContext();
+  const { site, client } = useAppContext();
 
   const fetchMaintenanceSchedule = useCallback(async (siteId: string) => {
     setIsLoading(true);
@@ -88,10 +88,10 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
   }, []);
 
   useEffect(() => {
-    if (site) {
+    if (client?._id && site?._id) {
       fetchMaintenanceSchedule(site._id);
     }
-  }, [site]);
+  }, [site, client]);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);

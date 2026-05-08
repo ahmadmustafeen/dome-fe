@@ -1,6 +1,6 @@
 "use client";
 import type { ProcedureItem } from "@/types/maintenance-schedule";
-import { PenIcon } from 'lucide-react'
+import { Eye, PenIcon } from 'lucide-react'
 
 type RequirementSectionProps = {
   label: string;
@@ -8,6 +8,7 @@ type RequirementSectionProps = {
   handleCreateClick?: (mopId: string) => void,
   noIcon?: boolean;
   colorClass: string;
+  existing?: string[]
   onGenerate: (item: ProcedureItem) => void;
 };
 
@@ -17,10 +18,13 @@ const RequirementSection = ({
   items,
   noIcon,
   colorClass,
+  existing,
 }: RequirementSectionProps) => {
   const textColorClass = colorClass
     .replace("border-", "text-")
     .replace("-200", "-700");
+
+
 
   return (
     <div className={`rounded-lg border ${colorClass} p-4`}>
@@ -36,18 +40,24 @@ const RequirementSection = ({
         <p className="text-xs text-gray-400 italic">None required</p>
       ) : (
         <ol className="list-inside list-decimal space-y-2">
-          {items.map((item) => (
-            <li
+          {items.map((item) => {
+            console.log({ item: item._id, existing });
+
+            return <li
               key={item._id}
-              className="flex items-start gap-2 text-xs leading-relaxed text-gray-700"
+              className="flex min-h-10 items-start gap-2 text-xs leading-relaxed text-gray-700"
             >
               <div className="flex-1 text-left">
                 {item.title}</div>
-              {!noIcon ? <PenIcon className="w-4 h-4 cursor-pointer" size={2}
-                onClick={() => handleCreateClick?.(item._id)}
-              /> : null}
+              {noIcon ? null : existing?.includes(item._id.toString()) ?
+                <Eye className="w-4 h-4 cursor-pointer" size={2}
+                  onClick={() => handleCreateClick?.(item._id)} />
+                : <PenIcon className="w-4 h-4 cursor-pointer" size={2}
+                  onClick={() => handleCreateClick?.(item._id)}
+                />}
             </li>
-          ))}
+          }
+          )}
         </ol>
       )}
     </div>

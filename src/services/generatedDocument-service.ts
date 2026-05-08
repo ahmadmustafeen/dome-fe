@@ -1,5 +1,4 @@
 import { apiFetch } from "@/libs/fetcher";
-import type { DocumentCreateApiResponse } from "@/types/document";
 
 export type DocumentQueryParams = {
   page?: number;

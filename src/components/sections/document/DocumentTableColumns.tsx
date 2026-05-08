@@ -23,6 +23,7 @@ type ActionHandlers = {
     ingested: string;
     colActions: string;
     actionView: string;
+    verified: string;
     actionDownload: string;
     actionDelete: string;
   };
@@ -119,6 +120,16 @@ export const getDocumentColumns = ({
       cell: ({ row }) => (
         <span className="text-sm text-gray-600">
           {!!row.original.ingested ? "Yes" : "No"}
+        </span>
+      ),
+    },
+        {
+      id: "verified",
+      accessorKey: "verified",
+      header: labels.verified,
+      cell: ({ row }) => (
+        <span className="text-sm text-gray-600">
+          {!!row.original.verified ? "Yes" : "No"}
         </span>
       ),
     },

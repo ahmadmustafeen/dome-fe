@@ -55,15 +55,16 @@ export const documentService = {
       body: formData,
     });
   },
-  
-  ingestDocument: (documentId: string, type: string, file: File, clientId?: string) => {
+
+  ingestDocument: (documentId: string, type: string, file: File, clientId?: string, siteId?: string) => {
     const formData = new FormData();
     if (clientId) {
       formData.append("clientId", clientId);
     }
     formData.append("type", type);
+    formData.append("documentType", type);
     formData.append("file", file);
-    return apiFetch<DocumentCreateApiResponse>(`/company-policy/ingest/${documentId}/${clientId}/`, {
+    return apiFetch<DocumentCreateApiResponse>(`/company-policy/ingest/${documentId}/${clientId}/${siteId}`, {
       method: "POST",
       body: formData,
     })

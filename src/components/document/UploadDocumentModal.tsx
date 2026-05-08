@@ -105,7 +105,9 @@ const UploadDocumentModal = ({
         response.data._id,
         documentType,
         file!,
-        clientId)
+        clientId,
+        siteId
+      )
 
       toast.success("Document uploaded successfully, wait for the document for processing");
       onSuccess(response.data);

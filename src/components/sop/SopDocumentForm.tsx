@@ -7,6 +7,9 @@ import { MopPortalShell } from "@/components/mop/MopPortalShell";
 import type { SOP } from "@/types/sop";
 
 import { SopSection01Schedule } from "./SopSection01Schedule";
+import { SopSection02Site } from "./SopSection02Site";
+import { SopSection03Overview } from "./SopSection03Overview";
+import { SopSection04Facility } from "./SopSection04Facility";
 
 type SopDocumentFormProps = {
   sop: SOP;
@@ -15,6 +18,9 @@ type SopDocumentFormProps = {
   patchEquipment: (partial: Partial<SOP["equipment"]>) => void;
   patchProcedure: (partial: Partial<SOP["procedure"]>) => void;
   patchSignOff: (partial: Partial<SOP["signOff"]>) => void;
+  patchSite: (partial: Partial<SOP["site"]>) => void;
+  patchOverview: (partial: Partial<SOP["overview"]>) => void;
+  patchFacilityEffects: (rows: SOP["facilityEffects"]) => void;
 };
 
 export const SopDocumentForm = ({
@@ -24,6 +30,9 @@ export const SopDocumentForm = ({
   patchEquipment,
   patchProcedure,
   patchSignOff,
+  patchSite,
+  patchOverview,
+  patchFacilityEffects,
 }: SopDocumentFormProps) => {
   const bannerTitle =
     sop.document.title.trim() !== ""
@@ -38,13 +47,24 @@ export const SopDocumentForm = ({
             Loading SOP...
           </Typography>
         ) : (
-          <SopSection01Schedule
-            sop={sop}
-            patchDocument={patchDocument}
-            patchEquipment={patchEquipment}
-            patchProcedure={patchProcedure}
-            patchSignOff={patchSignOff}
-          />
+          <>
+            <SopSection01Schedule
+              sop={sop}
+              patchDocument={patchDocument}
+              patchEquipment={patchEquipment}
+              patchProcedure={patchProcedure}
+              patchSignOff={patchSignOff}
+            />
+            <SopSection02Site site={sop.site} patchSite={patchSite} />
+            <SopSection03Overview
+              overview={sop.overview}
+              patchOverview={patchOverview}
+            />
+            <SopSection04Facility
+              facilityEffects={sop.facilityEffects}
+              patchFacilityEffects={patchFacilityEffects}
+            />
+          </>
         )}
       </MopPortalShell>
     </div>

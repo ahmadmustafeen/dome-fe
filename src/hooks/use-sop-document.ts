@@ -2,14 +2,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 import { generateSOP, getLatestSOP, saveSOP } from "@/services/sop-service";
-import type {
-  SOP,
-  SOPDocument,
-  SOPEquipment,
-  SOPProcedure,
-  SOPSignOff,
-} from "@/types/sop";
+import type { SOP } from "@/types/sop";
 import type { CanonicalSopVersionApiRow } from "@/types/sop-api";
+import { bumpSopModified, patchSopSection, sopBootstrapKey } from "@/utils/sop-document-state";
 
 type SopDocumentContextParams = {
   mode: "create" | "edit";
@@ -17,29 +12,6 @@ type SopDocumentContextParams = {
   onAfterPersist?: () => void | Promise<void>;
   onCreateSaveSuccess?: (createdId: string) => void | Promise<void>;
 };
-
-const bumpModified = (sop: SOP): SOP => ({
-  ...sop,
-  document: { ...sop.document, lastModified: new Date().toISOString() },
-});
-
-const patch = <Section>(
-  prev: SOP | null,
-  key: keyof SOP,
-  partial: Partial<Section>,
-): SOP | null => {
-  if (prev === null) {
-    return prev;
-  }
-
-  return bumpModified({
-    ...prev,
-    [key]: { ...(prev[key] as object), ...partial },
-  });
-};
-
-const bootstrapKey = (mode: "create" | "edit", id: string | undefined) =>
-  `${mode}|${id ?? ""}`;
 
 export const useSopDocument = (ctx: SopDocumentContextParams) => {
   const { mode, sopId, onAfterPersist, onCreateSaveSuccess } = ctx;
@@ -52,7 +24,7 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
   const preArchiveDraftRef = useRef<SOP | null>(null);
   const archiveSessionActiveRef = useRef(false);
 
-  const key = bootstrapKey(mode, sopId);
+  const key = sopBootstrapKey(mode, sopId);
   const isBootstrapping = loadedKey !== key;
   const isReadOnly = viewingArchivedVersionNumber !== null;
 
@@ -94,20 +66,43 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
     };
   }, [mode, sopId, key]);
 
-  const patchDocument = useCallback((partial: Partial<SOPDocument>) => {
-    setSop((prev) => patch<SOPDocument>(prev, "document", partial));
+  const patchDocument = useCallback((partial: Partial<SOP["document"]>) => {
+    setSop((prev) => patchSopSection<SOP["document"]>(prev, "document", partial));
   }, []);
 
-  const patchEquipment = useCallback((partial: Partial<SOPEquipment>) => {
-    setSop((prev) => patch<SOPEquipment>(prev, "equipment", partial));
+  const patchEquipment = useCallback((partial: Partial<SOP["equipment"]>) => {
+    setSop((prev) =>
+      patchSopSection<SOP["equipment"]>(prev, "equipment", partial),
+    );
   }, []);
 
-  const patchProcedure = useCallback((partial: Partial<SOPProcedure>) => {
-    setSop((prev) => patch<SOPProcedure>(prev, "procedure", partial));
+  const patchProcedure = useCallback((partial: Partial<SOP["procedure"]>) => {
+    setSop((prev) =>
+      patchSopSection<SOP["procedure"]>(prev, "procedure", partial),
+    );
   }, []);
 
-  const patchSignOff = useCallback((partial: Partial<SOPSignOff>) => {
-    setSop((prev) => patch<SOPSignOff>(prev, "signOff", partial));
+  const patchSignOff = useCallback((partial: Partial<SOP["signOff"]>) => {
+    setSop((prev) => patchSopSection<SOP["signOff"]>(prev, "signOff", partial));
+  }, []);
+
+  const patchSite = useCallback((partial: Partial<SOP["site"]>) => {
+    setSop((prev) => patchSopSection<SOP["site"]>(prev, "site", partial));
+  }, []);
+
+  const patchOverview = useCallback((partial: Partial<SOP["overview"]>) => {
+    setSop((prev) => patchSopSection<SOP["overview"]>(prev, "overview", partial));
+  }, []);
+
+  const patchFacilityEffects = useCallback((rows: SOP["facilityEffects"]) => {
+    setSop((prev) =>
+      prev === null
+        ? prev
+        : bumpSopModified({
+            ...prev,
+            facilityEffects: rows,
+          }),
+    );
   }, []);
 
   const resetSop = useCallback(async () => {
@@ -190,6 +185,9 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
     patchEquipment,
     patchProcedure,
     patchSignOff,
+    patchSite,
+    patchOverview,
+    patchFacilityEffects,
     resetSop,
     persistSop,
   };

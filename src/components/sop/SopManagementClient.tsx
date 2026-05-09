@@ -63,6 +63,9 @@ export const SopManagementClient = ({ sopId }: SopManagementClientProps) => {
     patchEquipment,
     patchProcedure,
     patchSignOff,
+    patchSite,
+    patchOverview,
+    patchFacilityEffects,
     resetSop,
     persistSop,
   } = useSopDocument({
@@ -178,6 +181,9 @@ export const SopManagementClient = ({ sopId }: SopManagementClientProps) => {
               patchEquipment={patchEquipment}
               patchProcedure={patchProcedure}
               patchSignOff={patchSignOff}
+              patchSite={patchSite}
+              patchOverview={patchOverview}
+              patchFacilityEffects={patchFacilityEffects}
             />
           </fieldset>
         </section>

@@ -1,3 +1,4 @@
+import { buildDefaultSopSection04Rows } from "@/constants/sop-section04-facility";
 import type { SOP } from "@/types/sop";
 import type {
   CanonicalSopVersionApiRow,
@@ -34,6 +35,27 @@ const DUMMY_SOP: SOP = {
   signOff: {
     approvedBy: "",
   },
+  site: {
+    customer: "T5 Data Centers",
+    siteName: "T5 @ Chicago I",
+    dataCenterLocation: "MISSING",
+    siteAddress: "1000 Lunt Ave, Elk Grove Village, IL 60007",
+    siteContact: "",
+  },
+  overview: {
+    sopTitle: "Air Handling Units Weekly System Check",
+    workArea: "",
+    buildingFloorRoom: "",
+    accessRequirements: "",
+    workDeliveryType: "self_delivered",
+    qualificationsRequired:
+      "CET-1 Certification: Demonstrated basic competency in data center operations and safety protocols.\nHVAC Fundamentals Training: Basic understanding of HVAC system components, airflow, and refrigeration cycles.\nLENNOX HS29-060-13G Familiarization: Knowledge of the specific unit's operational characteristics, control panel, and safety features as outlined in the manufacturer's manual.\nSite-Specific Safety Training: Completion of all required site safety orientations and hazard awareness training.\nLockout/Tagout (LOTO) Awareness: Understanding of LOTO procedures, even if not performing LOTO for this specific check, to identify when it might be required for further intervention.",
+    advanceNotifications:
+      "Building Management System (BMS)/DCIM Operator: Notify of impending weekly check to ensure no alarms are generated due to routine inspection activities and to coordinate any necessary data logging.\nSite Operations Manager: Inform of planned activity and estimated duration.\nRelevant Data Center Tenants (if applicable): If the AHU directly serves a specific tenant space, a courtesy notification may be required.\nSecurity Personnel: For access to restricted areas or if external checks of the outdoor unit are required.",
+    postNotifications:
+      "Building Management System (BMS)/DCIM Operator: Confirm completion of the check, report any anomalies found, and ensure all system points are returned to normal monitoring.\nSite Operations Manager: Provide a brief summary of the check, including any findings or actions taken.\nLogbook/CMMS Update: Document completion of the weekly check in the equipment logbook or Computerized Maintenance Management System (CMMS).",
+  },
+  facilityEffects: buildDefaultSopSection04Rows(),
 };
 
 const cloneSOP = (sop: SOP): SOP => ({
@@ -42,6 +64,9 @@ const cloneSOP = (sop: SOP): SOP => ({
   equipment: { ...sop.equipment },
   procedure: { ...sop.procedure },
   signOff: { ...sop.signOff },
+  site: { ...sop.site },
+  overview: { ...sop.overview },
+  facilityEffects: sop.facilityEffects.map((row) => ({ ...row })),
 });
 
 const toListRow = (sop: SOP): SopListSummaryRow => ({

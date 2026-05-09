@@ -13,6 +13,9 @@ import {
 import { buildDefaultSopPreProcedureCheckRows } from "@/constants/sop-section07-details";
 import { buildDefaultSopDetailedProcedureStepRows } from "@/constants/sop-section07-procedure-steps";
 import { buildDefaultSopBackOutProcedureRows } from "@/constants/sop-section08-back-out";
+import { buildDefaultSopApproval } from "@/constants/sop-section09-approval";
+import { buildDefaultSopComments } from "@/constants/sop-section10-comments";
+import { buildDefaultSopReferences } from "@/constants/sop-section11-references";
 import type { SOP } from "@/types/sop";
 import type {
   CanonicalSopVersionApiRow,
@@ -88,6 +91,9 @@ const DUMMY_SOP: SOP = {
   backOutProcedures: {
     rows: buildDefaultSopBackOutProcedureRows(),
   },
+  approval: buildDefaultSopApproval(),
+  comments: buildDefaultSopComments(),
+  references: buildDefaultSopReferences(),
 };
 
 const cloneSOP = (sop: SOP): SOP => ({
@@ -129,6 +135,36 @@ const cloneSOP = (sop: SOP): SOP => ({
   },
   backOutProcedures: {
     rows: sop.backOutProcedures.rows.map((row) => ({ ...row })),
+  },
+  approval: {
+    reviewRows: sop.approval.reviewRows.map((row) => ({ ...row })),
+    effectiveDate: sop.approval.effectiveDate,
+    expirationDate: sop.approval.expirationDate,
+  },
+  comments: {
+    relevantCommentItems: sop.comments.relevantCommentItems.map((row) => ({
+      ...row,
+    })),
+    postOperationRequirementItems:
+      sop.comments.postOperationRequirementItems.map((row) => ({ ...row })),
+    additionalNoteItems: sop.comments.additionalNoteItems.map((row) => ({
+      ...row,
+    })),
+  },
+  references: {
+    equipmentDocumentRows: sop.references.equipmentDocumentRows.map((row) => ({
+      ...row,
+    })),
+    safetyStandardRows: sop.references.safetyStandardRows.map((row) => ({
+      ...row,
+    })),
+    additionalResourceRows: sop.references.additionalResourceRows.map((row) => ({
+      ...row,
+    })),
+    usageGuidelineItems: sop.references.usageGuidelineItems.map((row) => ({
+      ...row,
+    })),
+    verificationNotice: sop.references.verificationNotice,
   },
 });
 

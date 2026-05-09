@@ -14,6 +14,9 @@ import { SopSection05Safety } from "./SopSection05Safety";
 import { SopSection06RisksAssumptions } from "./SopSection06RisksAssumptions";
 import { SopSection07Details } from "./SopSection07Details";
 import { SopSection08BackOutProcedures } from "./SopSection08BackOutProcedures";
+import { SopSection09Approval } from "./SopSection09Approval";
+import { SopSection10Comments } from "./SopSection10Comments";
+import { SopSection11References } from "./SopSection11References";
 
 type SopDocumentFormProps = {
   sop: SOP;
@@ -31,6 +34,9 @@ type SopDocumentFormProps = {
   patchBackOutProcedures: (
     partial: Partial<SOP["backOutProcedures"]>,
   ) => void;
+  patchApproval: (partial: Partial<SOP["approval"]>) => void;
+  patchComments: (partial: Partial<SOP["comments"]>) => void;
+  patchReferences: (partial: Partial<SOP["references"]>) => void;
 };
 
 export const SopDocumentForm = ({
@@ -47,6 +53,9 @@ export const SopDocumentForm = ({
   patchRisksAssumptions,
   patchDetails,
   patchBackOutProcedures,
+  patchApproval,
+  patchComments,
+  patchReferences,
 }: SopDocumentFormProps) => {
   const bannerTitle =
     sop.document.title.trim() !== ""
@@ -90,6 +99,18 @@ export const SopDocumentForm = ({
             <SopSection08BackOutProcedures
               backOutProcedures={sop.backOutProcedures}
               patchBackOutProcedures={patchBackOutProcedures}
+            />
+            <SopSection09Approval
+              approval={sop.approval}
+              patchApproval={patchApproval}
+            />
+            <SopSection10Comments
+              comments={sop.comments}
+              patchComments={patchComments}
+            />
+            <SopSection11References
+              references={sop.references}
+              patchReferences={patchReferences}
             />
           </>
         )}

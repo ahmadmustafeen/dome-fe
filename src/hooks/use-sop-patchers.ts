@@ -75,6 +75,20 @@ export const useSopPatchers = (setSop: Dispatch<SetStateAction<SOP | null>>) => 
     [setSop],
   );
 
+  const patchApproval = useCallback((partial: Partial<SOP["approval"]>) => {
+    setSop((prev) => patchSopSection<SOP["approval"]>(prev, "approval", partial));
+  }, [setSop]);
+
+  const patchComments = useCallback((partial: Partial<SOP["comments"]>) => {
+    setSop((prev) => patchSopSection<SOP["comments"]>(prev, "comments", partial));
+  }, [setSop]);
+
+  const patchReferences = useCallback((partial: Partial<SOP["references"]>) => {
+    setSop((prev) =>
+      patchSopSection<SOP["references"]>(prev, "references", partial),
+    );
+  }, [setSop]);
+
   return {
     patchDocument,
     patchEquipment,
@@ -87,5 +101,8 @@ export const useSopPatchers = (setSop: Dispatch<SetStateAction<SOP | null>>) => 
     patchRisksAssumptions,
     patchDetails,
     patchBackOutProcedures,
+    patchApproval,
+    patchComments,
+    patchReferences,
   };
 };

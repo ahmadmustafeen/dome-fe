@@ -1,5 +1,28 @@
 import type { MOPStatus, RiskLevelOrEmpty } from "@/types/mop";
 import type { ProcedureFacilityEffectRow } from "@/types/procedure-facility";
+import type { SOPApproval } from "@/types/sop-approval";
+import type { SOPBackOutProcedures } from "@/types/sop-back-out";
+import type { SOPComments } from "@/types/sop-comments";
+import type { SOPDetails } from "@/types/sop-details";
+import type { SOPReferences } from "@/types/sop-references";
+
+export type {
+  SOPBackOutProcedureRow,
+  SOPBackOutProcedures,
+} from "@/types/sop-back-out";
+export type { SOPCommentItem, SOPComments } from "@/types/sop-comments";
+export type {
+  SOPDetailedProcedureStepRow,
+  SOPDetails,
+  SOPPreProcedureCheckRow,
+} from "@/types/sop-details";
+export type {
+  SOPReferenceAdditionalResourceRow,
+  SOPReferenceDocumentRow,
+  SOPReferenceGuidelineItem,
+  SOPReferences,
+  SOPReferenceSafetyStandardRow,
+} from "@/types/sop-references";
 
 export type SOPDocument = {
   title: string;
@@ -142,42 +165,6 @@ export type SOPRisksAssumptions = {
   criticalDecisionPointItems: SOPCriticalDecisionPointItem[];
 };
 
-export type SOPPreProcedureCheckRow = {
-  id: string;
-  step: number;
-  description: string;
-  expectedResult: string;
-  actualResult: string;
-  actionIfNotMet: string;
-};
-
-export type SOPDetailedProcedureStepRow = {
-  id: string;
-  step: number;
-  description: string;
-  expectedRange: string;
-  source: string;
-  recordedValue: string;
-  actionIfOutOfRange: string;
-};
-
-export type SOPDetails = {
-  preProcedureCheckRows: SOPPreProcedureCheckRow[];
-  detailedProcedureStepRows: SOPDetailedProcedureStepRow[];
-};
-
-export type SOPBackOutProcedureRow = {
-  id: string;
-  step: number;
-  description: string;
-  verification: string;
-  actionRequired: string;
-};
-
-export type SOPBackOutProcedures = {
-  rows: SOPBackOutProcedureRow[];
-};
-
 export type SOP = {
   id: string;
   document: SOPDocument;
@@ -191,4 +178,7 @@ export type SOP = {
   risksAssumptions: SOPRisksAssumptions;
   details: SOPDetails;
   backOutProcedures: SOPBackOutProcedures;
+  approval: SOPApproval;
+  comments: SOPComments;
+  references: SOPReferences;
 };

@@ -1,3 +1,5 @@
+import type { EopSection04SafetyChecklistItem } from "@/types/eop";
+
 export const EOP_SECTION_04_HEADING =
   "Section 04: Immediate Emergency Actions - Power Failure Diagnostics";
 
@@ -32,3 +34,10 @@ export const newEopSection04ToolRow = () => ({
   modelType: "",
   available: false,
 });
+
+export const newEopSection04SafetyChecklistItem =
+  (): EopSection04SafetyChecklistItem => ({
+    id: crypto.randomUUID(),
+    text: "",
+    checked: false,
+  });

@@ -31,13 +31,14 @@ export const EopSection08SupportingInformationSection = ({
     <EopSection08PolicyDocumentsTable
       rows={supportingInformation.policyDocuments}
       note={supportingInformation.policyNote}
+      onRowsChange={(rows) =>
+        patchSupportingInformation({ policyDocuments: rows })}
     />
 
     <EopSection08InfrastructureTable
       rows={supportingInformation.infrastructureLocations}
       onRowsChange={(rows) =>
-        patchSupportingInformation({ infrastructureLocations: rows })
-      }
+        patchSupportingInformation({ infrastructureLocations: rows })}
     />
 
     <EopSection08SparePartsTable

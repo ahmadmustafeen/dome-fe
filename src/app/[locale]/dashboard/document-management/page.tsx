@@ -23,6 +23,7 @@ import { documentService } from "@/services/document-service";
 import type { DocumentApiRecord, DocumentType } from "@/types/document";
 import { extractDocumentName } from "@/utils/formatters";
 import { useRouter } from "next/navigation";
+import { socket } from "@/lib/socket";
 
 const PAGE_LIMIT = 10;
 
@@ -95,6 +96,54 @@ export default function DocumentManagementPage() {
     setTotalCount((prev) => prev + 1);
   };
 
+  useEffect(() => {
+    if (!site?._id) return;
+
+
+    const onConnect = () => {
+      socket.emit("join-site", site._id);
+    };
+
+    const onDocumentsUpdated = (payload: any) => {
+      setDocuments((prev) => {
+        const exists = prev.find(
+          (d) => d._id === payload.document._id
+        );
+
+        if (!exists) {
+          return [payload.document, ...prev];
+        }
+
+        return prev.map((doc) =>
+          doc._id === payload.document._id
+            ? payload.document
+            : doc
+        );
+      });
+    };
+
+    socket.on("connect", onConnect);
+
+    socket.on(
+      "documents-updated",
+      onDocumentsUpdated
+    );
+
+    // already connected case
+    if (socket.connected) {
+      onConnect();
+    }
+
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off(
+        "documents-updated",
+        onDocumentsUpdated
+      );
+    };
+  }, [site?._id]);
+
+
   const handleDeleteConfirm = async () => {
     if (!deleteTargetId) {
       return;
@@ -147,8 +196,8 @@ export default function DocumentManagementPage() {
   const columns = useMemo(
     () =>
       getDocumentColumns({
-        onView: (doc) =>{
-        router.push(`/en/dashboard/document-management/${doc._id}`)
+        onView: (doc) => {
+          router.push(`/en/dashboard/document-management/${doc._id}`)
 
         },
         onDownload: (doc) => {

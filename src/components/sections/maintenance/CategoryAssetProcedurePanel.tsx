@@ -40,10 +40,6 @@ const CategoryAssetProcedurePanel = ({
     }
   }
 
-  console.log({ asset });
-
-
-
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
       <RequirementSection

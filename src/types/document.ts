@@ -4,14 +4,15 @@
 
 export type DocumentType =
   | "Asset Maintenance and Service Documents"
-  | "Asset Manuals"
+  // | "Asset Manuals"
   | "Site Diagrams and Documents"
-  | "Outdated MOPs, SOPs and EOPs"
+  | 'Site Policies'
+  | 'Site Documents'
+  | 'Basis of design'
+  | 'Approved submittal'
   | "Company Policies and Documents"
-  | "Asset List" |
-  'Basis of Design' |
-  'Electrical One-Line Diagram' |
-  'Mechanical One-Line Diagram'
+  | 'Electrical One-Line Diagram'
+  | 'Mechanical One-Line Diagram'
 
 
 export interface DocumentApiRecord {

@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
+import { useSopPatchers } from "@/hooks/use-sop-patchers";
 import { generateSOP, getLatestSOP, saveSOP } from "@/services/sop-service";
 import type { SOP } from "@/types/sop";
 import type { CanonicalSopVersionApiRow } from "@/types/sop-api";
-import { bumpSopModified, patchSopSection, sopBootstrapKey } from "@/utils/sop-document-state";
+import { sopBootstrapKey } from "@/utils/sop-document-state";
 
 type SopDocumentContextParams = {
   mode: "create" | "edit";
@@ -27,6 +28,7 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
   const key = sopBootstrapKey(mode, sopId);
   const isBootstrapping = loadedKey !== key;
   const isReadOnly = viewingArchivedVersionNumber !== null;
+  const patchers = useSopPatchers(setSop);
 
   useEffect(() => {
     let cancelled = false;
@@ -65,45 +67,6 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
       cancelled = true;
     };
   }, [mode, sopId, key]);
-
-  const patchDocument = useCallback((partial: Partial<SOP["document"]>) => {
-    setSop((prev) => patchSopSection<SOP["document"]>(prev, "document", partial));
-  }, []);
-
-  const patchEquipment = useCallback((partial: Partial<SOP["equipment"]>) => {
-    setSop((prev) =>
-      patchSopSection<SOP["equipment"]>(prev, "equipment", partial),
-    );
-  }, []);
-
-  const patchProcedure = useCallback((partial: Partial<SOP["procedure"]>) => {
-    setSop((prev) =>
-      patchSopSection<SOP["procedure"]>(prev, "procedure", partial),
-    );
-  }, []);
-
-  const patchSignOff = useCallback((partial: Partial<SOP["signOff"]>) => {
-    setSop((prev) => patchSopSection<SOP["signOff"]>(prev, "signOff", partial));
-  }, []);
-
-  const patchSite = useCallback((partial: Partial<SOP["site"]>) => {
-    setSop((prev) => patchSopSection<SOP["site"]>(prev, "site", partial));
-  }, []);
-
-  const patchOverview = useCallback((partial: Partial<SOP["overview"]>) => {
-    setSop((prev) => patchSopSection<SOP["overview"]>(prev, "overview", partial));
-  }, []);
-
-  const patchFacilityEffects = useCallback((rows: SOP["facilityEffects"]) => {
-    setSop((prev) =>
-      prev === null
-        ? prev
-        : bumpSopModified({
-            ...prev,
-            facilityEffects: rows,
-          }),
-    );
-  }, []);
 
   const resetSop = useCallback(async () => {
     setLoadedKey(null);
@@ -181,13 +144,7 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
     viewingArchivedVersionNumber,
     applyCanonicalVersionRow,
     resumeEditingLatestSop,
-    patchDocument,
-    patchEquipment,
-    patchProcedure,
-    patchSignOff,
-    patchSite,
-    patchOverview,
-    patchFacilityEffects,
+    ...patchers,
     resetSop,
     persistSop,
   };

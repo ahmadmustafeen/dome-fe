@@ -10,6 +10,9 @@ import { SopSection01Schedule } from "./SopSection01Schedule";
 import { SopSection02Site } from "./SopSection02Site";
 import { SopSection03Overview } from "./SopSection03Overview";
 import { SopSection04Facility } from "./SopSection04Facility";
+import { SopSection05Safety } from "./SopSection05Safety";
+import { SopSection06RisksAssumptions } from "./SopSection06RisksAssumptions";
+import { SopSection07Details } from "./SopSection07Details";
 
 type SopDocumentFormProps = {
   sop: SOP;
@@ -21,6 +24,9 @@ type SopDocumentFormProps = {
   patchSite: (partial: Partial<SOP["site"]>) => void;
   patchOverview: (partial: Partial<SOP["overview"]>) => void;
   patchFacilityEffects: (rows: SOP["facilityEffects"]) => void;
+  patchSafety: (partial: Partial<SOP["safety"]>) => void;
+  patchRisksAssumptions: (partial: Partial<SOP["risksAssumptions"]>) => void;
+  patchDetails: (partial: Partial<SOP["details"]>) => void;
 };
 
 export const SopDocumentForm = ({
@@ -33,6 +39,9 @@ export const SopDocumentForm = ({
   patchSite,
   patchOverview,
   patchFacilityEffects,
+  patchSafety,
+  patchRisksAssumptions,
+  patchDetails,
 }: SopDocumentFormProps) => {
   const bannerTitle =
     sop.document.title.trim() !== ""
@@ -63,6 +72,15 @@ export const SopDocumentForm = ({
             <SopSection04Facility
               facilityEffects={sop.facilityEffects}
               patchFacilityEffects={patchFacilityEffects}
+            />
+            <SopSection05Safety safety={sop.safety} patchSafety={patchSafety} />
+            <SopSection06RisksAssumptions
+              risksAssumptions={sop.risksAssumptions}
+              patchRisksAssumptions={patchRisksAssumptions}
+            />
+            <SopSection07Details
+              details={sop.details}
+              patchDetails={patchDetails}
             />
           </>
         )}

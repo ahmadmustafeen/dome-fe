@@ -1,11 +1,10 @@
 "use client";
 
-import { History } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-import { AppButton, SectionWrapper, Typography } from "@/components/common";
+import { SectionWrapper, Typography } from "@/components/common";
 import { DASHBOARD_ROUTES } from "@/constants/routes";
 import { useSopDocument } from "@/hooks/use-sop-document";
 import { useSopVersionHistoryPanel } from "@/hooks/use-sop-version-history-panel";
@@ -14,6 +13,7 @@ import type { CanonicalSopVersionApiRow } from "@/types/sop-api";
 import { SopArchivedVersionBanner } from "./SopArchivedVersionBanner";
 import { SopDocumentForm } from "./SopDocumentForm";
 import { SopFormActionsFooter } from "./SopFormActionsFooter";
+import { SopManagementHeader } from "./SopManagementHeader";
 import { SopNotFoundState } from "./SopNotFoundState";
 import { SopVersionHistoryDrawer } from "./SopVersionHistoryDrawer";
 
@@ -66,6 +66,9 @@ export const SopManagementClient = ({ sopId }: SopManagementClientProps) => {
     patchSite,
     patchOverview,
     patchFacilityEffects,
+    patchSafety,
+    patchRisksAssumptions,
+    patchDetails,
     resetSop,
     persistSop,
   } = useSopDocument({
@@ -145,19 +148,11 @@ export const SopManagementClient = ({ sopId }: SopManagementClientProps) => {
       ) : null}
 
       <SectionWrapper className="flex min-h-full flex-col">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 sm:mb-6">
-          <Typography variant="h1" className="min-w-0 flex-1">
-            Standard Operating Procedure (SOP)
-          </Typography>
-          <AppButton
-            variant="default"
-            icon={<History className="h-4 w-4" />}
-            title="Version History"
-            onClick={handleOpenHistory}
-            disabled={isBootstrapping || showVersionHistory === false}
-            className="shrink-0"
-          />
-        </div>
+        <SopManagementHeader
+          isBootstrapping={isBootstrapping}
+          showVersionHistory={showVersionHistory}
+          onOpenHistory={handleOpenHistory}
+        />
 
         <section className="flex min-h-0 min-w-0 flex-1 flex-col gap-3 pb-24">
           {viewingArchivedVersionNumber !== null ? (
@@ -184,6 +179,9 @@ export const SopManagementClient = ({ sopId }: SopManagementClientProps) => {
               patchSite={patchSite}
               patchOverview={patchOverview}
               patchFacilityEffects={patchFacilityEffects}
+              patchSafety={patchSafety}
+              patchRisksAssumptions={patchRisksAssumptions}
+              patchDetails={patchDetails}
             />
           </fieldset>
         </section>

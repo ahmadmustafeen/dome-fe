@@ -1,4 +1,17 @@
 import { buildDefaultSopSection04Rows } from "@/constants/sop-section04-facility";
+import { buildDefaultSopSiteHazardRows } from "@/constants/sop-section05-hazards";
+import {
+  buildDefaultSopEmergencyContactRows,
+  buildDefaultSopPpeRows,
+  buildDefaultSopToolRows,
+} from "@/constants/sop-section05-safety";
+import {
+  buildDefaultSopCriticalDecisionItems,
+  buildDefaultSopKeyAssumptionRows,
+  buildDefaultSopRiskAnalysisRows,
+} from "@/constants/sop-section06-risks";
+import { buildDefaultSopPreProcedureCheckRows } from "@/constants/sop-section07-details";
+import { buildDefaultSopDetailedProcedureStepRows } from "@/constants/sop-section07-procedure-steps";
 import type { SOP } from "@/types/sop";
 import type {
   CanonicalSopVersionApiRow,
@@ -56,6 +69,21 @@ const DUMMY_SOP: SOP = {
       "Building Management System (BMS)/DCIM Operator: Confirm completion of the check, report any anomalies found, and ensure all system points are returned to normal monitoring.\nSite Operations Manager: Provide a brief summary of the check, including any findings or actions taken.\nLogbook/CMMS Update: Document completion of the weekly check in the equipment logbook or Computerized Maintenance Management System (CMMS).",
   },
   facilityEffects: buildDefaultSopSection04Rows(),
+  safety: {
+    ppeRequirementRows: buildDefaultSopPpeRows(),
+    toolRequirementRows: buildDefaultSopToolRows(),
+    emergencyContactRows: buildDefaultSopEmergencyContactRows(),
+    siteHazardRows: buildDefaultSopSiteHazardRows(),
+  },
+  risksAssumptions: {
+    riskAnalysisRows: buildDefaultSopRiskAnalysisRows(),
+    keyAssumptionRows: buildDefaultSopKeyAssumptionRows(),
+    criticalDecisionPointItems: buildDefaultSopCriticalDecisionItems(),
+  },
+  details: {
+    preProcedureCheckRows: buildDefaultSopPreProcedureCheckRows(),
+    detailedProcedureStepRows: buildDefaultSopDetailedProcedureStepRows(),
+  },
 };
 
 const cloneSOP = (sop: SOP): SOP => ({
@@ -67,6 +95,34 @@ const cloneSOP = (sop: SOP): SOP => ({
   site: { ...sop.site },
   overview: { ...sop.overview },
   facilityEffects: sop.facilityEffects.map((row) => ({ ...row })),
+  safety: {
+    ppeRequirementRows: sop.safety.ppeRequirementRows.map((row) => ({ ...row })),
+    toolRequirementRows: sop.safety.toolRequirementRows.map((row) => ({ ...row })),
+    emergencyContactRows: sop.safety.emergencyContactRows.map((row) => ({
+      ...row,
+    })),
+    siteHazardRows: sop.safety.siteHazardRows.map((row) => ({ ...row })),
+  },
+  risksAssumptions: {
+    riskAnalysisRows: sop.risksAssumptions.riskAnalysisRows.map((row) => ({
+      ...row,
+    })),
+    keyAssumptionRows: sop.risksAssumptions.keyAssumptionRows.map((row) => ({
+      ...row,
+    })),
+    criticalDecisionPointItems:
+      sop.risksAssumptions.criticalDecisionPointItems.map((row) => ({
+        ...row,
+      })),
+  },
+  details: {
+    preProcedureCheckRows: sop.details.preProcedureCheckRows.map((row) => ({
+      ...row,
+    })),
+    detailedProcedureStepRows: sop.details.detailedProcedureStepRows.map((row) => ({
+      ...row,
+    })),
+  },
 });
 
 const toListRow = (sop: SOP): SopListSummaryRow => ({

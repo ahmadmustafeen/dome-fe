@@ -69,6 +69,7 @@ export const SopManagementClient = ({ sopId }: SopManagementClientProps) => {
     patchSafety,
     patchRisksAssumptions,
     patchDetails,
+    patchBackOutProcedures,
     resetSop,
     persistSop,
   } = useSopDocument({
@@ -182,6 +183,7 @@ export const SopManagementClient = ({ sopId }: SopManagementClientProps) => {
               patchSafety={patchSafety}
               patchRisksAssumptions={patchRisksAssumptions}
               patchDetails={patchDetails}
+              patchBackOutProcedures={patchBackOutProcedures}
             />
           </fieldset>
         </section>

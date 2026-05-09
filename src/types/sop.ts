@@ -166,6 +166,18 @@ export type SOPDetails = {
   detailedProcedureStepRows: SOPDetailedProcedureStepRow[];
 };
 
+export type SOPBackOutProcedureRow = {
+  id: string;
+  step: number;
+  description: string;
+  verification: string;
+  actionRequired: string;
+};
+
+export type SOPBackOutProcedures = {
+  rows: SOPBackOutProcedureRow[];
+};
+
 export type SOP = {
   id: string;
   document: SOPDocument;
@@ -178,4 +190,5 @@ export type SOP = {
   safety: SOPSafetyRequirements;
   risksAssumptions: SOPRisksAssumptions;
   details: SOPDetails;
+  backOutProcedures: SOPBackOutProcedures;
 };

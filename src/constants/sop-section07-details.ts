@@ -1,4 +1,5 @@
 import type { SOPPreProcedureCheckRow } from "@/types/sop";
+import { newProcedureRowId } from "@/utils/procedure-row-id";
 
 export const SOP_SECTION_07_HEADING = "Section 07: SOP Details";
 
@@ -60,3 +61,12 @@ export const SOP_SECTION_07_PRE_CHECK_ROWS: readonly SOPPreProcedureCheckRow[] =
 export const buildDefaultSopPreProcedureCheckRows =
   (): SOPPreProcedureCheckRow[] =>
     SOP_SECTION_07_PRE_CHECK_ROWS.map((row) => ({ ...row }));
+
+export const newSopPreProcedureCheckRow = (): SOPPreProcedureCheckRow => ({
+  id: newProcedureRowId("sop-pre-check"),
+  step: 0,
+  description: "",
+  expectedResult: "",
+  actualResult: "",
+  actionIfNotMet: "",
+});

@@ -13,6 +13,7 @@ import { SopSection04Facility } from "./SopSection04Facility";
 import { SopSection05Safety } from "./SopSection05Safety";
 import { SopSection06RisksAssumptions } from "./SopSection06RisksAssumptions";
 import { SopSection07Details } from "./SopSection07Details";
+import { SopSection08BackOutProcedures } from "./SopSection08BackOutProcedures";
 
 type SopDocumentFormProps = {
   sop: SOP;
@@ -27,6 +28,9 @@ type SopDocumentFormProps = {
   patchSafety: (partial: Partial<SOP["safety"]>) => void;
   patchRisksAssumptions: (partial: Partial<SOP["risksAssumptions"]>) => void;
   patchDetails: (partial: Partial<SOP["details"]>) => void;
+  patchBackOutProcedures: (
+    partial: Partial<SOP["backOutProcedures"]>,
+  ) => void;
 };
 
 export const SopDocumentForm = ({
@@ -42,6 +46,7 @@ export const SopDocumentForm = ({
   patchSafety,
   patchRisksAssumptions,
   patchDetails,
+  patchBackOutProcedures,
 }: SopDocumentFormProps) => {
   const bannerTitle =
     sop.document.title.trim() !== ""
@@ -81,6 +86,10 @@ export const SopDocumentForm = ({
             <SopSection07Details
               details={sop.details}
               patchDetails={patchDetails}
+            />
+            <SopSection08BackOutProcedures
+              backOutProcedures={sop.backOutProcedures}
+              patchBackOutProcedures={patchBackOutProcedures}
             />
           </>
         )}

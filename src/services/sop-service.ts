@@ -12,6 +12,7 @@ import {
 } from "@/constants/sop-section06-risks";
 import { buildDefaultSopPreProcedureCheckRows } from "@/constants/sop-section07-details";
 import { buildDefaultSopDetailedProcedureStepRows } from "@/constants/sop-section07-procedure-steps";
+import { buildDefaultSopBackOutProcedureRows } from "@/constants/sop-section08-back-out";
 import type { SOP } from "@/types/sop";
 import type {
   CanonicalSopVersionApiRow,
@@ -84,6 +85,9 @@ const DUMMY_SOP: SOP = {
     preProcedureCheckRows: buildDefaultSopPreProcedureCheckRows(),
     detailedProcedureStepRows: buildDefaultSopDetailedProcedureStepRows(),
   },
+  backOutProcedures: {
+    rows: buildDefaultSopBackOutProcedureRows(),
+  },
 };
 
 const cloneSOP = (sop: SOP): SOP => ({
@@ -122,6 +126,9 @@ const cloneSOP = (sop: SOP): SOP => ({
     detailedProcedureStepRows: sop.details.detailedProcedureStepRows.map((row) => ({
       ...row,
     })),
+  },
+  backOutProcedures: {
+    rows: sop.backOutProcedures.rows.map((row) => ({ ...row })),
   },
 });
 

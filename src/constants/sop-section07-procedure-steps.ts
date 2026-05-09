@@ -1,4 +1,5 @@
 import type { SOPDetailedProcedureStepRow } from "@/types/sop";
+import { newProcedureRowId } from "@/utils/procedure-row-id";
 
 export const SOP_SECTION_07_DETAILED_STEP_ROWS: readonly SOPDetailedProcedureStepRow[] =
   [
@@ -68,3 +69,14 @@ export const SOP_SECTION_07_DETAILED_STEP_ROWS: readonly SOPDetailedProcedureSte
 export const buildDefaultSopDetailedProcedureStepRows =
   (): SOPDetailedProcedureStepRow[] =>
     SOP_SECTION_07_DETAILED_STEP_ROWS.map((row) => ({ ...row }));
+
+export const newSopDetailedProcedureStepRow =
+  (): SOPDetailedProcedureStepRow => ({
+    id: newProcedureRowId("sop-detail-step"),
+    step: 0,
+    description: "",
+    expectedRange: "",
+    source: "",
+    recordedValue: "",
+    actionIfOutOfRange: "",
+  });

@@ -1,6 +1,8 @@
 "use client";
 
-import { Textarea } from "@/components/ui/Textarea";
+import type { ProcedureFixedStepEditableColumn } from "@/components/procedure/ProcedureFixedStepEditableRowsTable";
+import { ProcedureFixedStepEditableRowsTable } from "@/components/procedure/ProcedureFixedStepEditableRowsTable";
+import { newSopPreProcedureCheckRow } from "@/constants/sop-section07-details";
 import type { SOPDetails, SOPPreProcedureCheckRow } from "@/types/sop";
 
 type SopSection07PreProcedureChecksProps = {
@@ -8,66 +10,28 @@ type SopSection07PreProcedureChecksProps = {
   patchDetails: (partial: Partial<SOPDetails>) => void;
 };
 
-const updateActualResult = (
-  rows: SOPPreProcedureCheckRow[],
-  rowId: string,
-  actualResult: string,
-): SOPPreProcedureCheckRow[] =>
-  rows.map((row) => (row.id === rowId ? { ...row, actualResult } : row));
+const PRE_PROCEDURE_CHECK_COLUMNS = [
+  { header: "Description", field: "description" },
+  { header: "Expected Result", field: "expectedResult" },
+  { header: "Actual Result", field: "actualResult" },
+  { header: "Action if Not Met", field: "actionIfNotMet" },
+] satisfies readonly ProcedureFixedStepEditableColumn<
+  SOPPreProcedureCheckRow,
+  keyof Omit<SOPPreProcedureCheckRow, "id" | "step">
+>[];
 
 export const SopSection07PreProcedureChecks = ({
   rows,
   patchDetails,
 }: SopSection07PreProcedureChecksProps) => {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[900px] border-collapse text-sm">
-        <thead>
-          <tr className="bg-[#0f3456] text-white">
-            <th className="w-16 px-3 py-2 text-center font-semibold">Step</th>
-            <th className="px-3 py-2 text-left font-semibold">Description</th>
-            <th className="px-3 py-2 text-left font-semibold">Expected Result</th>
-            <th className="px-3 py-2 text-left font-semibold">
-              Actual Result
-            </th>
-            <th className="px-3 py-2 text-left font-semibold">
-              Action if Not Met
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr key={row.id} className="bg-white">
-              <td className="border border-gray-200 px-3 py-2 text-center align-top text-gray-900">
-                {row.step}
-              </td>
-              <td className="border border-gray-200 px-3 py-2 align-top text-gray-900">
-                {row.description}
-              </td>
-              <td className="border border-gray-200 px-3 py-2 align-top text-gray-700">
-                {row.expectedResult}
-              </td>
-              <td className="border border-gray-200 px-2 py-1 align-top">
-                <Textarea
-                  value={row.actualResult}
-                  onChange={(event) =>
-                    patchDetails({
-                      preProcedureCheckRows: updateActualResult(
-                        rows,
-                        row.id,
-                        event.target.value,
-                      ),
-                    })}
-                  className="min-h-20 w-full"
-                />
-              </td>
-              <td className="border border-gray-200 px-3 py-2 align-top text-gray-700">
-                {row.actionIfNotMet}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <ProcedureFixedStepEditableRowsTable
+      rows={rows}
+      columns={PRE_PROCEDURE_CHECK_COLUMNS}
+      ariaLabelGroup="SOP pre-procedure checks row controls"
+      newRow={newSopPreProcedureCheckRow}
+      onRowsChange={(preProcedureCheckRows) =>
+        patchDetails({ preProcedureCheckRows })}
+    />
   );
 };

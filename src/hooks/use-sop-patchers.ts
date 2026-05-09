@@ -62,6 +62,19 @@ export const useSopPatchers = (setSop: Dispatch<SetStateAction<SOP | null>>) => 
     setSop((prev) => patchSopSection<SOP["details"]>(prev, "details", partial));
   }, [setSop]);
 
+  const patchBackOutProcedures = useCallback(
+    (partial: Partial<SOP["backOutProcedures"]>) => {
+      setSop((prev) =>
+        patchSopSection<SOP["backOutProcedures"]>(
+          prev,
+          "backOutProcedures",
+          partial,
+        ),
+      );
+    },
+    [setSop],
+  );
+
   return {
     patchDocument,
     patchEquipment,
@@ -73,5 +86,6 @@ export const useSopPatchers = (setSop: Dispatch<SetStateAction<SOP | null>>) => 
     patchSafety,
     patchRisksAssumptions,
     patchDetails,
+    patchBackOutProcedures,
   };
 };

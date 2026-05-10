@@ -5,7 +5,7 @@ export type DocumentType =
   | "Outdated MOPs, SOPs and EOPs"
   | "Company Policies and Documents"
   | "Asset List" |
-  'Basis of Design' |
+  'Basis of design' |
   'Electrical One-Line Diagram' |
   'Mechanical One-Line Diagram'
 

@@ -115,11 +115,21 @@ export default function PolicyEditor({ params }: PageProps) {
                 </div>
               ) : Array.isArray(value) ? (
                 <textarea
-                  className="border p-2 rounded"
-                  value={value.join("\n")}
-                  onChange={(e) =>
-                    updateField(key, e.target.value.split("\n"))
+                  className="border p-2 rounded min-h-37.5 font-mono"
+                  value={
+                    value.every((v) => typeof v === "string")
+                      ? value.join("\n")
+                      : JSON.stringify(value, null, 2)
                   }
+                  onChange={(e) => {
+                    try {
+                      // try parsing JSON first (for array of objects)
+                      updateField(key, JSON.parse(e.target.value));
+                    } catch {
+                      // fallback to string array
+                      updateField(key, e.target.value.split("\n"));
+                    }
+                  }}
                 />
               ) : (
                 <textarea

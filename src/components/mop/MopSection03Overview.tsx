@@ -1,6 +1,4 @@
-"use client";
-
-import { Typography } from "@/components/common";
+import { ProcedureSectionCard } from "@/components/procedure/ProcedureSectionCard";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import type { MopSection03FieldRow } from "@/constants/mop-section03-overview";
@@ -55,47 +53,42 @@ export const MopSection03Overview = ({
   const showContractorBlock = overview.workDeliveryType === "subcontractor";
 
   return (
-    <div className="mt-5 rounded-lg border border-[#e0e0e0] bg-white px-3 py-4 shadow-sm sm:mt-6 sm:px-4 sm:py-5">
-      <Typography
-        variant="h6"
-        className="mb-3 border-b border-gray-200 pb-2 font-bold text-gray-900"
-      >
-        {MOP_SECTION_03_HEADING}
-      </Typography>
+    <div className="mt-5 sm:mt-6">
+      <ProcedureSectionCard heading={MOP_SECTION_03_HEADING}>
+        <div>
+          {MOP_SECTION_03_LEAD_FIELD_ROWS.map((row) =>
+            renderMappedRow(row, overview, patchOverview),
+          )}
 
-      <div>
-        {MOP_SECTION_03_LEAD_FIELD_ROWS.map((row) =>
-          renderMappedRow(row, overview, patchOverview),
-        )}
+          <MopFormTableRow label="Self Delivered / Vendor:">
+            <select
+              className="mop-doc-input"
+              value={overview.workDeliveryType}
+              onChange={(e) => {
+                patchOverview({
+                  workDeliveryType: e.target.value as MOPWorkDeliveryType,
+                });
+              }}
+            >
+              {MOP_SECTION_03_DELIVERY_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          </MopFormTableRow>
 
-        <MopFormTableRow label="Self Delivered / Vendor:">
-          <select
-            className="mop-doc-input"
-            value={overview.workDeliveryType}
-            onChange={(e) => {
-              patchOverview({
-                workDeliveryType: e.target.value as MOPWorkDeliveryType,
-              });
-            }}
-          >
-            {MOP_SECTION_03_DELIVERY_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
-        </MopFormTableRow>
+          {showContractorBlock
+            ? MOP_SECTION_03_CONTRACTOR_FIELD_ROWS.map((row) =>
+                renderMappedRow(row, overview, patchOverview),
+              )
+            : null}
 
-        {showContractorBlock
-          ? MOP_SECTION_03_CONTRACTOR_FIELD_ROWS.map((row) =>
-              renderMappedRow(row, overview, patchOverview),
-            )
-          : null}
-
-        {MOP_SECTION_03_TAIL_FIELD_ROWS.map((row) =>
-          renderMappedRow(row, overview, patchOverview),
-        )}
-      </div>
+          {MOP_SECTION_03_TAIL_FIELD_ROWS.map((row) =>
+            renderMappedRow(row, overview, patchOverview),
+          )}
+        </div>
+      </ProcedureSectionCard>
     </div>
   );
 };

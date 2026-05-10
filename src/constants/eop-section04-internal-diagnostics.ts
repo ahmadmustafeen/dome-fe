@@ -3,3 +3,13 @@ export const EOP_SECTION_04_INTERNAL_DIAGNOSTICS_HEADING =
 
 export const EOP_SECTION_04_INTERNAL_DIAGNOSTICS_WARNING =
   "WARNING: If internal diagnostics do not identify the cause of Power Failure, proceed to Section 05 for external equipment diagnostics. The fault may be upstream from the unit.";
+
+export const newEopSection04InternalDiagnosticRow = () => ({
+  id: crypto.randomUUID(),
+  stepNumber: 0,
+  componentToCheck: "",
+  expectedCondition: "",
+  actualReading: "",
+  actualReadingPlaceholder: "",
+  passFail: "" as const,
+});

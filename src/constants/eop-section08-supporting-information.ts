@@ -11,3 +11,25 @@ export const EOP_SECTION_08_INFRASTRUCTURE_HEADING =
 export const EOP_SECTION_08_SPARE_PARTS_HEADING = "Spare Parts Inventory";
 
 export const EOP_SECTION_08_RELATED_DOCUMENTS_HEADING = "Related Documents";
+
+export const newEopSection08PolicyDocumentRow = () => ({
+  id: crypto.randomUUID(),
+  documentName: "",
+  uploadDate: "",
+  documentType: "",
+});
+
+export const newEopSection08InfrastructureRow = () => ({
+  id: crypto.randomUUID(),
+  infrastructureElement: "",
+  locationDetails: "",
+  accessRequirements: "",
+});
+
+export const newEopSection08SparePartRow = () => ({
+  id: crypto.randomUUID(),
+  partDescription: "",
+  partNumber: "",
+  quantity: "",
+  storageLocation: "",
+});

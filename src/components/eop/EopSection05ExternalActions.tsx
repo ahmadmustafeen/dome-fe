@@ -1,13 +1,22 @@
 "use client";
 
 import { Typography } from "@/components/common";
-import { Input } from "@/components/ui/Input";
-import { EOP_SECTION_05_HEADING } from "@/constants/eop-section05-external-actions";
+import { Textarea } from "@/components/ui/Textarea";
+import {
+  EOP_SECTION_05_HEADING,
+  newEopSection05ExternalActionRow,
+} from "@/constants/eop-section05-external-actions";
+import { MOP_DYNAMIC_TABLE_MIN_ROWS } from "@/constants/mop-dynamic-table";
 import type {
   EopSection05ExternalActionRow,
   EOPSection05ExternalActions,
 } from "@/types/eop";
+import {
+  insertRowAfterId,
+  removeRowById,
+} from "@/utils/mop-dynamic-table-mutations";
 
+import { MopDynamicTableRowControls } from "../mop/MopDynamicTableRowControls";
 import { EopPassFailCheckboxes } from "./EopPassFailCheckboxes";
 
 type EopSection05ExternalActionsProps = {
@@ -19,10 +28,23 @@ const updateRow = (
   rows: EopSection05ExternalActionRow[],
   rowId: string,
   partial: Partial<
-    Pick<EopSection05ExternalActionRow, "actualStatus" | "passFail">
+    Pick<
+      EopSection05ExternalActionRow,
+      | "actualStatus"
+      | "connectionToUnit"
+      | "externalEquipment"
+      | "passFail"
+      | "potentialFailureMode"
+      | "verificationMethod"
+    >
   >,
 ): EopSection05ExternalActionRow[] =>
   rows.map((row) => (row.id === rowId ? { ...row, ...partial } : row));
+
+const renumberRows = (
+  rows: EopSection05ExternalActionRow[],
+): EopSection05ExternalActionRow[] =>
+  rows.map((row, index) => ({ ...row, stepNumber: index + 1 }));
 
 export const EopSection05ExternalActions = ({
   externalActions,
@@ -60,6 +82,9 @@ export const EopSection05ExternalActions = ({
               <th className="px-3 py-2 text-left font-semibold">Verification Method</th>
               <th className="px-3 py-2 text-left font-semibold">Actual Status</th>
               <th className="w-28 px-3 py-2 text-left font-semibold">Pass/Fail</th>
+              <th scope="col" className="w-17 px-1 py-2 text-center text-xs font-semibold">
+                +-
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -69,29 +94,64 @@ export const EopSection05ExternalActions = ({
                   {row.stepNumber}
                 </td>
                 <td className="border border-gray-200 px-3 py-2 align-top text-gray-900">
-                  {row.externalEquipment}
+                  <Textarea
+                    value={row.externalEquipment}
+                    onChange={(e) =>
+                      patchExternalActions({
+                        actionRows: updateRow(rows, row.id, {
+                          externalEquipment: e.target.value,
+                        }),
+                      })}
+                    className="min-h-24 w-full"
+                  />
                 </td>
                 <td className="border border-gray-200 px-3 py-2 align-top text-gray-700">
-                  {row.connectionToUnit}
+                  <Textarea
+                    value={row.connectionToUnit}
+                    onChange={(e) =>
+                      patchExternalActions({
+                        actionRows: updateRow(rows, row.id, {
+                          connectionToUnit: e.target.value,
+                        }),
+                      })}
+                    className="min-h-24 w-full"
+                  />
                 </td>
                 <td className="border border-gray-200 px-3 py-2 align-top text-gray-700">
-                  {row.potentialFailureMode}
+                  <Textarea
+                    value={row.potentialFailureMode}
+                    onChange={(e) =>
+                      patchExternalActions({
+                        actionRows: updateRow(rows, row.id, {
+                          potentialFailureMode: e.target.value,
+                        }),
+                      })}
+                    className="min-h-24 w-full"
+                  />
                 </td>
                 <td className="border border-gray-200 px-3 py-2 align-top text-gray-700">
-                  {row.verificationMethod}
+                  <Textarea
+                    value={row.verificationMethod}
+                    onChange={(e) =>
+                      patchExternalActions({
+                        actionRows: updateRow(rows, row.id, {
+                          verificationMethod: e.target.value,
+                        }),
+                      })}
+                    className="min-h-24 w-full"
+                  />
                 </td>
                 <td className="border border-gray-200 px-2 py-1 align-top">
-                  <Input
+                  <Textarea
                     value={row.actualStatus}
                     onChange={(e) =>
                       patchExternalActions({
                         actionRows: updateRow(rows, row.id, {
                           actualStatus: e.target.value,
                         }),
-                      })
-                    }
+                      })}
                     placeholder={row.actualStatusPlaceholder}
-                    className="w-full"
+                    className="min-h-24 w-full"
                   />
                 </td>
                 <td className="border border-gray-200 px-2 py-2 align-top">
@@ -100,8 +160,33 @@ export const EopSection05ExternalActions = ({
                     onChange={(value) =>
                       patchExternalActions({
                         actionRows: updateRow(rows, row.id, { passFail: value }),
-                      })
-                    }
+                      })}
+                  />
+                </td>
+                <td className="border border-gray-200 px-1 align-middle">
+                  <MopDynamicTableRowControls
+                    ariaLabelGroup="EOP external actions row controls"
+                    rowCount={rows.length}
+                    onAddBelow={() =>
+                      patchExternalActions({
+                        actionRows: renumberRows(
+                          insertRowAfterId(
+                            rows,
+                            row.id,
+                            newEopSection05ExternalActionRow(),
+                          ),
+                        ),
+                      })}
+                    onRemove={() => {
+                      const next = removeRowById(
+                        rows,
+                        row.id,
+                        MOP_DYNAMIC_TABLE_MIN_ROWS,
+                      );
+                      if (next !== undefined) {
+                        patchExternalActions({ actionRows: renumberRows(next) });
+                      }
+                    }}
                   />
                 </td>
               </tr>

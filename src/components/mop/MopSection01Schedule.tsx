@@ -1,6 +1,4 @@
-"use client";
-
-import { Typography } from "@/components/common";
+import { ProcedureSectionCard } from "@/components/procedure/ProcedureSectionCard";
 import { MOP_SECTION_01_HEADING } from "@/constants/mop-form";
 import type { MOP } from "@/types/mop";
 
@@ -22,14 +20,7 @@ export const MopSection01Schedule = ({
   patchSignOff,
 }: MopSection01ScheduleProps) => {
   return (
-    <div className="rounded-lg border border-[#e0e0e0] bg-white px-3 py-4 shadow-sm sm:px-4 sm:py-5">
-      <Typography
-        variant="h6"
-        className="mb-3 border-b border-gray-200 pb-2 font-bold text-gray-900"
-      >
-        {MOP_SECTION_01_HEADING}
-      </Typography>
-
+    <ProcedureSectionCard heading={MOP_SECTION_01_HEADING}>
       <div>
         <MopSection01FieldRows
           mop={mop}
@@ -39,6 +30,6 @@ export const MopSection01Schedule = ({
           patchSignOff={patchSignOff}
         />
       </div>
-    </div>
+    </ProcedureSectionCard>
   );
 };

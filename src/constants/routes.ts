@@ -15,6 +15,7 @@ export enum DASHBOARD_ROUTES {
   DOCUMENT_MANAGEMENT = "/en/dashboard/document-management",
   DOCUMENT_GENERATOR = "/en/dashboard/document-generator",
   SOP_MANAGEMENT = "/en/dashboard/sop-management",
+  SOP_MANAGEMENT_CREATE = "/en/dashboard/sop-management/create",
   EOP_MANAGEMENT = "/en/dashboard/eop-management",
   EOP_MANAGEMENT_CREATE = "/en/dashboard/eop-management/create",
   MOP_MANAGEMENT = "/en/dashboard/mop-management",
@@ -26,6 +27,9 @@ export const mopEditRoute = (mopId: string): string =>
 
 export const eopEditRoute = (eopId: string): string =>
   `${DASHBOARD_ROUTES.EOP_MANAGEMENT}/${eopId}`;
+
+export const sopEditRoute = (sopId: string): string =>
+  `${DASHBOARD_ROUTES.SOP_MANAGEMENT}/${sopId}`;
 
 export const maintenanceCategoryRoute = (categoryId: string): string =>
   `${DASHBOARD_ROUTES.MAINTENANCE_SCHEDULE}/${categoryId}`;

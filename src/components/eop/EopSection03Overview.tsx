@@ -1,7 +1,5 @@
-"use client";
-
-import { Typography } from "@/components/common";
 import { MopFormTableRow } from "@/components/mop/MopFormTableRow";
+import { ProcedureSectionCard } from "@/components/procedure/ProcedureSectionCard";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import type { EopSection03FieldRow } from "@/constants/eop-section03-overview";
@@ -52,41 +50,35 @@ export const EopSection03Overview = ({
   patchOverview,
 }: EopSection03OverviewProps) => {
   return (
-    <div className="mt-5 rounded-lg border border-[#e0e0e0] bg-white px-3 py-4 shadow-sm sm:mt-6 sm:px-4 sm:py-5">
-      <Typography
-        variant="h6"
-        className="mb-3 border-b border-gray-200 pb-2 font-bold text-gray-900"
-      >
-        {EOP_SECTION_03_HEADING}
-      </Typography>
+    <div className="mt-5 sm:mt-6">
+      <ProcedureSectionCard heading={EOP_SECTION_03_HEADING}>
+        <div>
+          {EOP_SECTION_03_LEAD_FIELD_ROWS.map((row) =>
+            renderMappedRow(row, overview, patchOverview),
+          )}
 
-      <div>
-        {EOP_SECTION_03_LEAD_FIELD_ROWS.map((row) =>
-          renderMappedRow(row, overview, patchOverview),
-        )}
+          <MopFormTableRow label="Delivery Method:">
+            <select
+              className="mop-doc-input"
+              value={overview.workDeliveryType}
+              onChange={(e) =>
+                patchOverview({
+                  workDeliveryType: e.target.value as EOPWorkDeliveryType,
+                })}
+            >
+              {EOP_SECTION_03_DELIVERY_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </MopFormTableRow>
 
-        <MopFormTableRow label="Delivery Method:">
-          <select
-            className="mop-doc-input"
-            value={overview.workDeliveryType}
-            onChange={(e) =>
-              patchOverview({
-                workDeliveryType: e.target.value as EOPWorkDeliveryType,
-              })
-            }
-          >
-            {EOP_SECTION_03_DELIVERY_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </MopFormTableRow>
-
-        {EOP_SECTION_03_TAIL_FIELD_ROWS.map((row) =>
-          renderMappedRow(row, overview, patchOverview),
-        )}
-      </div>
+          {EOP_SECTION_03_TAIL_FIELD_ROWS.map((row) =>
+            renderMappedRow(row, overview, patchOverview),
+          )}
+        </div>
+      </ProcedureSectionCard>
     </div>
   );
 };

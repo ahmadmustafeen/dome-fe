@@ -1,0 +1,1 @@
+export const PROCEDURE_DYNAMIC_TABLE_MIN_ROWS = 1;

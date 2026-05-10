@@ -37,18 +37,21 @@ export const EopSection07Recovery = ({
       description="Confirm stable operating conditions are available at all system levels:"
       items={recovery.resolutionVerificationItems}
       onItemsChange={(items) =>
-        patchRecovery({ resolutionVerificationItems: items })
-      }
+        patchRecovery({ resolutionVerificationItems: items })}
+      editable
     />
 
     <div className="mt-3 rounded-md border border-gray-200 bg-gray-50 p-3">
-      <label className="flex flex-col gap-2 text-sm font-medium text-gray-800 sm:flex-row sm:items-center">
+      <label
+        className="flex flex-col gap-2 text-sm font-medium text-gray-800 sm:flex-row sm:items-center"
+        htmlFor="eop-disconnect-voltage"
+      >
         <span>Confirm voltage readings at equipment disconnect:</span>
         <Input
+          id="eop-disconnect-voltage"
           value={recovery.disconnectVoltage}
           onChange={(event) =>
-            patchRecovery({ disconnectVoltage: event.target.value })
-          }
+            patchRecovery({ disconnectVoltage: event.target.value })}
           placeholder="Enter voltage"
           className="w-full sm:w-40"
         />
@@ -61,6 +64,7 @@ export const EopSection07Recovery = ({
       description="Complete all safety verifications before energizing equipment:"
       items={recovery.preStartSafetyItems}
       onItemsChange={(items) => patchRecovery({ preStartSafetyItems: items })}
+      editable
     />
 
     <EopSection07Checklist
@@ -68,12 +72,17 @@ export const EopSection07Recovery = ({
       description="Follow the manufacturer-specific startup procedure for LENNOX HS29-060-13G:"
       items={recovery.restartSequenceItems}
       onItemsChange={(items) => patchRecovery({ restartSequenceItems: items })}
+      editable
     />
 
     <div className="mt-3 rounded-md border border-gray-200 bg-gray-50 p-3">
-      <label className="flex flex-col gap-2 text-sm font-medium text-gray-800 sm:flex-row sm:items-center">
+      <label
+        className="flex flex-col gap-2 text-sm font-medium text-gray-800 sm:flex-row sm:items-center"
+        htmlFor="eop-startup-time"
+      >
         <span>Record startup time:</span>
         <Input
+          id="eop-startup-time"
           type="time"
           value={recovery.startupTime}
           onChange={(event) => patchRecovery({ startupTime: event.target.value })}
@@ -109,8 +118,8 @@ export const EopSection07Recovery = ({
       description="Confirm equipment is operating within normal parameters:"
       items={recovery.performanceValidationItems}
       onItemsChange={(items) =>
-        patchRecovery({ performanceValidationItems: items })
-      }
+        patchRecovery({ performanceValidationItems: items })}
+      editable
     />
 
     <EopSection07Checklist
@@ -118,28 +127,35 @@ export const EopSection07Recovery = ({
       description="Complete recovery documentation and notifications per Element Critical Limble CMMS Policy:"
       items={recovery.returnToNormalItems}
       onItemsChange={(items) => patchRecovery({ returnToNormalItems: items })}
+      editable
     />
 
     <div className="mt-3 grid gap-3 rounded-md border border-gray-200 bg-gray-50 p-3 sm:grid-cols-[1fr_180px]">
-      <label className="text-sm font-medium text-gray-800">
+      <label
+        className="text-sm font-medium text-gray-800"
+        htmlFor="eop-restoration-completed-by"
+      >
         Restoration completed by:
         <Input
+          id="eop-restoration-completed-by"
           value={recovery.restorationCompletedBy}
           onChange={(event) =>
-            patchRecovery({ restorationCompletedBy: event.target.value })
-          }
+            patchRecovery({ restorationCompletedBy: event.target.value })}
           placeholder="Name"
           className="mt-1 w-full"
         />
       </label>
-      <label className="text-sm font-medium text-gray-800">
+      <label
+        className="text-sm font-medium text-gray-800"
+        htmlFor="eop-restoration-completed-at"
+      >
         at
         <Input
+          id="eop-restoration-completed-at"
           type="time"
           value={recovery.restorationCompletedAt}
           onChange={(event) =>
-            patchRecovery({ restorationCompletedAt: event.target.value })
-          }
+            patchRecovery({ restorationCompletedAt: event.target.value })}
           className="mt-1 w-full"
         />
       </label>

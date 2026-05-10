@@ -162,6 +162,66 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
 
       })
 
+      evtSource.addEventListener("sectionFiveToolsRequired", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("sectionFiveToolsRequired failed");
+          return;
+        }
+        setSop((prev: any) => ({
+          ...prev,
+          safety: {
+            ...prev?.safety,
+            toolRequirementRows: data || [],
+          },
+        }));
+      });
+
+      evtSource.addEventListener("sectionFiveSiteHazards", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("sectionFiveSiteHazards failed");
+          return;
+        }
+        setSop((prev: any) => ({
+          ...prev,
+          safety: {
+            ...prev?.safety,
+            siteHazardRows: data || [],
+          },
+        }));
+      });
+
+      evtSource.addEventListener("sectionSixRiskAnalysisRow", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("sectionSixRiskAnalysisRow failed");
+          return;
+        }
+        setSop((prev: any) => ({
+          ...prev,
+          risksAssumptions: {
+            ...prev?.risksAssumptions,
+            riskAnalysisRows: data || [],
+          },
+        }));
+      });
+      evtSource.addEventListener("sectionSixAssumptionsAndDecision", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("sectionSixRiskAnalysisRow failed");
+          return;
+        }
+        setSop((prev: any) => ({
+          ...prev,
+          risksAssumptions: {
+            ...prev?.risksAssumptions,
+            keyAssumptionRows: data.keyAssumptionRows,
+            criticalDecisionPointItems: data.criticalDecisionPointItems,
+          },
+        }));
+      });
+
       evtSource.addEventListener("done", () => {
         toast.success("Succesfully generated, Please save the document manually.");
         setIsGenerating(false)

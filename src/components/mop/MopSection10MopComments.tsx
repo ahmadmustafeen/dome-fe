@@ -1,20 +1,36 @@
 "use client";
 
 import { Typography } from "@/components/common";
+import { ProcedureEditableList } from "@/components/procedure/ProcedureEditableList";
 import { Textarea } from "@/components/ui/Textarea";
-import { X } from 'lucide-react'
 import {
   MOP_SECTION_10_ADDITIONAL_NOTES_LABEL,
   MOP_SECTION_10_MOP_COMMENTS_LABEL,
   MOP_SECTION_10_POST_MAINTENANCE_HEADING,
   MOP_SECTION_10_SUBHEADING,
 } from "@/constants/mop-section10-comments";
+import type { ProcedureEditableListItem } from "@/components/procedure/ProcedureEditableList";
 import type { MOPSection10MopComments } from "@/types/mop";
 
 type MopSection10MopCommentsProps = {
   mopComments: MOPSection10MopComments;
   patchMopComments: (p: Partial<MOPSection10MopComments>) => void;
 };
+
+const postMaintenanceToListItems = (
+  bullets: MOPSection10MopComments["postMaintenanceBullets"],
+): ProcedureEditableListItem[] =>
+  bullets.map((b) => ({ id: b.id, text: b.title }));
+
+const listItemsToPostMaintenance = (
+  items: ProcedureEditableListItem[],
+): MOPSection10MopComments["postMaintenanceBullets"] =>
+  items.map((row) => ({ id: row.id, title: row.text }));
+
+const newPostMaintenanceListItem = (): ProcedureEditableListItem => ({
+  id: crypto.randomUUID(),
+  text: "",
+});
 
 export const MopSection10MopComments = ({
   mopComments,
@@ -40,16 +56,17 @@ export const MopSection10MopComments = ({
       />
 
       <div className="mt-6 border border-gray-300 bg-gray-100 p-4">
-        <Typography variant="h6" className="mt-0 mb-2 text-sm font-semibold text-gray-900">
+        <Typography variant="h6" className="mt-0 mb-3 text-sm font-semibold text-gray-900">
           {MOP_SECTION_10_POST_MAINTENANCE_HEADING}
         </Typography>
-        <ul className="mb-0 list-inside list-disc space-y-1 pl-0 text-sm text-gray-800">
-          {postMaintenanceBullets?.map((line: { index: string, title: string }) => (
-            <li key={line.index} className="pl-0">
-              {line.title}
-            </li>
-          ))}
-        </ul>
+        <ProcedureEditableList
+          items={postMaintenanceToListItems(postMaintenanceBullets)}
+          ariaLabelPrefix="Post-maintenance requirement"
+          newItem={newPostMaintenanceListItem}
+          onItemsChange={(items) =>
+            patchMopComments({ postMaintenanceBullets: listItemsToPostMaintenance(items) })
+          }
+        />
       </div>
 
       <div className="mt-5">

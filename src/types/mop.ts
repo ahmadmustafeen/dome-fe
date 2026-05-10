@@ -68,12 +68,18 @@ export type MOPSection09MopApproval = {
   mopExpirationDate: string;
 };
 
+/** Section 10 — one post-maintenance requirement line (AI / persisted). */
+export type MopPostMaintenanceBullet = {
+  id: string;
+  title: string;
+};
+
 /** Section 10 — MOP Comments (`generateSection10` in `section-11-comments/route.js`). */
 export type MOPSection10MopComments = {
   /** All MOP comment lines in one field (replaces per-line inputs). */
   mopCommentsText: string;
   additionalNotes: string;
-  postMaintenanceBullets: [{ index: string, title: string }];
+  postMaintenanceBullets: MopPostMaintenanceBullet[];
 };
 
 /** Section 11 — company policy table row (`generateSection11` in `section-generators.js`). */

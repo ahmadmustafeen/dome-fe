@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
+import { resolveMopComments } from "@/constants/mop-section10-comments";
+import { useAppContext } from "@/context/AppContext";
 import { createEmptyMop } from "@/services/mop-mock-service";
 import { getLatestMOP, saveMOP } from "@/services/mop-service";
 import type {
@@ -22,7 +24,6 @@ import type {
   MOPStep,
 } from "@/types/mop";
 import type { CanonicalMopVersionApiRow } from "@/types/mop-api";
-import { useAppContext } from "@/context/AppContext";
 
 export type MopDocumentContextParams = {
   mode: "create" | "edit";
@@ -51,7 +52,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
   const [loadedBootstrapKey, setLoadedBootstrapKey] = useState<string | null>(
     null,
   );
-  const [isGenerating, setIsGenerating] = useState(false)
+  const [isGenerating, setIsGenerating] = useState(false);
   const [generateError, setGenerateError] = useState<string | null>(null);
   const [mopNotFound, setMopNotFound] = useState(false);
   const [viewingArchivedVersionNumber, setViewingArchivedVersionNumber] =
@@ -77,7 +78,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
       loading: true,
     }));
 
-    setIsGenerating(true)
+    setIsGenerating(true);
 
     evtSource.addEventListener("allData", (e) => {
       const data = JSON.parse(e.data);
@@ -258,18 +259,27 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
 
       setMop((prev: any) => ({
         ...prev,
-        mopComments: {
+        mopComments: resolveMopComments({
           ...prev.mopComments,
-          postMaintenanceBullets: data.postmaintenenaceRequirements,
-          additionalNotes: data.additionalNotes,
-          mopCommentsText: data.mopComments,
-        },
+          mopCommentsText:
+            typeof data.mopComments === "string"
+              ? data.mopComments
+              : prev.mopComments.mopCommentsText,
+          additionalNotes:
+            typeof data.additionalNotes === "string"
+              ? data.additionalNotes
+              : prev.mopComments.additionalNotes,
+          postMaintenanceBullets:
+            Array.isArray(data.postmaintenenaceRequirements) === true
+              ? data.postmaintenenaceRequirements
+              : prev.mopComments.postMaintenanceBullets,
+        }),
       }));
     });
 
     evtSource.addEventListener("done", () => {
       toast.success("Succesfully generated, Please save the document manually.");
-      setIsGenerating(false)
+      setIsGenerating(false);
       // setMop((prev: any) => ({
       //   ...prev,
       //   loading: false,
@@ -477,7 +487,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
     },
     [],
   );
-  const { site } = useAppContext()
+  const { site } = useAppContext();
 
   const patchFacilityEffects = useCallback((rows: MopFacilityEffectRow[]) => {
     setMop((prev) =>

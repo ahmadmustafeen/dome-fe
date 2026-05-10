@@ -121,7 +121,7 @@
     "col_name": "Document Name",
     "col_type": "Document Type",
     "col_size": "File Size",
-    "col_date": "Uploaded Date",
+    "col_date": "Last Updated Date",
     "col_actions": "Actions",
     "action_view": "View",
     "action_download": "Download",

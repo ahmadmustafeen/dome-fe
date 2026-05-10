@@ -653,8 +653,5 @@ export const generateMOP = async (
 
 export const saveMOP = async (mop: MOP): Promise<{ success: boolean }> => {
   await delay(400);
-  // Later: POST /api/mop — replace body with real request.
-  // eslint-disable-next-line no-console -- mock persistence
-  console.log("saveMOP (mock):", JSON.stringify(mop, null, 2));
   return { success: true };
 };

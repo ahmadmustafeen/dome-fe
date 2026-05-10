@@ -41,8 +41,6 @@ const RequirementSection = ({
       ) : (
         <ol className="list-inside list-decimal space-y-2">
           {items.map((item) => {
-            console.log({ item: item._id, existing });
-
             return <li
               key={item._id}
               className="flex min-h-10 items-start gap-2 text-xs leading-relaxed text-gray-700"

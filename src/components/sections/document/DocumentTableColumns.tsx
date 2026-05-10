@@ -123,7 +123,7 @@ export const getDocumentColumns = ({
         </span>
       ),
     },
-        {
+    {
       id: "verified",
       accessorKey: "verified",
       header: labels.verified,
@@ -141,12 +141,15 @@ export const getDocumentColumns = ({
         return (
           <div className="flex items-center justify-end gap-1.5">
             <button
+              disabled={!row.original.ingested}
               onClick={(e) => {
                 e.stopPropagation();
                 onView(doc);
               }}
               title={labels.actionView}
-              className="flex cursor-pointer items-center gap-1 rounded bg-slate-900 px-2.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-slate-700"
+              className="flex
+              disabled:bg-slate-400 disabled:cursor-not-allowed
+              cursor-pointer items-center gap-1 rounded bg-slate-900 px-2.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-slate-700"
             >
               <Eye className="h-3.5 w-3.5" />
               {labels.actionView}

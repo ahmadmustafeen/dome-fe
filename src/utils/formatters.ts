@@ -55,8 +55,6 @@ export const extractDocumentName = (url: string): string => {
  * @param url
  */
 export const extractFileExtension = (url: string): string => {
-  console.log({ url });
-
   const name = extractDocumentName?.(url);
   const ext = name?.split(".")?.pop()?.toLowerCase() ?? "";
   return ext || "pdf";

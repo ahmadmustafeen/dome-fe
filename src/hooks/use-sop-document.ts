@@ -222,6 +222,68 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
         }));
       });
 
+      evtSource.addEventListener("sectionSevenPreProcedure", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("sectionSevenPreProcedure failed");
+          return;
+        }
+        setSop((prev: any) => ({
+          ...prev,
+          details: {
+            ...prev?.details,
+            preProcedureCheckRows: data,
+          },
+        }));
+      });
+
+      evtSource.addEventListener("sectionSevenDetailedProcedureSteps", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("sectionSevenDetailedProcedureSteps failed");
+          return;
+        }
+        setSop((prev: any) => ({
+          ...prev,
+          details: {
+            ...prev?.details,
+            detailedProcedureStepRows: data,
+          },
+        }));
+      });
+
+      evtSource.addEventListener("sectionEightBackoutProcedure", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("sectionEightBackoutProcedure failed");
+          return;
+        }
+        setSop((prev: any) => ({
+          ...prev,
+          backOutProcedures: {
+            ...prev?.backOutProcedures,
+            rows: data,
+          },
+        }));
+      });
+
+      evtSource.addEventListener("sectionTenComments", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("sectionTenComments failed");
+          return;
+        }
+        setSop((prev: any) => ({
+          ...prev,
+          comments: {
+            ...prev?.comments,
+            relevantCommentItems: data.relevantCommentItems,
+            postOperationRequirementItems: data.postOperationRequirementItems,
+            additionalNoteItems: data.additionalNoteItems,
+          },
+        }));
+      });
+
       evtSource.addEventListener("done", () => {
         toast.success("Succesfully generated, Please save the document manually.");
         setIsGenerating(false)

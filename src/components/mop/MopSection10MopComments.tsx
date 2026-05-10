@@ -1,6 +1,7 @@
 "use client";
 
 import { Typography } from "@/components/common";
+import type { ProcedureEditableListItem } from "@/components/procedure/ProcedureEditableList";
 import { ProcedureEditableList } from "@/components/procedure/ProcedureEditableList";
 import { Textarea } from "@/components/ui/Textarea";
 import {
@@ -9,7 +10,6 @@ import {
   MOP_SECTION_10_POST_MAINTENANCE_HEADING,
   MOP_SECTION_10_SUBHEADING,
 } from "@/constants/mop-section10-comments";
-import type { ProcedureEditableListItem } from "@/components/procedure/ProcedureEditableList";
 import type { MOPSection10MopComments } from "@/types/mop";
 
 type MopSection10MopCommentsProps = {
@@ -36,14 +36,21 @@ export const MopSection10MopComments = ({
   mopComments,
   patchMopComments,
 }: MopSection10MopCommentsProps) => {
-  const { mopCommentsText, additionalNotes, postMaintenanceBullets } = mopComments;
+  const { mopCommentsText, additionalNotes, postMaintenanceBullets } =
+    mopComments;
 
   return (
     <div className="mb-8 border-t border-gray-200 pt-6 last:mb-0">
-      <Typography variant="h5" className="mb-2 text-base font-semibold text-gray-900">
+      <Typography
+        variant="h5"
+        className="mb-2 text-base font-semibold text-gray-900"
+      >
         {MOP_SECTION_10_SUBHEADING}
       </Typography>
-      <Typography variant="h6" className="mb-2 text-sm font-semibold text-gray-900">
+      <Typography
+        variant="h6"
+        className="mb-2 text-sm font-semibold text-gray-900"
+      >
         {MOP_SECTION_10_MOP_COMMENTS_LABEL}
       </Typography>
       <Textarea
@@ -56,7 +63,10 @@ export const MopSection10MopComments = ({
       />
 
       <div className="mt-6 border border-gray-300 bg-gray-100 p-4">
-        <Typography variant="h6" className="mt-0 mb-3 text-sm font-semibold text-gray-900">
+        <Typography
+          variant="h6"
+          className="mt-0 mb-3 text-sm font-semibold text-gray-900"
+        >
           {MOP_SECTION_10_POST_MAINTENANCE_HEADING}
         </Typography>
         <ProcedureEditableList
@@ -64,7 +74,9 @@ export const MopSection10MopComments = ({
           ariaLabelPrefix="Post-maintenance requirement"
           newItem={newPostMaintenanceListItem}
           onItemsChange={(items) =>
-            patchMopComments({ postMaintenanceBullets: listItemsToPostMaintenance(items) })
+            patchMopComments({
+              postMaintenanceBullets: listItemsToPostMaintenance(items),
+            })
           }
         />
       </div>
@@ -79,7 +91,9 @@ export const MopSection10MopComments = ({
         <Textarea
           id="mop-section10-additional-notes"
           value={additionalNotes}
-          onChange={(e) => patchMopComments({ additionalNotes: e.target.value })}
+          onChange={(e) =>
+            patchMopComments({ additionalNotes: e.target.value })
+          }
           rows={5}
           className="min-h-25 w-full"
           placeholder="Space for technician notes, observations, or recommendations for future maintenance..."

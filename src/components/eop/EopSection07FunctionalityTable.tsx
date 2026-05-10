@@ -14,7 +14,6 @@ import {
 } from "@/utils/mop-dynamic-table-mutations";
 
 import { MopDynamicTableRowControls } from "../mop/MopDynamicTableRowControls";
-
 import { EopPassFailCheckboxes } from "./EopPassFailCheckboxes";
 
 type EopSection07FunctionalityTableProps = {

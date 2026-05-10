@@ -55,21 +55,21 @@ export const SopSection10Comments = ({
       <ProcedureSectionCard heading={SOP_SECTION_10_HEADING}>
         <SopCommentsListBlock
           title={SOP_SECTION_10_RELEVANT_COMMENTS_SUBHEADING}
-          items={comments.relevantCommentItems}
+          items={comments?.relevantCommentItems}
           ariaLabelPrefix="SOP relevant comment"
           onItemsChange={(relevantCommentItems) =>
             patchComments({ relevantCommentItems })}
         />
         <SopCommentsListBlock
           title={SOP_SECTION_10_POST_OPERATION_SUBHEADING}
-          items={comments.postOperationRequirementItems}
+          items={comments?.postOperationRequirementItems}
           ariaLabelPrefix="SOP post-operation requirement"
           onItemsChange={(postOperationRequirementItems) =>
             patchComments({ postOperationRequirementItems })}
         />
         <SopCommentsListBlock
           title={SOP_SECTION_10_ADDITIONAL_NOTES_SUBHEADING}
-          items={comments.additionalNoteItems}
+          items={comments?.additionalNoteItems}
           ariaLabelPrefix="SOP additional note"
           onItemsChange={(additionalNoteItems) =>
             patchComments({ additionalNoteItems })}

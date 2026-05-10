@@ -30,7 +30,7 @@ export const generatedDocumentService = {
     return apiFetch<{
       data: {
         _id: string;
-        mopId?: string;
+        pdId?: string;
       };
     }>("generatedDocument/create", {
       method: "POST",

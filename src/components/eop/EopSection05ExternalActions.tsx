@@ -39,12 +39,12 @@ const updateRow = (
     >
   >,
 ): EopSection05ExternalActionRow[] =>
-  rows.map((row) => (row.id === rowId ? { ...row, ...partial } : row));
+  rows?.map((row) => (row.id === rowId ? { ...row, ...partial } : row));
 
 const renumberRows = (
   rows: EopSection05ExternalActionRow[],
 ): EopSection05ExternalActionRow[] =>
-  rows.map((row, index) => ({ ...row, stepNumber: index + 1 }));
+  rows?.map((row, index) => ({ ...row, stepNumber: index + 1 }));
 
 export const EopSection05ExternalActions = ({
   externalActions,
@@ -88,7 +88,7 @@ export const EopSection05ExternalActions = ({
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
+            {rows?.map((row) => (
               <tr key={row.id} className="bg-white">
                 <td className="border border-gray-200 px-3 py-2 align-top">
                   {row.stepNumber}

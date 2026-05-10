@@ -19,7 +19,7 @@ const patchReviewCell = (
   patchApprovalReview: EopSection09ApprovalReviewProps["patchApprovalReview"],
 ) => {
   patchApprovalReview({
-    reviewRows: rows.map((row) => (row.id === rowId ? { ...row, ...partial } : row)),
+    reviewRows: rows?.map((row) => (row.id === rowId ? { ...row, ...partial } : row)),
   });
 };
 
@@ -48,7 +48,7 @@ export const EopSection09ApprovalReview = ({
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
+            {rows?.map((row) => (
               <tr key={row.id} className="bg-white">
                 <td className="border border-gray-200 px-3 py-2 align-top">{row.role}</td>
                 <td className="border border-gray-200 px-2 py-1 align-top">

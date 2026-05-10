@@ -41,7 +41,7 @@ export const resolveDetailedProcedureStepRows = (
   if (!rows || rows.length === 0) {
     return buildDefaultDetailedProcedureRows(MOP_SECTION_07_DEFAULT_DETAILED_STEP_COUNT);
   }
-  return rows.map((r, i) => ensureId(r, i));
+  return rows?.map((r, i) => ensureId(r, i));
 };
 
 export const mapMopStepsToDetailedProcedureRows = (

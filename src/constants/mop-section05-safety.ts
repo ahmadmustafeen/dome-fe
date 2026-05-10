@@ -104,7 +104,7 @@ export const resolvePpeRequirementRows = (
   if (!rows || rows.length === 0) {
     return buildDefaultPpeRows(MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT);
   }
-  return rows.map((r) => ensureId(r, "ppe"));
+  return rows?.map((r) => ensureId(r, "ppe"));
 };
 
 export const resolveToolRequirementRows = (
@@ -113,7 +113,7 @@ export const resolveToolRequirementRows = (
   if (!rows || rows.length === 0) {
     return buildDefaultToolRows(MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT);
   }
-  return rows.map((r) => ensureId(r, "tool"));
+  return rows?.map((r) => ensureId(r, "tool"));
 };
 
 export const resolveSafetyProcedureRows = (
@@ -122,7 +122,7 @@ export const resolveSafetyProcedureRows = (
   if (!rows || rows.length === 0) {
     return buildDefaultSafetyProcedureRows(MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT);
   }
-  return rows.map((r) => ensureId(r, "proc"));
+  return rows?.map((r) => ensureId(r, "proc"));
 };
 
 export const resolveEmergencyContactRows = (
@@ -131,7 +131,7 @@ export const resolveEmergencyContactRows = (
   if (!rows || rows.length === 0) {
     return buildDefaultEmergencyContactRows(MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT);
   }
-  return rows.map((r) => ensureId(r, "emg"));
+  return rows?.map((r) => ensureId(r, "emg"));
 };
 
 export const resolveLocalEmergencyServiceRows = (
@@ -140,5 +140,5 @@ export const resolveLocalEmergencyServiceRows = (
   if (!rows || rows.length === 0) {
     return buildDefaultLocalEmergencyServiceRows(MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT);
   }
-  return rows.map((r) => ensureId(r, "les"));
+  return rows?.map((r) => ensureId(r, "les"));
 };

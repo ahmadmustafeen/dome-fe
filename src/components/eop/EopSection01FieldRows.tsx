@@ -129,7 +129,7 @@ const renderControl = (row: EopSection01FieldRow, props: EopSection01FieldRowsPr
 export const EopSection01FieldRows = (props: EopSection01FieldRowsProps) => {
   return (
     <div>
-      {EOP_SECTION_01_FIELD_ROWS.map((row) => (
+      {EOP_SECTION_01_FIELD_ROWS?.map((row) => (
         <MopFormTableRow key={row.id} label={row.label}>
           {renderControl(row, props)}
         </MopFormTableRow>

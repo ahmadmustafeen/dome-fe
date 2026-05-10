@@ -26,10 +26,10 @@ export const MopSection02Site = ({ site, patchSite }: MopSection02SiteProps) => 
       </Typography>
 
       <div>
-        {MOP_SECTION_02_FIELD_ROWS.map((row) => (
+        {MOP_SECTION_02_FIELD_ROWS?.map((row) => (
           <MopFormTableRow key={row.id} label={row.label}>
             <Input
-              value={site[row.field]}
+              value={site?.[row.field]}
               onChange={(e) => {
                 patchSite({ [row.field]: e.target.value } as Partial<MOPSiteSection>);
               }}

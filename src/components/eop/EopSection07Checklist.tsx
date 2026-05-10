@@ -18,7 +18,7 @@ const updateSection07ChecklistItem = (
   itemId: string,
   checked: boolean,
 ): EopSection07ChecklistItem[] =>
-  items.map((item) => (item.id === itemId ? { ...item, checked } : item));
+  items?.map((item) => (item.id === itemId ? { ...item, checked } : item));
 
 export const EopSection07Checklist = ({
   title,
@@ -43,7 +43,7 @@ export const EopSection07Checklist = ({
       />
     ) : (
       <div className="space-y-2">
-        {items.map((item) => (
+        {items?.map((item) => (
           <label
             key={item.id}
             className="flex items-start gap-2 text-sm leading-6 text-gray-800"

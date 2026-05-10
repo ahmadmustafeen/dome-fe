@@ -30,14 +30,14 @@ const renderMappedRow = (
     <MopFormTableRow key={row.id} label={row.label}>
       {row.control === "textarea" ? (
         <Textarea
-          value={overview[row.field]}
+          value={overview?.[row.field]}
           onChange={(e) => handleValue(e.target.value)}
           placeholder={row.placeholder}
           className="min-h-24"
         />
       ) : (
         <Input
-          value={overview[row.field]}
+          value={overview?.[row.field]}
           onChange={(e) => handleValue(e.target.value)}
           placeholder={row.placeholder}
         />
@@ -50,20 +50,20 @@ export const MopSection03Overview = ({
   overview,
   patchOverview,
 }: MopSection03OverviewProps) => {
-  const showContractorBlock = overview.workDeliveryType === "subcontractor";
+  const showContractorBlock = overview?.workDeliveryType === "subcontractor";
 
   return (
     <div className="mt-5 sm:mt-6">
       <ProcedureSectionCard heading={MOP_SECTION_03_HEADING}>
         <div>
-          {MOP_SECTION_03_LEAD_FIELD_ROWS.map((row) =>
+          {MOP_SECTION_03_LEAD_FIELD_ROWS?.map((row) =>
             renderMappedRow(row, overview, patchOverview),
           )}
 
           <MopFormTableRow label="Self Delivered / Vendor:">
             <select
               className="mop-doc-input"
-              value={overview.workDeliveryType}
+              value={overview?.workDeliveryType}
               onChange={(e) => {
                 patchOverview({
                   workDeliveryType: e.target.value as MOPWorkDeliveryType,
@@ -79,12 +79,12 @@ export const MopSection03Overview = ({
           </MopFormTableRow>
 
           {showContractorBlock
-            ? MOP_SECTION_03_CONTRACTOR_FIELD_ROWS.map((row) =>
+            ? MOP_SECTION_03_CONTRACTOR_FIELD_ROWS?.map((row) =>
                 renderMappedRow(row, overview, patchOverview),
               )
             : null}
 
-          {MOP_SECTION_03_TAIL_FIELD_ROWS.map((row) =>
+          {MOP_SECTION_03_TAIL_FIELD_ROWS?.map((row) =>
             renderMappedRow(row, overview, patchOverview),
           )}
         </div>

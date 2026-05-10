@@ -28,7 +28,7 @@ const patchRow = (
   patch: MopSection11SafetyTableProps['patchMopReferences'],
 ) => {
   patch({
-    safetyStandardRows: current.safetyStandardRows.map(r => (r.id === id ? { ...r, ...partial } : r)),
+    safetyStandardRows: current.safetyStandardrows?.map(r => (r.id === id ? { ...r, ...partial } : r)),
   });
 };
 
@@ -57,7 +57,7 @@ export const MopSection11SafetyTable = ({ rows, references, patchMopReferences }
             </tr>
           </thead>
           <tbody>
-            {rows.map(row => (
+            {rows?.map(row => (
               <tr key={row.id} className="bg-white">
                 <td className="border border-gray-200 px-2 py-1 align-top">
                   <Input

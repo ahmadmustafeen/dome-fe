@@ -36,7 +36,7 @@ const patchCell = <
   field: TField,
   value: string,
 ): TRow[] => {
-  return rows.map((row) =>
+  return rows?.map((row) =>
     row.id === rowId ? ({ ...row, [field]: value } as TRow) : row,
   );
 };
@@ -67,7 +67,7 @@ export const ProcedureEditableRowsTable = <
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => (
+          {rows?.map((row) => (
             <tr key={row.id} className="bg-white">
               {columns.map((column) => (
                 <td

@@ -58,8 +58,8 @@ export const SopDocumentForm = ({
   patchReferences,
 }: SopDocumentFormProps) => {
   const bannerTitle =
-    sop.document.title.trim() !== ""
-      ? sop.document.title.trim()
+    sop?.document?.title?.trim() !== ""
+      ? sop?.document?.title?.trim()
       : "Standard Operating Procedure";
 
   return (

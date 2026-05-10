@@ -42,7 +42,7 @@ const patchStep = (
   patch({
     detailedProcedures: {
       ...d.detailedProcedures,
-      stepRows: stepRows.map((r) => (r.id === id ? { ...r, ...partial } : r)),
+      stepRows: steprows?.map((r) => (r.id === id ? { ...r, ...partial } : r)),
     },
   });
 };
@@ -56,7 +56,7 @@ export const MopSection07ProcedureSteps = ({
   details,
   patchMopDetails,
 }: MopSection07ProcedureStepsProps) => {
-  const { stepRows, criticalStepNotes } = details.detailedProcedures;
+  const { stepRows, criticalStepNotes } = details?.detailedProcedures;
 
   return (
     <div className="mb-8 border-t border-gray-200 pt-6 last:mb-0">
@@ -95,7 +95,7 @@ export const MopSection07ProcedureSteps = ({
             </tr>
           </thead>
           <tbody>
-            {stepRows.map((row) => (
+            {steprows?.map((row) => (
               <tr key={row.id} className="bg-white">
                 <td className="border border-gray-200 px-2 py-2 text-center text-gray-800">
                   {row.stepNumber}
@@ -171,7 +171,7 @@ export const MopSection07ProcedureSteps = ({
                       );
                       patchMopDetails({
                         detailedProcedures: {
-                          ...details.detailedProcedures,
+                          ...details?.detailedProcedures,
                           stepRows: renumberDetailedSteps(merged),
                         },
                       });
@@ -187,7 +187,7 @@ export const MopSection07ProcedureSteps = ({
                       }
                       patchMopDetails({
                         detailedProcedures: {
-                          ...details.detailedProcedures,
+                          ...details?.detailedProcedures,
                           stepRows: renumberDetailedSteps(next),
                         },
                       });
@@ -211,7 +211,7 @@ export const MopSection07ProcedureSteps = ({
           onChange={(e) =>
             patchMopDetails({
               detailedProcedures: {
-                ...details.detailedProcedures,
+                ...details?.detailedProcedures,
                 criticalStepNotes: e.target.value,
               },
             })

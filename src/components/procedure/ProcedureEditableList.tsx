@@ -28,7 +28,7 @@ export const ProcedureEditableList = <TItem extends ProcedureEditableListItem>({
 }: ProcedureEditableListProps<TItem>) => {
   return (
     <ul className="list-none space-y-3 pl-0">
-      {items.map((item, index) => (
+      {items?.map((item, index) => (
         <li key={item.id} className="flex gap-2">
           <span
             className="mt-2 w-6 shrink-0 text-right text-sm text-gray-600"
@@ -40,7 +40,7 @@ export const ProcedureEditableList = <TItem extends ProcedureEditableListItem>({
             value={item.text}
             onChange={(event) =>
               onItemsChange(
-                items.map((row) =>
+                items?.map((row) =>
                   row.id === item.id ? { ...row, text: event.target.value } : row,
                 ),
               )}

@@ -37,12 +37,12 @@ const updateRow = (
     >
   >,
 ): EopSection04InternalDiagnosticRow[] =>
-  rows.map((row) => (row.id === rowId ? { ...row, ...partial } : row));
+  rows?.map((row) => (row.id === rowId ? { ...row, ...partial } : row));
 
 const renumberRows = (
   rows: EopSection04InternalDiagnosticRow[],
 ): EopSection04InternalDiagnosticRow[] =>
-  rows.map((row, index) => ({ ...row, stepNumber: index + 1 }));
+  rows?.map((row, index) => ({ ...row, stepNumber: index + 1 }));
 
 export const EopSection04InternalDiagnostics = ({
   internalDiagnostics,
@@ -78,7 +78,7 @@ export const EopSection04InternalDiagnostics = ({
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
+            {rows?.map((row) => (
               <tr key={row.id} className="bg-white">
                 <td className="border border-gray-200 px-3 py-2 align-top">
                   {row.stepNumber}

@@ -32,7 +32,7 @@ const updateRow = (
     >
   >,
 ): EopSection08PolicyDocumentRow[] =>
-  rows.map((row) => (row.id === rowId ? { ...row, ...partial } : row));
+  rows?.map((row) => (row.id === rowId ? { ...row, ...partial } : row));
 
 export const EopSection08PolicyDocumentsTable = ({
   rows,
@@ -60,7 +60,7 @@ export const EopSection08PolicyDocumentsTable = ({
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => (
+          {rows?.map((row) => (
             <tr key={row.id} className="bg-white">
               <td className="border border-gray-200 px-3 py-2 align-top text-gray-900">
                 <Textarea

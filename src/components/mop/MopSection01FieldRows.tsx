@@ -149,7 +149,7 @@ const renderControl = (
 export const MopSection01FieldRows = (props: MopSection01FieldRowsProps) => {
   return (
     <div>
-      {MOP_SECTION_01_FIELD_ROWS.map((row) => (
+      {MOP_SECTION_01_FIELD_ROWS?.map((row) => (
         <MopFormTableRow key={row.id} label={row.label}>
           {renderControl(row, props)}
         </MopFormTableRow>

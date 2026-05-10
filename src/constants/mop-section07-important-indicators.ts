@@ -43,7 +43,7 @@ export const MOP_SECTION_07_IMPORTANT_INDICATORS: readonly MopImportantIndicator
   {
     id: "loto",
     title: "Lock Out Tag Out",
-    body: "LOTO procedure required for electrical safety.",
+    body: "LOTO procedure required for electrical safety?.",
   },
 ];
 

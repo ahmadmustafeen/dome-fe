@@ -42,7 +42,7 @@ export const MopSection07EnginePerformance = ({
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
+            {rows?.map((row) => (
               <tr key={row.rowId} className="bg-white">
                 <td className="border border-gray-200 px-3 py-2 text-gray-900">{row.parameter}</td>
                 <td className="border border-gray-200 px-2 py-1">

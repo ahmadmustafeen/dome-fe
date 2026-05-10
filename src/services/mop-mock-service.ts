@@ -608,13 +608,13 @@ export const generateMOP = async (
   data.document.lastModified = new Date().toISOString();
   data.safety = {
     ...data.safety,
-    localEmergencyServicesAddress: data.safety.localEmergencyServicesAddress ?? "",
-    ppeRequirementRows: resolvePpeRequirementRows(data.safety.ppeRequirementRows),
-    toolRequirementRows: resolveToolRequirementRows(data.safety.toolRequirementRows),
-    safetyProcedureRows: resolveSafetyProcedureRows(data.safety.safetyProcedureRows),
-    emergencyContactRows: resolveEmergencyContactRows(data.safety.emergencyContactRows),
+    localEmergencyServicesAddress: data.safety?.localEmergencyServicesAddress ?? "",
+    ppeRequirementRows: resolvePpeRequirementRows(data.safety?.ppeRequirementRows),
+    toolRequirementRows: resolveToolRequirementRows(data.safety?.toolRequirementRows),
+    safetyProcedureRows: resolveSafetyProcedureRows(data.safety?.safetyProcedureRows),
+    emergencyContactRows: resolveEmergencyContactRows(data.safety?.emergencyContactRows),
     localEmergencyServiceRows: resolveLocalEmergencyServiceRows(
-      data.safety.localEmergencyServiceRows,
+      data.safety?.localEmergencyServiceRows,
     ),
   };
   data.assumptions = {

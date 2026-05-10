@@ -33,13 +33,13 @@ const patchRow = (
 ) => {
   if (variant === 'equipment') {
     patch({
-      equipmentDocumentRows: current.equipmentDocumentRows.map(r =>
+      equipmentDocumentRows: current.equipmentDocumentrows?.map(r =>
         r.id === id ? { ...r, ...partial } : r,
       ),
     });
   } else {
     patch({
-      additionalResourceRows: current.additionalResourceRows.map(r =>
+      additionalResourceRows: current.additionalResourcerows?.map(r =>
         r.id === id ? { ...r, ...partial } : r,
       ),
     });
@@ -88,7 +88,7 @@ export const MopSection11DocTable = ({ variant, rows, references, patchMopRefere
             </tr>
           </thead>
           <tbody>
-            {rows.map(row => (
+            {rows?.map(row => (
               <tr key={row.id} className="bg-white">
                 <td className="border border-gray-200 px-2 py-1 align-top">
                   <Input

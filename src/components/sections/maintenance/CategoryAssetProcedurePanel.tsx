@@ -29,14 +29,24 @@ const CategoryAssetProcedurePanel = ({
   const { site } = useAppContext()
 
 
-  const handleCreateClick = async (mopId: string) => {
-    const resp = await generatedDocumentService.createGeneratedDocument(mopId, 'mop', asset._id, site?._id!);
+  const handleCreateClick = async (pdId: string, type: string) => {
+
+    const resp = await generatedDocumentService.createGeneratedDocument(pdId, type, asset._id, site?._id!);
     if (resp) {
-      if (resp.data.mopId) {
-        return router.push(`/en/dashboard/mop-management/${resp.data.mopId}`)
+      if (resp.data.pdId) {
+        let route = '';
+        if (type === 'mop') route = 'mop-management';
+        if (type === 'sop') route = 'sop-management';
+        if (type === 'eop') route = 'eop-management';
+
+        return router.push(`/en/dashboard/${route}/${resp.data.pdId}`)
 
       }
-      router.push(`/en/dashboard/mop-management/create/${resp.data._id}`)
+      let route = '';
+      if (type === 'mop') route = 'mop-management';
+      if (type === 'sop') route = 'sop-management';
+      if (type === 'eop') route = 'eop-management';
+      router.push(`/en/dashboard/${route}/create/${resp.data._id}`)
     }
   }
 
@@ -50,13 +60,13 @@ const CategoryAssetProcedurePanel = ({
         onGenerate={(item) => {
           onProcedureGenerate(item, "mop", asset.id);
         }}
-        handleCreateClick={handleCreateClick}
+        handleCreateClick={(id) => handleCreateClick(id, 'mop')}
       />
       <RequirementSection
         label={labels.eops}
         items={asset.eops}
         colorClass="border-red-200"
-        handleCreateClick={handleCreateClick}
+        handleCreateClick={(id) => handleCreateClick(id, 'eop')}
         onGenerate={(item) => {
           onProcedureGenerate(item, "eop", asset.id);
         }}
@@ -65,7 +75,7 @@ const CategoryAssetProcedurePanel = ({
         label={labels.sops}
         items={asset.sops}
         colorClass="border-green-200"
-        handleCreateClick={handleCreateClick}
+        handleCreateClick={(id) => handleCreateClick(id, 'sop')}
         onGenerate={(item) => {
           onProcedureGenerate(item, "sop", asset.id);
         }}

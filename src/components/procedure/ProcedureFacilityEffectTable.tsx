@@ -11,7 +11,7 @@ const choiceForRow = <TKey extends string>(
   rows: ProcedureFacilityEffectRow<TKey>[],
   key: TKey,
 ): ProcedureFacilityEffectChoice => {
-  const found = rows.find((row) => row.systemKey === key);
+  const found = rows?.find((row) => row.systemKey === key);
   return found ? found.choice : "no";
 };
 
@@ -19,7 +19,7 @@ const detailsForRow = <TKey extends string>(
   rows: ProcedureFacilityEffectRow<TKey>[],
   key: TKey,
 ): string => {
-  const found = rows.find((row) => row.systemKey === key);
+  const found = rows?.find((row) => row.systemKey === key);
   return found ? found.details : "";
 };
 
@@ -29,7 +29,7 @@ const patchRow = <TKey extends string>(
   partial: Partial<Pick<ProcedureFacilityEffectRow<TKey>, "choice" | "details">>,
 ): ProcedureFacilityEffectRow<TKey>[] => {
   let touched = false;
-  const mapped = rows.map((row) => {
+  const mapped = rows?.map((row) => {
     if (row.systemKey !== key) {
       return row;
     }
@@ -85,7 +85,7 @@ export const ProcedureFacilityEffectTable = <TKey extends string>({
           </tr>
         </thead>
         <tbody>
-          {systemRows.map((system) => {
+          {systemRows?.map((system) => {
             const choice = choiceForRow(effects, system.key);
             const details = detailsForRow(effects, system.key);
             const groupName = `${namePrefix}-${system.key}`;

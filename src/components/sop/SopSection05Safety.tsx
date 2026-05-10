@@ -36,7 +36,7 @@ export const SopSection05Safety = ({
             {SOP_SECTION_05_PPE_SUBHEADING}
           </Typography>
           <SopSection05PpeBlock
-            rows={safety.ppeRequirementRows}
+            rows={safety?.ppeRequirementRows}
             patchSafety={patchSafety}
           />
         </div>
@@ -48,7 +48,7 @@ export const SopSection05Safety = ({
             {SOP_SECTION_05_TOOLS_SUBHEADING}
           </Typography>
           <SopSection05ToolsBlock
-            rows={safety.toolRequirementRows}
+            rows={safety?.toolRequirementRows}
             patchSafety={patchSafety}
           />
         </div>
@@ -60,7 +60,7 @@ export const SopSection05Safety = ({
             {SOP_SECTION_05_EMERGENCY_SUBHEADING}
           </Typography>
           <SopSection05EmergencyBlock
-            rows={safety.emergencyContactRows}
+            rows={safety?.emergencyContactRows}
             patchSafety={patchSafety}
           />
         </div>
@@ -72,7 +72,7 @@ export const SopSection05Safety = ({
             {SOP_SECTION_05_HAZARDS_SUBHEADING}
           </Typography>
           <SopSection05HazardsBlock
-            rows={safety.siteHazardRows}
+            rows={safety?.siteHazardRows}
             patchSafety={patchSafety}
           />
         </div>

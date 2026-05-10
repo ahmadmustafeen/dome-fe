@@ -22,7 +22,7 @@ const patchEmergencyCell = (
   patchSafety: MopSection05EmergencyBlockProps['patchSafety'],
 ) => {
   patchSafety({
-    emergencyContactRows: rows.map(r => (r.id === rowId ? { ...r, ...partial } : r)),
+    emergencyContactRows: rows?.map(r => (r.id === rowId ? { ...r, ...partial } : r)),
   });
 };
 
@@ -48,7 +48,7 @@ export const MopSection05EmergencyBlock = ({
             </tr>
           </thead>
           <tbody>
-            {rows.map(row => (
+            {rows?.map(row => (
               <tr key={row.id} className="bg-white">
                 <td className="border border-gray-200 px-2 py-1 align-top">
                   <Input

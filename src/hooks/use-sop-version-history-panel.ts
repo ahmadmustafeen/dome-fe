@@ -67,7 +67,7 @@ const initialHistoryState: HistoryState = {
 const rowsToHistoryState = (
   rows: CanonicalSopVersionApiRow[],
 ): HistoryRowsState => {
-  const latest = rows.find((row) => row.isLatest === true) ?? null;
+  const latest = rows?.find((row) => row.isLatest === true) ?? null;
   const archives = rows.filter((row) => row.isLatest === false);
 
   return {

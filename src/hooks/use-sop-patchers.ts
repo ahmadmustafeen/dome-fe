@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import type { SOP } from "@/types/sop";
 import { bumpSopModified, patchSopSection } from "@/utils/sop-document-state";
 
-export const useSopPatchers = (setSop: Dispatch<SetStateAction<SOP | null>>) => {
+export const useSopPatchers = (setSop: Dispatch<SetStateAction<SOP>>) => {
   const patchDocument = useCallback((partial: Partial<SOP["document"]>) => {
     setSop((prev) => patchSopSection<SOP["document"]>(prev, "document", partial));
   }, [setSop]);

@@ -6,10 +6,10 @@ export const bumpSopModified = (sop: SOP): SOP => ({
 });
 
 export const patchSopSection = <Section>(
-  prev: SOP | null,
+  prev: SOP,
   key: keyof SOP,
   partial: Partial<Section>,
-): SOP | null => {
+): SOP => {
   if (prev === null) {
     return prev;
   }

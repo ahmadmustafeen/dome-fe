@@ -22,7 +22,7 @@ const patchEscalationCell = (
   patchCommunication: EopSection06EscalationTableProps["patchCommunication"],
 ) => {
   patchCommunication({
-    escalationMatrixRows: rows.map((row) =>
+    escalationMatrixRows: rows?.map((row) =>
       row.id === rowId ? { ...row, ...partial } : row,
     ),
   });
@@ -49,7 +49,7 @@ export const EopSection06EscalationTable = ({
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
+            {rows?.map((row) => (
               <tr key={row.id} className="bg-white">
                 <td className="border border-gray-200 px-3 py-2 align-top">{row.level}</td>
                 <td className="border border-gray-200 px-3 py-2 align-top">{row.title}</td>

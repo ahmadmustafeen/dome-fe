@@ -25,7 +25,7 @@ const patchAssumptionCell = (
   patchAssumptions: MopSection06KeyAssumptionsTableProps['patchAssumptions'],
 ) => {
   patchAssumptions({
-    assumptionRows: rows.map(r => (r.id === rowId ? { ...r, ...partial } : r)),
+    assumptionRows: rows?.map(r => (r.id === rowId ? { ...r, ...partial } : r)),
   });
 };
 

@@ -19,10 +19,10 @@ export const SopSection02Site = ({ site, patchSite }: SopSection02SiteProps) => 
     <div className="mt-5 sm:mt-6">
       <ProcedureSectionCard heading={SOP_SECTION_02_HEADING}>
         <div>
-          {SOP_SECTION_02_FIELD_ROWS.map((row) => (
+          {SOP_SECTION_02_FIELD_ROWS?.map((row) => (
             <MopFormTableRow key={row.id} label={row.label}>
               <Input
-                value={site[row.field]}
+                value={site?.[row.field]}
                 onChange={(event) => {
                   patchSite({ [row.field]: event.target.value });
                 }}

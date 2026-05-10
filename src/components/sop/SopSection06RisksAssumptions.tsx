@@ -34,7 +34,7 @@ export const SopSection06RisksAssumptions = ({
             {SOP_SECTION_06_RISK_MATRIX_SUBHEADING}
           </Typography>
           <SopSection06RiskMatrix
-            rows={risksAssumptions.riskAnalysisRows}
+            rows={risksAssumptions?.riskAnalysisRows}
             patchRisksAssumptions={patchRisksAssumptions}
           />
         </div>
@@ -46,7 +46,7 @@ export const SopSection06RisksAssumptions = ({
             {SOP_SECTION_06_KEY_ASSUMPTIONS_SUBHEADING}
           </Typography>
           <SopSection06KeyAssumptionsTable
-            rows={risksAssumptions.keyAssumptionRows}
+            rows={risksAssumptions?.keyAssumptionRows}
             patchRisksAssumptions={patchRisksAssumptions}
           />
         </div>
@@ -58,7 +58,7 @@ export const SopSection06RisksAssumptions = ({
             {SOP_SECTION_06_CRITICAL_DECISIONS_SUBHEADING}
           </Typography>
           <SopSection06CriticalDecisionsList
-            items={risksAssumptions.criticalDecisionPointItems}
+            items={risksAssumptions?.criticalDecisionPointItems}
             patchRisksAssumptions={patchRisksAssumptions}
           />
         </div>

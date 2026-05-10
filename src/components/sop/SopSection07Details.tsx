@@ -32,7 +32,7 @@ export const SopSection07Details = ({
             {SOP_SECTION_07_PRE_CHECKS_SUBHEADING}
           </Typography>
           <SopSection07PreProcedureChecks
-            rows={details.preProcedureCheckRows}
+            rows={details?.preProcedureCheckRows}
             patchDetails={patchDetails}
           />
         </div>
@@ -44,7 +44,7 @@ export const SopSection07Details = ({
             {SOP_SECTION_07_DETAILED_STEPS_SUBHEADING}
           </Typography>
           <SopSection07DetailedProcedureSteps
-            rows={details.detailedProcedureStepRows}
+            rows={details?.detailedProcedureStepRows}
             patchDetails={patchDetails}
           />
         </div>

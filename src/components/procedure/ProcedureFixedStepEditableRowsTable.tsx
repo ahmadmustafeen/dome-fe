@@ -28,7 +28,7 @@ type ProcedureFixedStepEditableRowsTableProps<
 };
 
 const renumberRows = <TRow extends { step: number }>(rows: TRow[]): TRow[] =>
-  rows.map((row, index) => ({ ...row, step: index + 1 }));
+  rows?.map((row, index) => ({ ...row, step: index + 1 }));
 
 const patchCell = <
   TRow extends { id: string; step: number },
@@ -39,7 +39,7 @@ const patchCell = <
   field: TField,
   value: string,
 ): TRow[] =>
-  rows.map((row) =>
+  rows?.map((row) =>
     row.id === rowId ? ({ ...row, [field]: value } as TRow) : row,
   );
 
@@ -72,7 +72,7 @@ export const ProcedureFixedStepEditableRowsTable = <
           </tr>
         </thead>
         <tbody>
-          {normalizedRows.map((row) => (
+          {normalizedRows?.map((row) => (
             <tr key={row.id} className="bg-white">
               <td className="border border-gray-200 px-3 py-2 text-center align-top text-gray-900">
                 {row.step}

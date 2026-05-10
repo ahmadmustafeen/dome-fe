@@ -25,7 +25,7 @@ const patchEmergencyCell = (
   patchCommunication: EopSection06EmergencyContactsTableProps["patchCommunication"],
 ) => {
   patchCommunication({
-    emergencyContactRows: rows.map((row) =>
+    emergencyContactRows: rows?.map((row) =>
       row.id === rowId ? { ...row, ...partial } : row,
     ),
   });
@@ -52,7 +52,7 @@ export const EopSection06EmergencyContactsTable = ({
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
+            {rows?.map((row) => (
               <tr key={row.id} className="bg-white">
                 <td className="border border-gray-200 px-3 py-2 align-top">{row.serviceType}</td>
                 <td className="border border-gray-200 px-2 py-1 align-top">

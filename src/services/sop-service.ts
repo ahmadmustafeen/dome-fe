@@ -61,12 +61,12 @@ export const getLatestSOP = async (sopId: string): Promise<SOP | null> => {
   }
 };
 
-export const saveSOP = async (sop: SOP, sopId: string): Promise<SOP> => {
+export const saveSOP = async (sop: SOP, sopId: string, siteId?: string): Promise<SOP> => {
   const segment = encodeURIComponent(sopId.trim());
   const payload = await unwrapData(
     apiFetch<ApiSuccessEnvelope<SopApiPayload>>(`/sop/${segment}`, {
       method: "PUT",
-      body: JSON.stringify(sop),
+      body: JSON.stringify({ ...sop, siteId }),
     }),
   );
   return asSOP(payload);

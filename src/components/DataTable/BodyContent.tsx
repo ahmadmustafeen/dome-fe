@@ -64,7 +64,7 @@ export function BodyContent<TData>({
   const rows = table.getRowModel().rows
 
 
-  return rows.map((row) => (
+  return rows?.map((row) => (
 
     <Fragment key={row.id}>
       <TableRow

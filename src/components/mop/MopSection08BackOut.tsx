@@ -28,13 +28,13 @@ const patchRow = (
   patch: MopSection08BackOutProps['patchBackOut'],
 ) => {
   patch({
-    stepRows: s.stepRows.map(r => (r.id === id ? { ...r, ...partial } : r)),
+    stepRows: s.steprows?.map(r => (r.id === id ? { ...r, ...partial } : r)),
   });
 };
 
 const renumberBackOutSteps = (
   rows: MopBackOutProcedureRow[],
-): MopBackOutProcedureRow[] => rows.map((r, i) => ({ ...r, stepNumber: i + 1 }));
+): MopBackOutProcedureRow[] => rows?.map((r, i) => ({ ...r, stepNumber: i + 1 }));
 
 export const MopSection08BackOut = ({ backOut, patchBackOut }: MopSection08BackOutProps) => {
   const { stepRows } = backOut;
@@ -62,7 +62,7 @@ export const MopSection08BackOut = ({ backOut, patchBackOut }: MopSection08BackO
             </tr>
           </thead>
           <tbody>
-            {stepRows.map(row => (
+            {steprows?.map(row => (
               <tr key={row.id} className="bg-white">
                 <td className="border border-gray-200 px-2 py-2 text-center text-gray-800">
                   {row.stepNumber}

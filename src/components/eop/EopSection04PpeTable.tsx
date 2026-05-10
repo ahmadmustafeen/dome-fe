@@ -24,13 +24,13 @@ const updateRow = (
   rows: EopSection04PpeRow[],
   rowId: string,
   partial: Partial<Pick<EopSection04PpeRow, "ppeItem" | "specification" | "verified">>,
-): EopSection04PpeRow[] => rows.map((row) => (row.id === rowId ? { ...row, ...partial } : row));
+): EopSection04PpeRow[] => rows?.map((row) => (row.id === rowId ? { ...row, ...partial } : row));
 
 export const EopSection04PpeTable = ({
   preActionSafety,
   patchPreActionSafety,
 }: EopSection04PpeTableProps) => {
-  const rows = preActionSafety.ppeRows;
+  const rows = preActionsafety?.ppeRows;
 
   return (
     <div className="mb-6">
@@ -53,7 +53,7 @@ export const EopSection04PpeTable = ({
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
+            {rows?.map((row) => (
               <tr key={row.id} className="bg-white">
                 <td className="border border-gray-200 px-3 py-2 align-top text-gray-900">
                   <Textarea

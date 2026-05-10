@@ -19,15 +19,16 @@ import { SopVersionHistoryDrawer } from "./SopVersionHistoryDrawer";
 
 type SopManagementClientProps = {
   sopId?: string;
+  documentId?: string
 };
 
-export const SopManagementClient = ({ sopId }: SopManagementClientProps) => {
+export const SopManagementClient = ({ sopId, documentId }: SopManagementClientProps) => {
   const router = useRouter();
   const isEdit = sopId !== undefined && sopId.trim() !== "";
   const resolvedSopId = isEdit ? sopId.trim() : undefined;
   const [isSaving, setIsSaving] = useState(false);
   const applyVersionRef = useRef<(row: CanonicalSopVersionApiRow) => void>(
-    () => {},
+    () => { },
   );
 
   const handleSelectCanonicalRow = useCallback(
@@ -78,6 +79,7 @@ export const SopManagementClient = ({ sopId }: SopManagementClientProps) => {
   } = useSopDocument({
     mode: isEdit ? "edit" : "create",
     sopId: resolvedSopId,
+    documentId,
     onAfterPersist: () => void refetchVersionHistory(),
     onCreateSaveSuccess: async (createdId) => {
       if (createdId.trim() === "") {

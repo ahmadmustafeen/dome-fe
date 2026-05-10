@@ -28,7 +28,7 @@ const patchReviewRow = (
   rowId: string,
   partial: Partial<Omit<SOPApprovalReviewRow, "id">>,
 ): SOPApprovalReviewRow[] =>
-  rows.map((row) => (row.id === rowId ? { ...row, ...partial } : row));
+  rows?.map((row) => (row.id === rowId ? { ...row, ...partial } : row));
 
 export const SopSection09Approval = ({
   approval,
@@ -62,14 +62,14 @@ export const SopSection09Approval = ({
               </tr>
             </thead>
             <tbody>
-              {approval.reviewRows.map((row) => (
+              {approval?.reviewRows?.map((row) => (
                 <tr key={row.id} className="bg-white">
                   <td className="border border-gray-200 px-2 py-1 align-top">
                     <Input
                       value={row.reviewStage}
                       onChange={(event) =>
                         patchApproval({
-                          reviewRows: patchReviewRow(approval.reviewRows, row.id, {
+                          reviewRows: patchReviewRow(approval?.reviewRows, row.id, {
                             reviewStage: event.target.value,
                           }),
                         })}
@@ -82,7 +82,7 @@ export const SopSection09Approval = ({
                       value={row.reviewersName}
                       onChange={(event) =>
                         patchApproval({
-                          reviewRows: patchReviewRow(approval.reviewRows, row.id, {
+                          reviewRows: patchReviewRow(approval?.reviewRows, row.id, {
                             reviewersName: event.target.value,
                           }),
                         })}
@@ -95,7 +95,7 @@ export const SopSection09Approval = ({
                       value={row.reviewersTitle}
                       onChange={(event) =>
                         patchApproval({
-                          reviewRows: patchReviewRow(approval.reviewRows, row.id, {
+                          reviewRows: patchReviewRow(approval?.reviewRows, row.id, {
                             reviewersTitle: event.target.value,
                           }),
                         })}
@@ -108,7 +108,7 @@ export const SopSection09Approval = ({
                       value={row.date}
                       onChange={(event) =>
                         patchApproval({
-                          reviewRows: patchReviewRow(approval.reviewRows, row.id, {
+                          reviewRows: patchReviewRow(approval?.reviewRows, row.id, {
                             date: event.target.value,
                           }),
                         })}
@@ -119,18 +119,18 @@ export const SopSection09Approval = ({
                   <td className="border border-gray-200 px-1 align-middle">
                     <ProcedureDynamicTableRowControls
                       ariaLabelGroup="SOP approval review row controls"
-                      rowCount={approval.reviewRows.length}
+                      rowCount={approval?.reviewRows.length}
                       onAddBelow={() =>
                         patchApproval({
                           reviewRows: insertProcedureRowAfterId(
-                            approval.reviewRows,
+                            approval?.reviewRows,
                             row.id,
                             newSopApprovalReviewRow(),
                           ),
                         })}
                       onRemove={() => {
                         const next = removeProcedureRowById(
-                          approval.reviewRows,
+                          approval?.reviewRows,
                           row.id,
                           PROCEDURE_DYNAMIC_TABLE_MIN_ROWS,
                         );
@@ -149,7 +149,7 @@ export const SopSection09Approval = ({
           <label className="block text-sm font-semibold text-gray-800">
             {SOP_EFFECTIVE_DATE_LABEL}
             <Input
-              value={approval.effectiveDate}
+              value={approval?.effectiveDate}
               onChange={(event) =>
                 patchApproval({ effectiveDate: event.target.value })}
               className="mt-1 w-full max-w-xs"
@@ -159,7 +159,7 @@ export const SopSection09Approval = ({
           <label className="block text-sm font-semibold text-gray-800">
             {SOP_EXPIRATION_DATE_LABEL}
             <Input
-              value={approval.expirationDate}
+              value={approval?.expirationDate}
               onChange={(event) =>
                 patchApproval({ expirationDate: event.target.value })}
               className="mt-1 w-full max-w-xs"

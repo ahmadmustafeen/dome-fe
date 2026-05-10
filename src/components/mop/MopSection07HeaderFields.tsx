@@ -27,7 +27,7 @@ export const MopSection07HeaderFields = ({
           </label>
           <Input
             id="mop-s07-date-performed"
-            value={details.datePerformed}
+            value={details?.datePerformed}
             onChange={(e) => patchMopDetails({ datePerformed: e.target.value })}
             type="date"
             className="w-full min-w-0"
@@ -42,7 +42,7 @@ export const MopSection07HeaderFields = ({
           </label>
           <Input
             id="mop-s07-time-begun"
-            value={details.timeBegun}
+            value={details?.timeBegun}
             onChange={(e) => patchMopDetails({ timeBegun: e.target.value })}
             type="time"
             className="w-full min-w-0"
@@ -57,7 +57,7 @@ export const MopSection07HeaderFields = ({
           </label>
           <Input
             id="mop-s07-time-completed"
-            value={details.timeCompleted}
+            value={details?.timeCompleted}
             onChange={(e) => patchMopDetails({ timeCompleted: e.target.value })}
             type="time"
             className="w-full min-w-0"
@@ -70,7 +70,7 @@ export const MopSection07HeaderFields = ({
       <div className="pt-3">
         <MopFormTableRow label="Facilities personnel performing work:">
           <Input
-            value={details.facilitiesPersonnel}
+            value={details?.facilitiesPersonnel}
             onChange={(e) => patchMopDetails({ facilitiesPersonnel: e.target.value })}
             className="w-full"
           />
@@ -80,7 +80,7 @@ export const MopSection07HeaderFields = ({
         <MopFormTableRow label="Contractor/Vendor personnel performing work:">
           <div className="w-full">
             <Input
-              value={details.contractorPersonnel}
+              value={details?.contractorPersonnel}
               onChange={(e) => patchMopDetails({ contractorPersonnel: e.target.value })}
               className="w-full"
               placeholder="If subcontractor is selected in Section 3, reference that company"

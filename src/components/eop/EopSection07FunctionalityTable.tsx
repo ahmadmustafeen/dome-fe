@@ -20,7 +20,7 @@ const updateRow = (
     Pick<EopSection07FunctionalityRow, "actualReading" | "passFail">
   >,
 ): EopSection07FunctionalityRow[] =>
-  rows.map((row) => (row.id === rowId ? { ...row, ...partial } : row));
+  rows?.map((row) => (row.id === rowId ? { ...row, ...partial } : row));
 
 export const EopSection07FunctionalityTable = ({
   rows,
@@ -37,7 +37,7 @@ export const EopSection07FunctionalityTable = ({
         </tr>
       </thead>
       <tbody>
-        {rows.map((row) => (
+        {rows?.map((row) => (
           <tr key={row.id} className="bg-white">
             <td className="border border-gray-200 px-3 py-2 align-top text-gray-900">
               {row.parameter}

@@ -37,15 +37,15 @@ export const MopSection07MopDetails = ({
       <MopSection07OutlineSteps steps={steps} patchSteps={patchSteps} />
       <MopSection07HeaderFields details={details} patchMopDetails={patchMopDetails} />
       <MopSection07GeneratorLog
-        rows={details.generatorOperationalRows}
+        rows={details?.generatorOperationalRows}
         patchMopDetails={patchMopDetails}
       />
       <MopSection07EnginePerformance
-        rows={details.enginePerformanceRows}
+        rows={details?.enginePerformanceRows}
         patchMopDetails={patchMopDetails}
       />
       <MopSection07FaultHistory
-        rows={details.faultAlarmHistoryRows}
+        rows={details?.faultAlarmHistoryRows}
         patchMopDetails={patchMopDetails}
       />
       <MopSection07ImportantIndicators />

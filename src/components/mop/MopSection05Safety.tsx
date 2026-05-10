@@ -27,18 +27,18 @@ export const MopSection05Safety = ({ safety, patchSafety, assetName, mopTitle }:
       >
         {MOP_SECTION_05_HEADING}
       </Typography>
-      <MopSection05PpeBlock rows={safety.ppeRequirementRows} patchSafety={patchSafety}
+      <MopSection05PpeBlock rows={safety?.ppeRequirementRows} patchSafety={patchSafety}
         assetName={assetName}
       />
-      <MopSection05ToolsBlock rows={safety.toolRequirementRows} patchSafety={patchSafety}
+      <MopSection05ToolsBlock rows={safety?.toolRequirementRows} patchSafety={patchSafety}
         assetName={assetName}
         mopTitle={mopTitle}
       />
-      <MopSection05ProceduresBlock rows={safety.safetyProcedureRows} patchSafety={patchSafety} />
-      <MopSection05EmergencyBlock rows={safety.emergencyContactRows} patchSafety={patchSafety} />
+      <MopSection05ProceduresBlock rows={safety?.safetyProcedureRows} patchSafety={patchSafety} />
+      <MopSection05EmergencyBlock rows={safety?.emergencyContactRows} patchSafety={patchSafety} />
       <MopSection05LocalServicesBlock
-        address={safety.localEmergencyServicesAddress}
-        rows={safety.localEmergencyServiceRows}
+        address={safety?.localEmergencyServicesAddress}
+        rows={safety?.localEmergencyServiceRows}
         patchSafety={patchSafety}
       />
     </div>

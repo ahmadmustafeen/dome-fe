@@ -105,7 +105,7 @@ const fillSafetyRows = (count: number): MopReferenceSafetyRow[] =>
   Array.from({ length: count }, () => newMopReferenceSafetyRow());
 
 const ensureRowIds = <T extends { id: string }>(rows: T[], prefix: string): T[] =>
-  rows.map(r => (r.id && r.id.length > 0 ? r : { ...r, id: newMopRowId(prefix) }));
+  rows?.map(r => (r.id && r.id.length > 0 ? r : { ...r, id: newMopRowId(prefix) }));
 
 export const buildDefaultMopReferences = (): MOPSection11References => ({
   policyDocumentRows: fillPolicyRows(MOP_SECTION_11_DEFAULT_POLICY_COUNT),

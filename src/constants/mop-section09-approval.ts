@@ -84,7 +84,7 @@ export const resolveMopApproval = (section: MOPSection09MopApproval | undefined)
     };
   }
   return {
-    reviewRows: rows.map((r, i) => ensureReviewRow(r, i)),
+    reviewRows: rows?.map((r, i) => ensureReviewRow(r, i)),
     mopEffectiveDate: section.mopEffectiveDate ?? '',
     mopExpirationDate: section.mopExpirationDate ?? '',
   };

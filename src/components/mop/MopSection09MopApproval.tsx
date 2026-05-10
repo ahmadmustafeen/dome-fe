@@ -33,7 +33,7 @@ const patchReviewRow = (
   patch: MopSection09MopApprovalProps['patchMopApproval'],
 ) => {
   patch({
-    reviewRows: current.reviewRows.map(r => (r.id === id ? { ...r, ...partial } : r)),
+    reviewRows: current.reviewRows?.map(r => (r.id === id ? { ...r, ...partial } : r)),
   });
 };
 
@@ -68,7 +68,7 @@ export const MopSection09MopApproval = ({
             </tr>
           </thead>
           <tbody>
-            {reviewRows.map(row => (
+            {reviewRows?.map(row => (
               <tr key={row.id} className="bg-white">
                 <td className="border border-gray-200 px-2 py-1 align-top">
                   <Input

@@ -49,7 +49,7 @@ export const resolveAssumptionRows = (
   if (!rows || rows.length === 0) {
     return buildDefaultAssumptionRows(MOP_SECTION_06_DEFAULT_TABLE_ROW_COUNT);
   }
-  return rows.map((r) => ensureId(r, "asm"));
+  return rows?.map((r) => ensureId(r, "asm"));
 };
 
 export const resolveCriticalDecisionItems = (
@@ -58,5 +58,5 @@ export const resolveCriticalDecisionItems = (
   if (!items || items.length === 0) {
     return buildDefaultCriticalDecisionItems(MOP_SECTION_06_DEFAULT_DECISION_LIST_COUNT);
   }
-  return items.map((r) => ensureId(r, "cdp"));
+  return items?.map((r) => ensureId(r, "cdp"));
 };

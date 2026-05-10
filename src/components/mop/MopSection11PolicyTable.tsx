@@ -29,7 +29,7 @@ const patchRow = (
   patch: MopSection11PolicyTableProps['patchMopReferences'],
 ) => {
   patch({
-    policyDocumentRows: current.policyDocumentRows.map(r => (r.id === id ? { ...r, ...partial } : r)),
+    policyDocumentRows: current.policyDocumentrows?.map(r => (r.id === id ? { ...r, ...partial } : r)),
   });
 };
 
@@ -65,7 +65,7 @@ export const MopSection11PolicyTable = ({
             </tr>
           </thead>
           <tbody>
-            {rows.map(row => (
+            {rows?.map(row => (
               <tr key={row.id} className="bg-white">
                 <td className="border border-gray-200 px-2 py-1 align-top">
                   <Input

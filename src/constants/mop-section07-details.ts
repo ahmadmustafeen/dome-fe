@@ -90,7 +90,7 @@ export const resolveGeneratorOperationalRows = (
 ): MopGeneratorOperationalDataRow[] => {
   const defaults = buildDefaultGeneratorOperationalRows();
   if (!rows?.length) return defaults;
-  const byId = new Map(rows.map((r) => [r.rowId, r]));
+  const byId = new Map(rows?.map((r) => [r.rowId, r]));
   return defaults.map((d) => {
     const v = byId.get(d.rowId);
     return v
@@ -108,7 +108,7 @@ export const resolveEnginePerformanceRows = (
 ): MopEnginePerformanceDataRow[] => {
   const defaults = buildDefaultEnginePerformanceRows();
   if (!rows?.length) return defaults;
-  const byId = new Map(rows.map((r) => [r.rowId, r]));
+  const byId = new Map(rows?.map((r) => [r.rowId, r]));
   return defaults.map((d) => {
     const v = byId.get(d.rowId);
     return v
@@ -123,5 +123,5 @@ export const resolveFaultAlarmHistoryRows = (
   if (!rows || rows.length === 0) {
     return buildDefaultFaultAlarmRows(MOP_SECTION_07_DEFAULT_FAULT_ROW_COUNT);
   }
-  return rows.map((r) => ensureFaultId(r));
+  return rows?.map((r) => ensureFaultId(r));
 };

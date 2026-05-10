@@ -31,14 +31,14 @@ const renderMappedRow = (
     <MopFormTableRow key={row.id} label={row.label}>
       {row.control === "textarea" ? (
         <Textarea
-          value={overview[row.field]}
+          value={overview?.[row.field]}
           onChange={(event) => handleValue(event.target.value)}
           placeholder={row.placeholder}
           className="min-h-24"
         />
       ) : (
         <Input
-          value={overview[row.field]}
+          value={overview?.[row.field]}
           onChange={(event) => handleValue(event.target.value)}
           placeholder={row.placeholder}
         />
@@ -55,13 +55,13 @@ export const SopSection03Overview = ({
     <div className="mt-5 sm:mt-6">
       <ProcedureSectionCard heading={SOP_SECTION_03_HEADING}>
         <div>
-          {SOP_SECTION_03_LEAD_FIELD_ROWS.map((row) =>
+          {SOP_SECTION_03_LEAD_FIELD_ROWS?.map((row) =>
             renderMappedRow(row, overview, patchOverview),
           )}
           <MopFormTableRow label="Self Delivered / Vendor:">
             <select
               className="mop-doc-input"
-              value={overview.workDeliveryType}
+              value={overview?.workDeliveryType}
               onChange={(event) => {
                 patchOverview({
                   workDeliveryType: event.target.value as SOPWorkDeliveryType,
@@ -75,7 +75,7 @@ export const SopSection03Overview = ({
               ))}
             </select>
           </MopFormTableRow>
-          {SOP_SECTION_03_TAIL_FIELD_ROWS.map((row) =>
+          {SOP_SECTION_03_TAIL_FIELD_ROWS?.map((row) =>
             renderMappedRow(row, overview, patchOverview),
           )}
         </div>

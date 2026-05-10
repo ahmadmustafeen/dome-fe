@@ -15,7 +15,7 @@ type MopSection07OutlineStepsProps = {
 };
 
 const renumber = (rows: MOPStep[]): MOPStep[] =>
-  rows.map((r, i) => ({ ...r, stepNumber: i + 1 }));
+  rows?.map((r, i) => ({ ...r, stepNumber: i + 1 }));
 
 const newStep = (stepNumber: number): MOPStep => ({
   id: crypto.randomUUID(),

@@ -60,5 +60,5 @@ export const resolveBackOutStepRows = (
   if (!rows || rows.length === 0) {
     return buildDefaultBackOutStepRows();
   }
-  return rows.map((r, i) => ensureRow(r, i));
+  return rows?.map((r, i) => ensureRow(r, i));
 };

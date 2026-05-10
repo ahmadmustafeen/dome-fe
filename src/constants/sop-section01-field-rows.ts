@@ -55,18 +55,18 @@ export type SopSection01FieldRow =
   };
 
 export const SOP_SECTION_01_FIELD_ROWS: readonly SopSection01FieldRow[] = [
-  ["sop-title", "SOP Title:", "Air Handling Units Weekly System Check", "document", "title", "text"],
-  ["sop-identifier", "SOP Identifier:", "To be assigned", "document", "identifier", "text"],
-  ["version", "Version:", "V1", "document", "version", "version"],
+  ["sop-title", "SOP Title:", "", "document", "title", "text"],
+  ["sop-identifier", "SOP Identifier:", "", "document", "identifier", "text"],
+  ["version", "Version:", "", "document", "version", "version"],
   ["creation-date", "Creation Date:", "", "document", "createdDate", "date"],
   ["work-description", "Work Description:", "Weekly System Check", "procedure", "workDescription", "textarea"],
-  ["component-type", "Component Type:", "Air Handling Units", "equipment", "componentType", "text"],
-  ["manufacturer", "Manufacturer:", "LENNOX", "equipment", "manufacturer", "text"],
-  ["model-number", "Model Number:", "HS29-060-13G", "equipment", "modelNumber", "text"],
-  ["serial-number", "Serial Number:", "5807C3674", "equipment", "serialNumber", "text"],
-  ["equipment-number", "Equipment Number:", "AHU 15 CDR", "equipment", "equipmentNumber", "text"],
-  ["location", "Location:", "MISSING", "equipment", "location", "text"],
-  ["duration", "Duration:", "30-45 minutes", "procedure", "duration", "textarea"],
+  ["component-type", "Component Type:", "", "equipment", "componentType", "text"],
+  ["manufacturer", "Manufacturer:", "", "equipment", "manufacturer", "text"],
+  ["model-number", "Model Number:", "", "equipment", "modelNumber", "text"],
+  ["serial-number", "Serial Number:", "", "equipment", "serialNumber", "text"],
+  ["equipment-number", "Equipment Number:", "", "equipment", "equipmentNumber", "text"],
+  ["location", "Location:", "", "equipment", "location", "text"],
+  ["duration", "Duration:", "", "procedure", "duration", "textarea"],
   ["lor", "Level of Risk (LOR):", "", "procedure", "levelOfRisk", "lor"],
   [
     "cet-required",

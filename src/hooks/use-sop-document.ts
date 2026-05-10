@@ -140,6 +140,27 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
         }));
 
       })
+      evtSource.addEventListener('sectionFour', (e) => {
+        const data = JSON.parse(e.data);
+
+        setSop((prev) => ({
+          ...prev,
+          facilityEffects: data,
+        }));
+
+      })
+      evtSource.addEventListener('sectionFivePPE', (e) => {
+        const data = JSON.parse(e.data);
+
+        setSop((prev) => ({
+          ...prev,
+          safety: {
+            ...prev?.safety,
+            ppeRequirementRows: data || [],
+          },
+        }));
+
+      })
 
       evtSource.addEventListener("done", () => {
         toast.success("Succesfully generated, Please save the document manually.");

@@ -28,7 +28,7 @@ const patchRow = (
   patch: MopSection08BackOutProps['patchBackOut'],
 ) => {
   patch({
-    stepRows: s.steprows?.map(r => (r.id === id ? { ...r, ...partial } : r)),
+    stepRows: s.stepRows?.map(r => (r.id === id ? { ...r, ...partial } : r)),
   });
 };
 
@@ -56,13 +56,13 @@ export const MopSection08BackOut = ({ backOut, patchBackOut }: MopSection08BackO
               <th className="min-w-56 px-3 py-2 text-left font-semibold">Back-out Procedures</th>
               <th className="w-24 px-3 py-2 text-left font-semibold">Initials</th>
               <th className="w-24 px-3 py-2 text-left font-semibold">Time</th>
-              <th scope="col" className="w-[4.25rem] px-1 py-2 text-center text-xs font-semibold">
+              <th scope="col" className="w-17 px-1 py-2 text-center text-xs font-semibold">
                 ±
               </th>
             </tr>
           </thead>
           <tbody>
-            {steprows?.map(row => (
+            {stepRows?.map(row => (
               <tr key={row.id} className="bg-white">
                 <td className="border border-gray-200 px-2 py-2 text-center text-gray-800">
                   {row.stepNumber}

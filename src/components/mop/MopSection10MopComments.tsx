@@ -20,7 +20,7 @@ type MopSection10MopCommentsProps = {
 const postMaintenanceToListItems = (
   bullets: MOPSection10MopComments["postMaintenanceBullets"],
 ): ProcedureEditableListItem[] =>
-  bullets.map((b) => ({ id: b.id, text: b.title }));
+  bullets?.map((b) => ({ id: b.id, text: b.title }));
 
 const listItemsToPostMaintenance = (
   items: ProcedureEditableListItem[],

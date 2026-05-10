@@ -154,6 +154,16 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
       }));
     });
 
+    evtSource.addEventListener('sectionFour', (e) => {
+      const data = JSON.parse(e.data);
+
+      setMop((prev) => ({
+        ...prev,
+        facilityEffects: data.facilityEffects,
+      }));
+
+    })
+
     evtSource.addEventListener("sectionFiveSafetyProcedure", (e) => {
       const data = JSON.parse(e.data);
       if (data?.error) {

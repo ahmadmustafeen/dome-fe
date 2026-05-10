@@ -98,22 +98,11 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
       evtSource.addEventListener("allData", (e) => {
         const data = JSON.parse(e.data);
         const next = withReferenceTableBootstrap(data);
-        console.log({ data, next });
-
-
-
         setSop((prev) => ({
           ...prev,
           ...next,
         }));
 
-        // setSop((prev: any) => ({
-        //   ...prev,
-        //   ...data,
-        //   equipment: {},
-        //   procedure: {},
-        //   document: {},
-        // }));
       });
 
       evtSource.addEventListener('sectionOne', (e) => {
@@ -140,6 +129,17 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
           site: data,
         }));
       });
+
+
+      evtSource.addEventListener('sectionThree', (e) => {
+        const data = JSON.parse(e.data);
+
+        setSop((prev) => ({
+          ...prev,
+          overview: data.overview,
+        }));
+
+      })
 
       evtSource.addEventListener("done", () => {
         toast.success("Succesfully generated, Please save the document manually.");

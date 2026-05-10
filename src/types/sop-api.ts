@@ -16,3 +16,12 @@ export type SopListSummaryRow = {
   status: MOPStatus;
   lastModified: string;
 };
+
+export interface CanonicalSopDeleteApiResponse {
+  success: boolean;
+  message?: string;
+  data: {
+    liveDeleted: number;
+    archiveDeleted: number;
+  };
+}

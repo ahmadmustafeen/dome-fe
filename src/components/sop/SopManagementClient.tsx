@@ -79,7 +79,11 @@ export const SopManagementClient = ({ sopId }: SopManagementClientProps) => {
     mode: isEdit ? "edit" : "create",
     sopId: resolvedSopId,
     onAfterPersist: () => void refetchVersionHistory(),
-    onCreateSaveSuccess: async () => {
+    onCreateSaveSuccess: async (createdId) => {
+      if (createdId.trim() === "") {
+        toast.error("SOP saved but no id returned from the API.");
+        return;
+      }
       toast.success("SOP saved successfully");
       router.push(DASHBOARD_ROUTES.SOP_MANAGEMENT);
     },

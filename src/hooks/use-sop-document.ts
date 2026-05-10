@@ -6,6 +6,12 @@ import { generateSOP, getLatestSOP, saveSOP } from "@/services/sop-service";
 import type { SOP } from "@/types/sop";
 import type { CanonicalSopVersionApiRow } from "@/types/sop-api";
 import { sopBootstrapKey } from "@/utils/sop-document-state";
+import { bootstrapEmptySopReferenceTables } from "@/utils/sop-references-bootstrap";
+
+const withReferenceTableBootstrap = (doc: SOP): SOP => ({
+  ...doc,
+  references: bootstrapEmptySopReferenceTables(doc.references),
+});
 
 type SopDocumentContextParams = {
   mode: "create" | "edit";
@@ -46,8 +52,9 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
           setSopNotFound(true);
           return;
         }
-        setSop(loaded);
-        latestSopRef.current = loaded;
+        const next = withReferenceTableBootstrap(loaded);
+        setSop(next);
+        latestSopRef.current = next;
         preArchiveDraftRef.current = null;
         archiveSessionActiveRef.current = false;
         setViewingArchivedVersionNumber(null);
@@ -73,8 +80,14 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
     try {
       const loaded =
         mode === "create" ? await generateSOP() : await getLatestSOP(sopId ?? "");
-      setSop(loaded);
-      latestSopRef.current = loaded;
+      if (loaded === null) {
+        setSop(null);
+        latestSopRef.current = null;
+      } else {
+        const next = withReferenceTableBootstrap(loaded);
+        setSop(next);
+        latestSopRef.current = next;
+      }
       preArchiveDraftRef.current = null;
       archiveSessionActiveRef.current = false;
       setViewingArchivedVersionNumber(null);
@@ -94,9 +107,10 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
       throw new Error("SOP id is required to save");
     }
     const saved = await saveSOP(sop, id);
-    setSop(saved);
-    latestSopRef.current = saved;
-    preArchiveDraftRef.current = saved;
+    const next = withReferenceTableBootstrap(saved);
+    setSop(next);
+    latestSopRef.current = next;
+    preArchiveDraftRef.current = next;
     archiveSessionActiveRef.current = false;
     setViewingArchivedVersionNumber(null);
     await onAfterPersist?.();
@@ -112,14 +126,16 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
         archiveSessionActiveRef.current = false;
         const stash = preArchiveDraftRef.current;
         preArchiveDraftRef.current = null;
-        latestSopRef.current = row.sop;
-        return stash !== null ? stash : row.sop;
+        const chosen = stash !== null ? stash : row.sop;
+        const next = withReferenceTableBootstrap(chosen);
+        latestSopRef.current = next;
+        return next;
       }
       if (archiveSessionActiveRef.current === false) {
         preArchiveDraftRef.current = prev;
         archiveSessionActiveRef.current = true;
       }
-      return row.sop;
+      return withReferenceTableBootstrap(row.sop);
     });
     setViewingArchivedVersionNumber(
       row.isLatest === true ? null : row.versionNumber,
@@ -129,7 +145,7 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
   const resumeEditingLatestSop = useCallback(() => {
     const next = preArchiveDraftRef.current ?? latestSopRef.current;
     if (next !== null) {
-      setSop(next);
+      setSop(withReferenceTableBootstrap(next));
     }
     preArchiveDraftRef.current = null;
     archiveSessionActiveRef.current = false;

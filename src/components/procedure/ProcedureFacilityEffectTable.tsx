@@ -28,9 +28,25 @@ const patchRow = <TKey extends string>(
   key: TKey,
   partial: Partial<Pick<ProcedureFacilityEffectRow<TKey>, "choice" | "details">>,
 ): ProcedureFacilityEffectRow<TKey>[] => {
-  return rows.map((row) =>
-    row.systemKey === key ? { ...row, ...partial } : row,
-  );
+  let touched = false;
+  const mapped = rows.map((row) => {
+    if (row.systemKey !== key) {
+      return row;
+    }
+    touched = true;
+    return { ...row, ...partial };
+  });
+  if (touched === true) {
+    return mapped;
+  }
+  return [
+    ...rows,
+    {
+      systemKey: key,
+      choice: partial.choice ?? "no",
+      details: partial.details ?? "",
+    },
+  ];
 };
 
 const radioOptions: readonly {

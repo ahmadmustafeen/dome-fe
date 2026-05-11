@@ -40,6 +40,14 @@ export const documentService = {
     );
   },
 
+    getApprovedDocumentsBySiteId: (siteId: string) => {
+   
+    return apiFetch<DocumentListApiResponse>(
+      `/documents/site/approved/${siteId}`,
+      { method: "GET" },
+    );
+  },
+
   createDocument: (
     siteId: string,
     type: string,

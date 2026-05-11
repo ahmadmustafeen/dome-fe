@@ -283,6 +283,20 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
           },
         }));
       });
+      evtSource.addEventListener("emergencyContactRows", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("emergencyContactRows failed");
+          return;
+        }
+        setSop((prev: any) => ({
+          ...prev,
+          safety: {
+            ...prev.safety,
+            emergencyContactRows: data
+          }
+        }));
+      });
 
       evtSource.addEventListener("done", () => {
         toast.success("Succesfully generated, Please save the document manually.");

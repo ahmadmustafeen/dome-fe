@@ -20,6 +20,7 @@ export const generatedDocumentService = {
     pdType: string,
     assetId: string,
     siteId: string,
+    documentIds?: string[]
   ) => {
     const data = {
       pdId,
@@ -31,10 +32,11 @@ export const generatedDocumentService = {
       data: {
         _id: string;
         pdId?: string;
+        documentIds?: string
       };
     }>("generatedDocument/create", {
       method: "POST",
-      body: JSON.stringify(data),
+      body: JSON.stringify({ ...data, documentIds }),
     });
   },
 };

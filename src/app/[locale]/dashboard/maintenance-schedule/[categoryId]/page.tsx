@@ -31,6 +31,10 @@ import { useAppContext } from "@/context/AppContext";
 import { maintenanceScheduleService } from "@/services/maintenance-schedule-service";
 import * as assetService from "@/services/asset-service";
 import { toast } from "react-toastify";
+import { generatedDocumentService } from "@/services/generatedDocument-service";
+import Image from "next/image";
+import { DocumentApiRecord, documentService } from "@/services/document-service";
+import { extractDocumentName } from "@/utils/formatters";
 
 const PAGE_SIZE = 10;
 
@@ -47,6 +51,8 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
   const [, setData] = useState<MaintenanceRow[]>([]);
   const [, setSchedule] = useState<MaintenanceScheduleData | null>(null);
   const { site, client } = useAppContext();
+  const [documents, setDocuments] = useState<DocumentApiRecord[]>([]);
+
 
   const fetchMaintenanceSchedule = useCallback(async (siteId: string) => {
     setIsLoading(true);
@@ -95,6 +101,8 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [pdData, setPdData] = useState<{ type: string, pdId: string, assetId: string } | null>(null)
+  const [selectedDocuments, setSelectedDocuments] = useState<any[]>([]);
 
   const filteredAssets = useMemo(() => {
     searchQuery.trim().toLowerCase();
@@ -111,6 +119,73 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
       ),
     [filteredAssets, currentPage],
   );
+  const fetchDocuments = async () => {
+    try {
+      const response = await documentService.getApprovedDocumentsBySiteId(site?._id!);
+      setDocuments(response.data.documents || []);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to fetch documents");
+    }
+  };
+
+  useEffect(() => {
+    if (site?._id) {
+      fetchDocuments();
+    }
+  }, [site?._id]);
+
+  // Group documents by type
+  const groupedDocuments = documents.reduce((acc: any, doc: any) => {
+    const type = doc.type || "other";
+
+    if (!acc[type]) {
+      acc[type] = [];
+    }
+
+    acc[type].push(doc);
+
+    return acc;
+  }, {});
+
+  // Toggle selection
+  const toggleDocumentSelection = (doc: any) => {
+    setSelectedDocuments((prev) => {
+      const alreadySelected = prev.find((item) => item._id === doc._id);
+
+      if (alreadySelected) {
+        return prev.filter((item) => item._id !== doc._id);
+      }
+
+      return [...prev, doc];
+    });
+  };
+
+  const handleNavigate = async (pdId: string, type: string, assetId: string, documentIds: string[]) => {
+
+    const resp = await generatedDocumentService.createGeneratedDocument(pdId, type, assetId, site?._id!, documentIds);
+    if (resp) {
+      if (resp.data.pdId) {
+        let route = '';
+        if (type === 'mop') route = 'mop-management';
+        if (type === 'sop') route = 'sop-management';
+        if (type === 'eop') route = 'eop-management';
+        setPdData(null)
+        return router.push(`/en/dashboard/${route}/${resp.data.pdId}`)
+
+      }
+      let route = '';
+      if (type === 'mop') route = 'mop-management';
+      if (type === 'sop') route = 'sop-management';
+      if (type === 'eop') route = 'eop-management';
+      setPdData(null)
+      router.push(`/en/dashboard/${route}/create/${resp.data._id}`)
+    }
+  }
+
+  const handleCreateClick = async (pdId: string, type: string, assetId: string) => {
+    setPdData({ pdId, type, assetId })
+  }
 
   const handleProcedureGenerate = useCallback(
     (item: ProcedureItem, kind: ProcedureKind, assetRecordId: string) => {
@@ -134,6 +209,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
           eops: t("details_eops"),
           sops: t("details_sops"),
         }}
+        handleCreateClick={handleCreateClick}
         onProcedureGenerate={handleProcedureGenerate}
       />
     ),
@@ -154,6 +230,10 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
       }),
     [t],
   );
+
+  const handleContinue = () => {
+    handleNavigate(pdData?.pdId!, pdData?.type!, pdData?.assetId!, selectedDocuments.map(item => item._id))
+  }
 
   const assetCount = filteredAssets.length;
 
@@ -176,6 +256,89 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
             icon={<ArrowLeft className="size-4" />}
           />
         </div>
+        {pdData ? (
+          <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/30 px-4">
+            <div className="relative flex w-full max-w-2xl flex-col rounded-2xl bg-white shadow-xl">
+
+              <div
+                className="absolute right-4 top-4 cursor-pointer"
+                onClick={() => setPdData(null)}
+              >
+                <X />
+              </div>
+
+              <div className="border-b border-gray-200 px-6 py-4 text-center">
+                <Typography variant="h2">
+                  Select Documents to Complement Generation
+                </Typography>
+              </div>
+
+              <div className="px-6 py-6">
+                <Typography variant="p" className="mb-6 text-center text-gray-500">
+                  Select all documents you want included in this generation.
+                </Typography>
+
+                <div className="max-h-125 overflow-y-auto space-y-6">
+                  {Object.entries(groupedDocuments).map(([type, docs]: any) => (
+                    <div key={type}>
+
+                      <div className="mb-3 text-sm font-semibold uppercase text-gray-400">
+                        {type}
+                      </div>
+
+                      <div className="space-y-2">
+                        {docs.map((doc: any) => {
+                          const isSelected = selectedDocuments.some(
+                            (item) => item._id === doc._id
+                          );
+
+                          const name = extractDocumentName(doc.documentUrl);
+                          return (
+                            <div
+                              key={doc._id}
+                              onClick={() => toggleDocumentSelection(doc)}
+                              className={`cursor-pointer rounded-xl border p-3 transition-all ${isSelected
+                                ? "border-blue-500 bg-blue-50"
+                                : "border-gray-200 hover:border-gray-300"
+                                }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <div className="font-medium">
+                                    {name ?? "Name"}
+                                  </div>
+
+                                  <div className="text-sm text-gray-500">
+                                    {doc.type}
+                                  </div>
+                                </div>
+
+                                {isSelected && (
+                                  <div className="text-sm font-medium text-blue-600">
+                                    Selected
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 flex justify-end">
+                  <button
+                    onClick={handleContinue}
+                    className="rounded-xl bg-black px-5 py-2 text-white"
+                  >
+                    Continue
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : null}
 
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>

@@ -1,18 +1,16 @@
 "use client";
 
 import { RequirementSection } from "@/components/sections/maintenance/RequirementSection";
-import { useAppContext } from "@/context/AppContext";
-import { generatedDocumentService } from "@/services/generatedDocument-service";
 import type {
   CategoryAsset,
   ProcedureItem,
   ProcedureKind,
 } from "@/types/maintenance-schedule";
-import { useRouter } from "next/navigation";
 
 type CategoryAssetProcedurePanelProps = {
   asset: CategoryAsset;
   labels: { mops: string; eops: string; sops: string };
+  handleCreateClick: (id: string, type: string, assetId: string) => void;
   onProcedureGenerate: (
     item: ProcedureItem,
     kind: ProcedureKind,
@@ -24,31 +22,9 @@ const CategoryAssetProcedurePanel = ({
   asset,
   labels,
   onProcedureGenerate,
+  handleCreateClick,
 }: CategoryAssetProcedurePanelProps) => {
-  const router = useRouter()
-  const { site } = useAppContext()
 
-
-  const handleCreateClick = async (pdId: string, type: string) => {
-
-    const resp = await generatedDocumentService.createGeneratedDocument(pdId, type, asset._id, site?._id!);
-    if (resp) {
-      if (resp.data.pdId) {
-        let route = '';
-        if (type === 'mop') route = 'mop-management';
-        if (type === 'sop') route = 'sop-management';
-        if (type === 'eop') route = 'eop-management';
-
-        return router.push(`/en/dashboard/${route}/${resp.data.pdId}`)
-
-      }
-      let route = '';
-      if (type === 'mop') route = 'mop-management';
-      if (type === 'sop') route = 'sop-management';
-      if (type === 'eop') route = 'eop-management';
-      router.push(`/en/dashboard/${route}/create/${resp.data._id}`)
-    }
-  }
 
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
@@ -60,7 +36,7 @@ const CategoryAssetProcedurePanel = ({
         onGenerate={(item) => {
           onProcedureGenerate(item, "mop", asset.id);
         }}
-        handleCreateClick={(id) => handleCreateClick(id, 'mop')}
+        handleCreateClick={(id) => handleCreateClick(id, 'mop', asset?._id)}
       />
       <RequirementSection
         label={labels.eops}
@@ -68,7 +44,7 @@ const CategoryAssetProcedurePanel = ({
         existing={asset.eop}
 
         colorClass="border-red-200"
-        handleCreateClick={(id) => handleCreateClick(id, 'eop')}
+        handleCreateClick={(id) => handleCreateClick(id, 'eop', asset?._id)}
         onGenerate={(item) => {
           onProcedureGenerate(item, "eop", asset.id);
         }}
@@ -78,7 +54,7 @@ const CategoryAssetProcedurePanel = ({
         items={asset.sops}
         existing={asset.sop}
         colorClass="border-green-200"
-        handleCreateClick={(id) => handleCreateClick(id, 'sop')}
+        handleCreateClick={(id) => handleCreateClick(id, 'sop', asset?._id)}
         onGenerate={(item) => {
           onProcedureGenerate(item, "sop", asset.id);
         }}

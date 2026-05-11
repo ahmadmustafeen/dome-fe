@@ -81,7 +81,7 @@ export const MOP_SECTION_04_DUMMY_EFFECTS: Record<
 };
 
 export const buildDefaultMopSection04Rows = (): MopFacilityEffectRow[] =>
-  MOP_SECTION_04_SYSTEM_rows?.map((row) => {
+  MOP_SECTION_04_SYSTEM_ROWS?.map((row) => {
     const cell = MOP_SECTION_04_DUMMY_EFFECTS[row.key];
     return {
       systemKey: row.key,

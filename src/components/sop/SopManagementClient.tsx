@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-import { SectionWrapper, Typography } from "@/components/common";
+import { ScreenLoader, SectionWrapper, Typography } from "@/components/common";
 import { DASHBOARD_ROUTES } from "@/constants/routes";
 import { useSopDocument } from "@/hooks/use-sop-document";
 import { useSopVersionHistoryPanel } from "@/hooks/use-sop-version-history-panel";
@@ -56,6 +56,7 @@ export const SopManagementClient = ({ sopId, documentId }: SopManagementClientPr
     sop,
     isBootstrapping,
     sopNotFound,
+    isGenerating,
     isReadOnly,
     viewingArchivedVersionNumber,
     applyCanonicalVersionRow,
@@ -141,8 +142,12 @@ export const SopManagementClient = ({ sopId, documentId }: SopManagementClientPr
     );
   }
 
+  console.log({ isGenerating });
+
+
   return (
     <>
+
       {historyOpen ? (
         <SopVersionHistoryDrawer
           versionCount={versionCount}
@@ -158,6 +163,9 @@ export const SopManagementClient = ({ sopId, documentId }: SopManagementClientPr
       ) : null}
 
       <SectionWrapper className="flex min-h-full flex-col">
+        {
+          isGenerating ? <ScreenLoader heading="SOP is being generated" description="Selected SOP is being generated, do not switch or refresh the page, and once the document is generated, remember to save the generated document." /> : null
+        }
         <SopManagementHeader
           isBootstrapping={isBootstrapping}
           showVersionHistory={showVersionHistory}
@@ -202,6 +210,7 @@ export const SopManagementClient = ({ sopId, documentId }: SopManagementClientPr
 
         <SopFormActionsFooter
           isSaving={isSaving}
+          isGenerating={isGenerating}
           isBootstrapping={isBootstrapping}
           readOnlyForm={readOnlyForm}
           onClear={handleClear}

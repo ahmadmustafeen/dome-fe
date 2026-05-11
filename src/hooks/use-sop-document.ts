@@ -90,30 +90,20 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
     try {
       setGenerateError(null);
 
-      setIsGenerating(true);
       const evtSource = new EventSource(
         `${process.env.NEXT_PUBLIC_BASE_URL}/sop/generate?documentId=${documentId}`,
       );
+      setIsGenerating(true);
+      
 
       evtSource.addEventListener("allData", (e) => {
         const data = JSON.parse(e.data);
         const next = withReferenceTableBootstrap(data);
-        console.log({ data, next });
-
-
-
         setSop((prev) => ({
           ...prev,
           ...next,
         }));
 
-        // setSop((prev: any) => ({
-        //   ...prev,
-        //   ...data,
-        //   equipment: {},
-        //   procedure: {},
-        //   document: {},
-        // }));
       });
 
       evtSource.addEventListener('sectionOne', (e) => {
@@ -141,14 +131,177 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
         }));
       });
 
+
+      evtSource.addEventListener('sectionThree', (e) => {
+        const data = JSON.parse(e.data);
+
+        setSop((prev) => ({
+          ...prev,
+          overview: data.overview,
+        }));
+
+      })
+      evtSource.addEventListener('sectionFour', (e) => {
+        const data = JSON.parse(e.data);
+
+        setSop((prev) => ({
+          ...prev,
+          facilityEffects: data,
+        }));
+
+      })
+      evtSource.addEventListener('sectionFivePPE', (e) => {
+        const data = JSON.parse(e.data);
+
+        setSop((prev) => ({
+          ...prev,
+          safety: {
+            ...prev?.safety,
+            ppeRequirementRows: data || [],
+          },
+        }));
+
+      })
+
+      evtSource.addEventListener("sectionFiveToolsRequired", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("sectionFiveToolsRequired failed");
+          return;
+        }
+        setSop((prev: any) => ({
+          ...prev,
+          safety: {
+            ...prev?.safety,
+            toolRequirementRows: data || [],
+          },
+        }));
+      });
+
+      evtSource.addEventListener("sectionFiveSiteHazards", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("sectionFiveSiteHazards failed");
+          return;
+        }
+        setSop((prev: any) => ({
+          ...prev,
+          safety: {
+            ...prev?.safety,
+            siteHazardRows: data || [],
+          },
+        }));
+      });
+
+      evtSource.addEventListener("sectionSixRiskAnalysisRow", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("sectionSixRiskAnalysisRow failed");
+          return;
+        }
+        setSop((prev: any) => ({
+          ...prev,
+          risksAssumptions: {
+            ...prev?.risksAssumptions,
+            riskAnalysisRows: data || [],
+          },
+        }));
+      });
+      evtSource.addEventListener("sectionSixAssumptionsAndDecision", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("sectionSixRiskAnalysisRow failed");
+          return;
+        }
+        setSop((prev: any) => ({
+          ...prev,
+          risksAssumptions: {
+            ...prev?.risksAssumptions,
+            keyAssumptionRows: data.keyAssumptionRows,
+            criticalDecisionPointItems: data.criticalDecisionPointItems,
+          },
+        }));
+      });
+
+      evtSource.addEventListener("sectionSevenPreProcedure", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("sectionSevenPreProcedure failed");
+          return;
+        }
+        setSop((prev: any) => ({
+          ...prev,
+          details: {
+            ...prev?.details,
+            preProcedureCheckRows: data,
+          },
+        }));
+      });
+
+      evtSource.addEventListener("sectionSevenDetailedProcedureSteps", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("sectionSevenDetailedProcedureSteps failed");
+          return;
+        }
+        setSop((prev: any) => ({
+          ...prev,
+          details: {
+            ...prev?.details,
+            detailedProcedureStepRows: data,
+          },
+        }));
+      });
+
+      evtSource.addEventListener("sectionEightBackoutProcedure", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("sectionEightBackoutProcedure failed");
+          return;
+        }
+        setSop((prev: any) => ({
+          ...prev,
+          backOutProcedures: {
+            ...prev?.backOutProcedures,
+            rows: data,
+          },
+        }));
+      });
+
+      evtSource.addEventListener("sectionTenComments", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("sectionTenComments failed");
+          return;
+        }
+        setSop((prev: any) => ({
+          ...prev,
+          comments: {
+            ...prev?.comments,
+            relevantCommentItems: data.relevantCommentItems,
+            postOperationRequirementItems: data.postOperationRequirementItems,
+            additionalNoteItems: data.additionalNoteItems,
+          },
+        }));
+      });
+      evtSource.addEventListener("emergencyContactRows", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("emergencyContactRows failed");
+          return;
+        }
+        setSop((prev: any) => ({
+          ...prev,
+          safety: {
+            ...prev.safety,
+            emergencyContactRows: data
+          }
+        }));
+      });
+
       evtSource.addEventListener("done", () => {
         toast.success("Succesfully generated, Please save the document manually.");
         setIsGenerating(false)
-        // setMop((prev: any) => ({
-        //   ...prev,
-        //   loading: false,
-        // }));
-
         evtSource.close();
       });
 
@@ -183,11 +336,6 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
         loading: false,
       }));
 
-      setIsGenerating(false);
-
-      toast.success(
-        "Successfully generated SOP. Please save the document manually.",
-      );
     } catch (err: unknown) {
       setGenerateError(
         err instanceof Error ? err.message : "SOP generation failed",
@@ -364,7 +512,7 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
       throw new Error("SOP id is required to save");
     }
 
-    const saved = await saveSOP(sop, id, site?._id);
+    const saved = await saveSOP(sop, id, site?._id, documentId);
 
     const next = withReferenceTableBootstrap(saved);
 

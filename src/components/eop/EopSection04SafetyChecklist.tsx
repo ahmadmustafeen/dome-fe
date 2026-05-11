@@ -17,7 +17,7 @@ export const EopSection04SafetyChecklist = ({
   preActionSafety,
   patchPreActionSafety,
 }: EopSection04SafetyChecklistProps) => {
-  const items = preActionsafety?.safetyChecklistItems;
+  const items = preActionSafety?.safetyChecklistItems;
 
   return (
     <div className="mb-6">

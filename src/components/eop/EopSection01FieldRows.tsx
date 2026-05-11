@@ -31,10 +31,10 @@ const parseVersionInput = (raw: string): number => {
 
 const readRowValue = (row: EopSection01FieldRow, eop: EOP): string => {
   if (row.control === "version") {
-    return formatVersionDisplay(eop.document.version);
+    return formatVersionDisplay(eop?.document?.version);
   }
   if (row.source === "document") {
-    return eop.document[row.field];
+    return eop?.document?.[row.field];
   }
   if (row.source === "equipment") {
     return eop.equipment[row.field];

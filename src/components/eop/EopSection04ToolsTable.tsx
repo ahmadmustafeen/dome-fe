@@ -31,7 +31,7 @@ export const EopSection04ToolsTable = ({
   preActionSafety,
   patchPreActionSafety,
 }: EopSection04ToolsTableProps) => {
-  const rows = preActionsafety?.toolRows;
+  const rows = preActionSafety?.toolRows;
 
   return (
     <div className="mb-6">

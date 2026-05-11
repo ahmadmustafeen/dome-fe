@@ -18,16 +18,17 @@ import { EopDocumentForm } from "./EopDocumentForm";
 
 type EopManagementClientProps = {
   eopId?: string;
+  documentId?: string;
 };
 
-export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
+export const EopManagementClient = ({ eopId, documentId }: EopManagementClientProps) => {
   const router = useRouter();
   const isEdit = eopId !== undefined && eopId.trim() !== "";
   const resolvedEopId = isEdit ? eopId.trim() : undefined;
   const [isSaving, setIsSaving] = useState(false);
 
   const applyVersionRef = useRef<(row: CanonicalEopVersionApiRow) => void>(
-    () => {},
+    () => { },
   );
 
   const {
@@ -72,6 +73,7 @@ export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
   } = useEopDocument({
     mode: isEdit ? "edit" : "create",
     eopId: resolvedEopId,
+    documentId,
     onAfterPersist: () => void refetchVersionHistory(),
     onCreateSaveSuccess: async () => {
       toast.success("EOP saved successfully");

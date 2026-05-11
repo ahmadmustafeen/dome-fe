@@ -30,7 +30,7 @@ export const EopSection04PpeTable = ({
   preActionSafety,
   patchPreActionSafety,
 }: EopSection04PpeTableProps) => {
-  const rows = preActionsafety?.ppeRows;
+  const rows = preActionSafety?.ppeRows;
 
   return (
     <div className="mb-6">

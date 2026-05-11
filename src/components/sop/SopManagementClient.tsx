@@ -142,11 +142,12 @@ export const SopManagementClient = ({ sopId, documentId }: SopManagementClientPr
     );
   }
 
+  console.log({ isGenerating });
+
+
   return (
     <>
-      {
-        isGenerating ? <ScreenLoader heading="SOP is being generated" description="Selected SOP is being generated, do not switch or refresh the page, and once the document is generated, remember to save the generated document." /> : null
-      }
+
       {historyOpen ? (
         <SopVersionHistoryDrawer
           versionCount={versionCount}
@@ -162,6 +163,9 @@ export const SopManagementClient = ({ sopId, documentId }: SopManagementClientPr
       ) : null}
 
       <SectionWrapper className="flex min-h-full flex-col">
+        {
+          isGenerating ? <ScreenLoader heading="SOP is being generated" description="Selected SOP is being generated, do not switch or refresh the page, and once the document is generated, remember to save the generated document." /> : null
+        }
         <SopManagementHeader
           isBootstrapping={isBootstrapping}
           showVersionHistory={showVersionHistory}

@@ -90,10 +90,10 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
     try {
       setGenerateError(null);
 
-      setIsGenerating(true);
       const evtSource = new EventSource(
         `${process.env.NEXT_PUBLIC_BASE_URL}/sop/generate?documentId=${documentId}`,
       );
+      setIsGenerating(true);
       
 
       evtSource.addEventListener("allData", (e) => {
@@ -336,11 +336,6 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
         loading: false,
       }));
 
-      setIsGenerating(false);
-
-      toast.success(
-        "Successfully generated SOP. Please save the document manually.",
-      );
     } catch (err: unknown) {
       setGenerateError(
         err instanceof Error ? err.message : "SOP generation failed",

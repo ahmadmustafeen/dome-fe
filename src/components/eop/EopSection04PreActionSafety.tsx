@@ -16,11 +16,13 @@ import { EopSection04ToolsTable } from "./EopSection04ToolsTable";
 type EopSection04PreActionSafetyProps = {
   preActionSafety: EOPSection04PreActionSafety;
   patchPreActionSafety: (p: Partial<EOPSection04PreActionSafety>) => void;
+  assetName?: string
 };
 
 export const EopSection04PreActionSafetyBlock = ({
   preActionSafety,
   patchPreActionSafety,
+  assetName,
 }: EopSection04PreActionSafetyProps) => {
   return (
     <div className="mb-2">
@@ -36,7 +38,7 @@ export const EopSection04PreActionSafetyBlock = ({
           ⚠️ {EOP_SECTION_04_CRITICAL_CHECKPOINT_TITLE}
         </Typography>
         <Textarea
-          value={preActionsafety?.ppeIntroText}
+          value={preActionSafety?.ppeIntroText}
           onChange={(e) => patchPreActionSafety({ ppeIntroText: e.target.value })}
           className="mt-2 min-h-20"
           placeholder="Describe the emergency context and PPE requirements"
@@ -46,14 +48,17 @@ export const EopSection04PreActionSafetyBlock = ({
       <EopSection04PpeTable
         preActionSafety={preActionSafety}
         patchPreActionSafety={patchPreActionSafety}
+        assetName={assetName}
       />
       <EopSection04ToolsTable
         preActionSafety={preActionSafety}
         patchPreActionSafety={patchPreActionSafety}
+        assetName={assetName}
       />
       <EopSection04SafetyChecklist
         preActionSafety={preActionSafety}
         patchPreActionSafety={patchPreActionSafety}
+        assetName={assetName}
       />
 
       <div className="mt-4 rounded-md border border-red-300 bg-red-50 px-3 py-3 text-sm font-semibold text-red-800">

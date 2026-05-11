@@ -49,18 +49,14 @@ export const getLatestEOP = async (eopId: string): Promise<EOP | null> => {
   }
 };
 
-export const saveEOP = async (eop: EOP, eopId: string): Promise<EOP> => {
+export const saveEOP = async (eop: EOP, eopId: string, siteId?: string, documentId?: string): Promise<EOP> => {
   const segment = encodeURIComponent(eopId.trim());
   return unwrapData(
     apiFetch<ApiSuccessEnvelope<EOP>>(`/eop/${segment}`, {
       method: "PUT",
-      body: JSON.stringify(eop),
+      body: JSON.stringify({ ...eop, siteId, documentId }),
     }),
   );
-};
-
-export const createEOP = async (eop: EOP): Promise<EOP> => {
-  return saveEOP(eop, "new");
 };
 
 export const getEOPVersions = async (

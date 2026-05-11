@@ -31,18 +31,18 @@ const parseVersionInput = (raw: string): number => {
 
 const readRowValue = (row: EopSection01FieldRow, eop: EOP): string => {
   if (row.control === "version") {
-    return formatVersionDisplay(eop.document.version);
+    return formatVersionDisplay(eop?.document?.version);
   }
   if (row.source === "document") {
-    return eop.document[row.field];
+    return eop?.document?.[row.field];
   }
   if (row.source === "equipment") {
-    return eop.equipment[row.field];
+    return eop?.equipment?.[row.field];
   }
   if (row.source === "procedure") {
-    return eop.procedure[row.field];
+    return eop?.procedure?.[row.field];
   }
-  return eop.signOff[row.field];
+  return eop?.signOff?.[row.field];
 };
 
 const applyRowValue = (
@@ -87,12 +87,12 @@ const renderControl = (row: EopSection01FieldRow, props: EopSection01FieldRowsPr
   }
 
   if (row.control === "lor") {
-    const helper = getEopLorHelper(props.eop.procedure.levelOfRisk);
+    const helper = getEopLorHelper(props.eop?.procedure?.levelOfRisk);
     return (
       <div>
         <select
           className="mop-doc-input"
-          value={props.eop.procedure.levelOfRisk}
+          value={props.eop?.procedure?.levelOfRisk}
           onChange={(e) =>
             props.patchProcedure({
               levelOfRisk: e.target.value as RiskLevelOrEmpty,

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-import { AppButton, SectionWrapper, Typography } from "@/components/common";
+import { AppButton, ScreenLoader, SectionWrapper, Typography } from "@/components/common";
 import { ProcedureVersionHistory } from "@/components/version-history/ProcedureVersionHistory";
 import { VersionHistoryDrawer } from "@/components/version-history/VersionHistoryDrawer";
 import { DASHBOARD_ROUTES } from "@/constants/routes";
@@ -18,16 +18,17 @@ import { EopDocumentForm } from "./EopDocumentForm";
 
 type EopManagementClientProps = {
   eopId?: string;
+  documentId?: string;
 };
 
-export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
+export const EopManagementClient = ({ eopId, documentId }: EopManagementClientProps) => {
   const router = useRouter();
   const isEdit = eopId !== undefined && eopId.trim() !== "";
   const resolvedEopId = isEdit ? eopId.trim() : undefined;
   const [isSaving, setIsSaving] = useState(false);
 
   const applyVersionRef = useRef<(row: CanonicalEopVersionApiRow) => void>(
-    () => {},
+    () => { },
   );
 
   const {
@@ -57,6 +58,7 @@ export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
     patchDocument,
     patchEquipment,
     patchProcedure,
+    isGenerating,
     patchSignOff,
     patchSite,
     patchOverview,
@@ -69,9 +71,11 @@ export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
     patchApprovalReview,
     resetEop,
     persistEop,
+    assetData,
   } = useEopDocument({
     mode: isEdit ? "edit" : "create",
     eopId: resolvedEopId,
+    documentId,
     onAfterPersist: () => void refetchVersionHistory(),
     onCreateSaveSuccess: async () => {
       toast.success("EOP saved successfully");
@@ -163,6 +167,9 @@ export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
       ) : null}
 
       <SectionWrapper className="flex min-h-full flex-col">
+        {
+          isGenerating ? <ScreenLoader heading="EOP is being generated" description="Selected EOP is being generated, do not switch or refresh the page, and once the document is generated, remember to save the generated document." /> : null
+        }
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3 sm:mb-6">
           <Typography variant="h1" className="min-w-0 flex-1">
             Emergency Operating Procedure (EOP)
@@ -210,6 +217,7 @@ export const EopManagementClient = ({ eopId }: EopManagementClientProps) => {
                 patchDocument={patchDocument}
                 patchEquipment={patchEquipment}
                 patchProcedure={patchProcedure}
+                assetName={assetData?.assetName}
                 patchSignOff={patchSignOff}
                 patchSite={patchSite}
                 patchOverview={patchOverview}

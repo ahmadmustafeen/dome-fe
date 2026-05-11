@@ -27,7 +27,7 @@ export const EopSection09ApprovalReview = ({
   approvalReview,
   patchApprovalReview,
 }: EopSection09ApprovalReviewProps) => {
-  const rows = approvalReview.reviewRows;
+  const rows = approvalReview?.reviewRows;
   return (
     <div className="mt-5 rounded-lg border border-[#e0e0e0] bg-white px-3 py-4 shadow-sm sm:mt-6 sm:px-4 sm:py-5">
       <Typography

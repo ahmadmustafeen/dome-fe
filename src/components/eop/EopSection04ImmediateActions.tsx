@@ -14,6 +14,7 @@ import { EopSection04PreActionSafetyBlock } from "./EopSection04PreActionSafety"
 type EopSection04ImmediateActionsProps = {
   immediateActions: EOPSection04ImmediateActions;
   patchPreActionSafety: (p: Partial<EOPSection04PreActionSafety>) => void;
+  assetName?: string;
   patchInternalDiagnostics: (
     p: Partial<EOPSection04InternalDiagnostics>,
   ) => void;
@@ -23,6 +24,7 @@ export const EopSection04ImmediateActionsSection = ({
   immediateActions,
   patchPreActionSafety,
   patchInternalDiagnostics,
+  assetName
 }: EopSection04ImmediateActionsProps) => {
   return (
     <div className="mt-5 rounded-lg border border-[#e0e0e0] bg-white px-3 py-4 shadow-sm sm:mt-6 sm:px-4 sm:py-5">
@@ -34,12 +36,14 @@ export const EopSection04ImmediateActionsSection = ({
       </Typography>
 
       <EopSection04PreActionSafetyBlock
-        preActionSafety={immediateActions.preActionSafety}
+        preActionSafety={immediateActions?.preActionSafety}
         patchPreActionSafety={patchPreActionSafety}
+        assetName={assetName}
       />
       <EopSection04InternalDiagnostics
-        internalDiagnostics={immediateActions.internalDiagnostics}
+        internalDiagnostics={immediateActions?.internalDiagnostics}
         patchInternalDiagnostics={patchInternalDiagnostics}
+        assetName={assetName}
       />
     </div>
   );

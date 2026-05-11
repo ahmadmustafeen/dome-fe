@@ -35,7 +35,7 @@ export const EopSection06EmergencyContactsTable = ({
   communication,
   patchCommunication,
 }: EopSection06EmergencyContactsTableProps) => {
-  const rows = communication.emergencyContactRows;
+  const rows = communication?.emergencyContactRows;
   return (
     <div>
       <Typography variant="h6" className="mb-4 text-base font-semibold text-gray-900">
@@ -113,14 +113,14 @@ export const EopSection06EmergencyContactsTable = ({
 
       <div className="mt-3 grid grid-cols-1 gap-2 md:grid-cols-2">
         <Input
-          value={communication.verificationContactName}
+          value={communication?.verificationContactName}
           onChange={(e) =>
             patchCommunication({ verificationContactName: e.target.value })
           }
           placeholder="Enter contact name"
         />
         <Input
-          value={communication.verificationPhoneNumber}
+          value={communication?.verificationPhoneNumber}
           onChange={(e) =>
             patchCommunication({ verificationPhoneNumber: e.target.value })
           }

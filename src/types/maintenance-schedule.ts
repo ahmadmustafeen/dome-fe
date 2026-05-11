@@ -38,6 +38,7 @@ export type CategoryAsset = {
   assetName: string;
   location: string;
   serialNumber: string;
+  eop: string[];
   mop: string[];
   sop: string[];
   mops: ProcedureItem[];

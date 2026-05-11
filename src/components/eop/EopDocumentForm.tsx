@@ -25,6 +25,7 @@ type EopDocumentFormProps = {
   patchSignOff: (p: Partial<EOP["signOff"]>) => void;
   patchSite: (p: Partial<EOP["site"]>) => void;
   patchOverview: (p: Partial<EOP["overview"]>) => void;
+  assetName?: string
   patchPreActionSafety: (
     p: Partial<EOP["immediateActions"]["preActionSafety"]>,
   ) => void;
@@ -56,10 +57,11 @@ export const EopDocumentForm = ({
   patchRecovery,
   patchSupportingInformation,
   patchApprovalReview,
+  assetName,
 }: EopDocumentFormProps) => {
   return (
     <div className="mop-portal-form-root min-h-0 w-full flex-1 overflow-x-hidden bg-linear-to-b from-white to-[#f9fafb] py-2 pr-1 pb-6">
-      <MopPortalShell bannerSubtitle={eop.document.title || "Loading"}>
+      <MopPortalShell bannerSubtitle={eop?.document?.title || "Loading"}>
         {isBootstrapping ? (
           <Typography variant="p" className="text-gray-500">
             Loading example EOP…
@@ -73,34 +75,36 @@ export const EopDocumentForm = ({
               patchProcedure={patchProcedure}
               patchSignOff={patchSignOff}
             />
-            <EopSection02Site site={eop.site} patchSite={patchSite} />
+            <EopSection02Site site={eop?.site} patchSite={patchSite} />
             <EopSection03Overview
-              overview={eop.overview}
+              overview={eop?.overview}
               patchOverview={patchOverview}
             />
             <EopSection04ImmediateActionsSection
-              immediateActions={eop.immediateActions}
+              immediateActions={eop?.immediateActions}
               patchPreActionSafety={patchPreActionSafety}
+              assetName={assetName}
               patchInternalDiagnostics={patchInternalDiagnostics}
             />
             <EopSection05ExternalActions
-              externalActions={eop.externalActions}
+              externalActions={eop?.externalActions}
               patchExternalActions={patchExternalActions}
+              assetName={assetName}
             />
             <EopSection06Communication
-              communication={eop.communication}
+              communication={eop?.communication}
               patchCommunication={patchCommunication}
             />
             <EopSection07Recovery
-              recovery={eop.recovery}
+              recovery={eop?.recovery}
               patchRecovery={patchRecovery}
             />
             <EopSection08SupportingInformationSection
-              supportingInformation={eop.supportingInformation}
+              supportingInformation={eop?.supportingInformation}
               patchSupportingInformation={patchSupportingInformation}
             />
             <EopSection09ApprovalReview
-              approvalReview={eop.approvalReview}
+              approvalReview={eop?.approvalReview}
               patchApprovalReview={patchApprovalReview}
             />
           </>

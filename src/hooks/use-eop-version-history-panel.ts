@@ -14,7 +14,7 @@ const canonicalRowToSyntheticId = (row: CanonicalEopVersionApiRow): string =>
 const toVersionDateIso = (row: CanonicalEopVersionApiRow): string =>
   row.archivedAt !== null && row.archivedAt !== ""
     ? row.archivedAt
-    : row.eop.document.lastModified;
+    : row.eop?.document?.lastModified;
 
 const toCurrentShim = (
   row: CanonicalEopVersionApiRow,
@@ -22,17 +22,17 @@ const toCurrentShim = (
   _id: canonicalRowToSyntheticId(row),
   updatedAt: toVersionDateIso(row),
   versionNumber: String(row.versionNumber),
-  status: mopDocumentStatusToFormLabel(row.eop.document.status),
+  status: mopDocumentStatusToFormLabel(row.eop?.document?.status),
 });
 
 const toArchiveShim = (
   row: CanonicalEopVersionApiRow,
 ): MopVersionHistoryArchiveRecord => ({
   _id: canonicalRowToSyntheticId(row),
-  archivedAt: row.archivedAt ?? row.eop.document.lastModified,
+  archivedAt: row.archivedAt ?? row.eop?.document?.lastModified,
   updatedAt: toVersionDateIso(row),
   versionNumber: String(row.versionNumber),
-  status: mopDocumentStatusToFormLabel(row.eop.document.status),
+  status: mopDocumentStatusToFormLabel(row.eop?.document?.status),
   mopId: "",
 });
 

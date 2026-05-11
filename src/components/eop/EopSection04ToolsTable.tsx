@@ -18,6 +18,7 @@ import { MopDynamicTableRowControls } from "../mop/MopDynamicTableRowControls";
 type EopSection04ToolsTableProps = {
   preActionSafety: EOPSection04PreActionSafety;
   patchPreActionSafety: (p: Partial<EOPSection04PreActionSafety>) => void;
+  assetName?: string;
 };
 
 const updateRow = (
@@ -30,13 +31,14 @@ const updateRow = (
 export const EopSection04ToolsTable = ({
   preActionSafety,
   patchPreActionSafety,
+  assetName
 }: EopSection04ToolsTableProps) => {
   const rows = preActionSafety?.toolRows;
 
   return (
     <div className="mb-6">
       <Typography variant="h6" className="mb-3 text-base font-semibold text-gray-900">
-        {EOP_SECTION_04_TOOLS_HEADING}
+        {`Required Tools & Test Equipment for ${assetName}`}
       </Typography>
 
       <div className="overflow-x-auto">

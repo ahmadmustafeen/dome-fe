@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-import { generateEOP, getLatestEOP, saveEOP } from "@/services/eop-service";
+import { getLatestEOP, saveEOP } from "@/services/eop-service";
 
 import type { CanonicalEopVersionApiRow } from "@/types/eop-api";
 
@@ -23,6 +23,7 @@ import type {
 } from "@/types/eop";
 import { useAppContext } from "@/context/AppContext";
 import { siteService } from "@/services/site-service";
+import { Asset } from "@/components";
 
 type EopDocumentContextParams = {
   mode: "create" | "edit";
@@ -91,6 +92,8 @@ export const useEopDocument = (
   const [eopNotFound, setEopNotFound] =
     useState(false);
 
+  const [assetData, setAssetData] = useState<Asset | null>(null)
+
   const [isGenerating, setIsGenerating] =
     useState(false);
 
@@ -149,9 +152,9 @@ export const useEopDocument = (
          * ------------------------------------------------
          */
 
-        // const evtSource = new EventSource(
-        //   `${process.env.NEXT_PUBLIC_BASE_URL}/eop/generate?...`
-        // );
+        const evtSource = new EventSource(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/eop/generate?documentId=${documentId}`
+        );
 
         /**
          * ------------------------------------------------
@@ -159,32 +162,168 @@ export const useEopDocument = (
          * ------------------------------------------------
          */
 
-        // evtSource.addEventListener("sectionOne", (e) => {
-        //   const data = JSON.parse(e.data);
-        //
-        //   setEop((prev) => ({
-        //     ...prev,
-        //     ...
-        //   }));
-        // });
 
-        // evtSource.addEventListener("done", () => {
-        //   toast.success(
-        //     "Successfully generated, Please save the document manually."
-        //   );
-        //
-        //   setIsGenerating(false);
-        //
-        //   evtSource.close();
-        // });
+        evtSource.addEventListener("allData", (e) => {
+          const data = JSON.parse(e.data);
+          setEop((prev) => ({
+            ...prev,
+            ...data,
+          }));
+        });
+        evtSource.addEventListener("assetData", (e) => {
+          const data = JSON.parse(e.data);
+          setAssetData({ ...data, name: data.assetName });
+        });
+        evtSource.addEventListener("sectionOne", (e) => {
+          const data = JSON.parse(e.data);
 
-        // evtSource.addEventListener("error", () => {
-        //   setGenerateError("Streaming failed");
-        //
-        //   setIsGenerating(false);
-        //
-        //   evtSource.close();
-        // });
+          setEop((prev) => ({
+            ...prev,
+            equipment: data.equipment,
+            procedure: data.procedure,
+            document: data.document,
+          }));
+
+        });
+        evtSource.addEventListener("siteDetails", (e) => {
+          const data = JSON.parse(e.data);
+
+          setEop((prev) => ({
+            ...prev,
+            site: data
+
+          }));
+
+        });
+
+        evtSource.addEventListener("sectionThree", (e) => {
+          const data = JSON.parse(e.data);
+
+          setEop((prev) => ({
+            ...prev,
+            overview: data.overview
+          }));
+
+
+        });
+
+        evtSource.addEventListener("sectionFourPreActionSafety", (e) => {
+          const data = JSON.parse(e.data);
+
+          setEop((prev) => ({
+            ...prev,
+            immediateActions: {
+              ...prev.immediateActions,
+              preActionSafety: {
+                ...prev.immediateActions.preActionSafety,
+                ppeIntroText: data.ppeIntroText
+              }
+            }
+          }));
+
+
+        });
+
+        evtSource.addEventListener("sectionFourPPE", (e) => {
+          const data = JSON.parse(e.data);
+
+          setEop((prev) => ({
+            ...prev,
+            immediateActions: {
+              ...prev.immediateActions,
+              preActionSafety: {
+                ...prev.immediateActions.preActionSafety,
+                ppeRows: data
+              }
+            }
+          }));
+
+
+        });
+
+
+        evtSource.addEventListener("sectionFourTools", (e) => {
+          const data = JSON.parse(e.data);
+
+          setEop((prev) => ({
+            ...prev,
+            immediateActions: {
+              ...prev.immediateActions,
+              preActionSafety: {
+                ...prev.immediateActions.preActionSafety,
+                toolRows: data
+              }
+            }
+          }));
+
+
+        });
+
+
+        evtSource.addEventListener("sectionFourSafetyRequirements", (e) => {
+          const data = JSON.parse(e.data);
+
+          setEop((prev) => ({
+            ...prev,
+            immediateActions: {
+              ...prev.immediateActions,
+              preActionSafety: {
+                ...prev.immediateActions.preActionSafety,
+                safetyChecklistItems: data
+              }
+            }
+          }));
+
+
+        });
+
+        evtSource.addEventListener("sectionFourDiagnostics", (e) => {
+          const data = JSON.parse(e.data);
+
+          setEop((prev) => ({
+            ...prev,
+            immediateActions: {
+              ...prev.immediateActions,
+              internalDiagnostics: {
+                ...prev.immediateActions.internalDiagnostics,
+                diagnosticRows: data
+              }
+
+            }
+          }));
+        });
+
+        evtSource.addEventListener("sectionFiveResponseActions", (e) => {
+          const data = JSON.parse(e.data);
+
+          setEop((prev) => ({
+            ...prev,
+            externalActions: {
+              ...prev.externalActions,
+              actionRows: data
+            }
+          }));
+        });
+
+
+
+        evtSource.addEventListener("done", () => {
+          toast.success(
+            "Successfully generated, Please save the document manually."
+          );
+
+          setIsGenerating(false);
+
+          evtSource.close();
+        });
+
+        evtSource.addEventListener("error", () => {
+          setGenerateError("Streaming failed");
+
+          setIsGenerating(false);
+
+          evtSource.close();
+        });
 
         /**
          * ------------------------------------------------
@@ -198,11 +337,6 @@ export const useEopDocument = (
           loading: true,
         }));
 
-        const generated = await generateEOP();
-
-        setEop({
-          ...generated,
-        });
       } catch (err: unknown) {
         setGenerateError(
           err instanceof Error
@@ -738,8 +872,8 @@ export const useEopDocument = (
 
     resumeEditingLatestEop,
 
+    assetData,
     patchDocument,
-
     patchEquipment,
 
     patchProcedure,

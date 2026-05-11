@@ -29,13 +29,13 @@ export const EopSection07Recovery = ({
       Power Failure Resolution and Equipment Recovery Procedures
     </Typography>
     <Typography variant="p" className="text-sm text-gray-600">
-      {recovery.introText}
+      {recovery?.introText}
     </Typography>
 
     <EopSection07Checklist
       title="Power Failure Resolution Verification"
       description="Confirm stable operating conditions are available at all system levels:"
-      items={recovery.resolutionVerificationItems}
+      items={recovery?.resolutionVerificationItems}
       onItemsChange={(items) =>
         patchRecovery({ resolutionVerificationItems: items })}
       editable
@@ -49,7 +49,7 @@ export const EopSection07Recovery = ({
         <span>Confirm voltage readings at equipment disconnect:</span>
         <Input
           id="eop-disconnect-voltage"
-          value={recovery.disconnectVoltage}
+          value={recovery?.disconnectVoltage}
           onChange={(event) =>
             patchRecovery({ disconnectVoltage: event.target.value })}
           placeholder="Enter voltage"
@@ -62,7 +62,7 @@ export const EopSection07Recovery = ({
     <EopSection07Checklist
       title="Pre-Start Safety Checks"
       description="Complete all safety verifications before energizing equipment:"
-      items={recovery.preStartSafetyItems}
+      items={recovery?.preStartSafetyItems}
       onItemsChange={(items) => patchRecovery({ preStartSafetyItems: items })}
       editable
     />
@@ -70,7 +70,7 @@ export const EopSection07Recovery = ({
     <EopSection07Checklist
       title="Equipment-Specific Restart Sequence"
       description="Follow the manufacturer-specific startup procedure for LENNOX HS29-060-13G:"
-      items={recovery.restartSequenceItems}
+      items={recovery?.restartSequenceItems}
       onItemsChange={(items) => patchRecovery({ restartSequenceItems: items })}
       editable
     />
@@ -84,7 +84,7 @@ export const EopSection07Recovery = ({
         <Input
           id="eop-startup-time"
           type="time"
-          value={recovery.startupTime}
+          value={recovery?.startupTime}
           onChange={(event) => patchRecovery({ startupTime: event.target.value })}
           className="w-full sm:w-40"
         />
@@ -99,7 +99,7 @@ export const EopSection07Recovery = ({
         Monitor critical parameters during the startup phase:
       </Typography>
       <EopSection07FunctionalityTable
-        rows={recovery.functionalityRows}
+        rows={recovery?.functionalityRows}
         onRowsChange={(rows) => patchRecovery({ functionalityRows: rows })}
       />
     </div>
@@ -109,14 +109,14 @@ export const EopSection07Recovery = ({
         Load Transfer (if applicable)
       </Typography>
       <Typography variant="p" className="text-sm text-gray-700">
-        {recovery.loadTransferNote}
+        {recovery?.loadTransferNote}
       </Typography>
     </div>
 
     <EopSection07Checklist
       title="Performance Validation"
       description="Confirm equipment is operating within normal parameters:"
-      items={recovery.performanceValidationItems}
+      items={recovery?.performanceValidationItems}
       onItemsChange={(items) =>
         patchRecovery({ performanceValidationItems: items })}
       editable
@@ -125,7 +125,7 @@ export const EopSection07Recovery = ({
     <EopSection07Checklist
       title="Return to Normal Operation"
       description="Complete recovery documentation and notifications per Element Critical Limble CMMS Policy:"
-      items={recovery.returnToNormalItems}
+      items={recovery?.returnToNormalItems}
       onItemsChange={(items) => patchRecovery({ returnToNormalItems: items })}
       editable
     />
@@ -138,7 +138,7 @@ export const EopSection07Recovery = ({
         Restoration completed by:
         <Input
           id="eop-restoration-completed-by"
-          value={recovery.restorationCompletedBy}
+          value={recovery?.restorationCompletedBy}
           onChange={(event) =>
             patchRecovery({ restorationCompletedBy: event.target.value })}
           placeholder="Name"
@@ -153,7 +153,7 @@ export const EopSection07Recovery = ({
         <Input
           id="eop-restoration-completed-at"
           type="time"
-          value={recovery.restorationCompletedAt}
+          value={recovery?.restorationCompletedAt}
           onChange={(event) =>
             patchRecovery({ restorationCompletedAt: event.target.value })}
           className="mt-1 w-full"

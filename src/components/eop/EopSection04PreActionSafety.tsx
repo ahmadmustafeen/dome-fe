@@ -16,11 +16,13 @@ import { EopSection04ToolsTable } from "./EopSection04ToolsTable";
 type EopSection04PreActionSafetyProps = {
   preActionSafety: EOPSection04PreActionSafety;
   patchPreActionSafety: (p: Partial<EOPSection04PreActionSafety>) => void;
+  assetName?: string
 };
 
 export const EopSection04PreActionSafetyBlock = ({
   preActionSafety,
   patchPreActionSafety,
+  assetName,
 }: EopSection04PreActionSafetyProps) => {
   return (
     <div className="mb-2">
@@ -46,10 +48,12 @@ export const EopSection04PreActionSafetyBlock = ({
       <EopSection04PpeTable
         preActionSafety={preActionSafety}
         patchPreActionSafety={patchPreActionSafety}
+        assetName={assetName}
       />
       <EopSection04ToolsTable
         preActionSafety={preActionSafety}
         patchPreActionSafety={patchPreActionSafety}
+        assetName={assetName}
       />
       <EopSection04SafetyChecklist
         preActionSafety={preActionSafety}

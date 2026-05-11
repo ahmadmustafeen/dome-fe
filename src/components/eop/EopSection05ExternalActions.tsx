@@ -22,6 +22,7 @@ import { EopPassFailCheckboxes } from "./EopPassFailCheckboxes";
 type EopSection05ExternalActionsProps = {
   externalActions: EOPSection05ExternalActions;
   patchExternalActions: (p: Partial<EOPSection05ExternalActions>) => void;
+  assetName?: string
 };
 
 const updateRow = (
@@ -49,8 +50,9 @@ const renumberRows = (
 export const EopSection05ExternalActions = ({
   externalActions,
   patchExternalActions,
+  assetName,
 }: EopSection05ExternalActionsProps) => {
-  const rows = externalActions.actionRows;
+  const rows = externalActions?.actionRows;
 
   return (
     <div className="mt-5 rounded-lg border border-[#e0e0e0] bg-white px-3 py-4 shadow-sm sm:mt-6 sm:px-4 sm:py-5">
@@ -62,7 +64,7 @@ export const EopSection05ExternalActions = ({
       </Typography>
 
       <Typography variant="p" className="mb-4 text-sm text-gray-600">
-        {externalActions.introText}
+        {`Verify all external equipment and systems that connect to or support the ${assetName}`}
       </Typography>
 
       <div className="overflow-x-auto">

@@ -70,6 +70,7 @@ export const EopManagementClient = ({ eopId, documentId }: EopManagementClientPr
     patchApprovalReview,
     resetEop,
     persistEop,
+    assetData,
   } = useEopDocument({
     mode: isEdit ? "edit" : "create",
     eopId: resolvedEopId,
@@ -212,6 +213,7 @@ export const EopManagementClient = ({ eopId, documentId }: EopManagementClientPr
                 patchDocument={patchDocument}
                 patchEquipment={patchEquipment}
                 patchProcedure={patchProcedure}
+                assetName={assetData?.assetName}
                 patchSignOff={patchSignOff}
                 patchSite={patchSite}
                 patchOverview={patchOverview}

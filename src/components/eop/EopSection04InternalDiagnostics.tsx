@@ -3,7 +3,6 @@
 import { Typography } from "@/components/common";
 import { Textarea } from "@/components/ui/Textarea";
 import {
-  EOP_SECTION_04_INTERNAL_DIAGNOSTICS_HEADING,
   EOP_SECTION_04_INTERNAL_DIAGNOSTICS_WARNING,
   newEopSection04InternalDiagnosticRow,
 } from "@/constants/eop-section04-internal-diagnostics";
@@ -22,6 +21,7 @@ import { EopPassFailCheckboxes } from "./EopPassFailCheckboxes";
 
 type EopSection04InternalDiagnosticsProps = {
   internalDiagnostics: EOPSection04InternalDiagnostics;
+  assetName?: string
   patchInternalDiagnostics: (
     p: Partial<EOPSection04InternalDiagnostics>,
   ) => void;
@@ -47,20 +47,24 @@ const renumberRows = (
 export const EopSection04InternalDiagnostics = ({
   internalDiagnostics,
   patchInternalDiagnostics,
+  assetName
 }: EopSection04InternalDiagnosticsProps) => {
-  const rows = internalDiagnostics.diagnosticRows;
+  const rows = internalDiagnostics?.diagnosticRows || [];
 
   return (
     <div className="mt-7">
       <Typography variant="h6" className="mb-2 text-base font-semibold text-gray-900">
-        {EOP_SECTION_04_INTERNAL_DIAGNOSTICS_HEADING}
+        {
+          `Internal Equipment Diagnostics for ${assetName}`
+        }
+        {/* {EOP_SECTION_04_INTERNAL_DIAGNOSTICS_HEADING} */}
       </Typography>
       <Typography variant="p" className="mb-4 text-sm text-gray-600">
-        {internalDiagnostics.introText}
+        {internalDiagnostics?.introText}
       </Typography>
 
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[980px] border-collapse text-sm">
+        <table className="w-full min-w-245 border-collapse text-sm">
           <thead>
             <tr className="bg-[#0f3456] text-white">
               <th className="w-24 px-3 py-2 text-left font-semibold">Step Number</th>

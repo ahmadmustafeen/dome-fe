@@ -32,7 +32,7 @@ export const EopSection06EscalationTable = ({
   communication,
   patchCommunication,
 }: EopSection06EscalationTableProps) => {
-  const rows = communication.escalationMatrixRows;
+  const rows = communication?.escalationMatrixRows;
   return (
     <div className="mb-7">
       <Typography variant="h6" className="mb-4 text-base font-semibold text-gray-900">

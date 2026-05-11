@@ -29,24 +29,24 @@ export const EopSection08SupportingInformationSection = ({
     </Typography>
 
     <EopSection08PolicyDocumentsTable
-      rows={supportingInformation.policyDocuments}
-      note={supportingInformation.policyNote}
+      rows={supportingInformation?.policyDocuments}
+      note={supportingInformation?.policyNote}
       onRowsChange={(rows) =>
         patchSupportingInformation({ policyDocuments: rows })}
     />
 
     <EopSection08InfrastructureTable
-      rows={supportingInformation.infrastructureLocations}
+      rows={supportingInformation?.infrastructureLocations}
       onRowsChange={(rows) =>
         patchSupportingInformation({ infrastructureLocations: rows })}
     />
 
     <EopSection08SparePartsTable
-      rows={supportingInformation.spareParts}
-      intro={supportingInformation.sparePartsIntro}
+      rows={supportingInformation?.spareParts}
+      intro={supportingInformation?.sparePartsIntro}
       onRowsChange={(rows) => patchSupportingInformation({ spareParts: rows })}
     />
 
-    <EopSection08RelatedDocuments documents={supportingInformation.relatedDocuments} />
+    <EopSection08RelatedDocuments documents={supportingInformation?.relatedDocuments} />
   </div>
 );

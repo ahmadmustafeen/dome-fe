@@ -3,7 +3,6 @@
 import { Typography } from "@/components/common";
 import { Textarea } from "@/components/ui/Textarea";
 import {
-  EOP_SECTION_04_PPE_HEADING,
   newEopSection04PpeRow,
 } from "@/constants/eop-section04-immediate-actions";
 import { MOP_DYNAMIC_TABLE_MIN_ROWS } from "@/constants/mop-dynamic-table";
@@ -18,6 +17,7 @@ import { MopDynamicTableRowControls } from "../mop/MopDynamicTableRowControls";
 type EopSection04PpeTableProps = {
   preActionSafety: EOPSection04PreActionSafety;
   patchPreActionSafety: (p: Partial<EOPSection04PreActionSafety>) => void;
+  assetName?: string
 };
 
 const updateRow = (
@@ -29,17 +29,18 @@ const updateRow = (
 export const EopSection04PpeTable = ({
   preActionSafety,
   patchPreActionSafety,
+  assetName,
 }: EopSection04PpeTableProps) => {
   const rows = preActionSafety?.ppeRows;
 
   return (
     <div className="mb-6">
       <Typography variant="h6" className="mb-3 text-base font-semibold text-gray-900">
-        {EOP_SECTION_04_PPE_HEADING}
+        {`Equipment-Specific PPE Requirements for ${assetName}`}
       </Typography>
 
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[680px] border-collapse text-sm">
+        <table className="w-full min-w-170 border-collapse text-sm">
           <thead>
             <tr className="bg-[#0f3456] text-white">
               <th className="px-3 py-2 text-left font-semibold">PPE Item</th>

@@ -65,6 +65,7 @@ const CategoryAssetProcedurePanel = ({
       <RequirementSection
         label={labels.eops}
         items={asset.eops}
+
         colorClass="border-red-200"
         handleCreateClick={(id) => handleCreateClick(id, 'eop')}
         onGenerate={(item) => {
@@ -74,6 +75,7 @@ const CategoryAssetProcedurePanel = ({
       <RequirementSection
         label={labels.sops}
         items={asset.sops}
+        existing={asset.sop}
         colorClass="border-green-200"
         handleCreateClick={(id) => handleCreateClick(id, 'sop')}
         onGenerate={(item) => {

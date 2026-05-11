@@ -94,6 +94,7 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
       const evtSource = new EventSource(
         `${process.env.NEXT_PUBLIC_BASE_URL}/sop/generate?documentId=${documentId}`,
       );
+      
 
       evtSource.addEventListener("allData", (e) => {
         const data = JSON.parse(e.data);
@@ -301,11 +302,6 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
       evtSource.addEventListener("done", () => {
         toast.success("Succesfully generated, Please save the document manually.");
         setIsGenerating(false)
-        // setMop((prev: any) => ({
-        //   ...prev,
-        //   loading: false,
-        // }));
-
         evtSource.close();
       });
 
@@ -521,7 +517,7 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
       throw new Error("SOP id is required to save");
     }
 
-    const saved = await saveSOP(sop, id, site?._id);
+    const saved = await saveSOP(sop, id, site?._id, documentId);
 
     const next = withReferenceTableBootstrap(saved);
 

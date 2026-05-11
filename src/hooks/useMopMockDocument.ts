@@ -646,6 +646,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
     patchMopReferences,
     patchFacilityEffects,
     isGenerating,
+    createGenerateFailed: false,
     patchSteps,
     resetMop,
     persistMop,

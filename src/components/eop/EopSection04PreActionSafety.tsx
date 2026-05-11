@@ -58,6 +58,7 @@ export const EopSection04PreActionSafetyBlock = ({
       <EopSection04SafetyChecklist
         preActionSafety={preActionSafety}
         patchPreActionSafety={patchPreActionSafety}
+        assetName={assetName}
       />
 
       <div className="mt-4 rounded-md border border-red-300 bg-red-50 px-3 py-3 text-sm font-semibold text-red-800">

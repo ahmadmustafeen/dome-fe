@@ -305,6 +305,18 @@ export const useEopDocument = (
           }));
         });
 
+        evtSource.addEventListener("sectionSixEmergency", (e) => {
+          const data = JSON.parse(e.data);
+
+          setEop((prev) => ({
+            ...prev,
+            communication: {
+              ...prev.communication,
+              emergencyContactRows: data
+            }
+          }));
+        });
+
 
 
         evtSource.addEventListener("done", () => {

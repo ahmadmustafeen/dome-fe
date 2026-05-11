@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-import { AppButton, SectionWrapper, Typography } from "@/components/common";
+import { AppButton, ScreenLoader, SectionWrapper, Typography } from "@/components/common";
 import { ProcedureVersionHistory } from "@/components/version-history/ProcedureVersionHistory";
 import { VersionHistoryDrawer } from "@/components/version-history/VersionHistoryDrawer";
 import { DASHBOARD_ROUTES } from "@/constants/routes";
@@ -58,6 +58,7 @@ export const EopManagementClient = ({ eopId, documentId }: EopManagementClientPr
     patchDocument,
     patchEquipment,
     patchProcedure,
+    isGenerating,
     patchSignOff,
     patchSite,
     patchOverview,
@@ -166,6 +167,9 @@ export const EopManagementClient = ({ eopId, documentId }: EopManagementClientPr
       ) : null}
 
       <SectionWrapper className="flex min-h-full flex-col">
+        {
+          isGenerating ? <ScreenLoader heading="EOP is being generated" description="Selected EOP is being generated, do not switch or refresh the page, and once the document is generated, remember to save the generated document." /> : null
+        }
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3 sm:mb-6">
           <Typography variant="h1" className="min-w-0 flex-1">
             Emergency Operating Procedure (EOP)

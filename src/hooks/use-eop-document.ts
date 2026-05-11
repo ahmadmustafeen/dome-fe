@@ -317,7 +317,78 @@ export const useEopDocument = (
           }));
         });
 
+        evtSource.addEventListener("sectionSevenRecovery", (e) => {
+          const data = JSON.parse(e.data);
 
+          setEop((prev) => ({
+            ...prev,
+            recovery: {
+              ...prev.recovery,
+              resolutionVerificationItems: data
+            }
+          }));
+        });
+
+        evtSource.addEventListener("sectionSevenPreCheck", (e) => {
+          const data = JSON.parse(e.data);
+
+          setEop((prev) => ({
+            ...prev,
+            recovery: {
+              ...prev.recovery,
+              preStartSafetyItems: data
+            }
+          }));
+        });
+
+
+        evtSource.addEventListener("sectionSevenRestart", (e) => {
+          const data = JSON.parse(e.data);
+
+          setEop((prev) => ({
+            ...prev,
+            recovery: {
+              ...prev.recovery,
+              restartSequenceItems: data
+            }
+          }));
+        });
+
+        evtSource.addEventListener("sectionSevenVerification", (e) => {
+          const data = JSON.parse(e.data);
+
+          setEop((prev) => ({
+            ...prev,
+            recovery: {
+              ...prev.recovery,
+              functionalityRows: data
+            }
+          }));
+        });
+
+        evtSource.addEventListener("sectionSevenPerformance", (e) => {
+          const data = JSON.parse(e.data);
+
+          setEop((prev) => ({
+            ...prev,
+            recovery: {
+              ...prev.recovery,
+              performanceValidationItems: data
+            }
+          }));
+        });
+
+        evtSource.addEventListener("sectionSevenNormalOperations", (e) => {
+          const data = JSON.parse(e.data);
+
+          setEop((prev) => ({
+            ...prev,
+            recovery: {
+              ...prev.recovery,
+              returnToNormalItems: data
+            }
+          }));
+        });
 
         evtSource.addEventListener("done", () => {
           toast.success(
@@ -337,16 +408,9 @@ export const useEopDocument = (
           evtSource.close();
         });
 
-        /**
-         * ------------------------------------------------
-         * TEMP FALLBACK GENERATION
-         * ------------------------------------------------
-         */
-
         setEop((prev) => ({
           ...createEmptyEop(),
           ...prev,
-          loading: true,
         }));
 
       } catch (err: unknown) {
@@ -356,15 +420,11 @@ export const useEopDocument = (
             : "EOP generation failed",
         );
 
-        setIsGenerating(false);
-
         toast.error(
           err instanceof Error
             ? err.message
             : "Failed to generate EOP.",
         );
-      } finally {
-        setIsGenerating(false);
       }
     }, []);
 

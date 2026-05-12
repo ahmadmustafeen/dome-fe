@@ -159,7 +159,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
 
       setMop((prev) => ({
         ...prev,
-        facilityEffects: data.facilityEffects,
+        facilityEffects: data,
       }));
 
     })
@@ -284,6 +284,21 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
               ? data.postmaintenenaceRequirements
               : prev.mopComments.postMaintenanceBullets,
         }),
+      }));
+    });
+
+    evtSource.addEventListener("emergencyContactRows", (e) => {
+      const data = JSON.parse(e.data);
+      if (data?.error) {
+        toast.error("emergencyContactRows failed");
+        return;
+      }
+      setMop((prev: any) => ({
+        ...prev,
+        safety: {
+          ...prev.safety,
+          emergencyContactRows: data
+        }
       }));
     });
 

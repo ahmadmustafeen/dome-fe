@@ -33,13 +33,13 @@ const patchRow = (
 ) => {
   if (variant === 'equipment') {
     patch({
-      equipmentDocumentRows: current.equipmentDocumentrows?.map(r =>
+      equipmentDocumentRows: current.equipmentDocumentRows?.map(r =>
         r.id === id ? { ...r, ...partial } : r,
       ),
     });
   } else {
     patch({
-      additionalResourceRows: current.additionalResourcerows?.map(r =>
+      additionalResourceRows: current.equipmentDocumentRows?.map(r =>
         r.id === id ? { ...r, ...partial } : r,
       ),
     });

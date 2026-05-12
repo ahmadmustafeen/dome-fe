@@ -36,7 +36,7 @@ const patchRow = <TKey extends string>(
     touched = true;
     return { ...row, ...partial };
   });
-  if (touched === true) {
+  if (touched) {
     return mapped;
   }
   return [

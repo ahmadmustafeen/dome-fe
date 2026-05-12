@@ -29,7 +29,7 @@ const patchRow = (
   patch: MopSection11PolicyTableProps['patchMopReferences'],
 ) => {
   patch({
-    policyDocumentRows: current.policyDocumentrows?.map(r => (r.id === id ? { ...r, ...partial } : r)),
+    policyDocumentRows: current.policyDocumentRows?.map(r => (r.id === id ? { ...r, ...partial } : r)),
   });
 };
 

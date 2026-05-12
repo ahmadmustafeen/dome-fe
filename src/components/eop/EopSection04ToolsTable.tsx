@@ -3,7 +3,6 @@
 import { Typography } from "@/components/common";
 import { Textarea } from "@/components/ui/Textarea";
 import {
-  EOP_SECTION_04_TOOLS_HEADING,
   newEopSection04ToolRow,
 } from "@/constants/eop-section04-immediate-actions";
 import { MOP_DYNAMIC_TABLE_MIN_ROWS } from "@/constants/mop-dynamic-table";

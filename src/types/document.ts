@@ -28,6 +28,20 @@ export interface DocumentApiRecord {
   updatedAt: string;
 }
 
+export interface GeneratedDocumentApiRecord {
+  _id: string;
+  type: string;
+  /** Publicly accessible S3 URL of the uploaded file. */
+  documentUrl: string;
+  siteId: string;
+  ingested: boolean;
+  verified: boolean;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+  extraction: any;
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // API response wrappers
 // ─────────────────────────────────────────────────────────────────────────────
@@ -48,6 +62,12 @@ export interface DocumentCreateApiResponse {
   success: boolean;
   message: string;
   data: DocumentApiRecord;
+}
+
+export interface GeneratedDocumentCreateApiResponse {
+  success: boolean;
+  message: string;
+  data: GeneratedDocumentApiRecord;
 }
 
 export interface DocumentDeleteApiResponse {

@@ -119,7 +119,7 @@ export function DataTable<TData, TValue>({
   useEffect(() => {
     const selectedRows = table
       .getSelectedRowModel()
-      .flatrows?.map((row) => row.original);
+      .flatRows?.map((row) => row.original);
     onRowSelectionChange?.(selectedRows);
   }, [rowSelection, onRowSelectionChange]);
 

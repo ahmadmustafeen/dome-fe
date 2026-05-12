@@ -4,6 +4,7 @@ import type {
   DocumentCreateApiResponse,
   DocumentDeleteApiResponse,
   DocumentListApiResponse,
+  GeneratedDocumentCreateApiResponse,
 } from "@/types/document";
 
 export type DocumentQueryParams = {
@@ -93,12 +94,12 @@ export const documentService = {
     }),
 
   fetchIngestedDocument: (id: string) =>
-    apiFetch<DocumentCreateApiResponse>(`/documents/fetch-extracted-data/${id}`, {
+    apiFetch<GeneratedDocumentCreateApiResponse>(`/documents/fetch-extracted-data/${id}`, {
       method: "GET",
     }),
 
   updateIngestedDocument: (id: string, body: any) =>
-    apiFetch<DocumentCreateApiResponse>(`/documents/update-extracted-data/${id}`, {
+    apiFetch<GeneratedDocumentCreateApiResponse>(`/documents/update-extracted-data/${id}`, {
       method: "PUT",
       body: JSON.stringify(body)
     }),

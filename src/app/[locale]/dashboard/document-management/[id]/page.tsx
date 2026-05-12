@@ -14,7 +14,7 @@ export default function PolicyEditor({ params }: PageProps) {
   const router = useRouter();
 
   const [form, setForm] = useState({});
-  const [initialData, setInitialData] = useState({})
+  const [initialData, setInitialData] = useState<{ [key: string]: any }>({})
   const [loading, setLoading] = useState(false);
 
   const fetchDocuments = useCallback(async (id: string) => {

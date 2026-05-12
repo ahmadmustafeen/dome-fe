@@ -32,7 +32,6 @@ import { maintenanceScheduleService } from "@/services/maintenance-schedule-serv
 import * as assetService from "@/services/asset-service";
 import { toast } from "react-toastify";
 import { generatedDocumentService } from "@/services/generatedDocument-service";
-import Image from "next/image";
 import { DocumentApiRecord, documentService } from "@/services/document-service";
 import { extractDocumentName } from "@/utils/formatters";
 

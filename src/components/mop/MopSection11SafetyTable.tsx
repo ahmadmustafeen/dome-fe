@@ -28,7 +28,7 @@ const patchRow = (
   patch: MopSection11SafetyTableProps['patchMopReferences'],
 ) => {
   patch({
-    safetyStandardRows: current.safetyStandardrows?.map(r => (r.id === id ? { ...r, ...partial } : r)),
+    safetyStandardRows: current.safetyStandardRows?.map(r => (r.id === id ? { ...r, ...partial } : r)),
   });
 };
 

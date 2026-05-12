@@ -651,7 +651,7 @@ export const generateMOP = async (
   return data;
 };
 
-export const saveMOP = async (mop: MOP): Promise<{ success: boolean }> => {
+export const saveMOP = async (): Promise<{ success: boolean }> => {
   await delay(400);
   return { success: true };
 };

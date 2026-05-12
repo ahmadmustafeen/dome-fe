@@ -22,7 +22,6 @@ import type {
   EOPSiteSection,
 } from "@/types/eop";
 import { useAppContext } from "@/context/AppContext";
-import { siteService } from "@/services/site-service";
 import { Asset } from "@/components";
 
 type EopDocumentContextParams = {

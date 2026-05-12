@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 
-import { AppButton, EmptyState, SectionWrapper, Typography } from "@/components/common";
+import { EmptyState, SectionWrapper, Typography } from "@/components/common";
 
 type ProcedureDocumentsListLayoutProps = {
   title: string;
@@ -25,8 +25,6 @@ export const ProcedureDocumentsListLayout = ({
   entityPlural,
   totalCount,
   isLoading,
-  createButtonTitle,
-  onCreate,
   emptyHeading,
   emptyDescription,
   emptyIcon,
@@ -46,7 +44,6 @@ export const ProcedureDocumentsListLayout = ({
             {countLabel}
           </Typography>
         </div>
-        <AppButton variant="secondary" title={createButtonTitle} onClick={onCreate} />
       </div>
 
       {isLoading ? (
@@ -58,9 +55,6 @@ export const ProcedureDocumentsListLayout = ({
           icon={emptyIcon}
           heading={emptyHeading}
           description={emptyDescription}
-          action={
-            <AppButton variant="secondary" title={createButtonTitle} onClick={onCreate} />
-          }
         />
       ) : (
         table

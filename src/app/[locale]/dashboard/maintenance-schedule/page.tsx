@@ -97,6 +97,7 @@ export default function MaintenanceSchedulePage() {
         labels: {
           colCategory: t("col_category"),
           colSubCategory: t("col_subCategory"),
+          colDescription: "Description",
           colCount: t("col_assets"),
           colMake: "Make",
           colTotalMops: t("col_total_mops"),

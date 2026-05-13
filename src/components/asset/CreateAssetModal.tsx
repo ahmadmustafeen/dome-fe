@@ -15,6 +15,7 @@ export interface Asset {
   assetName: string;
   equipmentName: string;
   category: string;
+  description: string;
   subCategory: string;
   make: string;
   modelName: string;
@@ -88,6 +89,7 @@ const defaultFormState = {
   location: "",
   comment: "",
   equipmentName: "",
+  description: "",
   images: [] as string[],
 };
 
@@ -103,6 +105,7 @@ const assetToFormState = (asset: Asset) => ({
   comment: asset.comment ?? "",
   equipmentName: asset.equipmentName ?? "",
   images: asset.images ?? [],
+  description: asset.description ?? "",
 });
 
 const CreateAssetModal = ({
@@ -247,6 +250,13 @@ const CreateAssetModal = ({
               label="Sub Category"
               value={data.subCategory}
               onChange={(e) => handleChange("subCategory", e.target.value)}
+            />
+            <InputWithLabel
+              type="text"
+              placeholder=""
+              label="Description"
+              value={data.description}
+              onChange={(e) => handleChange("description", e.target.value)}
             />
           </div>
           <div className="grid grid-cols-1 gap-x-3 gap-y-0 sm:grid-cols-2 lg:grid-cols-3">

@@ -52,6 +52,7 @@ export type MaintenanceRow = {
   id: string;
   category: string;
   subCategory: string;
+  description: string;
   count: number;
   make: string;
   totalMOPs: number;

@@ -36,6 +36,7 @@ const SideBarNavigation = ({ currentPath, onClose }: SideBarNavigationProps) => 
   const handleLogout = async () => {
     try {
       await authService.logout();
+      localStorage.clear()
       toast.success("Logged out successfully");
       window.location.replace(AUTH_ROUTES.SIGN_IN);
     } catch (error) {

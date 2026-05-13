@@ -14,6 +14,7 @@ type AssetColumnHandlers = {
     colSubCategory: string;
     colEquipmentName: string;
     colMake: string;
+    colDescription: string;
     colModel: string;
     colLocation: string;
     colSerial: string;
@@ -126,6 +127,21 @@ export const getAssetColumns = ({
           title={row.original.subCategory}
         >
           {row.original.subCategory || (
+            <span className="text-red-400 italic">Missing</span>
+          )}
+        </span>
+      ),
+    },
+    {
+      id: "description",
+      accessorKey: "description",
+      header: labels.colDescription,
+      cell: ({ row }) => (
+        <span
+          className="block max-w-35 truncate text-sm text-gray-700"
+          title={row.original.description}
+        >
+          {row.original.description || (
             <span className="text-red-400 italic">Missing</span>
           )}
         </span>

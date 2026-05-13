@@ -24,6 +24,7 @@ type Labels = {
   colCount: string;
   colMake: string;
   colTotalMops: string;
+  colDescription: string
   colTotalEops: string;
   colTotalSops: string;
   colDetails: string;
@@ -69,6 +70,16 @@ export const getMaintenanceColumns = ({
       cell: ({ row }) => (
         <div className="max-w-60 overflow-clip font-medium whitespace-nowrap text-gray-900">
           {row.original.make}
+        </div>
+      ),
+    },
+    {
+      id: "description",
+      accessorKey: "description",
+      header: labels.colDescription,
+      cell: ({ row }) => (
+        <div className="max-w-60 overflow-clip font-medium whitespace-nowrap text-gray-900">
+          {row.original.description}
         </div>
       ),
     },

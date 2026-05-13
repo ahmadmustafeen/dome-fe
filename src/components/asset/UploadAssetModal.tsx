@@ -199,6 +199,7 @@ const UploadAssetModal = ({
             <ul className="grid grid-cols-2 gap-x-4 gap-y-1 list-disc list-inside text-gray-700">
               <li>Asset ID</li>
               <li>Asset Name</li>
+              <li>Description</li>
               <li>Category</li>
               <li>Make</li>
               <li>Model</li>

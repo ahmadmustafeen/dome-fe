@@ -247,6 +247,7 @@ export default function AssetManagementPage() {
           colAssetName: "Asset Name",
           colCategory: "Category",
           colSubCategory: "Sub Category",
+          colDescription: "Description",
           colEquipmentName: "Equipment Name",
           colMake: "Make",
           colModel: "Model",

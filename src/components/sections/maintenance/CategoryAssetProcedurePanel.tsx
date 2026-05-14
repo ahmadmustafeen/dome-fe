@@ -11,6 +11,7 @@ type CategoryAssetProcedurePanelProps = {
   asset: CategoryAsset;
   labels: { mops: string; eops: string; sops: string };
   handleCreateClick: (id: string, type: string, assetId: string) => void;
+  handleDeleteDocument: (id: string, type: string, assetId: string) => void;
   onProcedureGenerate: (
     item: ProcedureItem,
     kind: ProcedureKind,
@@ -23,6 +24,7 @@ const CategoryAssetProcedurePanel = ({
   labels,
   onProcedureGenerate,
   handleCreateClick,
+  handleDeleteDocument
 }: CategoryAssetProcedurePanelProps) => {
 
 
@@ -36,6 +38,7 @@ const CategoryAssetProcedurePanel = ({
         onGenerate={(item) => {
           onProcedureGenerate(item, "mop", asset.id);
         }}
+        handleDeleteDocument={(id) => handleDeleteDocument(id, 'mop', asset?._id)}
         handleCreateClick={(id) => handleCreateClick(id, 'mop', asset?._id)}
       />
       <RequirementSection
@@ -44,6 +47,7 @@ const CategoryAssetProcedurePanel = ({
         existing={asset.eop}
 
         colorClass="border-red-200"
+        handleDeleteDocument={(id) => handleDeleteDocument(id, 'eop', asset?._id)}
         handleCreateClick={(id) => handleCreateClick(id, 'eop', asset?._id)}
         onGenerate={(item) => {
           onProcedureGenerate(item, "eop", asset.id);
@@ -54,6 +58,7 @@ const CategoryAssetProcedurePanel = ({
         items={asset.sops}
         existing={asset.sop}
         colorClass="border-green-200"
+        handleDeleteDocument={(id) => handleDeleteDocument(id, 'sop', asset?._id)}
         handleCreateClick={(id) => handleCreateClick(id, 'sop', asset?._id)}
         onGenerate={(item) => {
           onProcedureGenerate(item, "sop", asset.id);

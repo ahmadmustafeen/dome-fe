@@ -1,11 +1,12 @@
 "use client";
 import type { ProcedureItem } from "@/types/maintenance-schedule";
-import { Eye, PenIcon } from 'lucide-react'
+import { Eye, PenIcon, Trash } from 'lucide-react'
 
 type RequirementSectionProps = {
   label: string;
   items: ProcedureItem[];
   handleCreateClick?: (mopId: string) => void,
+  handleDeleteDocument?: (mopId: string) => void,
   noIcon?: boolean;
   colorClass: string;
   existing?: string[]
@@ -14,6 +15,7 @@ type RequirementSectionProps = {
 
 const RequirementSection = ({
   label,
+  handleDeleteDocument,
   handleCreateClick,
   items,
   noIcon,
@@ -53,6 +55,11 @@ const RequirementSection = ({
                 : <PenIcon className="w-4 h-4 cursor-pointer" size={2}
                   onClick={() => handleCreateClick?.(item._id)}
                 />}
+              {
+                existing?.includes(item._id.toString()) ?
+                  <Trash className="w-4 h-4 cursor-pointer" size={2}
+                    onClick={() => handleDeleteDocument?.(item._id)} /> : null
+              }
             </li>
           }
           )}

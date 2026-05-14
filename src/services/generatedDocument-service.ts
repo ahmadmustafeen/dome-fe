@@ -39,4 +39,27 @@ export const generatedDocumentService = {
       body: JSON.stringify({ ...data, documentIds }),
     });
   },
+  deleteGeneratedDocument: (
+    pdId: string,
+    pdType: string,
+    assetId: string,
+    siteId: string,
+  ) => {
+    const data = {
+      pdId,
+      pdType,
+      assetId,
+      siteId,
+    };
+    return apiFetch<{
+      data: {
+        _id: string;
+        pdId?: string;
+        documentIds?: string
+      };
+    }>("generatedDocument/delete", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  },
 };

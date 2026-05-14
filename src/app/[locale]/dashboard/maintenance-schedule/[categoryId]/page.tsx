@@ -7,6 +7,7 @@ import { use, useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   AppButton,
+  DeleteConfirmationScreen,
   EmptyState,
   Pagination,
   ScreenLoader,
@@ -101,6 +102,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pdData, setPdData] = useState<{ type: string, pdId: string, assetId: string } | null>(null)
+  const [deletePdData, setdeletePdData] = useState<{ type: string, pdId: string, assetId: string } | null>(null)
   const [selectedDocuments, setSelectedDocuments] = useState<any[]>([]);
 
   const filteredAssets = useMemo(() => {
@@ -182,6 +184,20 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
     }
   }
 
+  const handleDeleteDocument = async (pdId: string, type: string, assetId: string) => {
+    setdeletePdData({ pdId, type, assetId })
+  }
+
+  const confirmDeleteDocument = async () => {
+
+    const resp = await generatedDocumentService.deleteGeneratedDocument(deletePdData?.pdId!, deletePdData?.type!, deletePdData?.assetId!, site?._id!);
+    if (resp) {
+      toast.success(`${deletePdData?.type} Deleted Succesfully.`)
+      setdeletePdData(null)
+      fetchMaintenanceSchedule(site?._id!)
+    }
+  }
+
   const handleCreateClick = async (pdId: string, type: string, assetId: string) => {
     setPdData({ pdId, type, assetId })
   }
@@ -209,6 +225,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
           sops: t("details_sops"),
         }}
         handleCreateClick={handleCreateClick}
+        handleDeleteDocument={handleDeleteDocument}
         onProcedureGenerate={handleProcedureGenerate}
       />
     ),
@@ -338,6 +355,14 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
             </div>
           </div>
         ) : null}
+        {
+          deletePdData ? <DeleteConfirmationScreen
+            description={`Confirm you want to delete this ${deletePdData.type} document?`}
+            heading="Delete Confirmation"
+            handleCancel={() => setdeletePdData(null)}
+            handleContinue={confirmDeleteDocument} />
+            : null
+        }
 
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>

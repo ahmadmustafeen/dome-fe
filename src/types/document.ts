@@ -3,8 +3,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type DocumentType =
-  | "Asset Maintenance and Service Documents"
-  // | "Asset Manuals"
+    'Asset Manuals' 
+  | 'Government Policies'
   | "Site Diagrams and Documents"
   | 'Site Policies'
   | 'Site Documents'

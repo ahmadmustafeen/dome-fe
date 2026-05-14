@@ -23,6 +23,7 @@ export const Navbar: NavItem[] = [
   },
   { id: 9, title: "Maintenance Schedule", link: "maintenance-schedule" },
   { id: 4, title: "Document Management", link: "document-management" },
+  { id: 4, title: "RAG Management", link: "rag-management" },
   { id: 5, title: "Document Generator", link: "document-generator" },
   { id: 6, title: "SOP Management", link: "sop-management" },
   { id: 7, title: "EOP Management", link: "eop-management" },

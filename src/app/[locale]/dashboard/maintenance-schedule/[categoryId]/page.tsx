@@ -52,6 +52,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
   const [, setSchedule] = useState<MaintenanceScheduleData | null>(null);
   const { site, client } = useAppContext();
   const [documents, setDocuments] = useState<DocumentApiRecord[]>([]);
+  const [ragDocuments, setRagDocuments] = useState<DocumentApiRecord[]>([]);
 
 
   const fetchMaintenanceSchedule = useCallback(async (siteId: string) => {
@@ -124,7 +125,9 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
   const fetchDocuments = async () => {
     try {
       const response = await documentService.getApprovedDocumentsBySiteId(site?._id!);
+      const ragResponse = await documentService.getApprovedRagDocuments()
       setDocuments(response.data.documents || []);
+      setRagDocuments(ragResponse.data.documents || [])
     } catch (error) {
       console.error(error);
       toast.error("Failed to fetch documents");
@@ -138,7 +141,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
   }, [site?._id]);
 
   // Group documents by type
-  const groupedDocuments = documents.reduce((acc: any, doc: any) => {
+  const groupedDocuments = [...documents, ...ragDocuments].reduce((acc: any, doc: any) => {
     const type = doc.type || "other";
 
     if (!acc[type]) {
@@ -149,6 +152,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
 
     return acc;
   }, {});
+
 
   // Toggle selection
   const toggleDocumentSelection = (doc: any) => {

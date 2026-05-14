@@ -1,8 +1,6 @@
 import type { DocumentType } from '@/types/document';
 
 export const DOCUMENT_TYPES: DocumentType[] = [
-  'Asset Maintenance and Service Documents',
-  // 'Asset Manuals',
   'Company Policies and Documents',
   'Site Policies',
   'Site Documents',
@@ -12,9 +10,14 @@ export const DOCUMENT_TYPES: DocumentType[] = [
   'Electrical One-Line Diagram',
   'Mechanical One-Line Diagram'
 ];
+export const RAG_DOCUMENT_TYPES: DocumentType[] = [
+  'Asset Manuals',
+  // 'Government Policies',
+]
 
 export const DOCUMENT_TYPE_BADGE: Record<DocumentType, string> = {
-  'Asset Maintenance and Service Documents': 'bg-blue-100 text-blue-700',
+  'Asset Manuals': 'bg-blue-100 text-blue-700',
+  'Government Policies': 'bg-violet-100 text-blue-700',
   'Site Diagrams and Documents': 'bg-green-100 text-green-700',
   'Company Policies and Documents': 'bg-purple-100 text-purple-700',
   'Site Policies': 'bg-yellow-100 text-yellow-700',

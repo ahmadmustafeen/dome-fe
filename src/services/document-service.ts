@@ -41,10 +41,38 @@ export const documentService = {
     );
   },
 
-    getApprovedDocumentsBySiteId: (siteId: string) => {
-   
+  getRagDocuments: (params?: DocumentQueryParams) => {
+    const query = new URLSearchParams({
+      page: String(params?.page ?? 1),
+      limit: String(params?.limit ?? 10),
+    });
+    if (params?.search) {
+      query.set("search", params.search);
+    }
+    if (params?.sortBy) {
+      query.set("sortBy", params.sortBy);
+    }
+    if (params?.sortOrder) {
+      query.set("sortOrder", params.sortOrder);
+    }
+    return apiFetch<DocumentListApiResponse>(
+      `/documents/rag?${query.toString()}`,
+      { method: "GET" },
+    );
+  },
+
+  getApprovedDocumentsBySiteId: (siteId: string) => {
+
     return apiFetch<DocumentListApiResponse>(
       `/documents/site/approved/${siteId}`,
+      { method: "GET" },
+    );
+  },
+
+  getApprovedRagDocuments: () => {
+
+    return apiFetch<DocumentListApiResponse>(
+      '/documents/site/approved-rag/',
       { method: "GET" },
     );
   },

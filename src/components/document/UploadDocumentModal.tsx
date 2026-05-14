@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { Upload, X } from "lucide-react";
 
 import { AppButton, Button } from "@/components/common";
-import { DOCUMENT_TYPES } from "@/constants/document-management";
+import { DOCUMENT_TYPES, RAG_DOCUMENT_TYPES } from "@/constants/document-management";
 import { documentService } from "@/services/document-service";
 import type { DocumentApiRecord } from "@/types/document";
 import { formatFileSize } from "@/utils/formatters";
@@ -16,6 +16,7 @@ const ACCEPTED_MIME = ".pdf,.doc,.docx,.txt";
 interface UploadDocumentModalProps {
   siteId: string;
   clientId: string;
+  isRag?: boolean;
   onClose: () => void;
   onSuccess: (doc: DocumentApiRecord) => void;
 }
@@ -23,6 +24,7 @@ interface UploadDocumentModalProps {
 const UploadDocumentModal = ({
   siteId,
   onClose,
+  isRag,
   clientId,
   onSuccess,
 }: UploadDocumentModalProps) => {
@@ -153,7 +155,7 @@ const UploadDocumentModal = ({
               <option value="" disabled>
                 Select document type
               </option>
-              {DOCUMENT_TYPES.map((type) => (
+              {(isRag ? RAG_DOCUMENT_TYPES : DOCUMENT_TYPES).map((type) => (
                 <option key={type} value={type}>
                   {type}
                 </option>

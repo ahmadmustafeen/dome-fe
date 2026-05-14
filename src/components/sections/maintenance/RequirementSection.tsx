@@ -36,11 +36,11 @@ const RequirementSection = ({
         >
           {label}
         </p>
-        <div title="Create custom">
+        {noIcon ? null : <div title="Create custom">
           <PlusCircleIcon className="w-4 h-4 cursor-pointer" size={2}
             onClick={() => handleCreateClick?.('custom', true)}
           />
-        </div>
+        </div>}
       </div>
 
       {items.length === 0 ? (

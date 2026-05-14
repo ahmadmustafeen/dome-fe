@@ -100,8 +100,9 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
   }, [site, client]);
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [customTitle, setCustomTitle] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [pdData, setPdData] = useState<{ type: string, pdId: string, assetId: string } | null>(null)
+  const [pdData, setPdData] = useState<{ type: string, pdId: string, assetId: string, custom: boolean } | null>(null)
   const [deletePdData, setdeletePdData] = useState<{ type: string, pdId: string, assetId: string } | null>(null)
   const [selectedDocuments, setSelectedDocuments] = useState<any[]>([]);
 
@@ -164,7 +165,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
 
   const handleNavigate = async (pdId: string, type: string, assetId: string, documentIds: string[]) => {
 
-    const resp = await generatedDocumentService.createGeneratedDocument(pdId, type, assetId, site?._id!, documentIds);
+    const resp = await generatedDocumentService.createGeneratedDocument(pdId, type, assetId, site?._id!, documentIds, customTitle);
     if (resp) {
       if (resp.data.pdId) {
         let route = '';
@@ -172,6 +173,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
         if (type === 'sop') route = 'sop-management';
         if (type === 'eop') route = 'eop-management';
         setPdData(null)
+        setCustomTitle('')
         return router.push(`/en/dashboard/${route}/${resp.data.pdId}`)
 
       }
@@ -180,6 +182,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
       if (type === 'sop') route = 'sop-management';
       if (type === 'eop') route = 'eop-management';
       setPdData(null)
+      setCustomTitle('')
       router.push(`/en/dashboard/${route}/create/${resp.data._id}`)
     }
   }
@@ -198,8 +201,8 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
     }
   }
 
-  const handleCreateClick = async (pdId: string, type: string, assetId: string) => {
-    setPdData({ pdId, type, assetId })
+  const handleCreateClick = async (pdId: string, type: string, assetId: string, custom?: boolean) => {
+    setPdData({ pdId, type, assetId, custom: custom ?? false })
   }
 
   const handleProcedureGenerate = useCallback(
@@ -248,6 +251,10 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
   );
 
   const handleContinue = () => {
+    if (pdData?.custom && !customTitle) {
+      toast.error("Title is required");
+      return
+    }
     handleNavigate(pdData?.pdId!, pdData?.type!, pdData?.assetId!, selectedDocuments.map(item => item._id))
   }
 
@@ -278,7 +285,10 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
 
               <div
                 className="absolute right-4 top-4 cursor-pointer"
-                onClick={() => setPdData(null)}
+                onClick={() => {
+                  setCustomTitle('')
+                  setPdData(null)
+                }}
               >
                 <X />
               </div>
@@ -288,6 +298,19 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
                   Select Documents to Complement Generation
                 </Typography>
               </div>
+              {pdData?.custom ? <div className="flex flex-col gap-2 py-2 w-11/12 mx-auto">
+                <h3 className="text-sm font-medium text-gray-700">
+                  Custom Title
+                </h3>
+
+                <input
+                  type="text"
+                  value={customTitle}
+                  onChange={(e) => setCustomTitle(e.target.value)}
+                  placeholder="Enter document title"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                />
+              </div> : null}
 
               <div className="px-6 py-6">
                 <Typography variant="p" className="mb-6 text-center text-gray-500">
@@ -346,7 +369,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
                 <div className="mt-6 flex justify-end">
                   <button
                     onClick={handleContinue}
-                    className="rounded-xl bg-black px-5 py-2 text-white"
+                    className="rounded-xl cursor-pointer bg-black px-5 py-2 text-white"
                   >
                     Continue
                   </button>

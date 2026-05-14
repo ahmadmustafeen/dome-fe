@@ -20,13 +20,15 @@ export const generatedDocumentService = {
     pdType: string,
     assetId: string,
     siteId: string,
-    documentIds?: string[]
+    documentIds?: string[],
+    customTitle?: string,
   ) => {
     const data = {
       pdId,
       pdType,
       assetId,
       siteId,
+      customTitle
     };
     return apiFetch<{
       data: {
@@ -36,7 +38,7 @@ export const generatedDocumentService = {
       };
     }>("generatedDocument/create", {
       method: "POST",
-      body: JSON.stringify({ ...data, documentIds }),
+      body: JSON.stringify({ ...data, documentIds, customTitle }),
     });
   },
   deleteGeneratedDocument: (

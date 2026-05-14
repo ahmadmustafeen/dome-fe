@@ -299,7 +299,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
 
               <div className="border-b border-gray-200 px-6 py-4 text-center">
                 <Typography variant="h2">
-                  Select Documents to Complement Generation
+                  Select documents to support generation
                 </Typography>
               </div>
               {pdData?.custom ? <div className="flex flex-col gap-2 py-2 w-11/12 mx-auto">

@@ -14,17 +14,19 @@ import { useRouter } from "next/navigation";
 const DashboardShell = ({ children }: { children: ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
-  const {site, client} = useAppContext()
+  const { site, client } = useAppContext()
+  console.log({ reloading: "here" });
 
-  useEffect(()=>{
-    if(!client?._id){
+
+  useEffect(() => {
+    if (!client?._id) {
       return router.push("/en/dashboard")
     }
-    if(!site?._id){
+    if (!site?._id) {
       return router.push("/en/dashboard/client")
     }
 
-  },[site, client])
+  }, [site, client])
 
   return (
     <div className="flex h-screen overflow-hidden">

@@ -389,6 +389,19 @@ export const useEopDocument = (
           }));
         });
 
+        // evtSource.addEventListener("policyDocuments", (e) => {
+        //   const data = JSON.parse(e.data);
+
+        //   // setEop((prevEop) => ({
+        //   //   ...prevEop,
+        //   //   supportingInformation: {
+        //   //     ...prevEop.supportingInformation,
+        //   //     policyDocuments: data ?? []
+        //   //   }
+
+        //   // }));
+        // });
+
         evtSource.addEventListener("done", () => {
           toast.success(
             "Successfully generated, Please save the document manually."

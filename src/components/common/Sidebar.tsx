@@ -54,7 +54,7 @@ const SideBarNavigation = ({ currentPath, onClose }: SideBarNavigationProps) => 
           currentPath === item.link;
 
         return (
-          <div key={item.id} className="w-full">
+          <div key={`${item.id}`} className="w-full">
             {/* Parent item */}
             <div
               className={`mx-auto flex w-11/12 cursor-pointer items-center justify-between rounded-lg px-4 py-2.5 text-white transition-colors hover:bg-white/10 ${

@@ -287,6 +287,25 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
       }));
     });
 
+    evtSource.addEventListener("policyDocumentRows", (e) => {
+      const data = JSON.parse(e.data);
+      if (data?.error) {
+        toast.error("policyDocumentRows failed");
+        return;
+
+      }
+
+      setMop((prevMop) => ({
+        ...prevMop,
+        references: {
+          ...prevMop.references,
+          policyDocumentRows: data
+        }
+      }))
+
+
+    });
+
     evtSource.addEventListener("emergencyContactRows", (e) => {
       const data = JSON.parse(e.data);
       if (data?.error) {
@@ -536,10 +555,6 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
     if (mode === "create") {
       setLoadedBootstrapKey(null);
       runStandaloneGenerateStream();
-      // const ok = await runStandaloneGenerateStream();
-      // if (ok) {
-      //   toast.info("Form reset to a fresh generated draft.");
-      // }
       setLoadedBootstrapKey(key);
       return;
     }

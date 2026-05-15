@@ -7,6 +7,9 @@ import { DownloadIcon, } from 'lucide-react'
 import { buildDefaultGeneratorOperationalRows } from "@/constants/mop-section07-details";
 import { MOP_SECTION_07_IMPORTANT_INDICATORS } from "@/constants/mop-section07-important-indicators";
 import { MopSection07IndicatorIcon } from "../mop/MopSection07IndicatorIcons";
+import { MOP_SECTION_09_APPROVAL_REQUIREMENT_BULLETS, MOP_SECTION_09_APPROVAL_REQUIREMENTS_HEADING } from "@/constants/mop-section09-approval";
+import { MOP_SECTION_11_POLICY_BANNER_TEXT, MOP_SECTION_11_POLICY_NOTE_LABEL } from "@/constants/mop-section11-references";
+import { MopSection11Notices } from "../mop/MopSection11Notices";
 
 const FirstSectionKeys1 = (mop: MOP) => ([
   { key: "MOP Title", value: mop.document?.title },
@@ -41,14 +44,16 @@ const EachRow = ({ item, className }: { item: { key: string, value?: string | nu
 
 const EachSingleRow = ({
   item,
+  noIcon
 }: {
   item: { text: string };
+  noIcon?: boolean
 }) => {
   return (
     <div className={`my-4 pb-3 flex items-start`}>
-      <div className="w-10 flex justify-center items-center">
+      {noIcon ? null : <div className="w-10 flex justify-center items-center">
         <div className="bg-gray-500 h-2 w-2 rounded-full mt-2" />
-      </div>
+      </div>}
       <div className="text-base flex-1">
         {item?.text || "-"}
       </div>
@@ -742,6 +747,386 @@ const SeventhSection = (props: MOP) => {
         </tbody>
       </table>
 
+
+      <p className="font-semibold text-lg mt-6">Critical Step Notes (Steps requiring torque verification or electrical testing)</p>
+      <EachSingleRow item={{ text: props.mopDetails.detailedProcedures.criticalStepNotes }} noIcon />
+    </div>
+  </div>
+}
+
+const EigthSection = (props: MOP) => {
+  return <div className="">
+    <div className="my-4 rounded-lg p-2 break-inside-auto">
+      <div className="border-b border-solid  pb-3 border-gray-300">
+        <h2 className="font-semibold text-lg">Section 08: Back-out Procedures</h2>
+      </div>
+      <p className="font-semibold text-lg py-4">CRITICAL BACK-OUT PROCEDURES</p>
+      <Typography variant="p" className="mb-4 text-sm text-gray-700">
+        If at any point during the maintenance procedure a critical issue is discovered that could affect data center operations, follow these detailed back-out procedures:
+      </Typography>
+      <table className="w-full border-collapse text-sm ">
+        <thead className="bg-[#0E3456]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              Step
+            </th>
+            <th className="border border-black p-3 text-left">
+              Back-out Procedures
+            </th>
+            <th className="border min-w-20 border-black p-3 text-left">
+              Initials
+            </th>
+            <th className="border min-w-20 border-black p-3 text-left">
+              Time
+            </th>
+          </tr>
+        </thead>
+
+        <tbody className="">
+          {props.backOut.stepRows.map((row, index) => (
+            <tr key={index}>
+              <td className="border border-black p-3 align-top">
+                {row.stepNumber}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.backOutProcedure}
+              </td>
+              <td className="border min-w-20 border-black p-3 align-top">
+                {row.initials}
+              </td>
+              <td className="border min-w-20 border-black p-3 align-top">
+                {row.time}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+}
+
+
+const NinthSection = (props: MOP) => {
+  return <div className="">
+    <div className="my-4 rounded-lg p-2 break-inside-auto">
+      <div className="border-b border-solid pb-3 border-gray-300">
+        <h2 className="font-semibold text-lg">Section 09: MOP Approval</h2>
+      </div>
+      <table className="w-full border-collapse text-sm mt-4 ">
+        <thead className="bg-[#0E3456]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              Review Stage
+            </th>
+            <th className="border border-black p-3 text-left">
+              Reviewer's Name
+            </th>
+            <th className="border min-w-20 border-black p-3 text-left">
+              Reviewer's Title
+            </th>
+            <th className="border min-w-20 border-black p-3 text-left">
+              Date
+            </th>
+          </tr>
+        </thead>
+
+        <tbody className="">
+          {props.mopApproval.reviewRows.map((row, index) => (
+            <tr key={index}>
+              <td className="border border-black p-3 align-top">
+                {row.reviewStage}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.reviewersName}
+              </td>
+              <td className="border min-w-20 border-black p-3 align-top">
+                {row.reviewersTitle}
+              </td>
+              <td className="border min-w-20 border-black p-3 align-top">
+                {row.date}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <div className="mt-6 border border-gray-300 bg-gray-100 p-4">
+        <Typography variant="h6" className="mt-0 mb-2 text-sm font-semibold text-gray-900">
+          {MOP_SECTION_09_APPROVAL_REQUIREMENTS_HEADING}
+        </Typography>
+        <ul className="mb-0 list-inside list-disc space-y-1 pl-0 text-sm text-gray-800">
+          {MOP_SECTION_09_APPROVAL_REQUIREMENT_BULLETS.map(line => (
+            <li key={line} className="pl-0">
+              {line}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="subsection-row-7 flex flex-row justify-evenly py-4">
+        <div className="flex gap-x-2" >
+          <Typography
+            variant="h5"
+            className="font-bold tracking-wide text-balance drop-shadow-sm"
+          >
+            MOP Effective Date:
+          </Typography>
+
+          <Typography
+            variant="p"
+            className="tracking-wide text-balance drop-shadow-sm"
+          >
+            {new Date(props.mopApproval.mopEffectiveDate || "").toDateString() || "Not selected"}
+          </Typography>
+        </div>
+        <div className="flex gap-x-2" >
+          <Typography
+            variant="h5"
+            className="font-bold tracking-wide text-balance drop-shadow-sm"
+          >
+            MOP Expiration Date:
+          </Typography>
+
+          <Typography
+            variant="p"
+            className="tracking-wide text-balance drop-shadow-sm"
+          >
+            {new Date(props.mopApproval.mopExpirationDate || "").toDateString() || "Not selected"}
+          </Typography>
+        </div>
+
+      </div>
+    </div>
+  </div>
+}
+
+
+const TenthSection = (props: MOP) => {
+  return <div className="">
+    <div className="my-4 rounded-lg p-2 break-inside-auto">
+      <div className="border-b border-solid  pb-3 border-gray-300">
+        <h2 className="font-semibold text-lg">Section 10: MOP Comments</h2>
+      </div>
+      <p className="font-semibold text-lg py-2">MOP Comments</p>
+
+      <EachSingleRow item={{ text: props.mopComments.mopCommentsText }} noIcon />
+
+      <p className="font-semibold text-lg py-2">Post-Maintenance Requirements:</p>
+      <div className="section-container-7">
+        {
+          props.mopComments.postMaintenanceBullets.map((item, index) => {
+            return <div className="subsection-row-7" key={index} >
+              <EachSingleRow item={{ text: item.title }} />
+            </div>
+          })
+        }
+      </div>
+
+      <p className="font-semibold text-lg py-2">Additional Notes:</p>
+      <EachSingleRow item={{ text: props.mopComments.additionalNotes }} noIcon />
+
+
+    </div>
+  </div>
+}
+
+const EleventhSection = (props: MOP) => {
+  return <div className="">
+    <div className="my-4 rounded-lg p-2 break-inside-auto">
+      <div className="border-b border-solid  pb-3 border-gray-300">
+        <h2 className="font-semibold text-lg">Section 11: References and Documentation</h2>
+      </div>
+      <p className="font-semibold text-lg py-2">Comprehensive Reference Library</p>
+      <p className="font-semibold text-lg py-2">Company Policy Documents Consulted</p>
+      <Typography variant="p" className="mb-4 text-sm text-gray-700">
+        The following company policy documents were referenced during the creation of this MOP to ensure alignment with company-specific procedures and requirements:
+      </Typography>
+
+      <table className="w-full border-collapse text-sm ">
+        <thead className="bg-[#0E3456]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              Policy Document
+            </th>
+            <th className="border border-black p-3 text-left">
+              Upload Date
+            </th>
+            <th className="border border-black p-3 text-left">
+              Type
+            </th>
+          </tr>
+        </thead>
+
+        <tbody className="">
+          {props.references.policyDocumentRows.map((row, index) => (
+            <tr key={index}>
+              <td className="border border-black p-3 align-top">
+                {row.policyDocument}
+              </td>
+
+              <td className="border border-black p-3 align-top">
+                {row.uploadDate}
+              </td>
+
+              <td className="border border-black p-3 align-top">
+                {row.type}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+
+      </table>
+      <div className="rounded-r-md border-l-4 border-blue-600 bg-sky-100 p-3 mt-4">
+        <p className="m-0 text-sm text-sky-950">
+          <strong>{MOP_SECTION_11_POLICY_NOTE_LABEL}</strong>
+          {' '}
+          {MOP_SECTION_11_POLICY_BANNER_TEXT}
+        </p>
+      </div>
+
+      <p className="font-semibold text-lg py-2 mt-8">Equipment-Specific Documentation</p>
+      <table className="w-full border-collapse text-sm ">
+        <thead className="bg-[#0E3456]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              Document Title
+            </th>
+            <th className="border border-black p-3 text-left">
+              Type
+            </th>
+            <th className="border border-black p-3 text-left">
+              Access
+            </th>
+          </tr>
+        </thead>
+
+        <tbody className="">
+          {props.references.equipmentDocumentRows.map((row, index) => (
+            <tr key={index}>
+              <td className="border border-black p-3 align-top">
+                {row.title}
+              </td>
+
+              <td className="border border-black p-3 align-top">
+                {row.type}
+              </td>
+
+              <td className="border border-black p-3 align-top">
+                <div>
+                  {row.linkUrl}
+                </div>
+                <div>
+                  {row.internalAccess}
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+
+      </table>
+
+      <p className="font-semibold text-lg py-2 mt-4">Safety Standards and Guidelines</p>
+      <table className="w-full border-collapse text-sm ">
+        <thead className="bg-[#0E3456]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              Safety Standard
+            </th>
+            <th className="border border-black p-3 text-left">
+              Authority
+            </th>
+            <th className="border border-black p-3 text-left">
+              Access
+            </th>
+          </tr>
+        </thead>
+
+        <tbody className="">
+          {props.references.safetyStandardRows.map((row, index) => (
+            <tr key={index}>
+              <td className="border border-black p-3 align-top">
+                {row.safetyStandard}
+              </td>
+
+              <td className="border border-black p-3 align-top">
+                {row.authority}
+              </td>
+
+              <td className="border border-black p-3 align-top">
+                <div>
+                  {row.linkUrl}
+                </div>
+                <div>
+                  {row.internalAccess}
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+
+      </table>
+
+
+      <p className="font-semibold text-lg py-2 mt-4">Additional Resources</p>
+      <table className="w-full border-collapse text-sm ">
+        <thead className="bg-[#0E3456]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              Resources
+            </th>
+            <th className="border border-black p-3 text-left">
+              Type
+            </th>
+            <th className="border border-black p-3 text-left">
+              Access
+            </th>
+          </tr>
+        </thead>
+
+        <tbody className="">
+          {props.references.additionalResourceRows.map((row, index) => (
+            <tr key={index}>
+              <td className="border border-black p-3 align-top">
+                {row.title}
+              </td>
+
+              <td className="border border-black p-3 align-top">
+                {row.type}
+              </td>
+
+              <td className="border border-black p-3 align-top">
+                <div>
+                  {row.linkUrl}
+                </div>
+                <div>
+                  {row.internalAccess}
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+
+      </table>
+
+      <MopSection11Notices />
+
+      {/* <EachSingleRow item={{ text: props.mopComments.mopCommentsText }} noIcon />
+
+      <p className="font-semibold text-lg py-2">Post-Maintenance Requirements:</p>
+      <div className="section-container-7">
+        {
+          props.mopComments.postMaintenanceBullets.map((item, index) => {
+            return <div className="subsection-row-7" key={index} >
+              <EachSingleRow item={{ text: item.title }} />
+            </div>
+          })
+        }
+      </div>
+
+      <p className="font-semibold text-lg py-2">Additional Notes:</p>
+      <EachSingleRow item={{ text: props.mopComments.additionalNotes }} noIcon /> */}
+
+
     </div>
   </div>
 }
@@ -799,6 +1184,23 @@ const MopPrintComponent = ({ mop, id }: { mop: MOP | null, id: string }) => {
       <SeventhSection
         {...mop}
       />
+
+      <EigthSection
+        {...mop}
+      />
+
+      <NinthSection
+        {...mop}
+      />
+
+      <TenthSection
+        {...mop}
+      />
+
+      <EleventhSection
+        {...mop}
+      />
+
       <div onClick={() => handleDownload(id)} className="bg-red-300 cursor-pointer print:hidden rounded-full px-4 py-4 fixed right-10 bottom-10"><DownloadIcon /></div>
     </div>
   </main>

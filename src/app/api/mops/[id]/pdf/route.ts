@@ -75,6 +75,15 @@ async function generatePdf(url: string) {
       '.section-container-6',
       '.subsection-row-6'
     )
+    renderSections(
+      '.section-container-7',
+      '.subsection-row-7'
+    )
+
+        renderSections(
+      '.section-container-7b',
+      '.subsection-row-7b'
+    )
   });
 
 

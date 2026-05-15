@@ -3,7 +3,10 @@ import { MOP } from "@/types/mop";
 import { Typography } from "../common";
 import { MOP_SECTION_04_SYSTEM_ROWS } from "@/constants/mop-section04-facility";
 
-import { DownloadIcon } from 'lucide-react'
+import { DownloadIcon, } from 'lucide-react'
+import { buildDefaultGeneratorOperationalRows } from "@/constants/mop-section07-details";
+import { MOP_SECTION_07_IMPORTANT_INDICATORS } from "@/constants/mop-section07-important-indicators";
+import { MopSection07IndicatorIcon } from "../mop/MopSection07IndicatorIcons";
 
 const FirstSectionKeys1 = (mop: MOP) => ([
   { key: "MOP Title", value: mop.document?.title },
@@ -38,17 +41,18 @@ const EachRow = ({ item, className }: { item: { key: string, value?: string | nu
 
 const EachSingleRow = ({
   item,
-  className,
 }: {
   item: { text: string };
-  className: string;
 }) => {
   return (
-    <li className={`my-4 pb-3 ${className}`}>
-      <div className="text-base">
+    <div className={`my-4 pb-3 flex items-start`}>
+      <div className="w-10 flex justify-center items-center">
+        <div className="bg-gray-500 h-2 w-2 rounded-full mt-2" />
+      </div>
+      <div className="text-base flex-1">
         {item?.text || "-"}
       </div>
-    </li>
+    </div>
   );
 };
 
@@ -432,16 +436,311 @@ const SixthSection = (props: MOP) => {
       </table>
 
       <div className="section-container-6">
-        <p className="font-semibold text-lg py-4 subsection-row-6">Critical Decision Points for</p>
-        <ul className="list-disc pl-6">
-          {
-            props.assumptions.criticalDecisionPointItems.map((item, index) => {
-              return <EachSingleRow item={item} key={index} className="subsection-row-6" />
-            })
-          }
-        </ul>
+        {
+          props.assumptions.criticalDecisionPointItems.map((item, index) => {
+            return <div className="subsection-row-6" key={index} >
+              {index === 0 ?
+                <p className="font-semibold text-lg py-4">Critical Decision Points for</p>
+                : null
+              }
+              <EachSingleRow item={item} />
+            </div>
+          })
+        }
       </div>
 
+
+    </div>
+  </div>
+}
+
+const SeventhSection = (props: MOP) => {
+  return <div className="">
+    <div className="my-4 rounded-lg p-2 break-inside-auto">
+      <div className="border-b border-solid  pb-3 border-gray-300">
+        <h2 className="font-semibold text-lg">Section 07: MOP Details</h2>
+      </div>
+      <p className="font-semibold text-lg py-2">Procedure steps (outline):</p>
+      <div className="section-container-7">
+        {
+          props.steps.map((item, index) => {
+            return <div className="subsection-row-7" key={index} >
+              <EachSingleRow item={{ text: item.description }} />
+            </div>
+          })
+        }
+        <div className="subsection-row-7 flex flex-row justify-evenly">
+          <div className="flex gap-x-2" >
+            <Typography
+              variant="h5"
+              className="font-bold tracking-wide text-balance drop-shadow-sm"
+            >
+              Date Performed
+            </Typography>
+
+            <Typography
+              variant="p"
+              className="tracking-wide text-balance drop-shadow-sm"
+            >
+              {props.mopDetails.datePerformed || "Not selected"}
+            </Typography>
+          </div>
+          <div className="flex gap-x-2" >
+            <Typography
+              variant="h5"
+              className="font-bold tracking-wide text-balance drop-shadow-sm"
+            >
+              Time Begun
+            </Typography>
+
+            <Typography
+              variant="p"
+              className="tracking-wide text-balance drop-shadow-sm"
+            >
+              {props.mopDetails.timeBegun || "Not selected"}
+            </Typography>
+          </div>
+
+          <div className=" flex gap-x-2" >
+            <Typography
+              variant="h5"
+              className="font-bold tracking-wide text-balance drop-shadow-sm"
+            >
+              Time Completed
+            </Typography>
+
+            <Typography
+              variant="p"
+              className="tracking-wide text-balance drop-shadow-sm"
+            >
+              {props.mopDetails.timeCompleted || "Not selected"}
+            </Typography>
+          </div>
+        </div>
+        <EachRow className="subsection-row-7" item={{ key: "Facilities personnel performing work:", value: props.mopDetails.facilitiesPersonnel || "Not selected" }} />
+        <EachRow className="subsection-row-7" item={{ key: "Contractor/Vendor personnel performing work:", value: props.mopDetails.contractorPersonnel || "Not selected" }} />
+      </div>
+
+
+      <p className="font-semibold text-lg py-4">Generator Operational Data Log (Unit: GENERATOR 1)</p>
+      <Typography variant="p" className="mb-4 text-sm text-gray-700">
+        Parameters and acceptance bands are defined for this unit template; record As Found / As Left for each.
+      </Typography>
+      <table className="w-full border-collapse text-sm ">
+        <thead className="bg-[#0E3456]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              Parameter
+            </th>
+            <th className="border border-black min-w-20 p-3 text-left">
+              As Found
+            </th>
+            <th className="border border-black min-w-20 p-3 text-left">
+              As Left
+            </th>
+            <th className="border border-black p-3 text-left">
+              Units
+            </th>
+            <th className="border border-black p-3 text-left">
+              Acceptable Range
+            </th>
+          </tr>
+        </thead>
+
+        <tbody className="">
+          {buildDefaultGeneratorOperationalRows().map((row, index) => (
+            <tr key={index}>
+              <td className="border border-black p-3 align-top">
+                {row.parameter}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.asFound}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.asLeft}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.units}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.acceptableRange}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <p className="font-semibold text-lg py-4">Engine Performance Data</p>
+      <table className="w-full border-collapse text-sm ">
+        <thead className="bg-[#0E3456]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              Parameter
+            </th>
+            <th className="border border-black min-w-20 p-3 text-left">
+              Reading
+            </th>
+            <th className="border border-black min-w-20 p-3 text-left">
+              Units
+            </th>
+            <th className="border border-black p-3 text-left">
+              Status
+            </th>
+          </tr>
+        </thead>
+
+        <tbody className="">
+          {props.mopDetails.enginePerformanceRows.map((row, index) => (
+            <tr key={index}>
+              <td className="border border-black p-3 align-top">
+                {row.parameter}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.reading}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.units}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.status}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+
+      <p className="font-semibold text-lg py-4 break-before-page">System Fault/Alarm History</p>
+      <Typography variant="p" className="mb-4 text-sm text-gray-700">
+        Record active or cleared faults/alarms observed during this event (rows expand with API or manual entry; default blank rows for site use).
+      </Typography>
+      <table className="w-full border-collapse text-sm ">
+        <thead className="bg-[#0E3456]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              Date/Time
+            </th>
+            <th className="border border-black min-w-20 p-3 text-left">
+              Fault/Alarm Code
+            </th>
+            <th className="border border-black min-w-20 p-3 text-left">
+              Description
+            </th>
+            <th className="border border-black p-3 text-left">
+              Action Taken
+            </th>
+            <th className="border border-black p-3 text-left">
+              Initials
+            </th>
+          </tr>
+        </thead>
+
+        <tbody className="">
+          {props.mopDetails.faultAlarmHistoryRows.map((row, index) => (
+            <tr key={index}>
+              <td className="border border-black p-3 align-top">
+                {row.dateTime}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.faultCode}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.description}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.actionTaken}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.initials}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+
+      <div className="">
+        <p className="font-semibold text-lg py-4">Important Indicators</p>
+        <table className="w-full border-collapse text-sm ">
+          <thead className="bg-[#0E3456]">
+            <tr className=" text-white">
+              <th className="border border-black p-3 text-left">
+                Icon
+              </th>
+              <th className="border border-black min-w-20 p-3 text-left">
+                Meaning
+              </th>
+            </tr>
+          </thead>
+
+          <tbody className="">
+            {MOP_SECTION_07_IMPORTANT_INDICATORS.map((row, index) => (
+              <tr key={index}>
+                <td className="border border-black min-w-20 p-3 align-top">
+                  <div className="flex justify-center items-center h-full">
+                    <MopSection07IndicatorIcon
+                      indicatorId={row.id}
+                      className="h-6 w-6"
+                      aria-hidden
+                    />
+                  </div>
+                </td>
+                <td className="border border-black p-3 align-top">
+                  <span className="font-semibold">{row.title}</span> <span>{row.body}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <p className="font-semibold text-lg py-4">Detailed Procedure Steps</p>
+      <Typography variant="p" className="mb-4 text-sm text-gray-700">
+        Pick the icon that matches Important Indicators above; use “no indicator” when not applicable. The stored value is the indicator key (id); the meaning comes from the legend and tooltips.
+      </Typography>
+      <table className="w-full border-collapse text-sm ">
+        <thead className="bg-[#0E3456]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              Detailed Procedure
+            </th>
+            <th className="border border-black min-w-20 p-3 text-left">
+              Indicator
+            </th>
+            <th className="border border-black p-3 text-left">
+              Initials
+            </th>
+            <th className="border border-black min-w-20 p-3 text-left">
+              Time
+            </th>
+          </tr>
+        </thead>
+
+        <tbody className="">
+          {props.mopDetails.detailedProcedures.stepRows.map((row, index) => (
+            <tr key={index}>
+              <td className="border border-black min-w-20 p-3 align-top">
+                {row.detailedProcedure}
+              </td>
+              <td className="border border-black min-w-20 p-3 align-top">
+                <div className="flex justify-center items-center h-full">
+                  <MopSection07IndicatorIcon
+                    indicatorId={row.indicator}
+                    className="h-6 w-6"
+                    aria-hidden
+                  />
+                </div>
+              </td>
+              <td className="border border-black min-w-20 p-3 align-top">
+                {row.initials}
+              </td>
+              <td className="border border-black  min-w-20 p-3 align-top">
+                {row.time}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
     </div>
   </div>
@@ -494,6 +793,10 @@ const MopPrintComponent = ({ mop, id }: { mop: MOP | null, id: string }) => {
       />
 
       <SixthSection
+        {...mop}
+      />
+
+      <SeventhSection
         {...mop}
       />
       <div onClick={() => handleDownload(id)} className="bg-red-300 cursor-pointer print:hidden rounded-full px-4 py-4 fixed right-10 bottom-10"><DownloadIcon /></div>

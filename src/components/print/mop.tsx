@@ -1,6 +1,7 @@
 'use client'
 import { MOP } from "@/types/mop";
 import { Typography } from "../common";
+import { MOP_SECTION_04_SYSTEM_ROWS } from "@/constants/mop-section04-facility";
 
 
 const FirstSectionKeys1 = (mop: MOP) => ([
@@ -76,7 +77,7 @@ const FirstSection = (props: MOP) => {
 
 
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className=" pb-3 border-gray-300">
+      <div className="pb-3 border-gray-300">
         <h2 className="font-semibold text-lg">Section 01 - MOP Schedule Information</h2>
       </div>
       <div className="section-container">
@@ -124,6 +125,111 @@ const ThirdSection = (props: MOP) => {
   </div>
 }
 
+const FourthSection = (props: MOP) => {
+  return <div className="">
+    <div className="my-4 rounded-lg p-2 break-inside-auto">
+      <div className="border-b border-solid  pb-3 border-gray-300">
+        <h2 className="font-semibold text-lg">Section 04: Effect of MOP on Critical Facility</h2>
+      </div>
+      <div className="pdf-page">
+        <table className="w-full border-collapse text-sm ">
+          <thead className="bg-[#0E3456]">
+            <tr className=" text-white">
+              <th className="border border-black p-3 text-left">
+                ID
+              </th>
+              <th className="border border-black p-3 text-left">
+                Asset Name
+              </th>
+              <th className="border border-black p-3 text-left">
+                Location
+              </th>
+              <th className="border border-black p-3 text-left">
+                Status
+              </th>
+            </tr>
+          </thead>
+
+          <tbody className="">
+            {props.facilityEffects.map((row, index) => (
+              <tr key={index}>
+                <td className="border border-black p-3 align-top">
+                  {index}
+                </td>
+
+                <td className="border border-black p-3 align-top">
+                  {MOP_SECTION_04_SYSTEM_ROWS.find(item => item.key === row.systemKey)?.label}
+                </td>
+
+                <td className="border border-black p-3 align-top">
+                  {row.choice}
+                </td>
+
+                <td className="border border-black p-3 align-top">
+                  {row.details}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}
+const FifthSection = (props: MOP) => {
+  return <div className="">
+    <div className="my-4 rounded-lg p-2 break-inside-auto">
+      <div className="border-b border-solid  pb-3 border-gray-300">
+        <h2 className="font-semibold text-lg">Section 05: Safety Requirements</h2>
+      </div>
+      <p className="font-semibold text-lg py-4">PPE requirements specific to maintenance:</p>
+      <div className="pdf-page">
+        <table className="w-full border-collapse text-sm ">
+          <thead className="bg-[#0E3456]">
+            <tr className=" text-white">
+              <th className="border border-black p-3 text-left">
+                ID
+              </th>
+              <th className="border border-black p-3 text-left">
+                Asset Name
+              </th>
+              <th className="border border-black p-3 text-left">
+                Location
+              </th>
+              <th className="border border-black p-3 text-left">
+                Status
+              </th>
+            </tr>
+          </thead>
+
+          <tbody className="">
+            {props.facilityEffects.map((row, index) => (
+              <tr key={index}>
+                <td className="border border-black p-3 align-top">
+                  {index}
+                </td>
+
+                <td className="border border-black p-3 align-top">
+                  {MOP_SECTION_04_SYSTEM_ROWS.find(item => item.key === row.systemKey)?.label}
+                </td>
+
+                <td className="border border-black p-3 align-top">
+                  {row.choice}
+                </td>
+
+                <td className="border border-black p-3 align-top">
+                  {row.details}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}
+
+
 
 
 
@@ -164,6 +270,9 @@ const handleDownload = async (id: string) => {
 const MopPrintComponent = ({ mop, id }: { mop: MOP | null, id: string }) => {
   if (!mop) return;
 
+  console.log({ mop });
+
+
   return <main className="bg-white p-8 text-black">
     <div className="max-w-7xl mx-auto">
       <FirstSection
@@ -175,6 +284,14 @@ const MopPrintComponent = ({ mop, id }: { mop: MOP | null, id: string }) => {
       />
 
       <ThirdSection
+        {...mop}
+      />
+
+      <FourthSection
+        {...mop}
+      />
+
+      <FifthSection
         {...mop}
       />
 

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { chromium } from "playwright";
 
 async function generatePdf(url: string) {
@@ -92,7 +92,7 @@ async function generatePdf(url: string) {
 }
 
 export async function GET(
-  req: NextRequest,
+  req: NextResponse,
   context: { params: Promise<{ id: string }> }
 ) {
   const { id } = await context.params;

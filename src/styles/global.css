@@ -12,3 +12,21 @@
 
 @import 'tailwindcss';
 
+
+@media print {
+  body {
+    background: white;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+  .pdf-page {
+    page-break-after: always;
+    padding-top: 20px;
+  }
+}

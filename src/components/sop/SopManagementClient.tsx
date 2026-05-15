@@ -142,9 +142,6 @@ export const SopManagementClient = ({ sopId, documentId }: SopManagementClientPr
     );
   }
 
-  console.log({ isGenerating });
-
-
   return (
     <>
 

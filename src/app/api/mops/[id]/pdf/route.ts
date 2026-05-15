@@ -71,6 +71,10 @@ async function generatePdf(url: string) {
       '.section-container-3',
       '.subsection-row-3'
     )
+    renderSections(
+      '.section-container-6',
+      '.subsection-row-6'
+    )
   });
 
 
@@ -98,9 +102,6 @@ export async function GET(
   const { id } = await context.params;
 
   const url = `${process.env.NEXT_PUBLIC_FE_URL}/mops/${id}/print`;
-
-  console.log({ url });
-
 
   const pdfBuffer = await generatePdf(url);
 

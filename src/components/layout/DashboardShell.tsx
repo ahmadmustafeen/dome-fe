@@ -15,8 +15,6 @@ const DashboardShell = ({ children }: { children: ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
   const { site, client } = useAppContext()
-  console.log({ reloading: "here" });
-
 
   useEffect(() => {
     if (!client?._id) {

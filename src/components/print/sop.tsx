@@ -861,8 +861,6 @@ const EleventhSection = (props: SOP) => {
 
 
 
-
-
 const SopPrintComponent = ({ sop, id }: { sop: SOP | null, id: string }) => {
   if (!sop) return;
 

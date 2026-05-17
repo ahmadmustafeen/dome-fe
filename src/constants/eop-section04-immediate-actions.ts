@@ -19,7 +19,7 @@ export const EOP_SECTION_04_SAFETY_REQUIREMENTS_HEADING =
   "LENNOX HS29-060-13G Specific Safety Requirements:";
 
 export const EOP_SECTION_04_DO_NOT_PROCEED_BANNER =
-  "DO NOT PROCEED until all safety requirements are verified for LENNOX HS29-060-13G";
+  "DO NOT PROCEED until all safety requirements are verified for ";
 
 export const newEopSection04PpeRow = () => ({
   id: crypto.randomUUID(),

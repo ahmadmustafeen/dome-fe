@@ -46,6 +46,5 @@
 
   .pdf-page {
     page-break-after: avoid;
-    padding-top: 20px;
   }
 }

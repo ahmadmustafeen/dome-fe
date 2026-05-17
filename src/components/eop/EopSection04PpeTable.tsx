@@ -45,7 +45,7 @@ export const EopSection04PpeTable = ({
             <tr className="bg-[#0f3456] text-white">
               <th className="px-3 py-2 text-left font-semibold">PPE Item</th>
               <th className="px-3 py-2 text-left font-semibold">
-                Specification for HS29-060-13G
+                Specification for {assetName}
               </th>
               <th className="w-28 px-3 py-2 text-center font-semibold">Verified</th>
               <th scope="col" className="w-17 px-1 py-2 text-center text-xs font-semibold">

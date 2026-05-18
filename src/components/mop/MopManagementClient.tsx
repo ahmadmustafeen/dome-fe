@@ -25,7 +25,7 @@ import { MopVersionHistoryDrawer } from "./MopVersionHistoryDrawer";
 interface MopManagementClientProps {
   mopId?: string;
   documentId?: string;
-  noDownload: boolean;
+  noDownload?: boolean;
 }
 
 export const MopManagementClient = ({

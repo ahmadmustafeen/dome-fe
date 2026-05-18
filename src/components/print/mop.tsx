@@ -201,8 +201,9 @@ const FourthSection = (props: MOP) => {
 }
 
 const FifthSection = (props: MOP) => {
-  const assetName = '';
-  const mopTitle = '';
+  const assetName = props.asset.assetName;
+
+
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <div className="border-b border-solid  pb-3 border-gray-300">
@@ -247,7 +248,7 @@ const FifthSection = (props: MOP) => {
         {/* tools */}
         <p className="font-semibold text-lg py-4">TOOLS REQUIRED:</p>
         <Typography variant="p" className="mb-4 text-sm text-gray-700">
-          Specific tools required for {assetName} {mopTitle} based on equipment type and task:
+          Specific tools required for {assetName} {props.document.title} based on equipment type and task:
         </Typography>
         <table className="w-full border-collapse text-sm ">
           <thead className="bg-[#0E3456]">

@@ -176,6 +176,22 @@ const emptyOverview = (): MOPSection03Overview => ({
 });
 
 export const createEmptyMop = (): MOP => ({
+  asset: {
+    _id: "",
+    serialNumber: "",
+    assetId: "",
+    siteId: "",
+    assetName: "",
+    category: "",
+    subCategory: "",
+    modelName: "",
+    location: "",
+    equipmentName: "",
+    comment: "",
+    images: [],
+    make: "",
+    description: "",
+  },
   document: {
     title: "",
     identifier: "",
@@ -306,6 +322,22 @@ export const getAutoFilledContext = (params: {
 };
 
 export const MOCK_GENERATED_MOP: MOP = {
+   asset: {
+    _id: "",
+    serialNumber: "",
+    assetId: "",
+    siteId: "",
+    assetName: "",
+    category: "",
+    subCategory: "",
+    modelName: "",
+    location: "",
+    equipmentName: "",
+    comment: "",
+    images: [],
+    make: "",
+    description: "",
+  },
   document: {
     title: "CRACs Annual Preventative Maintenance",
     identifier: "",

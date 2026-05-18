@@ -145,7 +145,7 @@ const ThirdSection = (props: EOP) => {
 }
 
 const FourthSection = (props: EOP) => {
-  const assetName = ''
+  const assetName = props.asset.assetName;
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <div className="border-b border-solid  pb-3 border-gray-300">
@@ -309,7 +309,7 @@ const FourthSection = (props: EOP) => {
 
 
 const FifthSection = (props: EOP) => {
-  const assetName = ''
+  const assetName = props.asset.assetName;
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <div className="border-b border-solid  pb-3 border-gray-300">
@@ -480,7 +480,8 @@ const SixthSection = (props: EOP) => {
 }
 
 const SeventhSection = (props: EOP) => {
-  const assetName = ''
+  const assetName = props.asset.assetName;
+
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <div className="border-b border-solid  pb-3 border-gray-300">
@@ -627,7 +628,8 @@ const SeventhSection = (props: EOP) => {
 }
 
 const EighthSection = (props: EOP) => {
-  const assetName = ''
+  const assetName = props.asset.assetName;
+
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <div className="border-b border-solid  pb-3 border-gray-300">
@@ -778,7 +780,6 @@ const EighthSection = (props: EOP) => {
 }
 
 const NinthSection = (props: EOP) => {
-  const assetName = ''
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <div className="border-b border-solid  pb-3 border-gray-300">

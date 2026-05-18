@@ -9,14 +9,14 @@ async function generatePdf(url: string) {
     headless: true,
     ...(isServerless
       ? {
-          executablePath: await chromiumMin.executablePath(
-            "https://github.com/Sparticuz/chromium/releases/download/v131.0.0/chromium-v131.0.0-pack.tar"
-          ),
-          args: [...chromiumMin.args],
-        }
+        executablePath: await chromiumMin.executablePath(
+          "https://github.com/Sparticuz/chromium/releases/download/v131.0.0/chromium-v131.0.0-pack.tar"
+        ),
+        args: [...chromiumMin.args],
+      }
       : {
-          args: ["--no-sandbox", "--disable-setuid-sandbox"],
-        }),
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      }),
   });
 
   const context = await browser.newContext({
@@ -118,7 +118,7 @@ export async function GET(
 
   const pdfBuffer = await generatePdf(url);
 
-  return new NextResponse(pdfBuffer, {
+  return new NextResponse(new Uint8Array(pdfBuffer), {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": `attachment; filename="mop-${id}.pdf"`,

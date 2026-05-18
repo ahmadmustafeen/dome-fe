@@ -1,48 +1,8 @@
+import { generatePdfMOP } from "@/lib/pdf/generatePdf";
 import { NextRequest, NextResponse } from "next/server";
-import { chromium } from "playwright-core";
-import chromiumMin from "@sparticuz/chromium-min";
 
-async function generatePdf(url: string) {
-  const browser = await chromium.launch({
-    headless: true,
-    executablePath: await chromiumMin.executablePath(
-      "https://github.com/Sparticuz/chromium/releases/download/v131.0.0/chromium-v131.0.0-pack.tar"
-    ),
-    args: [
-      ...chromiumMin.args,
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-    ],
-  });
+export const runtime = "nodejs";
 
-  const context = await browser.newContext({
-    viewport: { width: 1280, height: 720 },
-  });
-
-  const page = await context.newPage();
-
-  await page.goto(url, {
-    waitUntil: "domcontentloaded",
-    timeout: 60000,
-  });
-
-  await page.waitForTimeout(3000);
-
-  const pdf = await page.pdf({
-    format: "Letter",
-    printBackground: true,
-    margin: {
-      top: "0in",
-      right: "0in",
-      bottom: "0in",
-      left: "0in",
-    },
-  });
-
-  await browser.close();
-
-  return pdf;
-}
 
 export async function GET(
   _: NextRequest,
@@ -52,7 +12,7 @@ export async function GET(
 
   const url = `${process.env.NEXT_PUBLIC_FE_URL}/mops/${id}/print`;
 
-  const pdfBuffer = await generatePdf(url);
+  const pdfBuffer = await generatePdfMOP(url);
 
   return new NextResponse(new Uint8Array(pdfBuffer), {
     headers: {

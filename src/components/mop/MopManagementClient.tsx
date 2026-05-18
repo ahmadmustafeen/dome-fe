@@ -1,6 +1,6 @@
 "use client";
 
-import { History } from "lucide-react";
+import { Download, History } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
@@ -25,16 +25,19 @@ import { MopVersionHistoryDrawer } from "./MopVersionHistoryDrawer";
 interface MopManagementClientProps {
   mopId?: string;
   documentId?: string;
+  noDownload: boolean;
 }
 
 export const MopManagementClient = ({
   mopId,
+  noDownload,
   documentId,
 }: MopManagementClientProps) => {
   const router = useRouter();
   const isEdit = mopId !== undefined && mopId.trim() !== "";
   const mode = isEdit ? "edit" : "create";
   const resolvedMopId = isEdit ? mopId.trim() : undefined;
+  const [isDownloading, setIsDownloading] = useState(false)
 
   const applyVersionRef = useRef<(row: CanonicalMopVersionApiRow) => void>(
     () => { },
@@ -119,6 +122,29 @@ export const MopManagementClient = ({
     setShowClearConfirm(false);
   }, [resetMop]);
 
+
+  const onDownload = async () => {
+    setIsDownloading(true)
+    const res = await fetch(`/api/mops/${mopId}/pdf`);
+
+    if (!res.ok) {
+      throw new Error("Failed to download PDF");
+    }
+
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${mop.document.title}-${new Date().toISOString()}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+
+    a.remove();
+    window.URL.revokeObjectURL(url);
+    setIsDownloading(false)
+  }
+
   const readOnlyForm = isReadOnly === true;
   const showVersionHistory = isEdit && resolvedMopId !== undefined;
 
@@ -195,6 +221,14 @@ export const MopManagementClient = ({
           <Typography variant="h1" className="min-w-0 flex-1">
             Method of Procedure (MOP)
           </Typography>
+          {!noDownload ? <AppButton
+            variant="secondary"
+            icon={<Download className="h-4 w-4" />}
+            title={isDownloading ? "Downloading..." : "Download"}
+            onClick={onDownload}
+            disabled={isBootstrapping || isDownloading}
+            className="shrink-0"
+          /> : null}
           <AppButton
             variant="default"
             icon={<History className="h-4 w-4" />}

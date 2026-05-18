@@ -9,11 +9,13 @@ import { EopSection06EscalationTable } from "./EopSection06EscalationTable";
 
 type EopSection06CommunicationProps = {
   communication: EOPSection06Communication;
+  address: string;
   patchCommunication: (p: Partial<EOPSection06Communication>) => void;
 };
 
 export const EopSection06Communication = ({
   communication,
+  address,
   patchCommunication,
 }: EopSection06CommunicationProps) => {
   return (
@@ -31,6 +33,7 @@ export const EopSection06Communication = ({
       />
       <EopSection06EmergencyContactsTable
         communication={communication}
+        address={address}
         patchCommunication={patchCommunication}
       />
     </div>

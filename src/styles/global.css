@@ -12,3 +12,39 @@
 
 @import 'tailwindcss';
 
+
+@media print {
+  body {
+    background: white;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  @page {
+    margin-top: 8mm;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+
+  .pdf-page {
+    page-break-after: avoid;
+  }
+}

@@ -10,6 +10,7 @@ import type { EOPSection06Communication } from "@/types/eop";
 
 type EopSection06EmergencyContactsTableProps = {
   communication: EOPSection06Communication;
+  address: string,
   patchCommunication: (p: Partial<EOPSection06Communication>) => void;
 };
 
@@ -32,6 +33,7 @@ const patchEmergencyCell = (
 };
 
 export const EopSection06EmergencyContactsTable = ({
+  address,
   communication,
   patchCommunication,
 }: EopSection06EmergencyContactsTableProps) => {
@@ -42,7 +44,7 @@ export const EopSection06EmergencyContactsTable = ({
         {EOP_SECTION_06_EMERGENCY_SUBHEADING}
       </Typography>
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[900px] border-collapse text-sm">
+        <table className="w-full min-w-225 border-collapse text-sm">
           <thead>
             <tr className="bg-[#0f3456] text-white">
               <th className="px-3 py-2 text-left font-semibold">Service Type</th>
@@ -108,7 +110,7 @@ export const EopSection06EmergencyContactsTable = ({
 
       <div className="mt-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-900">
         <span className="mr-1 font-semibold">✓</span>
-        {EOP_SECTION_06_RESEARCHED_NOTE}
+        {EOP_SECTION_06_RESEARCHED_NOTE(address)}
       </div>
 
       <div className="mt-3 grid grid-cols-1 gap-2 md:grid-cols-2">

@@ -3,6 +3,7 @@
  * Aligns with `prompt.md` plus data-centre portal Section 01–04 extras.
  */
 
+import { Asset } from "@/components";
 import type { MopImportantIndicatorId } from "@/constants/mop-section07-important-indicators";
 
 /** Stored on each detailed procedure row — `MopImportantIndicatorId` or none. */
@@ -368,6 +369,7 @@ export type MOP = {
   site: MOPSiteSection;
   overview: MOPSection03Overview;
   facilityEffects: MopFacilityEffectRow[];
+  asset: Asset
 };
 
 export type MOPGenerateContext = Partial<

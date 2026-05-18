@@ -171,28 +171,32 @@ export const useEopDocument = (
         });
         evtSource.addEventListener("assetData", (e) => {
           const data = JSON.parse(e.data);
-          setAssetData({ ...data, name: data.assetName });
+
+          setAssetData((prev) => ({
+            ...prev,
+            ...data,
+            name: data.assetName,
+          }));
         });
+
         evtSource.addEventListener("sectionOne", (e) => {
           const data = JSON.parse(e.data);
 
           setEop((prev) => ({
             ...prev,
-            equipment: data.equipment,
-            procedure: data.procedure,
-            document: data.document,
+            equipment: data?.equipment,
+            procedure: data?.procedure,
+            document: data?.document,
           }));
-
         });
+
         evtSource.addEventListener("siteDetails", (e) => {
           const data = JSON.parse(e.data);
 
           setEop((prev) => ({
             ...prev,
-            site: data
-
+            site: data,
           }));
-
         });
 
         evtSource.addEventListener("sectionThree", (e) => {
@@ -200,10 +204,8 @@ export const useEopDocument = (
 
           setEop((prev) => ({
             ...prev,
-            overview: data.overview
+            overview: data?.overview,
           }));
-
-
         });
 
         evtSource.addEventListener("sectionFourPreActionSafety", (e) => {
@@ -212,15 +214,13 @@ export const useEopDocument = (
           setEop((prev) => ({
             ...prev,
             immediateActions: {
-              ...prev.immediateActions,
+              ...(prev?.immediateActions || {}),
               preActionSafety: {
-                ...prev.immediateActions.preActionSafety,
-                ppeIntroText: data.ppeIntroText
-              }
-            }
+                ...(prev?.immediateActions?.preActionSafety || {}),
+                ppeIntroText: data?.ppeIntroText,
+              },
+            },
           }));
-
-
         });
 
         evtSource.addEventListener("sectionFourPPE", (e) => {
@@ -229,17 +229,14 @@ export const useEopDocument = (
           setEop((prev) => ({
             ...prev,
             immediateActions: {
-              ...prev.immediateActions,
+              ...(prev?.immediateActions || {}),
               preActionSafety: {
-                ...prev.immediateActions.preActionSafety,
-                ppeRows: data
-              }
-            }
+                ...(prev?.immediateActions?.preActionSafety || {}),
+                ppeRows: data,
+              },
+            },
           }));
-
-
         });
-
 
         evtSource.addEventListener("sectionFourTools", (e) => {
           const data = JSON.parse(e.data);
@@ -247,17 +244,14 @@ export const useEopDocument = (
           setEop((prev) => ({
             ...prev,
             immediateActions: {
-              ...prev.immediateActions,
+              ...(prev?.immediateActions || {}),
               preActionSafety: {
-                ...prev.immediateActions.preActionSafety,
-                toolRows: data
-              }
-            }
+                ...(prev?.immediateActions?.preActionSafety || {}),
+                toolRows: data,
+              },
+            },
           }));
-
-
         });
-
 
         evtSource.addEventListener("sectionFourSafetyRequirements", (e) => {
           const data = JSON.parse(e.data);
@@ -265,15 +259,13 @@ export const useEopDocument = (
           setEop((prev) => ({
             ...prev,
             immediateActions: {
-              ...prev.immediateActions,
+              ...(prev?.immediateActions || {}),
               preActionSafety: {
-                ...prev.immediateActions.preActionSafety,
-                safetyChecklistItems: data
-              }
-            }
+                ...(prev?.immediateActions?.preActionSafety || {}),
+                safetyChecklistItems: data,
+              },
+            },
           }));
-
-
         });
 
         evtSource.addEventListener("sectionFourDiagnostics", (e) => {
@@ -282,13 +274,12 @@ export const useEopDocument = (
           setEop((prev) => ({
             ...prev,
             immediateActions: {
-              ...prev.immediateActions,
+              ...(prev?.immediateActions || {}),
               internalDiagnostics: {
-                ...prev.immediateActions.internalDiagnostics,
-                diagnosticRows: data
-              }
-
-            }
+                ...(prev?.immediateActions?.internalDiagnostics || {}),
+                diagnosticRows: data,
+              },
+            },
           }));
         });
 
@@ -298,9 +289,9 @@ export const useEopDocument = (
           setEop((prev) => ({
             ...prev,
             externalActions: {
-              ...prev.externalActions,
-              actionRows: data
-            }
+              ...(prev?.externalActions || {}),
+              actionRows: data,
+            },
           }));
         });
 
@@ -310,9 +301,9 @@ export const useEopDocument = (
           setEop((prev) => ({
             ...prev,
             communication: {
-              ...prev.communication,
-              emergencyContactRows: data
-            }
+              ...(prev?.communication || {}),
+              emergencyContactRows: data,
+            },
           }));
         });
 
@@ -322,9 +313,9 @@ export const useEopDocument = (
           setEop((prev) => ({
             ...prev,
             recovery: {
-              ...prev.recovery,
-              resolutionVerificationItems: data
-            }
+              ...(prev?.recovery || {}),
+              resolutionVerificationItems: data,
+            },
           }));
         });
 
@@ -334,12 +325,11 @@ export const useEopDocument = (
           setEop((prev) => ({
             ...prev,
             recovery: {
-              ...prev.recovery,
-              preStartSafetyItems: data
-            }
+              ...(prev?.recovery || {}),
+              preStartSafetyItems: data,
+            },
           }));
         });
-
 
         evtSource.addEventListener("sectionSevenRestart", (e) => {
           const data = JSON.parse(e.data);
@@ -347,9 +337,9 @@ export const useEopDocument = (
           setEop((prev) => ({
             ...prev,
             recovery: {
-              ...prev.recovery,
-              restartSequenceItems: data
-            }
+              ...(prev?.recovery || {}),
+              restartSequenceItems: data,
+            },
           }));
         });
 
@@ -359,9 +349,9 @@ export const useEopDocument = (
           setEop((prev) => ({
             ...prev,
             recovery: {
-              ...prev.recovery,
-              functionalityRows: data
-            }
+              ...(prev?.recovery || {}),
+              functionalityRows: data,
+            },
           }));
         });
 
@@ -371,9 +361,9 @@ export const useEopDocument = (
           setEop((prev) => ({
             ...prev,
             recovery: {
-              ...prev.recovery,
-              performanceValidationItems: data
-            }
+              ...(prev?.recovery || {}),
+              performanceValidationItems: data,
+            },
           }));
         });
 
@@ -383,9 +373,9 @@ export const useEopDocument = (
           setEop((prev) => ({
             ...prev,
             recovery: {
-              ...prev.recovery,
-              returnToNormalItems: data
-            }
+              ...(prev?.recovery || {}),
+              returnToNormalItems: data,
+            },
           }));
         });
 
@@ -512,6 +502,8 @@ export const useEopDocument = (
 
           return;
         }
+
+        setAssetData(loaded.asset);
 
         setEop(loaded);
 
@@ -694,7 +686,7 @@ export const useEopDocument = (
             ...prev.immediateActions,
             preActionSafety: {
               ...prev.immediateActions
-                .preActionSafety,
+                ?.preActionSafety,
               ...p,
             },
           },

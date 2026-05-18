@@ -93,7 +93,7 @@ export const EopDocumentForm = ({
             />
             <EopSection06Communication
               communication={eop?.communication}
-              address={eop.site.siteAddress}
+              address={eop?.site?.siteAddress || ''}
               patchCommunication={patchCommunication}
             />
             <EopSection07Recovery

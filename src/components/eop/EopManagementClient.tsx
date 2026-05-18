@@ -1,6 +1,6 @@
 "use client";
 
-import { History } from "lucide-react";
+import { Download, History } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
@@ -19,13 +19,15 @@ import { EopDocumentForm } from "./EopDocumentForm";
 type EopManagementClientProps = {
   eopId?: string;
   documentId?: string;
+  noDownload?: boolean
 };
 
-export const EopManagementClient = ({ eopId, documentId }: EopManagementClientProps) => {
+export const EopManagementClient = ({ eopId, documentId, noDownload }: EopManagementClientProps) => {
   const router = useRouter();
   const isEdit = eopId !== undefined && eopId.trim() !== "";
   const resolvedEopId = isEdit ? eopId.trim() : undefined;
   const [isSaving, setIsSaving] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false)
 
   const applyVersionRef = useRef<(row: CanonicalEopVersionApiRow) => void>(
     () => { },
@@ -106,6 +108,28 @@ export const EopManagementClient = ({ eopId, documentId }: EopManagementClientPr
     void resetEop();
   }, [resetEop]);
 
+  const onDownload = async () => {
+    setIsDownloading(true)
+    const res = await fetch(`/api/eops/${eopId}/pdf`);
+
+    if (!res.ok) {
+      throw new Error("Failed to download PDF");
+    }
+
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${eop.document.title}-${new Date().toISOString()}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+
+    a.remove();
+    window.URL.revokeObjectURL(url);
+    setIsDownloading(false)
+  }
+
   if (isEdit && eopNotFound === true && isBootstrapping === false) {
     return (
       <SectionWrapper className="flex min-h-0 flex-1 flex-col">
@@ -174,6 +198,14 @@ export const EopManagementClient = ({ eopId, documentId }: EopManagementClientPr
           <Typography variant="h1" className="min-w-0 flex-1">
             Emergency Operating Procedure (EOP)
           </Typography>
+          {noDownload ? null : <AppButton
+            variant="secondary"
+            icon={<Download className="h-4 w-4" />}
+            title={isDownloading ? "Downloading..." : "Download"}
+            onClick={onDownload}
+            disabled={isBootstrapping || isDownloading}
+            className="shrink-0"
+          />}
           <AppButton
             variant="default"
             icon={<History className="h-4 w-4" />}

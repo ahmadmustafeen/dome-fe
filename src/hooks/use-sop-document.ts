@@ -47,6 +47,7 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
    */
 
   const [sop, setSop] = useState<SOP>(() => createEmptySop());
+  const [asset, setAsset] = useState({ name: "" });
 
   const [loadedKey, setLoadedKey] = useState<string | null>(null);
 
@@ -94,7 +95,7 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
         `${process.env.NEXT_PUBLIC_BASE_URL}/sop/generate?documentId=${documentId}`,
       );
       setIsGenerating(true);
-      
+
 
       evtSource.addEventListener("allData", (e) => {
         const data = JSON.parse(e.data);
@@ -401,6 +402,7 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
         const next = withReferenceTableBootstrap(loaded);
 
         setSop(next);
+        setAsset({ ...loaded.asset, name: loaded.asset.assetName })
 
         latestSopRef.current = next;
 
@@ -608,6 +610,8 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
     isBootstrapping,
 
     isGenerating,
+    
+    asset,
 
     generateError,
 

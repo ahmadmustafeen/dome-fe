@@ -20,12 +20,14 @@ import { SopVersionHistoryDrawer } from "./SopVersionHistoryDrawer";
 type SopManagementClientProps = {
   sopId?: string;
   documentId?: string
+  noDownload?: boolean
 };
 
-export const SopManagementClient = ({ sopId, documentId }: SopManagementClientProps) => {
+export const SopManagementClient = ({ sopId, documentId, noDownload }: SopManagementClientProps) => {
   const router = useRouter();
   const isEdit = sopId !== undefined && sopId.trim() !== "";
   const resolvedSopId = isEdit ? sopId.trim() : undefined;
+  const [isDownloading, setIsDownloading] = useState(false)
   const [isSaving, setIsSaving] = useState(false);
   const applyVersionRef = useRef<(row: CanonicalSopVersionApiRow) => void>(
     () => { },
@@ -142,6 +144,31 @@ export const SopManagementClient = ({ sopId, documentId }: SopManagementClientPr
     );
   }
 
+
+
+
+  const onDownload = async () => {
+    setIsDownloading(true)
+    const res = await fetch(`/api/sops/${sopId}/pdf`);
+
+    if (!res.ok) {
+      throw new Error("Failed to download PDF");
+    }
+
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${sop.document.title}-${new Date().toISOString()}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+
+    a.remove();
+    window.URL.revokeObjectURL(url);
+    setIsDownloading(false)
+  }
+
   return (
     <>
 
@@ -165,6 +192,9 @@ export const SopManagementClient = ({ sopId, documentId }: SopManagementClientPr
         }
         <SopManagementHeader
           isBootstrapping={isBootstrapping}
+          isDownloading={isDownloading}
+          onDownload={onDownload}
+          noDownload={noDownload}
           showVersionHistory={showVersionHistory}
           onOpenHistory={handleOpenHistory}
         />

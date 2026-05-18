@@ -19,7 +19,7 @@ export default function MopManagementCreatePage() {
         </Typography>
       }
     >
-      <MopManagementClient documentId={documentId} />
+      <MopManagementClient documentId={documentId} noDownload />
     </Suspense>
   );
 }

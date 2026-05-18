@@ -18,7 +18,7 @@ export default function EopManagementCreatePage() {
         </Typography>
       }
     >
-      <EopManagementClient documentId={documentId} />
+      <EopManagementClient documentId={documentId} noDownload />
     </Suspense>
   );
 }

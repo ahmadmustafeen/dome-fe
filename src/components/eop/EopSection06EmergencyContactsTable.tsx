@@ -44,7 +44,7 @@ export const EopSection06EmergencyContactsTable = ({
         {EOP_SECTION_06_EMERGENCY_SUBHEADING}
       </Typography>
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[900px] border-collapse text-sm">
+        <table className="w-full min-w-225 border-collapse text-sm">
           <thead>
             <tr className="bg-[#0f3456] text-white">
               <th className="px-3 py-2 text-left font-semibold">Service Type</th>

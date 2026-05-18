@@ -58,11 +58,11 @@ const EachSingleRow = ({
 };
 
 const SecondSectionKeys1 = (mop: EOP) => ([
-  { key: "Customer", value: mop.site.customer },
-  { key: "Site Name", value: mop.site.siteName },
-  { key: "Data Center Location:", value: mop.site.dataCenterLocation },
-  { key: "Site Address:", value: mop.site.siteAddress },
-  { key: "Site Contact:", value: mop.site.siteContact },
+  { key: "Customer", value: mop?.site?.customer },
+  { key: "Site Name", value: mop?.site?.siteName },
+  { key: "Data Center Location:", value: mop?.site?.dataCenterLocation },
+  { key: "Site Address:", value: mop?.site?.siteAddress },
+  { key: "Site Contact:", value: mop?.site?.siteContact },
 ])
 
 const ThirdSectionKeys1 = (mop: EOP) => ([
@@ -469,7 +469,7 @@ const SixthSection = (props: EOP) => {
 
       <div className="mt-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-900">
         <span className="mr-1 font-semibold">✓</span>
-        {EOP_SECTION_06_RESEARCHED_NOTE(props.site.siteAddress)}
+        {EOP_SECTION_06_RESEARCHED_NOTE(props?.site?.siteAddress)}
       </div>
 
       <EachRow item={{ "key": "Contact Name", value: props.communication.verificationContactName }} className="w-full" />

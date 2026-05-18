@@ -1,3 +1,4 @@
+import { Asset } from "@/components";
 import type { MOPStatus, RiskLevelOrEmpty } from "@/types/mop";
 import type { ProcedureFacilityEffectRow } from "@/types/procedure-facility";
 import type { SOPApproval } from "@/types/sop-approval";
@@ -181,4 +182,5 @@ export type SOP = {
   approval: SOPApproval;
   comments: SOPComments;
   references: SOPReferences;
+  asset: Asset;
 };

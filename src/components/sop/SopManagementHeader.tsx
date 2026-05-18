@@ -1,18 +1,24 @@
 "use client";
 
-import { History } from "lucide-react";
+import { Download, History } from "lucide-react";
 
 import { AppButton, Typography } from "@/components/common";
 
 type SopManagementHeaderProps = {
   isBootstrapping: boolean;
   showVersionHistory: boolean;
+  isDownloading: boolean;
+  onDownload: () => void,
+  noDownload?: boolean;
   onOpenHistory: () => void;
 };
 
 export const SopManagementHeader = ({
   isBootstrapping,
   showVersionHistory,
+  isDownloading,
+  noDownload,
+  onDownload,
   onOpenHistory,
 }: SopManagementHeaderProps) => {
   return (
@@ -20,6 +26,14 @@ export const SopManagementHeader = ({
       <Typography variant="h1" className="min-w-0 flex-1">
         Standard Operating Procedure (SOP)
       </Typography>
+      {!noDownload ? <AppButton
+        variant="secondary"
+        icon={<Download className="h-4 w-4" />}
+        title={isDownloading ? "Downloading..." : "Download"}
+        onClick={onDownload}
+        disabled={isBootstrapping || isDownloading}
+        className="shrink-0"
+      /> : null}
       <AppButton
         variant="default"
         icon={<History className="h-4 w-4" />}

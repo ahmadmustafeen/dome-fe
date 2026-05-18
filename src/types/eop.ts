@@ -1,3 +1,4 @@
+import { Asset } from "@/components";
 import type { MOPStatus, RiskLevelOrEmpty } from "@/types/mop";
 
 export type EOPDocument = {
@@ -235,4 +236,5 @@ export type EOP = {
   recovery: EOPSection07Recovery;
   supportingInformation: EOPSection08SupportingInformation;
   approvalReview: EOPSection09ApprovalReview;
+  asset: Asset;
 };

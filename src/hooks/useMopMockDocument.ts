@@ -370,6 +370,8 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
         if (remote !== null) {
           latestSavedCanonicalRef.current = remote;
           setMop(remote);
+          setAsset({ ...remote.asset, name: remote.asset.assetName })
+
           setMopNotFound(false);
         } else {
           setMop(createEmptyMop());

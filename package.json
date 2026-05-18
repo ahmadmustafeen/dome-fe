@@ -22,6 +22,7 @@
     "@arcjet/next": "^1.0.0",
     "@hookform/resolvers": "^5.2.2",
     "@logtape/logtape": "^2.0.2",
+    "@sparticuz/chromium-min": "^148.0.0",
     "@t3-oss/env-nextjs": "^0.13.10",
     "@tanstack/react-table": "^8.21.3",
     "@tiptap/pm": "^3.22.1",

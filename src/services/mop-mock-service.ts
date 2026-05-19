@@ -176,6 +176,7 @@ const emptyOverview = (): MOPSection03Overview => ({
 });
 
 export const createEmptyMop = (): MOP => ({
+  generatedDocumentId: "",
   asset: {
     _id: "",
     serialNumber: "",
@@ -322,7 +323,8 @@ export const getAutoFilledContext = (params: {
 };
 
 export const MOCK_GENERATED_MOP: MOP = {
-   asset: {
+  generatedDocumentId: "",
+  asset: {
     _id: "",
     serialNumber: "",
     assetId: "",

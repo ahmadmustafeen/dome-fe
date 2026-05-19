@@ -21,8 +21,6 @@ export async function GET(
         console.log(
           `[PDF Generation] Running in serverless environment, using @sparticuz/chromium-min`
         );
-        const before = fs.readdirSync("/tmp");
-
         browser = await chromium.launch({
           headless: true,
           executablePath: await chromiumMin.executablePath(

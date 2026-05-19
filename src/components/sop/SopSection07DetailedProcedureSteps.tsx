@@ -29,6 +29,7 @@ export const SopSection07DetailedProcedureSteps = ({
     <ProcedureFixedStepEditableRowsTable
       rows={rows}
       columns={DETAILED_PROCEDURE_STEP_COLUMNS}
+      className="bg-[#0F4D2E]!"
       ariaLabelGroup="SOP detailed procedure steps row controls"
       newRow={newSopDetailedProcedureStepRow}
       onRowsChange={(detailedProcedureStepRows) =>

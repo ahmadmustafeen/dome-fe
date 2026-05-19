@@ -81,7 +81,7 @@ const FirstSection = (props: SOP) => {
       className="bg-cover rounded-lg bg-center bg-no-repeat px-5 py-7 text-center sm:px-8 sm:py-9"
       style={{
         backgroundImage:
-          "linear-gradient(to bottom, rgba(10, 22, 40, 0.92) 0%, rgba(16, 35, 64, 0.92) 100%)",
+          "linear-gradient(to bottom, rgba(10, 40, 22, 0.92) 0%, rgba(16, 64, 35, 0.92) 100%)",
       }}
     >
       <Typography
@@ -150,7 +150,7 @@ const FourthSection = (props: SOP) => {
       </div>
       <div className="pdf-page">
         <table className="w-full border-collapse text-sm ">
-          <thead className="bg-[#0E3456]">
+          <thead className="bg-[#0F4D2E]">
             <tr className=" text-white">
               <th className="border border-black p-3 text-left">
                 ID
@@ -203,7 +203,7 @@ const FifthSection = (props: SOP) => {
       <div className="pdf-page">
         <p className="font-semibold text-lg py-4">PPE requirements specific to maintenance:</p>
         <table className="w-full border-collapse text-sm ">
-          <thead className="bg-[#0E3456]">
+          <thead className="bg-[#0F4D2E]">
             <tr className=" text-white">
               <th className="border border-black p-3 text-left">
                 PPE Category
@@ -242,7 +242,7 @@ const FifthSection = (props: SOP) => {
           Specific tools required for {props.asset.assetName} {props.document.title} based on equipment type and task:
         </Typography>
         <table className="w-full border-collapse text-sm ">
-          <thead className="bg-[#0E3456]">
+          <thead className="bg-[#0F4D2E]">
             <tr className=" text-white">
               <th className="border border-black p-3 text-left">
                 Tool/Equipment
@@ -284,7 +284,7 @@ const FifthSection = (props: SOP) => {
         {/* emergency Contacts */}
         <p className="font-semibold text-lg py-4">EMERGENCY CONTACTS:</p>
         <table className="w-full border-collapse text-sm ">
-          <thead className="bg-[#0E3456]">
+          <thead className="bg-[#0F4D2E]">
             <tr className=" text-white">
               <th className="border border-black p-3 text-left">
                 Emergency Type
@@ -321,7 +321,7 @@ const FifthSection = (props: SOP) => {
         </div>
 
         <table className="w-full border-collapse text-sm ">
-          <thead className="bg-[#0E3456]">
+          <thead className="bg-[#0F4D2E]">
             <tr className=" text-white">
               <th className="border border-black p-3 text-left">
                 Hazard Type
@@ -365,7 +365,7 @@ const SixthSection = (props: SOP) => {
       </div>
       <p className="font-semibold text-lg py-4">Risk Analysis Matrix:</p>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#0F4D2E]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Risk Category
@@ -410,7 +410,7 @@ const SixthSection = (props: SOP) => {
 
       <p className="font-semibold text-lg py-4">Key Project Assumptions:</p>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#0F4D2E]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Category
@@ -459,7 +459,7 @@ const SeventhSection = (props: SOP) => {
       </div>
       <p className="font-semibold text-lg py-2">7.1 Pre-Procedure Checks:</p>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#0F4D2E]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Description
@@ -498,7 +498,7 @@ const SeventhSection = (props: SOP) => {
 
       <p className="font-semibold text-lg py-4">7.2 Detailed Procedure Steps</p>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#0F4D2E]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Description
@@ -552,7 +552,7 @@ const EigthSection = (props: SOP) => {
         <h2 className="font-semibold text-lg">Section 08: Back-out Procedures</h2>
       </div>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#0F4D2E]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Description
@@ -593,7 +593,7 @@ const NinthSection = (props: SOP) => {
         <h2 className="font-semibold text-lg">Section 09: SOP Approval</h2>
       </div>
       <table className="w-full border-collapse text-sm mt-4 ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#0F4D2E]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Review Stage
@@ -729,7 +729,7 @@ const EleventhSection = (props: SOP) => {
       </Typography>
       <p className="font-semibold text-lg py-2">Equipment-Specific Documentation</p>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#0F4D2E]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Document Type
@@ -765,7 +765,7 @@ const EleventhSection = (props: SOP) => {
 
       <p className="font-semibold text-lg py-2">Safety Standards and Guidelines</p>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#0F4D2E]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Standard
@@ -802,7 +802,7 @@ const EleventhSection = (props: SOP) => {
 
       <p className="font-semibold text-lg py-2 mt-4">Additional Resources</p>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#0F4D2E]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Resources
@@ -850,7 +850,7 @@ const EleventhSection = (props: SOP) => {
 
       <p className="font-semibold text-lg py-2">Verification Notice</p>
       <div className="section-container-7">
-        <EachSingleRow item={{ text: props.references.verificationNotice }}  noIcon/>
+        <EachSingleRow item={{ text: props.references.verificationNotice }} noIcon />
       </div>
 
     </div>

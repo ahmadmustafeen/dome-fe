@@ -20,6 +20,7 @@ export const SopSection05HazardsBlock = ({
     <ProcedureEditableRowsTable
       rows={rows}
       columns={SOP_SECTION_05_HAZARD_COLUMNS}
+      className="bg-[#0F4D2E]!"
       ariaLabelGroup="SOP site hazards table row controls"
       newRow={newSopSiteHazardRow}
       onRowsChange={(siteHazardRows: SOPSiteHazardRow[]) =>

@@ -23,6 +23,7 @@ export const SopSection05EmergencyBlock = ({
     <ProcedureEditableRowsTable
       rows={rows}
       columns={SOP_SECTION_05_EMERGENCY_COLUMNS}
+      className="bg-[#0F4D2E]!"
       ariaLabelGroup="SOP emergency contacts table row controls"
       newRow={newSopEmergencyContactRow}
       onRowsChange={(emergencyContactRows: SOPEmergencyContactRow[]) =>

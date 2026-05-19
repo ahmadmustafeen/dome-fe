@@ -32,6 +32,7 @@ export const SopSection08BackOutProcedures = ({
       <ProcedureSectionCard heading={SOP_SECTION_08_HEADING}>
         <ProcedureFixedStepEditableRowsTable
           rows={backOutProcedures?.rows}
+          className="bg-[#0F4D2E]!"
           columns={BACK_OUT_PROCEDURE_COLUMNS}
           ariaLabelGroup="SOP back-out procedures row controls"
           newRow={newSopBackOutProcedureRow}

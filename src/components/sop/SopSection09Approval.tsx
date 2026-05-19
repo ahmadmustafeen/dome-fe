@@ -38,9 +38,9 @@ export const SopSection09Approval = ({
     <div className="mt-5 sm:mt-6">
       <ProcedureSectionCard heading={SOP_SECTION_09_HEADING}>
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[760px] border-collapse text-sm">
+          <table className="w-full min-w-190 border-collapse text-sm">
             <thead>
-              <tr className="bg-[#0f3456] text-white">
+              <tr className="bg-[#0F4D2E] text-white">
                 <th className="px-3 py-2 text-left font-semibold">
                   {SOP_SECTION_09_TABLE_HEADERS.reviewStage}
                 </th>

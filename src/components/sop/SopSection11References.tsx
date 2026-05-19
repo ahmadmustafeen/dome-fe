@@ -71,6 +71,7 @@ export const SopSection11References = ({
         <ProcedureEditableRowsTable
           rows={references.equipmentDocumentRows}
           columns={EQUIPMENT_DOCUMENT_COLUMNS}
+          className="bg-[#0F4D2E]!"
           ariaLabelGroup="SOP equipment documentation row controls"
           newRow={newSopReferenceDocumentRow}
           onRowsChange={(equipmentDocumentRows) =>
@@ -85,6 +86,7 @@ export const SopSection11References = ({
         <ProcedureEditableRowsTable
           rows={references.safetyStandardRows}
           columns={SAFETY_STANDARD_COLUMNS}
+          className="bg-[#0F4D2E]!"
           ariaLabelGroup="SOP safety standards row controls"
           newRow={newSopSafetyStandardRow}
           onRowsChange={(safetyStandardRows) =>
@@ -99,6 +101,7 @@ export const SopSection11References = ({
         <ProcedureEditableRowsTable
           rows={references.additionalResourceRows}
           columns={ADDITIONAL_RESOURCE_COLUMNS}
+          className="bg-[#0F4D2E]!"
           ariaLabelGroup="SOP additional resources row controls"
           newRow={newSopAdditionalResourceRow}
           onRowsChange={(additionalResourceRows) =>

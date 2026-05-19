@@ -28,6 +28,7 @@ export const SopSection07PreProcedureChecks = ({
     <ProcedureFixedStepEditableRowsTable
       rows={rows}
       columns={PRE_PROCEDURE_CHECK_COLUMNS}
+      className="bg-[#0F4D2E]!"
       ariaLabelGroup="SOP pre-procedure checks row controls"
       newRow={newSopPreProcedureCheckRow}
       onRowsChange={(preProcedureCheckRows) =>

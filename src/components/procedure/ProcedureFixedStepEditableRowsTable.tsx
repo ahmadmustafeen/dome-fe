@@ -25,6 +25,7 @@ type ProcedureFixedStepEditableRowsTableProps<
   ariaLabelGroup: string;
   newRow: () => TRow;
   onRowsChange: (rows: TRow[]) => void;
+  className?: string;
 };
 
 const renumberRows = <TRow extends { step: number }>(rows: TRow[]): TRow[] =>
@@ -52,6 +53,7 @@ export const ProcedureFixedStepEditableRowsTable = <
   ariaLabelGroup,
   newRow,
   onRowsChange,
+  className
 }: ProcedureFixedStepEditableRowsTableProps<TRow, TField>) => {
   const normalizedRows = renumberRows(rows);
 
@@ -59,7 +61,7 @@ export const ProcedureFixedStepEditableRowsTable = <
     <div className="overflow-x-auto">
       <table className="w-full min-w-[900px] border-collapse text-sm">
         <thead>
-          <tr className="bg-[#0f3456] text-white">
+          <tr className={`bg-[#0f3456] text-white ${className}`}>
             <th className="w-16 px-3 py-2 text-center font-semibold">Step</th>
             {columns.map((column) => (
               <th key={column.field} className="px-3 py-2 text-left font-semibold">

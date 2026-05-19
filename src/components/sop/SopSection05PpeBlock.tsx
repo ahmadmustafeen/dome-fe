@@ -21,6 +21,7 @@ export const SopSection05PpeBlock = ({
       rows={rows}
       columns={SOP_SECTION_05_PPE_COLUMNS}
       ariaLabelGroup="SOP PPE table row controls"
+      className="bg-[#0F4D2E]!"
       newRow={newSopPpeRequirementRow}
       onRowsChange={(ppeRequirementRows: SOPPpeRequirementRow[]) =>
         patchSafety({ ppeRequirementRows })}

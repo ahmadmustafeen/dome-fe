@@ -19,6 +19,7 @@ export const SopSection05ToolsBlock = ({
   return (
     <ProcedureEditableRowsTable
       rows={rows}
+      className="bg-[#0F4D2E]!"
       columns={SOP_SECTION_05_TOOL_COLUMNS}
       ariaLabelGroup="SOP tools table row controls"
       newRow={newSopToolRequirementRow}

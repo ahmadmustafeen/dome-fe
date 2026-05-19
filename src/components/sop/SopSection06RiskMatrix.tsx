@@ -20,6 +20,7 @@ export const SopSection06RiskMatrix = ({
     <ProcedureEditableRowsTable
       rows={rows}
       columns={SOP_SECTION_06_RISK_COLUMNS}
+      className="bg-[#0F4D2E]!"
       ariaLabelGroup="SOP risk analysis table row controls"
       newRow={newSopRiskAnalysisRow}
       onRowsChange={(riskAnalysisRows: SOPRiskAnalysisRow[]) =>

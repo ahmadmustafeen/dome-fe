@@ -20,6 +20,7 @@ export const SopSection06KeyAssumptionsTable = ({
     <ProcedureEditableRowsTable
       rows={rows}
       columns={SOP_SECTION_06_KEY_ASSUMPTION_COLUMNS}
+      className="bg-[#0F4D2E]!"
       ariaLabelGroup="SOP key assumptions table row controls"
       newRow={newSopKeyAssumptionRow}
       onRowsChange={(keyAssumptionRows: SOPKeyAssumptionRow[]) =>

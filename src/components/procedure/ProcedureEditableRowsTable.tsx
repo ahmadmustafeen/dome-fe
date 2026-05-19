@@ -25,6 +25,7 @@ type ProcedureEditableRowsTableProps<
   ariaLabelGroup: string;
   newRow: () => TRow;
   onRowsChange: (rows: TRow[]) => void;
+  className?: string
 };
 
 const patchCell = <
@@ -50,12 +51,13 @@ export const ProcedureEditableRowsTable = <
   ariaLabelGroup,
   newRow,
   onRowsChange,
+  className,
 }: ProcedureEditableRowsTableProps<TRow, TField>) => {
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[900px] border-collapse text-sm">
         <thead>
-          <tr className="bg-[#0f3456] text-white">
+          <tr className={`bg-[#0f3456] text-white ${className}`}>
             {columns.map((column) => (
               <th key={column.field} className="px-3 py-2 text-left font-semibold">
                 {column.header}

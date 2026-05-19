@@ -507,14 +507,14 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
    * ----------------------------------------------------------------
    */
 
-  const persistSop = useCallback(async () => {
+  const persistSop = useCallback(async (generatedDocumentId?: string) => {
     const id = mode === "create" ? "new" : sopId?.trim() ?? "";
 
     if (id === "") {
       throw new Error("SOP id is required to save");
     }
 
-    const saved = await saveSOP(sop, id, site?._id, documentId);
+    const saved = await saveSOP(sop, id, site?._id, documentId ?? generatedDocumentId);
 
     const next = withReferenceTableBootstrap(saved);
 
@@ -610,7 +610,7 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
     isBootstrapping,
 
     isGenerating,
-    
+
     asset,
 
     generateError,

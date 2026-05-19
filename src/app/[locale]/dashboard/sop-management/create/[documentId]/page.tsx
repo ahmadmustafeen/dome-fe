@@ -18,7 +18,7 @@ export default function SopManagementCreatePage() {
         </Typography>
       }
     >
-      <SopManagementClient documentId={documentId} />
+      <SopManagementClient documentId={documentId} noDownload/>
     </Suspense>
   );
 }

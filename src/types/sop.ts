@@ -183,4 +183,5 @@ export type SOP = {
   comments: SOPComments;
   references: SOPReferences;
   asset: Asset;
+  generatedDocumentId: string;
 };

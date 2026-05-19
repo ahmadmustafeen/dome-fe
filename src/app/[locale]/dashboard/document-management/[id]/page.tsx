@@ -2,15 +2,17 @@
 
 import { documentService } from "@/services/document-service";
 import { useRouter } from "next/navigation";
-import { use, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 type PageProps = {
-  params: Promise<{ id: string }>;
+  params: {
+    id: string;
+  };
 };
 
 export default function PolicyEditor({ params }: PageProps) {
-  const { id } = use(params);
+  const { id } = params;
   const router = useRouter();
 
   const [form, setForm] = useState({});

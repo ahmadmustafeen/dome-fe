@@ -3,7 +3,7 @@ import type { Row } from "@tanstack/react-table";
 import { ArrowLeft, Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { use, useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   AppButton,
@@ -39,11 +39,13 @@ import { extractDocumentName } from "@/utils/formatters";
 const PAGE_SIZE = 10;
 
 type PageProps = {
-  params: Promise<{ categoryId: string }>;
+  params: {
+    categoryId: string;
+  };
 };
 
 export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
-  const { categoryId } = use(params);
+  const { categoryId } = params;
   const t = useTranslations("MaintenanceCategoryDetail");
   const router = useRouter();
   const [categoryRow, setCategoryRow] = useState<CategoryAsset[]>([]);

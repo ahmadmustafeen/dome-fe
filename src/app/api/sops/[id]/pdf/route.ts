@@ -63,7 +63,7 @@ export async function GET(
       });
 
       const page = await context.newPage();
-      const url = `${process.env.NEXT_PUBLIC_FE_URL}/mops/${id}/print`;
+      const url = `${process.env.NEXT_PUBLIC_FE_URL}/sops/${id}/print`;
 
 
       await page.goto(url, {

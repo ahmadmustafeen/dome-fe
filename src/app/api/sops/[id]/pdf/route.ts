@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { chromium } from "playwright";
+import { chromium } from "playwright-core";
 
 async function generatePdf(url: string) {
   const browser = await chromium.launch({

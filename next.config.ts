@@ -10,6 +10,10 @@ const baseConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: false,
   reactCompiler: process.env.NODE_ENV === 'production', // Keep the development environment fast
+  serverExternalPackages: [
+    "playwright-core",
+    "@sparticuz/chromium-min"
+  ],
   outputFileTracingIncludes: {
     '/': ['./migrations/**/*'],
   },

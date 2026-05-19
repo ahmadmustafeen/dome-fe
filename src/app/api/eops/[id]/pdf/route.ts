@@ -1,3 +1,7 @@
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+
 import { NextRequest, NextResponse } from "next/server";
 import { chromium } from "playwright-core";
 import chromiumMin from "@sparticuz/chromium-min";
@@ -21,11 +25,12 @@ export async function GET(
         console.log(
           `[PDF Generation] Running in serverless environment, using @sparticuz/chromium-min`
         );
+        const executablePath = await chromiumMin.executablePath(
+          "https://github.com/Sparticuz/chromium/releases/download/v131.0.0/chromium-v131.0.0-pack.tar"
+        );
         browser = await chromium.launch({
+          executablePath,
           headless: true,
-          executablePath: await chromiumMin.executablePath(
-            "https://github.com/Sparticuz/chromium/releases/download/v131.0.0/chromium-v131.0.0-pack.tar"
-          ),
           args: [
             ...chromiumMin.args,
             "--disable-web-security",

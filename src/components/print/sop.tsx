@@ -500,13 +500,13 @@ const SeventhSection = (props: SOP) => {
       <table className="w-full border-collapse text-sm ">
         <thead className="bg-[#0F4D2E]">
           <tr className=" text-white">
-            <th className="border max-w-28 border-black p-3 text-left">
+            <th className="border max-w-40 border-black p-3 text-left">
               Description
             </th>
-            <th className="border max-w-28 border-black p-3 text-left">
+            <th className="border max-w-40 border-black p-3 text-left">
               Expected Range
             </th>
-            <th className="border max-w-28 border-black p-3 text-left">
+            <th className="border border-black p-3 text-left">
               Source
             </th>
             <th className="border border-black p-3 text-left">
@@ -522,10 +522,10 @@ const SeventhSection = (props: SOP) => {
         <tbody className="">
           {props.details.detailedProcedureStepRows.map((row, index) => (
             <tr key={index}>
-              <td className="border border-black p-3 align-top">
+              <td className="border max-w-40 border-black p-3 align-top">
                 {row.description}
               </td>
-              <td className="border border-black p-3 align-top">
+              <td className="border max-w-40 border-black p-3 align-top">
                 {row.expectedRange}
               </td>
               <td className="border border-black p-3 align-top">

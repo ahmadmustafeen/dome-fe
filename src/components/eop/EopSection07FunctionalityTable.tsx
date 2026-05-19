@@ -44,7 +44,7 @@ export const EopSection07FunctionalityTable = ({
   <div className="mt-4 overflow-x-auto">
     <table className="w-full min-w-[820px] border-collapse text-sm">
       <thead>
-        <tr className="bg-[#0f3456] text-white">
+        <tr className="bg-[#5A1A1A] text-white">
           <th className="px-3 py-2 text-left font-semibold">Parameter</th>
           <th className="px-3 py-2 text-left font-semibold">Expected Range</th>
           <th className="px-3 py-2 text-left font-semibold">Actual Reading</th>

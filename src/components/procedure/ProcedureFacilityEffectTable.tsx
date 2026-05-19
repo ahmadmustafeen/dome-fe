@@ -64,12 +64,13 @@ export const ProcedureFacilityEffectTable = <TKey extends string>({
   namePrefix,
   clearDetailsWhenNotYes = true,
   onChange,
+  className
 }: ProcedureFacilityEffectTableProps<TKey>) => {
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-160 border-collapse text-sm">
         <thead>
-          <tr className="bg-[#0F4D2E] text-white">
+          <tr className={`bg-[#0f3456]  text-white ${className}`}>
             <th className="px-3 py-2 text-left font-semibold">
               Facility Equipment or System
             </th>

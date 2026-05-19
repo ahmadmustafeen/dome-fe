@@ -16,5 +16,6 @@ export type ProcedureFacilityEffectTableProps<TKey extends string> = {
   effects: ProcedureFacilityEffectRow<TKey>[];
   namePrefix: string;
   clearDetailsWhenNotYes?: boolean;
+  className?: string
   onChange: (rows: ProcedureFacilityEffectRow<TKey>[]) => void;
 };

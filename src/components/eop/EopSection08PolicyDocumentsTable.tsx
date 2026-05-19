@@ -50,7 +50,7 @@ export const EopSection08PolicyDocumentsTable = ({
     <div className="overflow-x-auto">
       <table className="w-full min-w-[640px] border-collapse text-sm">
         <thead>
-          <tr className="bg-[#0f3456] text-white">
+          <tr className="bg-[#5A1A1A] text-white">
             <th className="px-3 py-2 text-left font-semibold">Policy Document</th>
             <th className="w-40 px-3 py-2 text-left font-semibold">Upload Date</th>
             <th className="w-44 px-3 py-2 text-left font-semibold">Type</th>

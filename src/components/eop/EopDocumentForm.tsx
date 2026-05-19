@@ -61,7 +61,7 @@ export const EopDocumentForm = ({
 }: EopDocumentFormProps) => {
   return (
     <div className="mop-portal-form-root min-h-0 w-full flex-1 overflow-x-hidden bg-linear-to-b from-white to-[#f9fafb] py-2 pr-1 pb-6">
-      <MopPortalShell bannerSubtitle={eop?.document?.title || "Loading"}>
+      <MopPortalShell bannerSubtitle={eop?.document?.title || "Loading"} type="eop">
         {isBootstrapping ? (
           <Typography variant="p" className="text-gray-500">
             Loading example EOP…

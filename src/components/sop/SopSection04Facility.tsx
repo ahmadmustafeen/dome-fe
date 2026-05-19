@@ -24,6 +24,7 @@ export const SopSection04Facility = ({
           systemRows={SOP_SECTION_04_SYSTEM_ROWS}
           effects={facilityEffects}
           namePrefix="sop-facility"
+          className="bg-[#0F4D2E]!"
           clearDetailsWhenNotYes={false}
           onChange={patchFacilityEffects}
         />

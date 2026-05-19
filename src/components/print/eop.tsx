@@ -83,7 +83,7 @@ const FirstSection = (props: EOP) => {
       className="bg-cover rounded-lg bg-center bg-no-repeat px-5 py-7 text-center sm:px-8 sm:py-9"
       style={{
         backgroundImage:
-          "linear-gradient(to bottom, rgba(10, 22, 40, 0.92) 0%, rgba(16, 35, 64, 0.92) 100%)",
+          "linear-gradient(to bottom, rgba(74, 20, 20, 0.92) 0%, rgba(107, 31, 31, 0.92) 100%)"
       }}
     >
       <Typography
@@ -162,7 +162,7 @@ const FourthSection = (props: EOP) => {
 
       <p className="font-semibold text-lg py-4">Equipment-Specific PPE Requirements for {assetName}</p>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#5A1A1A]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               PPE Item
@@ -197,7 +197,7 @@ const FourthSection = (props: EOP) => {
 
       <p className="font-semibold text-lg py-4">Required Tools & Test Equipment for {assetName}</p>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#5A1A1A]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Tool/Equipment
@@ -253,7 +253,7 @@ const FourthSection = (props: EOP) => {
       </Typography>
 
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#5A1A1A]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Step Number
@@ -320,7 +320,7 @@ const FifthSection = (props: EOP) => {
       </Typography>
 
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#5A1A1A]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Step Number
@@ -390,7 +390,7 @@ const SixthSection = (props: EOP) => {
 
       <p className="font-semibold text-lg my-4">Escalation Matrix</p>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#5A1A1A]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Level
@@ -430,7 +430,7 @@ const SixthSection = (props: EOP) => {
 
       <p className="font-semibold text-lg my-4">Emergency Contacts</p>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#5A1A1A]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Service Type
@@ -547,7 +547,7 @@ const SeventhSection = (props: EOP) => {
 
 
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#5A1A1A]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Parameter
@@ -649,7 +649,7 @@ const EighthSection = (props: EOP) => {
 
 
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#5A1A1A]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Policy Document
@@ -686,7 +686,7 @@ const EighthSection = (props: EOP) => {
 
       <p className="font-semibold text-lg my-4">Critical Infrastructure Locations</p>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#5A1A1A]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Infrastructure Element
@@ -723,7 +723,7 @@ const EighthSection = (props: EOP) => {
         Critical spare parts for {assetName} emergency response:
       </Typography>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#5A1A1A]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Part Description
@@ -786,7 +786,7 @@ const NinthSection = (props: EOP) => {
         <h2 className="font-semibold text-lg">Section 09: EOP Approval & Review</h2>
       </div>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#5A1A1A]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Role

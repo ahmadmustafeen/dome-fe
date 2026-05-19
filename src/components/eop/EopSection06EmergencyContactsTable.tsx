@@ -46,7 +46,7 @@ export const EopSection06EmergencyContactsTable = ({
       <div className="overflow-x-auto">
         <table className="w-full min-w-225 border-collapse text-sm">
           <thead>
-            <tr className="bg-[#0f3456] text-white">
+            <tr className="bg-[#5A1A1A] text-white">
               <th className="px-3 py-2 text-left font-semibold">Service Type</th>
               <th className="px-3 py-2 text-left font-semibold">Contact Name/Organization</th>
               <th className="px-3 py-2 text-left font-semibold">Phone Number</th>

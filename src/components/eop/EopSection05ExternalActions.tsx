@@ -70,7 +70,7 @@ export const EopSection05ExternalActions = ({
       <div className="overflow-x-auto">
         <table className="w-full min-w-[1200px] border-collapse text-sm">
           <thead>
-            <tr className="bg-[#0f3456] text-white">
+            <tr className="bg-[#5A1A1A] text-white">
               <th className="w-24 px-3 py-2 text-left font-semibold">Step Number</th>
               <th className="px-3 py-2 text-left font-semibold">
                 External Equipment/System to Check

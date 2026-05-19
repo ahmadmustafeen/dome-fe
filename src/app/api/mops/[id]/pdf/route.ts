@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { chromium } from "playwright-core";
+import { chromium } from "playwright";
 import chromiumMin from "@sparticuz/chromium-min";
 import fs from "fs";
 import path from "path";

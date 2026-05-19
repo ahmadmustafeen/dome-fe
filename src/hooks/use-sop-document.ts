@@ -300,6 +300,40 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
         }));
       });
 
+      evtSource.addEventListener("equipmentSpecificDocumentation", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("equipmentSpecificDocumentation failed");
+          return;
+        }
+
+
+        setSop((prev: any) => ({
+          ...prev,
+          references: {
+            ...prev?.references,
+            equipmentDocumentRows: data,
+          }
+        }));
+      });
+
+      evtSource.addEventListener("additionalDocumentation", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("additionalDocumentation failed");
+          return;
+        }
+
+
+        setSop((prev: any) => ({
+          ...prev,
+          references: {
+            ...prev?.references,
+            additionalResourceRows: data
+          }
+        }));
+      });
+
       evtSource.addEventListener("done", () => {
         toast.success("Succesfully generated, Please save the document manually.");
         setIsGenerating(false)
@@ -311,26 +345,13 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
         evtSource.close();
       });
 
+      
 
       setSop((prev) => ({
         ...createEmptySop(),
         ...prev,
         loading: true,
       }));
-
-
-      // const generated = await generateSOP();
-
-      // const next = withReferenceTableBootstrap(generated);
-
-
-      // setSop((prev) => ({
-      //   ...prev,
-      //   ...next,
-      // }));
-
-      // latestSopRef.current = next;
-
 
       setSop((prev) => ({
         ...prev,

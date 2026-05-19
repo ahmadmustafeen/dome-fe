@@ -93,7 +93,7 @@ export const EopManagementClient = ({ eopId, documentId, noDownload }: EopManage
   const handleSave = useCallback(async () => {
     setIsSaving(true);
     try {
-      await persistEop();
+      await persistEop(eop.generatedDocumentId);
       if (isEdit) {
         toast.success("EOP updated successfully");
       }

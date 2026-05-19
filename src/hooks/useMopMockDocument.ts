@@ -601,7 +601,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
       if (id === "") {
         throw new Error("MOP id is required to save");
       }
-      const saved = await saveMOP(mop, id, undefined, site?._id);
+      const saved = await saveMOP(mop, id, mop.generatedDocumentId, site?._id);
       setMop(saved);
       latestSavedCanonicalRef.current = saved;
       preArchiveDraftRef.current = saved;

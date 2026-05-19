@@ -94,6 +94,10 @@ export const SopManagementClient = ({ sopId, documentId, noDownload }: SopManage
     },
   });
 
+
+  console.log({s: sop.generatedDocumentId});
+  
+
   applyVersionRef.current = applyCanonicalVersionRow;
 
   const showVersionHistory = isEdit && resolvedSopId !== undefined;
@@ -111,7 +115,7 @@ export const SopManagementClient = ({ sopId, documentId, noDownload }: SopManage
   const handleSave = useCallback(async () => {
     setIsSaving(true);
     try {
-      await persistSop();
+      await persistSop(sop.generatedDocumentId);
       if (isEdit) {
         toast.success("SOP updated successfully");
       }

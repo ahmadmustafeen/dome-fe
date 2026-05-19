@@ -370,6 +370,7 @@ export type MOP = {
   overview: MOPSection03Overview;
   facilityEffects: MopFacilityEffectRow[];
   asset: Asset
+  generatedDocumentId: string
 };
 
 export type MOPGenerateContext = Partial<

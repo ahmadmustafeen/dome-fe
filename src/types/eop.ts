@@ -237,4 +237,5 @@ export type EOP = {
   supportingInformation: EOPSection08SupportingInformation;
   approvalReview: EOPSection09ApprovalReview;
   asset: Asset;
+  generatedDocumentId: string
 };

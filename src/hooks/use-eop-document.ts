@@ -811,7 +811,7 @@ export const useEopDocument = (
    * ------------------------------------------------
    */
 
-  const persistEop = useCallback(async () => {
+  const persistEop = useCallback(async (generatedDocumentId?: string) => {
     const id =
       mode === "create"
         ? "new"
@@ -823,7 +823,7 @@ export const useEopDocument = (
       );
     }
 
-    const saved = await saveEOP(eop, id, site?._id, documentId);
+    const saved = await saveEOP(eop, id, site?._id, documentId ?? generatedDocumentId);
 
     setEop(saved);
 

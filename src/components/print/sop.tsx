@@ -789,8 +789,7 @@ const EleventhSection = (props: SOP) => {
               <td className="border border-black p-3 align-top">
                 {row.description}
               </td>
-
-              <td className="border border-black p-3 align-top">
+              <td className="border border-black max-w-48 break-all p-3 align-top">
                 {row.accessLocation}
               </td>
             </tr>

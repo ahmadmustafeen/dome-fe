@@ -324,12 +324,33 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
           return;
         }
 
+        console.log({ test: data });
+
+
 
         setSop((prev: any) => ({
           ...prev,
           references: {
             ...prev?.references,
             additionalResourceRows: data
+          }
+        }));
+      });
+
+      evtSource.addEventListener("safetyStandardRows", (e) => {
+        const data = JSON.parse(e.data);
+        if (data?.error) {
+          toast.error("safetyStandardRows failed");
+          return;
+        }
+        console.log({ safetyStandards: data });
+
+
+        setSop((prev: any) => ({
+          ...prev,
+          references: {
+            ...prev?.references,
+            safetyStandardRows: data
           }
         }));
       });
@@ -344,8 +365,6 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
         setGenerateError("Streaming failed");
         evtSource.close();
       });
-
-      
 
       setSop((prev) => ({
         ...createEmptySop(),

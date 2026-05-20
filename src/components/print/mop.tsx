@@ -1053,7 +1053,7 @@ const EleventhSection = (props: MOP) => {
                 {row.authority}
               </td>
 
-              <td className="border border-black p-3 align-top">
+              <td className="border border-black max-w-48 break-all p-3 align-top">
                 <div>
                   {row.linkUrl}
                 </div>
@@ -1095,7 +1095,7 @@ const EleventhSection = (props: MOP) => {
                 {row.type}
               </td>
 
-              <td className="border border-black p-3 align-top">
+              <td className="border border-black max-w-48 break-all p-3 align-top">
                 <div>
                   {row.linkUrl}
                 </div>
@@ -1110,24 +1110,6 @@ const EleventhSection = (props: MOP) => {
       </table>
 
       <MopSection11Notices />
-
-      {/* <EachSingleRow item={{ text: props.mopComments.mopCommentsText }} noIcon />
-
-      <p className="font-semibold text-lg py-2">Post-Maintenance Requirements:</p>
-      <div className="section-container-7">
-        {
-          props.mopComments.postMaintenanceBullets.map((item, index) => {
-            return <div className="subsection-row-7" key={index} >
-              <EachSingleRow item={{ text: item.title }} />
-            </div>
-          })
-        }
-      </div>
-
-      <p className="font-semibold text-lg py-2">Additional Notes:</p>
-      <EachSingleRow item={{ text: props.mopComments.additionalNotes }} noIcon /> */}
-
-
     </div>
   </div>
 }

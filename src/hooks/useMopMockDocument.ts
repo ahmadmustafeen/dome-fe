@@ -321,6 +321,54 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
       }));
     });
 
+    evtSource.addEventListener("safetyStandardRows", (e) => {
+      const data = JSON.parse(e.data);
+      if (data?.error) {
+        toast.error("safetyStandardRows failed");
+        return;
+      }
+
+      setMop((prev: any) => ({
+        ...prev,
+        references: {
+          ...prev?.references,
+          safetyStandardRows: data
+        }
+      }));
+    });
+
+    evtSource.addEventListener("equipmentSpecificDocumentation", (e) => {
+      const data = JSON.parse(e.data);
+      if (data?.error) {
+        toast.error("equipmentSpecificDocumentation failed");
+        return;
+      }
+
+
+      setMop((prev: any) => ({
+        ...prev,
+        references: {
+          ...prev?.references,
+          equipmentDocumentRows: data,
+        }
+      }));
+    });
+
+    evtSource.addEventListener("additionalDocumentation", (e) => {
+      const data = JSON.parse(e.data);
+      if (data?.error) {
+        toast.error("additionalDocumentation failed");
+        return;
+      }
+      setMop((prev: any) => ({
+        ...prev,
+        references: {
+          ...prev?.references,
+          additionalResourceRows: data,
+        }
+      }));
+    });
+
     evtSource.addEventListener("done", () => {
       toast.success("Succesfully generated, Please save the document manually.");
       setIsGenerating(false);

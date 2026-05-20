@@ -343,8 +343,6 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
           toast.error("safetyStandardRows failed");
           return;
         }
-        console.log({ safetyStandards: data });
-
 
         setSop((prev: any) => ({
           ...prev,

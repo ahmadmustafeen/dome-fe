@@ -11,6 +11,7 @@ import { EopSection08SparePartsTable } from "./EopSection08SparePartsTable";
 
 type EopSection08SupportingInformationProps = {
   supportingInformation: EOPSection08SupportingInformation;
+  assetName?: string,
   patchSupportingInformation: (
     p: Partial<EOPSection08SupportingInformation>,
   ) => void;
@@ -19,6 +20,7 @@ type EopSection08SupportingInformationProps = {
 export const EopSection08SupportingInformationSection = ({
   supportingInformation,
   patchSupportingInformation,
+  assetName
 }: EopSection08SupportingInformationProps) => (
   <div className="mt-5 rounded-lg border border-[#e0e0e0] bg-white px-3 py-4 shadow-sm sm:mt-6 sm:px-4 sm:py-5">
     <Typography
@@ -43,7 +45,7 @@ export const EopSection08SupportingInformationSection = ({
 
     <EopSection08SparePartsTable
       rows={supportingInformation?.spareParts}
-      intro={supportingInformation?.sparePartsIntro}
+      intro={`Critical spare parts for ${assetName} emergency response:`}
       onRowsChange={(rows) => patchSupportingInformation({ spareParts: rows })}
     />
 

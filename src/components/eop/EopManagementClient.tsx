@@ -249,7 +249,8 @@ export const EopManagementClient = ({ eopId, documentId, noDownload }: EopManage
                 patchDocument={patchDocument}
                 patchEquipment={patchEquipment}
                 patchProcedure={patchProcedure}
-                assetName={assetData?.assetName}
+                // @ts-expect-error
+                assetName={assetData?.assetName || assetData?.name}
                 patchSignOff={patchSignOff}
                 patchSite={patchSite}
                 patchOverview={patchOverview}

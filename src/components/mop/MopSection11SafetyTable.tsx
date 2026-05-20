@@ -33,13 +33,14 @@ const patchRow = (
 };
 
 export const MopSection11SafetyTable = ({ rows, references, patchMopReferences }: MopSection11SafetyTableProps) => {
+
   return (
     <div className="mb-6">
       <Typography variant="h6" className="mb-2 text-sm font-semibold text-gray-900">
         {MOP_SECTION_11_SAFETY_STANDARDS_HEADING}
       </Typography>
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[720px] border-collapse text-sm">
+        <table className="w-full min-w-180 border-collapse text-sm">
           <thead>
             <tr className="bg-[#0f3456] text-white">
               <th className="min-w-40 px-2 py-2 text-left font-semibold">
@@ -51,7 +52,7 @@ export const MopSection11SafetyTable = ({ rows, references, patchMopReferences }
               <th className="min-w-48 px-2 py-2 text-left font-semibold">
                 {MOP_SECTION_11_SAFETY_TABLE_HEADERS.access}
               </th>
-              <th scope="col" className="w-[4.25rem] px-1 py-2 text-center text-xs font-semibold">
+              <th scope="col" className="w-17 px-1 py-2 text-center text-xs font-semibold">
                 ±
               </th>
             </tr>

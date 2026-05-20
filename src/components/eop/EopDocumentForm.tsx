@@ -103,6 +103,7 @@ export const EopDocumentForm = ({
             <EopSection08SupportingInformationSection
               supportingInformation={eop?.supportingInformation}
               patchSupportingInformation={patchSupportingInformation}
+              assetName={assetName}
             />
             <EopSection09ApprovalReview
               approvalReview={eop?.approvalReview}

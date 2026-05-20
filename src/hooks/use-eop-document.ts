@@ -379,18 +379,41 @@ export const useEopDocument = (
           }));
         });
 
-        // evtSource.addEventListener("policyDocuments", (e) => {
-        //   const data = JSON.parse(e.data);
+        evtSource.addEventListener("policyDocuments", (e) => {
+          try {
 
-        //   // setEop((prevEop) => ({
-        //   //   ...prevEop,
-        //   //   supportingInformation: {
-        //   //     ...prevEop.supportingInformation,
-        //   //     policyDocuments: data ?? []
-        //   //   }
+            const data = JSON.parse(e.data);
 
-        //   // }));
-        // });
+            setEop((prevEop) => ({
+              ...prevEop,
+              supportingInformation: {
+                ...prevEop.supportingInformation,
+                policyDocuments: data
+              }
+
+            }));
+          } catch (err) {
+            console.error(err)
+          }
+        });
+
+        evtSource.addEventListener("relatedDocuments", (e) => {
+          try {
+
+            const data = JSON.parse(e.data);
+
+            setEop((prevEop) => ({
+              ...prevEop,
+              supportingInformation: {
+                ...prevEop.supportingInformation,
+                relatedDocuments: data
+              }
+
+            }));
+          } catch (err) {
+            console.error(err)
+          }
+        });
 
         evtSource.addEventListener("done", () => {
           toast.success(

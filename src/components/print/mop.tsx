@@ -32,11 +32,13 @@ const FirstSectionKeys1 = (mop: MOP) => ([
 ])
 
 const EachRow = ({ item, className }: { item: { key: string, value?: string | number }, className: string }) => {
-  return <div className={`flex my-4 pb-3 ${className}`}>
-    <div className="font-semibold text-base w-1/4">
-      {item.key}
+  return <div className={`flex ${className} border border-gray-300`}>
+    <div className="font-semibold text-base w-60 py-4 px-4 bg-gray-200 border-r border-gray-300">
+      <h4>
+        {item.key}
+      </h4>
     </div>
-    <div className="text-base w-3/4">
+    <div className="text-base flex-1 py-4 px-4">
       {item?.value || "-"}
     </div>
   </div>
@@ -80,15 +82,18 @@ const ThirdSectionKeys1 = (mop: MOP) => ([
   { key: "Post notifications required:", value: mop.overview.postNotifications },
 ])
 
+const SectionHeading = ({ heading }: { heading: string }) => {
+  return <div className="pb-2 border-b-2 border-black my-4">
+    <h2 className="text-xl font-bold">{heading}</h2>
+  </div>
+}
+
 const FirstSection = (props: MOP) => {
   const { document } = props
   return <div>
     <div
-      className="bg-cover rounded-lg bg-center bg-no-repeat px-5 py-7 text-center sm:px-8 sm:py-9"
-      style={{
-        backgroundImage:
-          "linear-gradient(to bottom, rgba(10, 22, 40, 0.92) 0%, rgba(16, 35, 64, 0.92) 100%)",
-      }}
+      className="bg-cover rounded-sm bg-center bg-no-repeat px-5 py-10 text-center sm:px-8 sm:py-9 bg-[#091628]"
+
     >
       <Typography
         variant="h3"
@@ -101,9 +106,7 @@ const FirstSection = (props: MOP) => {
 
 
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className="pb-3 border-gray-300">
-        <h2 className="font-semibold text-lg">Section 01 - MOP Schedule Information</h2>
-      </div>
+      <SectionHeading heading="Section 01 - MOP Schedule Information" />
       <div className="section-container">
         {
           FirstSectionKeys1(props).map((item, index) => {
@@ -121,9 +124,7 @@ const FirstSection = (props: MOP) => {
 const SecondSection = (props: MOP) => {
   return <div>
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className="border-b border-solid  pb-3 border-gray-300">
-        <h2 className="font-semibold text-lg">Section 02: Site Information</h2>
-      </div>
+      <SectionHeading heading="Section 02: Site Information" />
       <div className="section-container-2">
         {SecondSectionKeys1(props).map((item, index) => <EachRow item={item} key={index}
           className="subsection-row-2"
@@ -136,9 +137,7 @@ const SecondSection = (props: MOP) => {
 const ThirdSection = (props: MOP) => {
   return <div>
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className="border-b border-solid  pb-3 border-gray-300">
-        <h2 className="font-semibold text-lg">Section 03: MOP Overview</h2>
-      </div>
+      <SectionHeading heading="Section 03: MOP Overview" />
       <div className="section-container-3">
         {ThirdSectionKeys1(props).map((item, index) => <EachRow item={item} key={index}
           className="subsection-row-3"
@@ -151,12 +150,10 @@ const ThirdSection = (props: MOP) => {
 const FourthSection = (props: MOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className="border-b border-solid  pb-3 border-gray-300">
-        <h2 className="font-semibold text-lg">Section 04: Effect of MOP on Critical Facility</h2>
-      </div>
+      <SectionHeading heading="Section 04: Effect of MOP on Critical Facility" />
       <div className="pdf-page">
         <table className="w-full border-collapse text-sm ">
-          <thead className="bg-[#0E3456]">
+          <thead className="bg-[#091628]">
             <tr className=" text-white">
               <th className="border border-black p-3 text-left">
                 ID
@@ -206,13 +203,11 @@ const FifthSection = (props: MOP) => {
 
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className="border-b border-solid  pb-3 border-gray-300">
-        <h2 className="font-semibold text-lg">Section 05: Safety Requirements</h2>
-      </div>
+      <SectionHeading heading="Section 05: Safety Requirements" />
       <div className="pdf-page">
         <p className="font-semibold text-lg py-4">PPE requirements specific to maintenance:</p>
         <table className="w-full border-collapse text-sm ">
-          <thead className="bg-[#0E3456]">
+          <thead className="bg-[#091628]">
             <tr className=" text-white">
               <th className="border border-black p-3 text-left">
                 PPE Category
@@ -251,7 +246,7 @@ const FifthSection = (props: MOP) => {
           Specific tools required for {assetName} {props.document.title} based on equipment type and task:
         </Typography>
         <table className="w-full border-collapse text-sm ">
-          <thead className="bg-[#0E3456]">
+          <thead className="bg-[#091628]">
             <tr className=" text-white">
               <th className="border border-black p-3 text-left">
                 Tool Category
@@ -287,7 +282,7 @@ const FifthSection = (props: MOP) => {
         {/* safety procedures */}
         <p className="font-semibold text-lg py-4">SAFETY PROCEDURES:</p>
         <table className="w-full border-collapse text-sm ">
-          <thead className="bg-[#0E3456]">
+          <thead className="bg-[#091628]">
             <tr className=" text-white">
               <th className="border border-black p-3 text-left">
                 Procedure
@@ -328,7 +323,7 @@ const FifthSection = (props: MOP) => {
         {/* emergency Contacts */}
         <p className="font-semibold text-lg py-4">EMERGENCY CONTACTS:</p>
         <table className="w-full border-collapse text-sm ">
-          <thead className="bg-[#0E3456]">
+          <thead className="bg-[#091628]">
             <tr className=" text-white">
               <th className="border border-black p-3 text-left">
                 Emergency Type
@@ -366,7 +361,7 @@ const FifthSection = (props: MOP) => {
         </div>
 
         <table className="w-full border-collapse text-sm ">
-          <thead className="bg-[#0E3456]">
+          <thead className="bg-[#091628]">
             <tr className=" text-white">
               <th className="border border-black p-3 text-left">
                 Service
@@ -411,12 +406,10 @@ const FifthSection = (props: MOP) => {
 const SixthSection = (props: MOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className="border-b border-solid  pb-3 border-gray-300">
-        <h2 className="font-semibold text-lg">Section 06: MOP Assumptions</h2>
-      </div>
+      <SectionHeading heading="Section 06: MOP Assumptions" />
       <p className="font-semibold text-lg py-4">Key Project Assumptions:</p>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#091628]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Category
@@ -463,9 +456,7 @@ const SixthSection = (props: MOP) => {
 const SeventhSection = (props: MOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className="border-b border-solid  pb-3 border-gray-300">
-        <h2 className="font-semibold text-lg">Section 07: MOP Details</h2>
-      </div>
+      <SectionHeading heading="Section 07: MOP Details" />
       <p className="font-semibold text-lg py-2">Procedure steps (outline):</p>
       <div className="section-container-7">
         {
@@ -533,7 +524,7 @@ const SeventhSection = (props: MOP) => {
         Parameters and acceptance bands are defined for this unit template; record As Found / As Left for each.
       </Typography>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#091628]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Parameter
@@ -578,7 +569,7 @@ const SeventhSection = (props: MOP) => {
 
       <p className="font-semibold text-lg py-4">Engine Performance Data</p>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#091628]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Parameter
@@ -621,7 +612,7 @@ const SeventhSection = (props: MOP) => {
         Record active or cleared faults/alarms observed during this event (rows expand with API or manual entry; default blank rows for site use).
       </Typography>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#091628]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Date/Time
@@ -668,7 +659,7 @@ const SeventhSection = (props: MOP) => {
       <div className="">
         <p className="font-semibold text-lg py-4">Important Indicators</p>
         <table className="w-full border-collapse text-sm ">
-          <thead className="bg-[#0E3456]">
+          <thead className="bg-[#091628]">
             <tr className=" text-white">
               <th className="border border-black p-3 text-left">
                 Icon
@@ -705,7 +696,7 @@ const SeventhSection = (props: MOP) => {
         Pick the icon that matches Important Indicators above; use “no indicator” when not applicable. The stored value is the indicator key (id); the meaning comes from the legend and tooltips.
       </Typography>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#091628]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Detailed Procedure
@@ -758,15 +749,14 @@ const SeventhSection = (props: MOP) => {
 const EigthSection = (props: MOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className="border-b border-solid  pb-3 border-gray-300">
-        <h2 className="font-semibold text-lg">Section 08: Back-out Procedures</h2>
-      </div>
+      <SectionHeading heading="Section 08: Back-out Procedures" />
+
       <p className="font-semibold text-lg py-4">CRITICAL BACK-OUT PROCEDURES</p>
       <Typography variant="p" className="mb-4 text-sm text-gray-700">
         If at any point during the maintenance procedure a critical issue is discovered that could affect data center operations, follow these detailed back-out procedures:
       </Typography>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#091628]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Step
@@ -810,11 +800,9 @@ const EigthSection = (props: MOP) => {
 const NinthSection = (props: MOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className="border-b border-solid pb-3 border-gray-300">
-        <h2 className="font-semibold text-lg">Section 09: MOP Approval</h2>
-      </div>
+      <SectionHeading heading="Section 09: MOP Approval" />
       <table className="w-full border-collapse text-sm mt-4 ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#091628]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Review Stage
@@ -905,9 +893,8 @@ const NinthSection = (props: MOP) => {
 const TenthSection = (props: MOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className="border-b border-solid  pb-3 border-gray-300">
-        <h2 className="font-semibold text-lg">Section 10: MOP Comments</h2>
-      </div>
+      <SectionHeading heading="Section 10: MOP Comments" />
+
       <p className="font-semibold text-lg py-2">MOP Comments</p>
 
       <EachSingleRow item={{ text: props.mopComments.mopCommentsText }} noIcon />
@@ -934,9 +921,8 @@ const TenthSection = (props: MOP) => {
 const EleventhSection = (props: MOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className="border-b border-solid  pb-3 border-gray-300">
-        <h2 className="font-semibold text-lg">Section 11: References and Documentation</h2>
-      </div>
+      <SectionHeading heading="Section 11: References and Documentation" />
+
       <p className="font-semibold text-lg py-2">Comprehensive Reference Library</p>
       <p className="font-semibold text-lg py-2">Company Policy Documents Consulted</p>
       <Typography variant="p" className="mb-4 text-sm text-gray-700">
@@ -944,7 +930,7 @@ const EleventhSection = (props: MOP) => {
       </Typography>
 
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#091628]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Policy Document
@@ -987,7 +973,7 @@ const EleventhSection = (props: MOP) => {
 
       <p className="font-semibold text-lg py-2 mt-8">Equipment-Specific Documentation</p>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#091628]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Document Title
@@ -1028,7 +1014,7 @@ const EleventhSection = (props: MOP) => {
 
       <p className="font-semibold text-lg py-2 mt-4">Safety Standards and Guidelines</p>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#091628]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Safety Standard
@@ -1070,7 +1056,7 @@ const EleventhSection = (props: MOP) => {
 
       <p className="font-semibold text-lg py-2 mt-4">Additional Resources</p>
       <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0E3456]">
+        <thead className="bg-[#091628]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
               Resources
@@ -1140,6 +1126,9 @@ const MopPrintComponent = ({ mop, id }: { mop: MOP | null, id: string }) => {
 
   return <main className="bg-white p-8 text-black">
     <div className="max-w-7xl mx-auto">
+      <div className="text-3xl pb-4 border-b-4 border-black border-solid mb-8 font-bold text-center">
+        Method of Procedure (MOP)
+      </div>
       <FirstSection
         {...mop}
       />

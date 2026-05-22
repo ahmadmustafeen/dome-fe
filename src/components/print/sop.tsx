@@ -883,6 +883,12 @@ const SopPrintComponent = ({ sop, id }: { sop: SOP | null, id: string }) => {
 
   return <main className="bg-white p-8 text-black">
     <div className="max-w-7xl mx-auto">
+
+      <div className="text-3xl pb-4 border-b-4 border-black border-solid mb-8 font-bold text-center">
+        Standard Operating Procedure (SOP)
+      </div>
+
+
       <FirstSection
         {...sop}
       />

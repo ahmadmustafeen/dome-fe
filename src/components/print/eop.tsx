@@ -853,6 +853,12 @@ const EopPrintComponent = ({ eop, id }: { eop: EOP | null, id: string }) => {
 
   return <main className="bg-white p-8 text-black">
     <div className="max-w-7xl mx-auto">
+
+      <div className="text-3xl pb-4 border-b-4 border-black border-solid mb-8 font-bold text-center">
+        Emergency Operations Plan (EOP)
+      </div>
+
+
       <FirstSection
         {...eop}
       />

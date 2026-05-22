@@ -6,6 +6,7 @@ import { EOP } from "@/types/eop";
 import { EOP_SECTION_04_DO_NOT_PROCEED_BANNER } from "@/constants/eop-section04-immediate-actions";
 import { EOP_SECTION_04_INTERNAL_DIAGNOSTICS_WARNING } from "@/constants/eop-section04-internal-diagnostics";
 import { EOP_SECTION_06_RESEARCHED_NOTE } from "@/constants/eop-section06-communication";
+import { ReactNode } from "react";
 
 const FirstSectionKeys1 = (mop: EOP) => ([
   { key: "EOP Title", value: mop.document?.title },
@@ -28,14 +29,31 @@ const FirstSectionKeys1 = (mop: EOP) => ([
 ])
 
 const EachRow = ({ item, className }: { item: { key: string, value?: string | number }, className: string }) => {
-  return <div className={`flex my-4 pb-3 ${className}`}>
-    <div className="font-semibold text-base w-1/4">
-      {item.key}
+  return <div className={`flex ${className} border border-gray-300`}>
+    <div className="font-semibold text-base w-60 py-4 px-4 bg-gray-200 border-r border-gray-300">
+      <h4>
+        {item.key}
+      </h4>
     </div>
-    <div className="text-base w-3/4">
+    <div className="text-base flex-1 py-4 px-4">
       {item?.value || "-"}
     </div>
   </div>
+}
+
+const SectionHeading = ({ heading, className }: { heading: string, className?: string }) => {
+  return <div className={`pb-2 border-b-2 border-black my-4 ${className}`}>
+    <h2 className="text-xl font-bold">{heading}</h2>
+  </div>
+}
+
+const CustomTableRowWrapper = ({ children, index }: { children: ReactNode, index: number }) => {
+  const isAlternativeRow = index % 2 === 1;
+  return <tr key={index}
+    className={isAlternativeRow ? "bg-gray-200" : ""}
+  >
+    {children}
+  </tr>
 }
 
 const EachSingleRow = ({
@@ -80,11 +98,7 @@ const FirstSection = (props: EOP) => {
   const { document } = props
   return <div>
     <div
-      className="bg-cover rounded-lg bg-center bg-no-repeat px-5 py-7 text-center sm:px-8 sm:py-9"
-      style={{
-        backgroundImage:
-          "linear-gradient(to bottom, rgba(74, 20, 20, 0.92) 0%, rgba(107, 31, 31, 0.92) 100%)"
-      }}
+      className="bg-cover rounded-sm bg-center bg-no-repeat px-5 py-10 text-center sm:px-8 sm:py-9 bg-[#5B2827]"
     >
       <Typography
         variant="h3"
@@ -97,9 +111,7 @@ const FirstSection = (props: EOP) => {
 
 
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className="pb-3 border-gray-300">
-        <h2 className="font-semibold text-lg">Section 01 - EOP Schedule Information</h2>
-      </div>
+      <SectionHeading className="heading-1" heading="Section 01 - EOP Schedule Information" />
       <div className="section-container">
         {
           FirstSectionKeys1(props).map((item, index) => {
@@ -117,9 +129,7 @@ const FirstSection = (props: EOP) => {
 const SecondSection = (props: EOP) => {
   return <div>
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className="border-b border-solid  pb-3 border-gray-300">
-        <h2 className="font-semibold text-lg">Section 02: Site Information</h2>
-      </div>
+      <SectionHeading className="heading-1" heading="Section 02: Site Information" />
       <div className="section-container-2">
         {SecondSectionKeys1(props).map((item, index) => <EachRow item={item} key={index}
           className="subsection-row-2"
@@ -132,9 +142,8 @@ const SecondSection = (props: EOP) => {
 const ThirdSection = (props: EOP) => {
   return <div>
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className="border-b border-solid  pb-3 border-gray-300">
-        <h2 className="font-semibold text-lg">Section 03: EOP Overview</h2>
-      </div>
+      <SectionHeading className="heading-1" heading="Section 03: EOP Overview" />
+
       <div className="section-container-3">
         {ThirdSectionKeys1(props).map((item, index) => <EachRow item={item} key={index}
           className="subsection-row-3"
@@ -148,9 +157,8 @@ const FourthSection = (props: EOP) => {
   const assetName = props.asset.assetName;
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className="border-b border-solid  pb-3 border-gray-300">
-        <h2 className="font-semibold text-lg">Section 04: Immediate Emergency Actions - Power Failure Diagnostics</h2>
-      </div>
+      <SectionHeading className="heading-1" heading="Section 04: Immediate Emergency Actions - Power Failure Diagnostics" />
+
       <p className="font-semibold text-lg py-4">Pre-Action Safety & Equipment Requirements:</p>
       <p className="font-semibold text-xl py-4">
         ⚠️ CRITICAL SAFETY CHECKPOINT - STOP Before Proceeding:
@@ -178,7 +186,7 @@ const FourthSection = (props: EOP) => {
 
         <tbody className="">
           {props.immediateActions.preActionSafety.ppeRows.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.ppeItem}
               </td>
@@ -190,7 +198,7 @@ const FourthSection = (props: EOP) => {
               <td className="border min-w-20 border-black p-3 align-top">
                 {row.verified}
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
       </table>
@@ -213,7 +221,7 @@ const FourthSection = (props: EOP) => {
 
         <tbody className="">
           {props.immediateActions.preActionSafety.toolRows.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.tool}
               </td>
@@ -225,7 +233,7 @@ const FourthSection = (props: EOP) => {
               <td className="border min-w-20 border-black p-3 align-top">
                 {row.available}
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
       </table>
@@ -275,7 +283,7 @@ const FourthSection = (props: EOP) => {
 
         <tbody className="">
           {props.immediateActions.internalDiagnostics.diagnosticRows.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.stepNumber}
               </td>
@@ -293,7 +301,7 @@ const FourthSection = (props: EOP) => {
               <td className="border  border-black p-3 align-top">
                 {row.passFail}
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
       </table>
@@ -312,9 +320,8 @@ const FifthSection = (props: EOP) => {
   const assetName = props.asset.assetName;
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className="border-b border-solid  pb-3 border-gray-300">
-        <h2 className="font-semibold text-lg">Section 05: Power Failure Detection External Response Actions</h2>
-      </div>
+      <SectionHeading className="heading-1" heading="Section 05: Power Failure Detection External Response Actions" />
+
       <Typography variant="p" className="my-4 text-sm text-gray-700">
         Verify all external equipment and systems that connect to or support the {assetName}
       </Typography>
@@ -348,7 +355,7 @@ const FifthSection = (props: EOP) => {
 
         <tbody className="">
           {props.externalActions.actionRows.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.stepNumber}
               </td>
@@ -371,7 +378,7 @@ const FifthSection = (props: EOP) => {
               <td className="border min-w-20 border-black p-3 align-top">
                 {row.passFail}
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
       </table>
@@ -383,10 +390,7 @@ const FifthSection = (props: EOP) => {
 const SixthSection = (props: EOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className="border-b border-solid  pb-3 border-gray-300">
-        <h2 className="font-semibold text-lg">Section 06: Communication & Escalation Protocol</h2>
-      </div>
-
+      <SectionHeading className="heading-1" heading="Section 06: Communication & Escalation Protocol" />
 
       <p className="font-semibold text-lg my-4">Escalation Matrix</p>
       <table className="w-full border-collapse text-sm ">
@@ -409,7 +413,7 @@ const SixthSection = (props: EOP) => {
 
         <tbody className="">
           {props.communication.escalationMatrixRows.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.level}
               </td>
@@ -422,7 +426,7 @@ const SixthSection = (props: EOP) => {
               <td className="border border-black min-w-20 p-3 align-top">
                 {row.phoneNumber}
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
       </table>
@@ -449,7 +453,7 @@ const SixthSection = (props: EOP) => {
 
         <tbody className="">
           {props.communication.emergencyContactRows.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.serviceType}
               </td>
@@ -462,12 +466,12 @@ const SixthSection = (props: EOP) => {
               <td className="border border-black min-w-20 p-3 align-top">
                 {row.notesAddress}
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
       </table>
 
-      <div className="mt-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-900">
+      <div className="my-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-900">
         <span className="mr-1 font-semibold">✓</span>
         {EOP_SECTION_06_RESEARCHED_NOTE(props?.site?.siteAddress)}
       </div>
@@ -484,9 +488,8 @@ const SeventhSection = (props: EOP) => {
 
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className="border-b border-solid  pb-3 border-gray-300">
-        <h2 className="font-semibold text-lg">Section 07: Recovery & Return to Service</h2>
-      </div>
+      <SectionHeading className="heading-1" heading="Section 07: Recovery & Return to Service" />
+
       <p className="font-semibold text-lg my-4">Power Failure Resolution and Equipment Recovery Procedures</p>
 
       <Typography variant="p" className="my-4 text-sm text-gray-700">
@@ -566,7 +569,7 @@ const SeventhSection = (props: EOP) => {
 
         <tbody className="">
           {props.recovery.functionalityRows.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.parameter}
               </td>
@@ -579,7 +582,7 @@ const SeventhSection = (props: EOP) => {
               <td className="border w-32 border-black min-w-20 p-3 align-top">
                 {row.passFail}
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
       </table>
@@ -632,9 +635,8 @@ const EighthSection = (props: EOP) => {
 
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className="border-b border-solid  pb-3 border-gray-300">
-        <h2 className="font-semibold text-lg">Section 08: Supporting Information</h2>
-      </div>
+      <SectionHeading className="heading-1" heading="Section 08: Supporting Information" />
+
       <p className="font-semibold text-lg my-4">Company Policy Documents Consulted</p>
 
       <Typography variant="p" className="my-4 text-sm text-gray-700">
@@ -665,7 +667,7 @@ const EighthSection = (props: EOP) => {
 
         <tbody className="">
           {props.supportingInformation.policyDocuments.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.documentName}
               </td>
@@ -675,7 +677,7 @@ const EighthSection = (props: EOP) => {
               <td className="border min-w-20 border-black p-3 align-top">
                 {row.documentType}
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
       </table>
@@ -702,7 +704,7 @@ const EighthSection = (props: EOP) => {
 
         <tbody className="">
           {props.supportingInformation.infrastructureLocations.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.infrastructureElement}
               </td>
@@ -712,7 +714,7 @@ const EighthSection = (props: EOP) => {
               <td className="border min-w-20 border-black p-3 align-top">
                 {row.accessRequirements}
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
       </table>
@@ -743,7 +745,7 @@ const EighthSection = (props: EOP) => {
 
         <tbody className="">
           {props.supportingInformation.spareParts.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.partDescription}
               </td>
@@ -756,7 +758,7 @@ const EighthSection = (props: EOP) => {
               <td className="border min-w-20 border-black p-3 align-top">
                 {row.storageLocation}
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
       </table>
@@ -782,9 +784,8 @@ const EighthSection = (props: EOP) => {
 const NinthSection = (props: EOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <div className="border-b border-solid  pb-3 border-gray-300">
-        <h2 className="font-semibold text-lg">Section 09: EOP Approval & Review</h2>
-      </div>
+      <SectionHeading className="heading-1" heading="Section 09: EOP Approval & Review" />
+
       <table className="w-full border-collapse text-sm ">
         <thead className="bg-[#5A1A1A]">
           <tr className=" text-white">
@@ -805,7 +806,7 @@ const NinthSection = (props: EOP) => {
 
         <tbody className="">
           {props.approvalReview.reviewRows.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.role}
               </td>
@@ -818,7 +819,7 @@ const NinthSection = (props: EOP) => {
               <td className="border min-w-20 border-black p-3 align-top">
                 {row.date}
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
       </table>

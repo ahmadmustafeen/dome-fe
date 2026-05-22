@@ -10,6 +10,7 @@ import { MopSection07IndicatorIcon } from "../mop/MopSection07IndicatorIcons";
 import { MOP_SECTION_09_APPROVAL_REQUIREMENT_BULLETS, MOP_SECTION_09_APPROVAL_REQUIREMENTS_HEADING } from "@/constants/mop-section09-approval";
 import { MOP_SECTION_11_POLICY_BANNER_TEXT, MOP_SECTION_11_POLICY_NOTE_LABEL } from "@/constants/mop-section11-references";
 import { MopSection11Notices } from "../mop/MopSection11Notices";
+import { ReactNode } from "react";
 
 const FirstSectionKeys1 = (mop: MOP) => ([
   { key: "MOP Title", value: mop.document?.title },
@@ -82,8 +83,8 @@ const ThirdSectionKeys1 = (mop: MOP) => ([
   { key: "Post notifications required:", value: mop.overview.postNotifications },
 ])
 
-const SectionHeading = ({ heading }: { heading: string }) => {
-  return <div className="pb-2 border-b-2 border-black my-4">
+const SectionHeading = ({ heading, className }: { heading: string, className?: string }) => {
+  return <div className={`pb-2 border-b-2 border-black my-4 ${className}`}>
     <h2 className="text-xl font-bold">{heading}</h2>
   </div>
 }
@@ -93,7 +94,6 @@ const FirstSection = (props: MOP) => {
   return <div>
     <div
       className="bg-cover rounded-sm bg-center bg-no-repeat px-5 py-10 text-center sm:px-8 sm:py-9 bg-[#091628]"
-
     >
       <Typography
         variant="h3"
@@ -106,7 +106,7 @@ const FirstSection = (props: MOP) => {
 
 
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <SectionHeading heading="Section 01 - MOP Schedule Information" />
+      <SectionHeading className="heading-1" heading="Section 01 - MOP Schedule Information" />
       <div className="section-container">
         {
           FirstSectionKeys1(props).map((item, index) => {
@@ -124,7 +124,7 @@ const FirstSection = (props: MOP) => {
 const SecondSection = (props: MOP) => {
   return <div>
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <SectionHeading heading="Section 02: Site Information" />
+      <SectionHeading className="heading-1" heading="Section 02: Site Information" />
       <div className="section-container-2">
         {SecondSectionKeys1(props).map((item, index) => <EachRow item={item} key={index}
           className="subsection-row-2"
@@ -137,7 +137,7 @@ const SecondSection = (props: MOP) => {
 const ThirdSection = (props: MOP) => {
   return <div>
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <SectionHeading heading="Section 03: MOP Overview" />
+      <SectionHeading className="heading-1" heading="Section 03: MOP Overview" />
       <div className="section-container-3">
         {ThirdSectionKeys1(props).map((item, index) => <EachRow item={item} key={index}
           className="subsection-row-3"
@@ -147,10 +147,19 @@ const ThirdSection = (props: MOP) => {
   </div>
 }
 
+const CustomTableRowWrapper = ({ children, index }: { children: ReactNode, index: number }) => {
+  const isAlternativeRow = index % 2 === 1;
+  return <tr key={index}
+    className={isAlternativeRow ? "bg-gray-200" : ""}
+  >
+    {children}
+  </tr>
+}
+
 const FourthSection = (props: MOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <SectionHeading heading="Section 04: Effect of MOP on Critical Facility" />
+      <SectionHeading className="heading-1" heading="Section 04: Effect of MOP on Critical Facility" />
       <div className="pdf-page">
         <table className="w-full border-collapse text-sm ">
           <thead className="bg-[#091628]">
@@ -171,25 +180,29 @@ const FourthSection = (props: MOP) => {
           </thead>
 
           <tbody className="">
-            {props.facilityEffects.map((row, index) => (
-              <tr key={index}>
-                <td className="border border-black p-3 align-top">
-                  {index}
-                </td>
+            {props.facilityEffects.map((row, index) => {
+              return (
+                <CustomTableRowWrapper index={index}>
 
-                <td className="border border-black p-3 align-top">
-                  {MOP_SECTION_04_SYSTEM_ROWS.find(item => item.key === row.systemKey)?.label}
-                </td>
+                  <td className="border border-black p-3 align-top">
+                    {index}
+                  </td>
 
-                <td className="border border-black p-3 align-top">
-                  {row.choice}
-                </td>
+                  <td className="border border-black p-3 align-top">
+                    {MOP_SECTION_04_SYSTEM_ROWS.find(item => item.key === row.systemKey)?.label}
+                  </td>
 
-                <td className="border border-black p-3 align-top">
-                  {row.details}
-                </td>
-              </tr>
-            ))}
+                  <td className="border border-black p-3 align-top">
+                    {row.choice}
+                  </td>
+
+                  <td className="border border-black p-3 align-top">
+                    {row.details}
+                  </td>
+                </CustomTableRowWrapper>
+
+              )
+            })}
           </tbody>
         </table>
       </div>
@@ -202,8 +215,8 @@ const FifthSection = (props: MOP) => {
 
 
   return <div className="">
-    <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <SectionHeading heading="Section 05: Safety Requirements" />
+    <div className="my-4 rounded-lg p-2 break-inside-auto ">
+      <SectionHeading className="heading-1" heading="Section 05: Safety Requirements" />
       <div className="pdf-page">
         <p className="font-semibold text-lg py-4">PPE requirements specific to maintenance:</p>
         <table className="w-full border-collapse text-sm ">
@@ -223,7 +236,7 @@ const FifthSection = (props: MOP) => {
 
           <tbody className="">
             {props.safety?.ppeRequirementRows.map((row, index) => (
-              <tr key={index}>
+              <CustomTableRowWrapper index={index}>
                 <td className="border border-black p-3 align-top">
                   {row.category}
                 </td>
@@ -235,7 +248,7 @@ const FifthSection = (props: MOP) => {
                 <td className="border border-black p-3 align-top">
                   {row.whenRequired}
                 </td>
-              </tr>
+              </CustomTableRowWrapper>
             ))}
           </tbody>
         </table>
@@ -262,7 +275,7 @@ const FifthSection = (props: MOP) => {
 
           <tbody className="">
             {props.safety?.toolRequirementRows.map((row, index) => (
-              <tr key={index}>
+              <CustomTableRowWrapper index={index}>
                 <td className="border border-black p-3 align-top">
                   {row.toolCategory}
                 </td>
@@ -274,13 +287,13 @@ const FifthSection = (props: MOP) => {
                 <td className="border border-black p-3 align-top">
                   {row.purpose}
                 </td>
-              </tr>
+              </CustomTableRowWrapper>
             ))}
           </tbody>
         </table>
 
         {/* safety procedures */}
-        <p className="font-semibold text-lg py-4">SAFETY PROCEDURES:</p>
+        <p className="font-semibold text-lg py-4 heading-1">SAFETY PROCEDURES:</p>
         <table className="w-full border-collapse text-sm ">
           <thead className="bg-[#091628]">
             <tr className=" text-white">
@@ -301,7 +314,7 @@ const FifthSection = (props: MOP) => {
 
           <tbody className="">
             {props.safety?.safetyProcedureRows.map((row, index) => (
-              <tr key={index}>
+              <CustomTableRowWrapper index={index}>
                 <td className="border border-black p-3 align-top">
                   {row.procedure}
                 </td>
@@ -314,7 +327,7 @@ const FifthSection = (props: MOP) => {
                 <td className="border border-black min-w-20 p-3 align-top">
                   {row.time}
                 </td>
-              </tr>
+              </CustomTableRowWrapper>
             ))}
           </tbody>
         </table>
@@ -339,7 +352,7 @@ const FifthSection = (props: MOP) => {
 
           <tbody className="">
             {props.safety?.emergencyContactRows.map((row, index) => (
-              <tr key={index}>
+              <CustomTableRowWrapper index={index}>
                 <td className="border border-black p-3 align-top">
                   {row.emergencyType}
                 </td>
@@ -349,7 +362,7 @@ const FifthSection = (props: MOP) => {
                 <td className="border border-black min-w-20  p-3 align-top">
                   {row.phoneNumber}
                 </td>
-              </tr>
+              </CustomTableRowWrapper>
             ))}
           </tbody>
         </table>
@@ -380,7 +393,7 @@ const FifthSection = (props: MOP) => {
 
           <tbody className="">
             {props.safety?.localEmergencyServiceRows.map((row, index) => (
-              <tr key={index}>
+              <CustomTableRowWrapper index={index}>
                 <td className="border border-black p-3 align-top">
                   {row.service}
                 </td>
@@ -393,7 +406,7 @@ const FifthSection = (props: MOP) => {
                 <td className="border border-black min-w-20  p-3 align-top">
                   {row.address}
                 </td>
-              </tr>
+              </CustomTableRowWrapper>
             ))}
           </tbody>
         </table>
@@ -406,8 +419,8 @@ const FifthSection = (props: MOP) => {
 const SixthSection = (props: MOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <SectionHeading heading="Section 06: MOP Assumptions" />
-      <p className="font-semibold text-lg py-4">Key Project Assumptions:</p>
+      <SectionHeading className="heading-1" heading="Section 06: MOP Assumptions" />
+      <p className="font-semibold text-lg py-4 heading-1">Key Project Assumptions:</p>
       <table className="w-full border-collapse text-sm ">
         <thead className="bg-[#091628]">
           <tr className=" text-white">
@@ -422,14 +435,14 @@ const SixthSection = (props: MOP) => {
 
         <tbody className="">
           {props.assumptions.assumptionRows.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.category}
               </td>
               <td className="border border-black p-3 align-top">
                 {row.assumption}
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
       </table>
@@ -456,7 +469,7 @@ const SixthSection = (props: MOP) => {
 const SeventhSection = (props: MOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <SectionHeading heading="Section 07: MOP Details" />
+      <SectionHeading className="heading-1" heading="Section 07: MOP Details" />
       <p className="font-semibold text-lg py-2">Procedure steps (outline):</p>
       <div className="section-container-7">
         {
@@ -546,7 +559,7 @@ const SeventhSection = (props: MOP) => {
 
         <tbody className="">
           {buildDefaultGeneratorOperationalRows().map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.parameter}
               </td>
@@ -562,7 +575,7 @@ const SeventhSection = (props: MOP) => {
               <td className="border border-black p-3 align-top">
                 {row.acceptableRange}
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
       </table>
@@ -588,7 +601,7 @@ const SeventhSection = (props: MOP) => {
 
         <tbody className="">
           {props.mopDetails.enginePerformanceRows.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.parameter}
               </td>
@@ -601,7 +614,7 @@ const SeventhSection = (props: MOP) => {
               <td className="border border-black p-3 align-top">
                 {row.status}
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
       </table>
@@ -634,7 +647,7 @@ const SeventhSection = (props: MOP) => {
 
         <tbody className="">
           {props.mopDetails.faultAlarmHistoryRows.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.dateTime}
               </td>
@@ -650,7 +663,7 @@ const SeventhSection = (props: MOP) => {
               <td className="border border-black p-3 align-top">
                 {row.initials}
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
       </table>
@@ -672,7 +685,7 @@ const SeventhSection = (props: MOP) => {
 
           <tbody className="">
             {MOP_SECTION_07_IMPORTANT_INDICATORS.map((row, index) => (
-              <tr key={index}>
+              <CustomTableRowWrapper index={index}>
                 <td className="border border-black min-w-20 p-3 align-top">
                   <div className="flex justify-center items-center h-full">
                     <MopSection07IndicatorIcon
@@ -685,7 +698,7 @@ const SeventhSection = (props: MOP) => {
                 <td className="border border-black p-3 align-top">
                   <span className="font-semibold">{row.title}</span> <span>{row.body}</span>
                 </td>
-              </tr>
+              </CustomTableRowWrapper>
             ))}
           </tbody>
         </table>
@@ -715,7 +728,7 @@ const SeventhSection = (props: MOP) => {
 
         <tbody className="">
           {props.mopDetails.detailedProcedures.stepRows.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black min-w-20 p-3 align-top">
                 {row.detailedProcedure}
               </td>
@@ -734,7 +747,7 @@ const SeventhSection = (props: MOP) => {
               <td className="border border-black  min-w-20 p-3 align-top">
                 {row.time}
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
       </table>
@@ -749,7 +762,7 @@ const SeventhSection = (props: MOP) => {
 const EigthSection = (props: MOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <SectionHeading heading="Section 08: Back-out Procedures" />
+      <SectionHeading className="heading-1" heading="Section 08: Back-out Procedures" />
 
       <p className="font-semibold text-lg py-4">CRITICAL BACK-OUT PROCEDURES</p>
       <Typography variant="p" className="mb-4 text-sm text-gray-700">
@@ -775,7 +788,7 @@ const EigthSection = (props: MOP) => {
 
         <tbody className="">
           {props.backOut.stepRows.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.stepNumber}
               </td>
@@ -788,7 +801,7 @@ const EigthSection = (props: MOP) => {
               <td className="border min-w-20 border-black p-3 align-top">
                 {row.time}
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
       </table>
@@ -800,7 +813,7 @@ const EigthSection = (props: MOP) => {
 const NinthSection = (props: MOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <SectionHeading heading="Section 09: MOP Approval" />
+      <SectionHeading className="heading-1" heading="Section 09: MOP Approval" />
       <table className="w-full border-collapse text-sm mt-4 ">
         <thead className="bg-[#091628]">
           <tr className=" text-white">
@@ -821,7 +834,7 @@ const NinthSection = (props: MOP) => {
 
         <tbody className="">
           {props.mopApproval.reviewRows.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.reviewStage}
               </td>
@@ -834,7 +847,7 @@ const NinthSection = (props: MOP) => {
               <td className="border min-w-20 border-black p-3 align-top">
                 {row.date}
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
       </table>
@@ -893,7 +906,7 @@ const NinthSection = (props: MOP) => {
 const TenthSection = (props: MOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <SectionHeading heading="Section 10: MOP Comments" />
+      <SectionHeading className="heading-1" heading="Section 10: MOP Comments" />
 
       <p className="font-semibold text-lg py-2">MOP Comments</p>
 
@@ -921,7 +934,7 @@ const TenthSection = (props: MOP) => {
 const EleventhSection = (props: MOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <SectionHeading heading="Section 11: References and Documentation" />
+      <SectionHeading className="heading-1" heading="Section 11: References and Documentation" />
 
       <p className="font-semibold text-lg py-2">Comprehensive Reference Library</p>
       <p className="font-semibold text-lg py-2">Company Policy Documents Consulted</p>
@@ -946,7 +959,7 @@ const EleventhSection = (props: MOP) => {
 
         <tbody className="">
           {props.references.policyDocumentRows.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.policyDocument}
               </td>
@@ -958,7 +971,7 @@ const EleventhSection = (props: MOP) => {
               <td className="border border-black p-3 align-top">
                 {row.type}
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
 
@@ -989,7 +1002,7 @@ const EleventhSection = (props: MOP) => {
 
         <tbody className="">
           {props.references.equipmentDocumentRows.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.title}
               </td>
@@ -1006,7 +1019,7 @@ const EleventhSection = (props: MOP) => {
                   {row.internalAccess}
                 </div>
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
 
@@ -1030,7 +1043,7 @@ const EleventhSection = (props: MOP) => {
 
         <tbody className="">
           {props.references.safetyStandardRows.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.safetyStandard}
               </td>
@@ -1047,7 +1060,7 @@ const EleventhSection = (props: MOP) => {
                   {row.internalAccess}
                 </div>
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
 
@@ -1072,7 +1085,7 @@ const EleventhSection = (props: MOP) => {
 
         <tbody className="">
           {props.references.additionalResourceRows.map((row, index) => (
-            <tr key={index}>
+            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.title}
               </td>
@@ -1089,7 +1102,7 @@ const EleventhSection = (props: MOP) => {
                   {row.internalAccess}
                 </div>
               </td>
-            </tr>
+            </CustomTableRowWrapper>
           ))}
         </tbody>
 

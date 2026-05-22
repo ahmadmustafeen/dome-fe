@@ -70,7 +70,9 @@ export async function GET(
         waitUntil: "networkidle",
       });
 
-
+      page.on("console", (msg) => {
+        console.log("BROWSER LOG:", msg.text());
+      })
 
       await page.evaluate(() => {
 
@@ -158,9 +160,6 @@ export async function GET(
       });
 
 
-
-
-      // HERE
 
 
       await browser.close();

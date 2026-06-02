@@ -1,10 +1,10 @@
 'use client'
 import { Typography } from "../common";
-import { MOP_SECTION_04_SYSTEM_ROWS } from "@/constants/mop-section04-facility";
 
 import { DownloadIcon, } from 'lucide-react'
 import { SOP } from "@/types/sop";
 import { ReactNode } from "react";
+import { SOP_SECTION_04_SYSTEM_ROWS } from "@/constants/sop-section04-facility";
 
 const FirstSectionKeys1 = (mop: SOP) => ([
   { key: "SOP Title", value: mop.document?.title },
@@ -175,25 +175,26 @@ const FourthSection = (props: SOP) => {
           </thead>
 
           <tbody className="">
-            {props.facilityEffects.map((row, index) => (
+            {SOP_SECTION_04_SYSTEM_ROWS.map((row, index) => (
               <CustomTableRowWrapper index={index}>
                 <td className="border border-black p-3 align-top">
-                  {index}
+                  {index + 1}
                 </td>
 
                 <td className="border border-black p-3 align-top">
-                  {MOP_SECTION_04_SYSTEM_ROWS.find(item => item.key === row.systemKey)?.label}
+                  {row.label}
                 </td>
 
                 <td className="border border-black p-3 align-top">
-                  {row.choice}
+                  {props.facilityEffects.find(Facitem => Facitem.systemKey === row.key)?.choice ?? "na"}
                 </td>
 
                 <td className="border border-black p-3 align-top">
-                  {row.details}
+                  {props.facilityEffects.find(Facitem => Facitem.systemKey === row.key)?.details}
                 </td>
               </CustomTableRowWrapper>
-            ))}
+            )
+            )}
           </tbody>
         </table>
       </div>
@@ -207,18 +208,21 @@ const FifthSection = (props: SOP) => {
       <SectionHeading className="heading-1" heading="Section 05: Safety Requirements" />
 
       <div className="pdf-page">
-        <p className="font-semibold text-lg py-4">PPE requirements specific to maintenance:</p>
+        <p className="font-semibold text-lg py-4">REQUIRED PERSONAL PROTECTIVE EQUIPMENT (PPE):</p>
         <table className="w-full border-collapse text-sm ">
           <thead className="bg-[#0F4D2E]">
             <tr className=" text-white">
               <th className="border border-black p-3 text-left">
-                PPE Category
+                REQUIRED PPE Item
               </th>
               <th className="border border-black p-3 text-left">
-                Specification
+                Specification/Standard
               </th>
               <th className="border border-black p-3 text-left">
-                When Required
+                Regulatory/Safety Requirement
+              </th>
+              <th className="border border-black p-3 text-left">
+                Specific Task Requiring This PPE
               </th>
             </tr>
           </thead>
@@ -227,7 +231,7 @@ const FifthSection = (props: SOP) => {
             {props.safety?.ppeRequirementRows.map((row, index) => (
               <CustomTableRowWrapper index={index}>
                 <td className="border border-black p-3 align-top">
-                  {row.requirement}
+                  {row.item}
                 </td>
 
                 <td className="border border-black p-3 align-top">
@@ -237,16 +241,16 @@ const FifthSection = (props: SOP) => {
                 <td className="border border-black p-3 align-top">
                   {row.requirement}
                 </td>
+                <td className="border border-black p-3 align-top">
+                  {row.task}
+                </td>
               </CustomTableRowWrapper>
             ))}
           </tbody>
         </table>
 
         {/* tools */}
-        <p className="font-semibold text-lg py-4">TOOLS REQUIRED:</p>
-        <Typography variant="p" className="mb-4 text-sm text-gray-700">
-          Specific tools required for {props.asset.assetName} {props.document.title} based on equipment type and task:
-        </Typography>
+        <p className="font-semibold text-lg py-4">Required Tools & Test Equipment:</p>
         <table className="w-full border-collapse text-sm ">
           <thead className="bg-[#0F4D2E]">
             <tr className=" text-white">

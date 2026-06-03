@@ -1,6 +1,6 @@
 "use client";
 import type { Row } from "@tanstack/react-table";
-import { ArrowLeft, Search, X } from "lucide-react";
+import { ArrowLeft, Search, Send, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -36,7 +36,7 @@ import { generatedDocumentService } from "@/services/generatedDocument-service";
 import { DocumentApiRecord, documentService } from "@/services/document-service";
 import { extractDocumentName } from "@/utils/formatters";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 20;
 
 type PageProps = {
   params: {
@@ -55,9 +55,14 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
   const { site, client } = useAppContext();
   const [documents, setDocuments] = useState<DocumentApiRecord[]>([]);
   const [ragDocuments, setRagDocuments] = useState<DocumentApiRecord[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [customTitle, setCustomTitle] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
 
 
-  const fetchMaintenanceSchedule = useCallback(async (siteId: string) => {
+  const fetchMaintenanceSchedule = useCallback(async (siteId: string, page?: number, noSearch?: boolean) => {
     setIsLoading(true);
     try {
       const response =
@@ -69,9 +74,15 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
         category?.subCategory!,
         category?.make!,
         site?._id!,
+        page ?? currentPage,
+        PAGE_SIZE,
+        noSearch ? "" : searchQuery,
       )) as {
-        data?: { assets?: CategoryAsset[] };
+        data?: { assets?: CategoryAsset[], total: number };
       };
+      const total = Math.max(1, Math.ceil((envelope.data?.total || 0) / PAGE_SIZE))
+      setTotalCount(envelope.data?.total || 0)
+      setTotalPages(total)
       setCategoryRow(
         envelope.data?.assets?.map((item) => ({
           ...item,
@@ -94,7 +105,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [searchQuery, currentPage,]);
 
   useEffect(() => {
     if (client?._id && site?._id) {
@@ -102,28 +113,11 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
     }
   }, [site, client]);
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [customTitle, setCustomTitle] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+
   const [pdData, setPdData] = useState<{ type: string, pdId: string, assetId: string, custom: boolean } | null>(null)
   const [deletePdData, setdeletePdData] = useState<{ type: string, pdId: string, assetId: string } | null>(null)
   const [selectedDocuments, setSelectedDocuments] = useState<any[]>([]);
 
-  const filteredAssets = useMemo(() => {
-    searchQuery.trim().toLowerCase();
-    return categoryRow;
-  }, [categoryRow, searchQuery]);
-
-  const totalPages = Math.max(1, Math.ceil(filteredAssets.length / PAGE_SIZE));
-
-  const pagedAssets = useMemo(
-    () =>
-      filteredAssets.slice(
-        (currentPage - 1) * PAGE_SIZE,
-        currentPage * PAGE_SIZE,
-      ),
-    [filteredAssets, currentPage],
-  );
   const fetchDocuments = async () => {
     try {
       const response = await documentService.getApprovedDocumentsBySiteId(site?._id!);
@@ -224,6 +218,11 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
     [router, categoryId],
   );
 
+  const handlePageChange = (e: number) => {
+    setCurrentPage(e);
+    fetchMaintenanceSchedule(site?._id!, e)
+  }
+
   const renderAssetSubRow = useCallback(
     (row: Row<CategoryAsset>) => (
       <CategoryAssetProcedurePanel
@@ -264,7 +263,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
     handleNavigate(pdData?.pdId!, pdData?.type!, pdData?.assetId!, selectedDocuments.map(item => item._id))
   }
 
-  const assetCount = filteredAssets.length;
+
 
   if (isLoading) {
     return (
@@ -397,14 +396,15 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
           <div>
             <Typography variant="h1">Category Detail</Typography>
             <Typography variant="p" className="mt-1 text-gray-500">
-              {assetCount !== 1
-                ? t("assets_count_other", { count: assetCount })
-                : t("assets_count_one", { count: assetCount })}
+              {totalCount !== 1
+                ? t("assets_count_other", { count: totalCount })
+                : t("assets_count_one", { count: totalCount })}
             </Typography>
           </div>
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 flex gap-x-2">
+          {/* this is search */}
           <div className="relative max-w-sm min-w-55">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <input
@@ -418,21 +418,43 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
               className="w-full rounded-lg border border-gray-300 py-2 pr-8 pl-9 text-sm focus:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none"
             />
             {searchQuery ? (
-              <button
-                type="button"
-                onClick={() => {
-                  setSearchQuery("");
-                  setCurrentPage(1);
-                }}
-                className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              >
-                <X className="size-4" />
-              </button>
+              <div>
+                <button
+                  type="button"
+                  onClick={() => fetchMaintenanceSchedule(site?._id!)}
+                  className="absolute top-1/2 right-8 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <Send className="size-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setCurrentPage(1);
+                  }}
+                  className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <X className="size-4" />
+                </button>
+
+              </div>
             ) : null}
+
           </div>
+          <button
+            type="button"
+            onClick={() => {
+              setSearchQuery("")
+              setCurrentPage(1)
+              fetchMaintenanceSchedule(site?._id!, 1, true)
+            }}
+            className="text-white bg-black rounded-2xl px-3 py-1 cursor-pointer hover:text-gray-600 text-xs"
+          >
+            Reset Filter
+          </button>
         </div>
 
-        {filteredAssets.length === 0 ? (
+        {categoryRow.length === 0 ? (
           <EmptyState
             icon={<Search className="size-9" />}
             heading={t("empty_heading")}
@@ -442,7 +464,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
           <div className="overflow-hidden rounded-lg border border-slate-800 shadow-xl shadow-black/20">
             <DataTable
               columns={columns}
-              data={pagedAssets}
+              data={categoryRow}
               getRowId={(row) => row.id}
               onRowActivate={(row) => {
                 row.toggleExpanded();
@@ -459,8 +481,8 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
         <Pagination
           totalPages={totalPages}
           currentPage={currentPage}
-          onPageChange={setCurrentPage}
-          totalCount={filteredAssets.length}
+          onPageChange={handlePageChange}
+          totalCount={totalCount}
           pageSize={PAGE_SIZE}
         />
       </SectionWrapper>

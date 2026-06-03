@@ -34,6 +34,9 @@ export const assetService = {
     subCategory: string,
     make: string,
     siteId: string,
+    currentPage: number,
+    pageSize: number,
+    searchQuery?: string
   ) => {
     return apiFetch(`/assets/fetchByCategoryAndSubCategory`, {
       method: "POST",
@@ -42,6 +45,9 @@ export const assetService = {
         subCategory,
         make,
         siteId,
+        currentPage,
+        pageSize,
+        searchQuery
       }),
     },);
   },

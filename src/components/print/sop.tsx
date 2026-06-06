@@ -208,7 +208,7 @@ const FifthSection = (props: SOP) => {
       <SectionHeading className="heading-1" heading="Section 05: Safety Requirements" />
 
       <div className="pdf-page">
-        <p className="font-semibold text-lg py-4">REQUIRED PERSONAL PROTECTIVE EQUIPMENT (PPE):</p>
+        <p className="font-semibold text-lg py-4">PPE requirements specific to operation:</p>
         <table className="w-full border-collapse text-sm ">
           <thead className="bg-[#0F4D2E]">
             <tr className=" text-white">
@@ -292,7 +292,7 @@ const FifthSection = (props: SOP) => {
         </table>
 
         {/* emergency Contacts */}
-        <p className="font-semibold text-lg py-4">EMERGENCY CONTACTS:</p>
+        <p className="font-semibold text-lg py-4">Emergency Contacts:</p>
         <table className="w-full border-collapse text-sm ">
           <thead className="bg-[#0F4D2E]">
             <tr className=" text-white">
@@ -445,14 +445,32 @@ const SixthSection = (props: SOP) => {
       </table>
 
       <p className="font-semibold text-lg py-4">Critical Decision Points</p>
-      <div className="section-container-6">
-        {
-          props.risksAssumptions.criticalDecisionPointItems.map((item, index) => {
-            return <div className="subsection-row-6" key={index} >
-              <EachSingleRow item={item} />
-            </div>
-          })
-        }
+      <div className="">
+        <table className="w-full border-collapse text-sm ">
+          <thead className="bg-[#0F4D2E]">
+            <tr className=" text-white">
+              <th className="border border-black p-3 text-left">
+                No.
+              </th>
+              <th className="border border-black p-3 text-left">
+                Critical Decision Points
+              </th>
+            </tr>
+          </thead>
+
+          <tbody className="">
+            {props.risksAssumptions.criticalDecisionPointItems.map((row, index) => (
+              <CustomTableRowWrapper index={index}>
+                <td className="border border-black p-3 align-top">
+                  {index + 1}
+                </td>
+                <td className="border border-black p-3 align-top">
+                  {row.text}
+                </td>
+              </CustomTableRowWrapper>
+            ))}
+          </tbody>
+        </table>
       </div>
 
 

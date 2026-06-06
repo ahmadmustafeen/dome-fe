@@ -1,7 +1,6 @@
 'use client'
 import { MOP } from "@/types/mop";
 import { Typography } from "../common";
-import { MOP_SECTION_04_SYSTEM_ROWS } from "@/constants/mop-section04-facility";
 
 import { DownloadIcon, } from 'lucide-react'
 import { buildDefaultGeneratorOperationalRows } from "@/constants/mop-section07-details";
@@ -11,6 +10,7 @@ import { MOP_SECTION_09_APPROVAL_REQUIREMENT_BULLETS, MOP_SECTION_09_APPROVAL_RE
 import { MOP_SECTION_11_POLICY_BANNER_TEXT, MOP_SECTION_11_POLICY_NOTE_LABEL } from "@/constants/mop-section11-references";
 import { MopSection11Notices } from "../mop/MopSection11Notices";
 import { ReactNode } from "react";
+import { SOP_SECTION_04_SYSTEM_ROWS } from "@/constants/sop-section04-facility";
 
 const FirstSectionKeys1 = (mop: MOP) => ([
   { key: "MOP Title", value: mop.document?.title },
@@ -180,29 +180,27 @@ const FourthSection = (props: MOP) => {
           </thead>
 
           <tbody className="">
-            {props.facilityEffects.map((row, index) => {
-              return (
-                <CustomTableRowWrapper index={index}>
 
-                  <td className="border border-black p-3 align-top">
-                    {index}
-                  </td>
+            {SOP_SECTION_04_SYSTEM_ROWS.map((row, index) => (
+              <CustomTableRowWrapper index={index}>
+                <td className="border border-black p-3 align-top">
+                  {index + 1}
+                </td>
 
-                  <td className="border border-black p-3 align-top">
-                    {MOP_SECTION_04_SYSTEM_ROWS.find(item => item.key === row.systemKey)?.label}
-                  </td>
+                <td className="border border-black p-3 align-top">
+                  {row.label}
+                </td>
 
-                  <td className="border border-black p-3 align-top">
-                    {row.choice}
-                  </td>
+                <td className="border border-black p-3 align-top">
+                  {props.facilityEffects.find(Facitem => Facitem.systemKey === row.key)?.choice ?? "na"}
+                </td>
 
-                  <td className="border border-black p-3 align-top">
-                    {row.details}
-                  </td>
-                </CustomTableRowWrapper>
-
-              )
-            })}
+                <td className="border border-black p-3 align-top">
+                  {props.facilityEffects.find(Facitem => Facitem.systemKey === row.key)?.details}
+                </td>
+              </CustomTableRowWrapper>
+            )
+            )}
           </tbody>
         </table>
       </div>
@@ -254,7 +252,7 @@ const FifthSection = (props: MOP) => {
         </table>
 
         {/* tools */}
-        <p className="font-semibold text-lg py-4">TOOLS REQUIRED:</p>
+        <p className="font-semibold text-lg py-4">Tools required:</p>
         <Typography variant="p" className="mb-4 text-sm text-gray-700">
           Specific tools required for {assetName} {props.document.title} based on equipment type and task:
         </Typography>
@@ -334,7 +332,7 @@ const FifthSection = (props: MOP) => {
 
 
         {/* emergency Contacts */}
-        <p className="font-semibold text-lg py-4">EMERGENCY CONTACTS:</p>
+        <p className="font-semibold text-lg py-4">Emergency Contacts:</p>
         <table className="w-full border-collapse text-sm ">
           <thead className="bg-[#091628]">
             <tr className=" text-white">

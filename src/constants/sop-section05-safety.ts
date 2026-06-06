@@ -8,7 +8,7 @@ import { newProcedureRowId } from "@/utils/procedure-row-id";
 export const SOP_SECTION_05_HEADING = "Section 05: Safety Requirements";
 
 export const SOP_SECTION_05_PPE_SUBHEADING =
-  "REQUIRED PERSONAL PROTECTIVE EQUIPMENT (PPE)";
+  "PPE requirements specific to operation:";
 
 export const SOP_SECTION_05_TOOLS_SUBHEADING =
   "Required Tools & Test Equipment";

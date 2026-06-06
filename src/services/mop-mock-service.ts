@@ -1,4 +1,3 @@
-import { buildDefaultMopSection04Rows } from "@/constants/mop-section04-facility";
 import {
   buildDefaultEmergencyContactRows,
   buildDefaultLocalEmergencyServiceRows,
@@ -284,7 +283,7 @@ export const createEmptyMop = (): MOP => ({
     siteContact: "",
   },
   overview: emptyOverview(),
-  facilityEffects: buildDefaultMopSection04Rows(),
+  facilityEffects: [],
 });
 
 /**
@@ -620,7 +619,7 @@ export const MOCK_GENERATED_MOP: MOP = {
     postNotifications:
       "Operations confirmation of stable temperatures and alarms cleared.",
   },
-  facilityEffects: buildDefaultMopSection04Rows(),
+  facilityEffects: [],
 };
 
 export const generateMOP = async (

@@ -342,6 +342,8 @@ export type MopFacilitySystemKey =
   | "lockoutTagout"
   | "workHot"
   | "radioInterference"
+  | "transferSwitch"
+  | "buildingAutomation"
   | "waterLeakDetection";
 
 export type MopFacilityEffectChoice = "yes" | "no" | "na";

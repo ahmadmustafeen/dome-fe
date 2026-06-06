@@ -364,50 +364,6 @@ const FifthSection = (props: MOP) => {
             ))}
           </tbody>
         </table>
-        <div className="py-6 flex">
-          <Typography variant="h4" className="mb-4 pr-2 text-sm text-gray-700">
-            LOCAL EMERGENCY SERVICES:
-          </Typography>
-          <Typography className="">{props.safety.localEmergencyServicesAddress}</Typography>
-        </div>
-
-        <table className="w-full border-collapse text-sm ">
-          <thead className="bg-[#091628]">
-            <tr className=" text-white">
-              <th className="border border-black p-3 text-left">
-                Service
-              </th>
-              <th className="border border-black p-3 text-left">
-                Contact Name
-              </th>
-              <th className="border border-black min-w-20 p-3 text-left">
-                Phone Number
-              </th>
-              <th className="border border-black min-w-20 p-3 text-left">
-                Address
-              </th>
-            </tr>
-          </thead>
-
-          <tbody className="">
-            {props.safety?.localEmergencyServiceRows.map((row, index) => (
-              <CustomTableRowWrapper index={index}>
-                <td className="border border-black p-3 align-top">
-                  {row.service}
-                </td>
-                <td className="border border-black p-3 align-top">
-                  {row.contactName}
-                </td>
-                <td className="border border-black min-w-20  p-3 align-top">
-                  {row.phoneNumber}
-                </td>
-                <td className="border border-black min-w-20  p-3 align-top">
-                  {row.address}
-                </td>
-              </CustomTableRowWrapper>
-            ))}
-          </tbody>
-        </table>
       </div>
 
     </div>
@@ -415,6 +371,7 @@ const FifthSection = (props: MOP) => {
 }
 
 const SixthSection = (props: MOP) => {
+  const assetName = props.asset.assetName
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 06: MOP Assumptions" />
@@ -446,17 +403,32 @@ const SixthSection = (props: MOP) => {
       </table>
 
       <div className="section-container-6">
-        {
-          props.assumptions.criticalDecisionPointItems.map((item, index) => {
-            return <div className="subsection-row-6" key={index} >
-              {index === 0 ?
-                <p className="font-semibold text-lg py-4">Critical Decision Points for</p>
-                : null
-              }
-              <EachSingleRow item={item} />
-            </div>
-          })
-        }
+        <p className="font-semibold text-lg py-4">Critical Decision Points for {assetName}</p>
+        <table className="w-full border-collapse text-sm ">
+          <thead className="bg-[#091628]">
+            <tr className=" text-white">
+              <th className="border border-black p-3 text-left">
+                No.
+              </th>
+              <th className="border border-black p-3 text-left">
+                Critical Decision Point
+              </th>
+            </tr>
+          </thead>
+
+          <tbody className="">
+            {props.assumptions.criticalDecisionPointItems.map((row, index) => (
+              <CustomTableRowWrapper index={index}>
+                <td className="border border-black p-3 align-top">
+                  {index + 1}
+                </td>
+                <td className="border border-black p-3 align-top">
+                  {row.text}
+                </td>
+              </CustomTableRowWrapper>
+            ))}
+          </tbody>
+        </table>
       </div>
 
 
@@ -468,7 +440,44 @@ const SeventhSection = (props: MOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 07: MOP Details" />
-      <p className="font-semibold text-lg py-2">Procedure steps (outline):</p>
+      <p className="font-semibold text-lg py-2">7.1 Pre-Procedure Checks:</p>
+      <table className="w-full border-collapse text-sm ">
+        <thead className="bg-[#091628]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              Description
+            </th>
+            <th className="border border-black min-w-20 p-3 text-left">
+              Expected Result
+            </th>
+            <th className="border border-black min-w-20 p-3 text-left">
+              Actual Result
+            </th>
+            <th className="border border-black p-3 text-left">
+              Action if Not Met
+            </th>
+          </tr>
+        </thead>
+
+        <tbody className="">
+          {props.steps.map((row, index) => (
+            <CustomTableRowWrapper index={index}>
+              <td className="border border-black max-w-100 p-3 align-top">
+                {row.description}
+              </td>
+              <td className="border border-black min-w-20 p-3 align-top">
+                {row.expectedResult}
+              </td>
+              <td className="border border-black min-w-20 p-3 align-top">
+                {row.actualResult}
+              </td>
+              <td className="border border-black min-w-20 p-3 align-top">
+                {row.actionIfNotMet}
+              </td>
+            </CustomTableRowWrapper>
+          ))}
+        </tbody>
+      </table>
       <div className="section-container-7">
         {
           props.steps.map((item, index) => {

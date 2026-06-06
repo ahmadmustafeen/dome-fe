@@ -6,24 +6,24 @@ import { SOP } from "@/types/sop";
 import { ReactNode } from "react";
 import { SOP_SECTION_04_SYSTEM_ROWS } from "@/constants/sop-section04-facility";
 
-const FirstSectionKeys1 = (mop: SOP) => ([
-  { key: "SOP Title", value: mop.document?.title },
-  { key: "SOP Identifier", value: mop.document.identifier },
-  { key: "Version:", value: mop.document?.version },
-  { key: "Creation Date", value: mop.document?.createdDate },
-  { key: "Work Description:", value: mop.procedure.workDescription },
-  { key: "Component Type:", value: mop.equipment.componentType },
-  { key: "Manufacturer:", value: mop.equipment.manufacturer },
-  { key: "Model Number:", value: mop.equipment.modelNumber },
-  { key: "Serial Number:", value: mop.equipment.serialNumber },
-  { key: "Equipment Number:", value: mop.equipment.equipmentNumber },
-  { key: "Location", value: mop.equipment.location },
-  { key: "Duration", value: mop.procedure.duration },
-  { key: "Level of Risk (LOR):", value: mop.procedure.levelOfRisk },
-  { key: "CET Level Required:", value: mop.procedure.cetLevelRequired },
-  { key: "Author:", value: mop.document.author },
-  { key: "Author CET Level:", value: mop.document.authorCetLevel },
-  { key: "Approver", value: mop.signOff.approvedBy },
+const FirstSectionKeys1 = (sop: SOP) => ([
+  { key: "SOP Title", value: sop.document?.title },
+  { key: "SOP Identifier", value: sop.document.identifier },
+  { key: "Version:", value: sop.document?.version },
+  { key: "Creation Date", value: sop.document?.createdDate },
+  { key: "Work Description:", value: sop.procedure.workDescription },
+  { key: "Component Type:", value: sop.equipment.componentType },
+  { key: "Manufacturer:", value: sop.equipment.manufacturer },
+  { key: "Model Number:", value: sop.equipment.modelNumber },
+  { key: "Serial Number:", value: sop.equipment.serialNumber },
+  { key: "Equipment Number:", value: sop.equipment.equipmentNumber },
+  { key: "Location", value: sop.equipment.location },
+  { key: "Duration", value: sop.procedure.duration },
+  { key: "Level of Risk (LOR):", value: sop.procedure.levelOfRisk },
+  { key: "CET Level Required:", value: sop.procedure.cetLevelRequired },
+  { key: "Author:", value: sop.document.author },
+  { key: "Author CET Level:", value: sop.document.authorCetLevel },
+  { key: "Approver", value: sop.signOff.approvedBy },
 ])
 
 const CustomTableRowWrapper = ({ children, index }: { children: ReactNode, index: number }) => {
@@ -66,23 +66,23 @@ const EachSingleRow = ({
   );
 };
 
-const SecondSectionKeys1 = (mop: SOP) => ([
-  { key: "Customer", value: mop.site.customer },
-  { key: "Site Name", value: mop.site.siteName },
-  { key: "Data Center Location:", value: mop.site.dataCenterLocation },
-  { key: "Site Address:", value: mop.site.siteAddress },
-  { key: "Site Contact:", value: mop.site.siteContact },
+const SecondSectionKeys1 = (sop: SOP) => ([
+  { key: "Customer", value: sop.site.customer },
+  { key: "Site Name", value: sop.site.siteName },
+  { key: "Data Center Location:", value: sop.site.dataCenterLocation },
+  { key: "Site Address:", value: sop.site.siteAddress },
+  { key: "Site Contact:", value: sop.site.siteContact },
 ])
 
-const ThirdSectionKeys1 = (mop: SOP) => ([
-  { key: "SOP Title:", value: mop.document.title },
-  { key: "Work Area:", value: mop.overview.workArea },
-  { key: "Building/Floor/Room:", value: mop.overview.buildingFloorRoom },
-  { key: "Access Requirements:", value: mop.overview.accessRequirements },
-  { key: "Self Delivered / Vendor:", value: mop.overview.workDeliveryType },
-  { key: "Qualifications Required:", value: mop.overview.qualificationsRequired },
-  { key: "Advance notifications required:", value: mop.overview.advanceNotifications },
-  { key: "Post notifications required:", value: mop.overview.postNotifications },
+const ThirdSectionKeys1 = (sop: SOP) => ([
+  { key: "SOP Title:", value: sop.document.title },
+  { key: "Work Area:", value: sop.overview.workArea },
+  { key: "Building/Floor/Room:", value: sop.overview.buildingFloorRoom },
+  { key: "Access Requirements:", value: sop.overview.accessRequirements },
+  { key: "Self Delivered / Vendor:", value: sop.overview.workDeliveryType },
+  { key: "Qualifications Required:", value: sop.overview.qualificationsRequired },
+  { key: "Advance notifications required:", value: sop.overview.advanceNotifications },
+  { key: "Post notifications required:", value: sop.overview.postNotifications },
 ])
 
 const SectionHeading = ({ heading, className }: { heading: string, className?: string }) => {
@@ -203,6 +203,7 @@ const FourthSection = (props: SOP) => {
 }
 
 const FifthSection = (props: SOP) => {
+  const assetName = props.asset.assetName;
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 05: Safety Requirements" />
@@ -251,6 +252,9 @@ const FifthSection = (props: SOP) => {
 
         {/* tools */}
         <p className="font-semibold text-lg py-4">Required Tools & Test Equipment:</p>
+        <Typography variant="p" className="mb-4 text-sm text-gray-700">
+          Specific tools required for {assetName} {props.document.title} based on equipment type and task:
+        </Typography>
         <table className="w-full border-collapse text-sm ">
           <thead className="bg-[#0F4D2E]">
             <tr className=" text-white">

@@ -23,6 +23,9 @@ export type MOPStep = {
   id: string;
   stepNumber: number;
   description: string;
+  expectedResult: string;
+  actualResult: string;
+  actionIfNotMet: string
 };
 
 /** Section 07 subsection — one row in Detailed Procedure Steps. */

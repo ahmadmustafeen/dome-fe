@@ -143,7 +143,7 @@ export const MopSection09MopApproval = ({
       </div>
 
       <div className="mt-6 border border-gray-300 bg-gray-100 p-4">
-        <Typography variant="h6" className="mt-0 mb-2 text-sm font-semibold text-gray-900">
+        <Typography variant="h6" className="mt-0 mb-2 text-sm font-semibold text-gray-900 capitalize">
           {MOP_SECTION_09_APPROVAL_REQUIREMENTS_HEADING}
         </Typography>
         <ul className="mb-0 list-inside list-disc space-y-1 pl-0 text-sm text-gray-800">

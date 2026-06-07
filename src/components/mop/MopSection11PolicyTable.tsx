@@ -40,7 +40,7 @@ export const MopSection11PolicyTable = ({
 }: MopSection11PolicyTableProps) => {
   return (
     <div className="mb-6">
-      <Typography variant="h6" className="mb-2 text-sm font-semibold text-gray-900">
+      <Typography variant="h6" className="mb-2 text-sm font-semibold text-gray-900 capitalize">
         Company Policy Documents Consulted
       </Typography>
       <Typography variant="p" className="mb-3 text-sm text-gray-800">

@@ -3,6 +3,7 @@ import {
   buildDefaultLocalEmergencyServiceRows,
   buildDefaultPpeRows,
   buildDefaultSafetyProcedureRows,
+  buildDefaultSiteHazardRows,
   buildDefaultToolRows,
   MOP_LOCAL_EMERGENCY_SAMPLE_ADDRESS,
   MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT,
@@ -10,6 +11,7 @@ import {
   resolveLocalEmergencyServiceRows,
   resolvePpeRequirementRows,
   resolveSafetyProcedureRows,
+  resolveSiteHazardRows,
   resolveToolRequirementRows,
 } from "@/constants/mop-section05-safety";
 import {
@@ -40,7 +42,7 @@ import { buildDefaultBackOutStepRows, resolveBackOutStepRows } from "@/constants
 import { buildDefaultMopApproval, resolveMopApproval } from "@/constants/mop-section09-approval";
 import { buildDefaultMopComments, resolveMopComments } from "@/constants/mop-section10-comments";
 import { buildDefaultMopReferences, resolveMopReferences } from "@/constants/mop-section11-references";
-import type { MOP, MOPGenerateContext, MOPSection03Overview, MOPSection11References, MOPStep } from "@/types/mop";
+import type { MOP, MOPGenerateContext, MOPSection03Overview, MOPSection11References } from "@/types/mop";
 import { getTodayDateInputValue } from "@/utils/mop-dates";
 
 const delay = (ms: number) =>
@@ -194,6 +196,7 @@ export const createEmptyMop = (): MOP => ({
     localEmergencyServicesAddress: "",
     ppeRequirementRows: buildDefaultPpeRows(MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT),
     toolRequirementRows: buildDefaultToolRows(MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT),
+    siteHazardRows: buildDefaultSiteHazardRows(MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT),
     safetyProcedureRows: buildDefaultSafetyProcedureRows(
       MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT,
     ),
@@ -381,6 +384,26 @@ export const MOCK_GENERATED_MOP: MOP = {
         toolCategory: "Electrical test",
         specificToolsList: "Digital multimeter\nMegohmmeter (if required by site)\nInsulated tools set",
         purpose: "Verify winding insulation, battery voltage, and control circuit integrity.",
+      },
+    ],
+    siteHazardRows: [
+      {
+        id: "haz-mock-arc",
+        hazardType: "Arc flash",
+        description: "Potential electrical arc exposure during panel access and terminal work.",
+        controlMeasures: "Verify LOTO, wear arc-rated PPE, maintain safe approach boundary.",
+      },
+      {
+        id: "haz-mock-slip",
+        hazardType: "Slips and trips",
+        description: "Wet or cluttered work area in the equipment room.",
+        controlMeasures: "Keep walkways clear, clean spills immediately, use non-slip footwear.",
+      },
+      {
+        id: "haz-mock-noise",
+        hazardType: "High noise",
+        description: "Generator exercise may exceed comfortable noise thresholds.",
+        controlMeasures: "Use hearing protection and limit exposure time during run-ups.",
       },
     ],
     safetyProcedureRows: [
@@ -611,6 +634,7 @@ export const generateMOP = async (
     localEmergencyServicesAddress: data.safety?.localEmergencyServicesAddress ?? "",
     ppeRequirementRows: resolvePpeRequirementRows(data.safety?.ppeRequirementRows),
     toolRequirementRows: resolveToolRequirementRows(data.safety?.toolRequirementRows),
+    siteHazardRows: resolveSiteHazardRows(data.safety?.siteHazardRows),
     safetyProcedureRows: resolveSafetyProcedureRows(data.safety?.safetyProcedureRows),
     emergencyContactRows: resolveEmergencyContactRows(data.safety?.emergencyContactRows),
     localEmergencyServiceRows: resolveLocalEmergencyServiceRows(

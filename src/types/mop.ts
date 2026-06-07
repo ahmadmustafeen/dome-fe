@@ -190,6 +190,14 @@ export type MopEmergencyContactRow = {
   phoneNumber: string;
 };
 
+/** Section 05 — site-specific hazard row for MOP safety. */
+export type MopSiteHazardRow = {
+  id: string;
+  hazardType: string;
+  description: string;
+  controlMeasures: string;
+};
+
 /** Section 05 — local emergency services (researched site-specific directory). */
 export type MopLocalEmergencyServiceRow = {
   id: string;
@@ -269,6 +277,7 @@ export type MOPSafety = {
   /** Dynamic-length tables: default empty rows, or one row per API/autofill item. */
   ppeRequirementRows: MopPpeRequirementRow[];
   toolRequirementRows: MopToolRequirementRow[];
+  siteHazardRows: MopSiteHazardRow[];
   safetyProcedureRows: MopSafetyProcedureRow[];
   emergencyContactRows: MopEmergencyContactRow[];
   localEmergencyServiceRows: MopLocalEmergencyServiceRow[];

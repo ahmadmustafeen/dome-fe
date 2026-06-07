@@ -62,7 +62,7 @@ export const MopSection07ProcedureSteps = ({
     <div className="mb-8 border-t border-gray-200 pt-6 last:mb-0">
       <Typography
         variant="h6"
-        className="mb-2 text-base font-semibold text-gray-900"
+        className="mb-2 text-base font-semibold capitalize text-gray-900"
       >
         {MOP_SECTION_07_DETAILED_PROCEDURES_SUBHEADING}
       </Typography>
@@ -202,7 +202,7 @@ export const MopSection07ProcedureSteps = ({
       <div>
         <Typography
           variant="h6"
-          className="mb-2 text-sm font-semibold text-gray-900"
+          className="mb-2 text-sm font-semibold capitalize text-gray-900"
         >
           {MOP_SECTION_07_CRITICAL_STEP_NOTES_HEADING}
         </Typography>

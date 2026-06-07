@@ -14,7 +14,7 @@ export const MopSection11Notices = () => {
   return (
     <div className="mt-8 space-y-4">
       <div className="rounded-r-md border-l-4 border-blue-600 bg-sky-50 p-5">
-        <Typography variant="h6" className="mt-0 mb-2 text-sm font-semibold text-blue-800">
+        <Typography variant="h6" className="mt-0 mb-2 text-sm font-semibold text-blue-800 capitalize">
           {MOP_SECTION_11_GUIDELINES_TITLE}
         </Typography>
         <ul className="mb-0 list-inside list-disc space-y-1 pl-0 text-sm text-sky-950">

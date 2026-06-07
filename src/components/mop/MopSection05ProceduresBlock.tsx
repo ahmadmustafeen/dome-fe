@@ -34,7 +34,7 @@ export const MopSection05ProceduresBlock = ({
 }: MopSection05ProceduresBlockProps) => {
   return (
     <div className="mb-8 last:mb-0">
-      <Typography variant="h6" className="mb-4 text-base font-semibold text-gray-900">
+      <Typography variant="h6" className="mb-4 capitalize text-base font-semibold text-gray-900">
         {MOP_SECTION_05_PROCEDURES_SUBHEADING}
       </Typography>
       <div className="overflow-x-auto">

@@ -49,7 +49,7 @@ export const MopSection10MopComments = ({
       </Typography>
       <Typography
         variant="h6"
-        className="mb-2 text-sm font-semibold text-gray-900"
+        className="mb-2 text-sm font-semibold text-gray-900 capitalize"
       >
         {MOP_SECTION_10_MOP_COMMENTS_LABEL}
       </Typography>
@@ -65,7 +65,7 @@ export const MopSection10MopComments = ({
       <div className="mt-6 border border-gray-300 bg-gray-100 p-4">
         <Typography
           variant="h6"
-          className="mt-0 mb-3 text-sm font-semibold text-gray-900"
+          className="mt-0 mb-3 text-sm font-semibold text-gray-900 capitalize"
         >
           {MOP_SECTION_10_POST_MAINTENANCE_HEADING}
         </Typography>

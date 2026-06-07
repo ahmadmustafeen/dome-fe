@@ -28,7 +28,7 @@ export const MopSection07EnginePerformance = ({
 }: MopSection07EnginePerformanceProps) => {
   return (
     <div className="mb-8">
-      <Typography variant="h6" className="mb-3 text-base font-semibold text-gray-900">
+      <Typography variant="h6" className="mb-3 text-base capitalize font-semibold text-gray-900">
         {MOP_SECTION_07_ENGINE_PERFORMANCE_SUBHEADING}
       </Typography>
       <div className="overflow-x-auto">

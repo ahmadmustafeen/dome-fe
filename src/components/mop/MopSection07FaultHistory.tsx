@@ -34,7 +34,7 @@ const patchFault = (
 export const MopSection07FaultHistory = ({ rows, patchMopDetails }: MopSection07FaultHistoryProps) => {
   return (
     <div className="mb-8">
-      <Typography variant="h6" className="mb-3 text-base font-semibold text-gray-900">
+      <Typography variant="h6" className="mb-3 text-base capitalize font-semibold text-gray-900">
         {MOP_SECTION_07_FAULT_HISTORY_SUBHEADING}
       </Typography>
       <p className="mb-2 text-sm text-gray-600">

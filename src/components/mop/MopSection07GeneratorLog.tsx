@@ -25,7 +25,7 @@ const patchGenRow = (
 export const MopSection07GeneratorLog = ({ rows, patchMopDetails }: MopSection07GeneratorLogProps) => {
   return (
     <div className="mb-8">
-      <Typography variant="h6" className="mb-3 text-base font-semibold text-gray-900">
+      <Typography variant="h6" className="mb-3 text-base capitalize font-semibold text-gray-900">
         {MOP_SECTION_07_GENERATOR_LOG_SUBHEADING}
       </Typography>
       <p className="mb-2 text-xs text-gray-500">

@@ -5,6 +5,7 @@ import type {
   MopLocalEmergencyServiceRow,
   MopPpeRequirementRow,
   MopSafetyProcedureRow,
+  MopSiteHazardRow,
   MopToolRequirementRow,
 } from "@/types/mop";
 
@@ -16,16 +17,18 @@ export const MOP_SECTION_05_PPE_SUBHEADING =
 export const MOP_SECTION_05_PPE_INTRO =
   "PPE requirements specific to Cummins Generator maintenance:";
 
-export const MOP_SECTION_05_TOOLS_SUBHEADING = "TOOLS REQUIRED";
+export const MOP_SECTION_05_TOOLS_SUBHEADING = "Tools Required";
 
 export const MOP_SECTION_05_TOOLS_INTRO =
   "Specific tools required for Cummins Generator Annual Preventative Maintenance based on equipment type and task:";
 
-export const MOP_SECTION_05_PROCEDURES_SUBHEADING = "SAFETY PROCEDURES";
+export const MOP_SECTION_05_PROCEDURES_SUBHEADING = "Safey Procedure";
 
-export const MOP_SECTION_05_EMERGENCY_SUBHEADING = "EMERGENCY CONTACTS";
+export const MOP_SECTION_05_HAZARDS_SUBHEADING = "Site-Specific Hazards";
 
-export const MOP_SECTION_05_LOCAL_EMERGENCY_SUBHEADING = "LOCAL EMERGENCY SERVICES";
+export const MOP_SECTION_05_EMERGENCY_SUBHEADING = "Emergeny Contacts";
+
+export const MOP_SECTION_05_LOCAL_EMERGENCY_SUBHEADING = "Local Emergeny Services";
 
 export const MOP_LOCAL_EMERGENCY_SAMPLE_ADDRESS =
   "8025 North Interstate Hwy 35, Austin, TX 78753";
@@ -61,6 +64,13 @@ export const newSafetyProcedureRow = (): MopSafetyProcedureRow => ({
   time: "",
 });
 
+export const newMopSiteHazardRow = (): MopSiteHazardRow => ({
+  id: newMopRowId("haz"),
+  hazardType: "",
+  description: "",
+  controlMeasures: "",
+});
+
 export const newEmergencyContactRow = (): MopEmergencyContactRow => ({
   id: newMopRowId("emg"),
   emergencyType: "",
@@ -84,6 +94,9 @@ export const buildDefaultToolRows = (count: number): MopToolRequirementRow[] =>
 
 export const buildDefaultSafetyProcedureRows = (count: number): MopSafetyProcedureRow[] =>
   Array.from({ length: count }, () => newSafetyProcedureRow());
+
+export const buildDefaultSiteHazardRows = (count: number): MopSiteHazardRow[] =>
+  Array.from({ length: count }, () => newMopSiteHazardRow());
 
 export const buildDefaultEmergencyContactRows = (count: number): MopEmergencyContactRow[] =>
   Array.from({ length: count }, () => newEmergencyContactRow());
@@ -123,6 +136,15 @@ export const resolveSafetyProcedureRows = (
     return buildDefaultSafetyProcedureRows(MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT);
   }
   return rows?.map((r) => ensureId(r, "proc"));
+};
+
+export const resolveSiteHazardRows = (
+  rows: MopSiteHazardRow[] | undefined,
+): MopSiteHazardRow[] => {
+  if (!rows || rows.length === 0) {
+    return buildDefaultSiteHazardRows(MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT);
+  }
+  return rows?.map((r) => ensureId(r, "haz"));
 };
 
 export const resolveEmergencyContactRows = (

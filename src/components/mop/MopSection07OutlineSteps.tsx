@@ -38,7 +38,7 @@ export const MopSection07OutlineSteps = ({ steps, patchSteps }: MopSection07Outl
 
   return (
     <div className="mb-6 border-b border-gray-100 pb-6">
-      <Typography variant="h6" className="mb-3 text-sm font-semibold text-[#0f3456]">
+      <Typography variant="h6" className="mb-3 text-sm capitalize font-semibold text-[#0f3456]">
         7.1 Pre-Procedure Checks:
       </Typography>
       <div className="overflow-x-auto">

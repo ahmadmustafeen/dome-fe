@@ -3,7 +3,7 @@ import { newMopRowId } from "@/utils/mopRowId";
 
 export const MOP_SECTION_08_SUBHEADING = "Section 08: Back-out Procedures";
 
-export const MOP_SECTION_08_CRITICAL_LABEL = "CRITICAL BACK-OUT PROCEDURES";
+export const MOP_SECTION_08_CRITICAL_LABEL = "Critical Back-out procedures";
 
 export const MOP_SECTION_08_INTRO =
   "If at any point during the maintenance procedure a critical issue is discovered that could affect data center operations, follow these detailed back-out procedures:";

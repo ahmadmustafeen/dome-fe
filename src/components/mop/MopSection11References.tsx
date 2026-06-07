@@ -20,7 +20,7 @@ export const MopSection11ReferencesBlock = ({ references, patchMopReferences }: 
       <Typography variant="h5" className="mb-2 text-base font-semibold text-gray-900">
         {MOP_SECTION_11_HEADING}
       </Typography>
-      <Typography variant="h6" className="mb-4 text-sm font-semibold text-gray-900">
+      <Typography variant="h6" className="mb-4 text-sm font-semibold text-gray-900 capitalize">
         {MOP_SECTION_11_COMPREHENSIVE_LIB_LABEL}
       </Typography>
 

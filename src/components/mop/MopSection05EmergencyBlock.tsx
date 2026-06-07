@@ -32,7 +32,7 @@ export const MopSection05EmergencyBlock = ({
 }: MopSection05EmergencyBlockProps) => {
   return (
     <div className="mb-8 last:mb-0">
-      <Typography variant="h6" className="mb-4 text-base font-semibold text-gray-900">
+      <Typography variant="h6" className="mb-4 text-base capitalize font-semibold text-gray-900">
         {MOP_SECTION_05_EMERGENCY_SUBHEADING}
       </Typography>
       <div className="overflow-x-auto">

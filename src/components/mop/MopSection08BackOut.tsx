@@ -44,7 +44,7 @@ export const MopSection08BackOut = ({ backOut, patchBackOut }: MopSection08BackO
       <Typography variant="h5" className="mb-2 text-base font-semibold text-gray-900">
         {MOP_SECTION_08_SUBHEADING}
       </Typography>
-      <p className="mb-1 text-sm font-semibold tracking-wide text-[#0f3456] uppercase">
+      <p className="mb-1 text-sm font-semibold capitalize tracking-wide text-[#0f3456]">
         {MOP_SECTION_08_CRITICAL_LABEL}
       </p>
       <p className="mb-4 text-sm text-gray-700">{MOP_SECTION_08_INTRO}</p>

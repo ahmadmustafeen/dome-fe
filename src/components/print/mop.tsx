@@ -650,7 +650,7 @@ const SeventhSection = (props: MOP) => {
 
       {props.mopDetails.faultAlarmHistoryRows?.length ? <>
 
-        <p className="font-semibold text-lg py-4 break-before-page">System Fault/Alarm History</p>
+        <p className="font-semibold text-lg py-4">System Fault/Alarm History</p>
         <Typography variant="p" className="mb-4 text-sm text-gray-700">
           Record active or cleared faults/alarms observed during this event (rows expand with API or manual entry; default blank rows for site use).
         </Typography>

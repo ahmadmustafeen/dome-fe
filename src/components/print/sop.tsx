@@ -486,7 +486,6 @@ const SixthSection = (props: SOP) => {
 }
 
 const SeventhSection = (props: SOP) => {
-  console.log({ detail: props.details.detailedProcedureStepRows[0] })
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 07: SOP Details" />
@@ -1083,19 +1082,6 @@ const SopPrintComponent = ({ sop, id }: { sop: SOP | null, id: string }) => {
       <EleventhSection
         {...sop}
       />
-
-      {/* 
-
-      
-
-
-      <TenthSection
-        {...sop}
-      />
-
-      <EleventhSection
-        {...sop}
-      /> */}
 
       <div onClick={() => handleDownload(id)} className="bg-red-300 cursor-pointer print:hidden rounded-full px-4 py-4 fixed right-10 bottom-10"><DownloadIcon /></div>
     </div>

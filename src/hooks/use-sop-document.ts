@@ -336,10 +336,6 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
           return;
         }
 
-        console.log({ test: data });
-
-
-
         setSop((prev: any) => ({
           ...prev,
           references: {

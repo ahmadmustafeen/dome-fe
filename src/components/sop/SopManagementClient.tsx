@@ -94,10 +94,6 @@ export const SopManagementClient = ({ sopId, documentId, noDownload }: SopManage
     },
   });
 
-
-  console.log({s: sop.generatedDocumentId});
-  
-
   applyVersionRef.current = applyCanonicalVersionRow;
 
   const showVersionHistory = isEdit && resolvedSopId !== undefined;

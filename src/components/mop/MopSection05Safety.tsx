@@ -6,6 +6,7 @@ import { MOP_SECTION_05_HEADING } from "@/constants/mop-section05-safety";
 import type { MOPSafety } from "@/types/mop";
 
 import { MopSection05EmergencyBlock } from "./MopSection05EmergencyBlock";
+import { MopSection05HazardsBlock } from "./MopSection05HazardsBlock";
 import { MopSection05LocalServicesBlock } from "./MopSection05LocalServicesBlock";
 import { MopSection05PpeBlock } from "./MopSection05PpeBlock";
 import { MopSection05ProceduresBlock } from "./MopSection05ProceduresBlock";
@@ -34,6 +35,7 @@ export const MopSection05Safety = ({ safety, patchSafety, assetName, mopTitle }:
         assetName={assetName}
         mopTitle={mopTitle}
       />
+      <MopSection05HazardsBlock rows={safety?.siteHazardRows ?? []} patchSafety={patchSafety} />
       <MopSection05ProceduresBlock rows={safety?.safetyProcedureRows} patchSafety={patchSafety} />
       <MopSection05EmergencyBlock rows={safety?.emergencyContactRows} patchSafety={patchSafety} />
       <MopSection05LocalServicesBlock

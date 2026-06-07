@@ -190,6 +190,14 @@ export type MopEmergencyContactRow = {
   phoneNumber: string;
 };
 
+/** Section 05 — site-specific hazard row for MOP safety. */
+export type MopSiteHazardRow = {
+  id: string;
+  hazardType: string;
+  description: string;
+  controlMeasures: string;
+};
+
 /** Section 05 — local emergency services (researched site-specific directory). */
 export type MopLocalEmergencyServiceRow = {
   id: string;
@@ -206,6 +214,16 @@ export type MopAssumptionRow = {
   assumption: string;
 };
 
+/** Section 06 — risk analysis row. */
+export type MopRiskAnalysisRow = {
+  id: string;
+  category: string;
+  description: string;
+  likelihood: string;
+  impact: string;
+  mitigationStrategy: string;
+};
+
 /** Section 06 — bullet under Critical Decision Points. */
 export type MopCriticalDecisionPointItem = {
   id: string;
@@ -214,6 +232,7 @@ export type MopCriticalDecisionPointItem = {
 
 export type MOPAssumptions = {
   assumptionRows: MopAssumptionRow[];
+  riskAnalysisRows: MopRiskAnalysisRow[];
   /** Shown in the critical-decision heading, e.g. "GENERATOR 1". */
   criticalDecisionUnitLabel: string;
   criticalDecisionPointItems: MopCriticalDecisionPointItem[];
@@ -269,6 +288,7 @@ export type MOPSafety = {
   /** Dynamic-length tables: default empty rows, or one row per API/autofill item. */
   ppeRequirementRows: MopPpeRequirementRow[];
   toolRequirementRows: MopToolRequirementRow[];
+  siteHazardRows: MopSiteHazardRow[];
   safetyProcedureRows: MopSafetyProcedureRow[];
   emergencyContactRows: MopEmergencyContactRow[];
   localEmergencyServiceRows: MopLocalEmergencyServiceRow[];

@@ -3,6 +3,7 @@ import {
   buildDefaultLocalEmergencyServiceRows,
   buildDefaultPpeRows,
   buildDefaultSafetyProcedureRows,
+  buildDefaultSiteHazardRows,
   buildDefaultToolRows,
   MOP_LOCAL_EMERGENCY_SAMPLE_ADDRESS,
   MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT,
@@ -10,16 +11,20 @@ import {
   resolveLocalEmergencyServiceRows,
   resolvePpeRequirementRows,
   resolveSafetyProcedureRows,
+  resolveSiteHazardRows,
   resolveToolRequirementRows,
 } from "@/constants/mop-section05-safety";
 import {
   buildDefaultAssumptionRows,
   buildDefaultCriticalDecisionItems,
+  buildDefaultRiskAnalysisRows,
   MOP_SECTION_06_DEFAULT_DECISION_LIST_COUNT,
+  MOP_SECTION_06_DEFAULT_RISK_ROW_COUNT,
   MOP_SECTION_06_DEFAULT_TABLE_ROW_COUNT,
   MOP_SECTION_06_DEFAULT_UNIT_LABEL,
   resolveAssumptionRows,
   resolveCriticalDecisionItems,
+  resolveRiskAnalysisRows,
 } from "@/constants/mop-section06-assumptions";
 import {
   buildDefaultEnginePerformanceRows,
@@ -40,7 +45,7 @@ import { buildDefaultBackOutStepRows, resolveBackOutStepRows } from "@/constants
 import { buildDefaultMopApproval, resolveMopApproval } from "@/constants/mop-section09-approval";
 import { buildDefaultMopComments, resolveMopComments } from "@/constants/mop-section10-comments";
 import { buildDefaultMopReferences, resolveMopReferences } from "@/constants/mop-section11-references";
-import type { MOP, MOPGenerateContext, MOPSection03Overview, MOPSection11References, MOPStep } from "@/types/mop";
+import type { MOP, MOPGenerateContext, MOPSection03Overview, MOPSection11References } from "@/types/mop";
 import { getTodayDateInputValue } from "@/utils/mop-dates";
 
 const delay = (ms: number) =>
@@ -194,6 +199,7 @@ export const createEmptyMop = (): MOP => ({
     localEmergencyServicesAddress: "",
     ppeRequirementRows: buildDefaultPpeRows(MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT),
     toolRequirementRows: buildDefaultToolRows(MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT),
+    siteHazardRows: buildDefaultSiteHazardRows(MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT),
     safetyProcedureRows: buildDefaultSafetyProcedureRows(
       MOP_SECTION_05_DEFAULT_TABLE_ROW_COUNT,
     ),
@@ -206,6 +212,7 @@ export const createEmptyMop = (): MOP => ({
   },
   assumptions: {
     assumptionRows: buildDefaultAssumptionRows(MOP_SECTION_06_DEFAULT_TABLE_ROW_COUNT),
+    riskAnalysisRows: buildDefaultRiskAnalysisRows(MOP_SECTION_06_DEFAULT_RISK_ROW_COUNT),
     criticalDecisionUnitLabel: MOP_SECTION_06_DEFAULT_UNIT_LABEL,
     criticalDecisionPointItems: buildDefaultCriticalDecisionItems(
       MOP_SECTION_06_DEFAULT_DECISION_LIST_COUNT,
@@ -383,6 +390,26 @@ export const MOCK_GENERATED_MOP: MOP = {
         purpose: "Verify winding insulation, battery voltage, and control circuit integrity.",
       },
     ],
+    siteHazardRows: [
+      {
+        id: "haz-mock-arc",
+        hazardType: "Arc flash",
+        description: "Potential electrical arc exposure during panel access and terminal work.",
+        controlMeasures: "Verify LOTO, wear arc-rated PPE, maintain safe approach boundary.",
+      },
+      {
+        id: "haz-mock-slip",
+        hazardType: "Slips and trips",
+        description: "Wet or cluttered work area in the equipment room.",
+        controlMeasures: "Keep walkways clear, clean spills immediately, use non-slip footwear.",
+      },
+      {
+        id: "haz-mock-noise",
+        hazardType: "High noise",
+        description: "Generator exercise may exceed comfortable noise thresholds.",
+        controlMeasures: "Use hearing protection and limit exposure time during run-ups.",
+      },
+    ],
     safetyProcedureRows: [
       {
         id: "proc-mock-loto",
@@ -462,6 +489,32 @@ export const MOCK_GENERATED_MOP: MOP = {
         id: "asm-mock-3",
         category: "OEM & parts",
         assumption: "Required filters, lubricants, and OEM consumables are on hand before the maintenance start.",
+      },
+    ],
+    riskAnalysisRows: [
+      {
+        id: "risk-mock-1",
+        category: "Electrical hazard",
+        description: "Potential for arc flash or shock during panel entry and equipment servicing.",
+        likelihood: "Possible",
+        impact: "High",
+        mitigationStrategy: "Confirm LOTO, wear arc-rated PPE, and verify absence of voltage before work.",
+      },
+      {
+        id: "risk-mock-2",
+        category: "Slip / trip",
+        description: "Wet floors, loose cables, or tools in the work area.",
+        likelihood: "Likely",
+        impact: "Medium",
+        mitigationStrategy: "Maintain clean work area, secure cables, and use housekeeping controls.",
+      },
+      {
+        id: "risk-mock-3",
+        category: "Noise exposure",
+        description: "Generator run-ups and testing may exceed safe noise levels.",
+        likelihood: "Possible",
+        impact: "Medium",
+        mitigationStrategy: "Use hearing protection and limit exposure during live testing.",
       },
     ],
     criticalDecisionPointItems: [
@@ -611,6 +664,7 @@ export const generateMOP = async (
     localEmergencyServicesAddress: data.safety?.localEmergencyServicesAddress ?? "",
     ppeRequirementRows: resolvePpeRequirementRows(data.safety?.ppeRequirementRows),
     toolRequirementRows: resolveToolRequirementRows(data.safety?.toolRequirementRows),
+    siteHazardRows: resolveSiteHazardRows(data.safety?.siteHazardRows),
     safetyProcedureRows: resolveSafetyProcedureRows(data.safety?.safetyProcedureRows),
     emergencyContactRows: resolveEmergencyContactRows(data.safety?.emergencyContactRows),
     localEmergencyServiceRows: resolveLocalEmergencyServiceRows(
@@ -622,6 +676,7 @@ export const generateMOP = async (
     criticalDecisionUnitLabel:
       data.assumptions.criticalDecisionUnitLabel ?? MOP_SECTION_06_DEFAULT_UNIT_LABEL,
     assumptionRows: resolveAssumptionRows(data.assumptions.assumptionRows),
+    riskAnalysisRows: resolveRiskAnalysisRows(data.assumptions.riskAnalysisRows),
     criticalDecisionPointItems: resolveCriticalDecisionItems(
       data.assumptions.criticalDecisionPointItems,
     ),

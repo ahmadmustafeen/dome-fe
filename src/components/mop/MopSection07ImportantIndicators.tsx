@@ -11,7 +11,7 @@ export const MopSection07ImportantIndicators = () => {
     <div>
       <Typography
         variant="h6"
-        className="mb-3 text-base font-semibold text-gray-900"
+        className="mb-3 text-base font-semibold capitalize text-gray-900"
       >
         {MOP_SECTION_07_IMPORTANT_SUBHEADING}
       </Typography>

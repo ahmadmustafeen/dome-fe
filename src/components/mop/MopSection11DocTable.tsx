@@ -68,7 +68,7 @@ export const MopSection11DocTable = ({ variant, rows, references, patchMopRefere
   const colTitle = firstColHeader(variant);
   return (
     <div className="mb-6">
-      <Typography variant="h6" className="mb-2 text-sm font-semibold text-gray-900">
+      <Typography variant="h6" className="mb-2 text-sm font-semibold text-gray-900 capitalize">
         {sectionTitle(variant)}
       </Typography>
       <div className="overflow-x-auto">

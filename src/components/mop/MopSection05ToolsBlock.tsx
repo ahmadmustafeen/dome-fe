@@ -35,7 +35,7 @@ const patchToolCell = (
 export const MopSection05ToolsBlock = ({ rows, patchSafety, assetName, mopTitle }: MopSection05ToolsBlockProps) => {
   return (
     <div className="mb-8 last:mb-0">
-      <Typography variant="h6" className="mb-2 text-base font-semibold text-gray-900">
+      <Typography variant="h6" className="mb-2 text-base capitalize font-semibold text-gray-900">
         {MOP_SECTION_05_TOOLS_SUBHEADING}
       </Typography>
       <Typography variant="p" className="mb-4 text-sm text-gray-700">

@@ -35,7 +35,7 @@ export const MopSection06KeyAssumptionsTable = ({
 }: MopSection06KeyAssumptionsTableProps) => {
   return (
     <div className="mb-8">
-      <Typography variant="h6" className="mb-4 text-base font-semibold text-gray-900">
+      <Typography variant="h6" className="mb-4 text-base capitalize font-semibold text-gray-900">
         {MOP_SECTION_06_KEY_ASSUMPTIONS_SUBHEADING}
       </Typography>
       <div className="overflow-x-auto">

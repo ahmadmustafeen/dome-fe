@@ -36,7 +36,7 @@ export const MopSection11SafetyTable = ({ rows, references, patchMopReferences }
 
   return (
     <div className="mb-6">
-      <Typography variant="h6" className="mb-2 text-sm font-semibold text-gray-900">
+      <Typography variant="h6" className="mb-2 text-sm font-semibold text-gray-900 capitalize">
         {MOP_SECTION_11_SAFETY_STANDARDS_HEADING}
       </Typography>
       <div className="overflow-x-auto">

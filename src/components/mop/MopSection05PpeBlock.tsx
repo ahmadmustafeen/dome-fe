@@ -32,7 +32,7 @@ const patchPpeCell = (
 export const MopSection05PpeBlock = ({ rows, patchSafety, assetName }: MopSection05PpeBlockProps) => {
   return (
     <div className="mb-8 last:mb-0">
-      <Typography variant="h6" className="mb-2 text-base font-semibold text-gray-900">
+      <Typography variant="h6" className="mb-2 capitalize text-base font-semibold text-gray-900">
         PPE requirements specific to {assetName} maintenance:
       </Typography>
       <div className="overflow-x-auto">

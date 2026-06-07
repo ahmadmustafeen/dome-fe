@@ -4,6 +4,8 @@ export type SOPBackOutProcedureRow = {
   description: string;
   verification: string;
   actionRequired: string;
+  initials: string;
+  time: string;
 };
 
 export type SOPBackOutProcedures = {

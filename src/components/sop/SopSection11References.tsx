@@ -28,6 +28,7 @@ import type {
   SOPReferences,
   SOPReferenceSafetyStandardRow,
 } from "@/types/sop-references";
+import SopSection11Notices from "./SopSection11Notices";
 
 type SopSection11ReferencesProps = {
   references: SOPReferences;
@@ -107,20 +108,16 @@ export const SopSection11References = ({
           onRowsChange={(additionalResourceRows) =>
             patchReferences({ additionalResourceRows })}
         />
-        <Typography
-          variant="h6"
-          className="mt-6 mb-2 text-base font-semibold text-gray-900"
-        >
-          {SOP_SECTION_11_USAGE_GUIDELINES_HEADING}
-        </Typography>
-        <ProcedureEditableList
+        <SopSection11Notices />
+
+        {/* <ProcedureEditableList
           items={references.usageGuidelineItems}
           ariaLabelPrefix="SOP reference usage guideline"
           newItem={newSopReferenceGuidelineItem}
           onItemsChange={(usageGuidelineItems) =>
             patchReferences({ usageGuidelineItems })}
-        />
-        <Typography
+        /> */}
+        {/* <Typography
           variant="h6"
           className="mt-6 mb-2 text-base font-semibold text-gray-900"
         >
@@ -131,7 +128,7 @@ export const SopSection11References = ({
           onChange={(event) =>
             patchReferences({ verificationNotice: event.target.value })}
           className="min-h-24 w-full"
-        />
+        /> */}
       </ProcedureSectionCard>
     </div>
   );

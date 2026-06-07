@@ -9,6 +9,8 @@ import type { CanonicalSopVersionApiRow } from "@/types/sop-api";
 
 import { sopBootstrapKey } from "@/utils/sop-document-state";
 import { useAppContext } from "@/context/AppContext";
+import { MOP_SECTION_09_REVIEW_STAGES } from "@/constants/mop-section09-approval";
+import { newMopRowId } from "@/utils/mopRowId";
 
 type SopDocumentContextParams = {
   mode: "create" | "edit";
@@ -20,6 +22,16 @@ type SopDocumentContextParams = {
 
 const withReferenceTableBootstrap = (doc: SOP): SOP => ({
   ...doc,
+  approval: {
+    ...doc.approval,
+    reviewRows: MOP_SECTION_09_REVIEW_STAGES.map(reviewStage => ({
+      id: newMopRowId('ma'),
+      reviewStage,
+      reviewersName: '',
+      reviewersTitle: '',
+      date: '',
+    })),
+  }
   // references: bootstrapEmptySopReferenceTables(doc.references||[]),
 });
 
@@ -323,10 +335,6 @@ export const useSopDocument = (ctx: SopDocumentContextParams) => {
           toast.error("additionalDocumentation failed");
           return;
         }
-
-        console.log({ test: data });
-
-
 
         setSop((prev: any) => ({
           ...prev,

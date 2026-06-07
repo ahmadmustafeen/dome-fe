@@ -1,29 +1,32 @@
 'use client'
 import { Typography } from "../common";
 
-import { DownloadIcon, } from 'lucide-react'
+import { DownloadIcon, HelpCircle, } from 'lucide-react'
 import { SOP } from "@/types/sop";
 import { ReactNode } from "react";
 import { SOP_SECTION_04_SYSTEM_ROWS } from "@/constants/sop-section04-facility";
+import { MOP_SECTION_07_IMPORTANT_INDICATORS } from "@/constants/mop-section07-important-indicators";
+import { SopSection07IndicatorIcon } from "../sop/SopSection07IndicatorIcons";
+import SopSection11Notices from "../sop/SopSection11Notices";
 
-const FirstSectionKeys1 = (mop: SOP) => ([
-  { key: "SOP Title", value: mop.document?.title },
-  { key: "SOP Identifier", value: mop.document.identifier },
-  { key: "Version:", value: mop.document?.version },
-  { key: "Creation Date", value: mop.document?.createdDate },
-  { key: "Work Description:", value: mop.procedure.workDescription },
-  { key: "Component Type:", value: mop.equipment.componentType },
-  { key: "Manufacturer:", value: mop.equipment.manufacturer },
-  { key: "Model Number:", value: mop.equipment.modelNumber },
-  { key: "Serial Number:", value: mop.equipment.serialNumber },
-  { key: "Equipment Number:", value: mop.equipment.equipmentNumber },
-  { key: "Location", value: mop.equipment.location },
-  { key: "Duration", value: mop.procedure.duration },
-  { key: "Level of Risk (LOR):", value: mop.procedure.levelOfRisk },
-  { key: "CET Level Required:", value: mop.procedure.cetLevelRequired },
-  { key: "Author:", value: mop.document.author },
-  { key: "Author CET Level:", value: mop.document.authorCetLevel },
-  { key: "Approver", value: mop.signOff.approvedBy },
+const FirstSectionKeys1 = (sop: SOP) => ([
+  { key: "SOP Title", value: sop.document?.title },
+  { key: "SOP Identifier", value: sop.document.identifier },
+  { key: "Version:", value: sop.document?.version },
+  { key: "Creation Date", value: sop.document?.createdDate },
+  { key: "Work Description:", value: sop.procedure.workDescription },
+  { key: "Component Type:", value: sop.equipment.componentType },
+  { key: "Manufacturer:", value: sop.equipment.manufacturer },
+  { key: "Model Number:", value: sop.equipment.modelNumber },
+  { key: "Serial Number:", value: sop.equipment.serialNumber },
+  { key: "Equipment Number:", value: sop.equipment.equipmentNumber },
+  { key: "Location", value: sop.equipment.location },
+  { key: "Duration", value: sop.procedure.duration },
+  { key: "Level of Risk (LOR):", value: sop.procedure.levelOfRisk },
+  { key: "CET Level Required:", value: sop.procedure.cetLevelRequired },
+  { key: "Author:", value: sop.document.author },
+  { key: "Author CET Level:", value: sop.document.authorCetLevel },
+  { key: "Approver", value: sop.signOff.approvedBy },
 ])
 
 const CustomTableRowWrapper = ({ children, index }: { children: ReactNode, index: number }) => {
@@ -66,23 +69,23 @@ const EachSingleRow = ({
   );
 };
 
-const SecondSectionKeys1 = (mop: SOP) => ([
-  { key: "Customer", value: mop.site.customer },
-  { key: "Site Name", value: mop.site.siteName },
-  { key: "Data Center Location:", value: mop.site.dataCenterLocation },
-  { key: "Site Address:", value: mop.site.siteAddress },
-  { key: "Site Contact:", value: mop.site.siteContact },
+const SecondSectionKeys1 = (sop: SOP) => ([
+  { key: "Customer", value: sop.site.customer },
+  { key: "Site Name", value: sop.site.siteName },
+  { key: "Data Center Location:", value: sop.site.dataCenterLocation },
+  { key: "Site Address:", value: sop.site.siteAddress },
+  { key: "Site Contact:", value: sop.site.siteContact },
 ])
 
-const ThirdSectionKeys1 = (mop: SOP) => ([
-  { key: "SOP Title:", value: mop.document.title },
-  { key: "Work Area:", value: mop.overview.workArea },
-  { key: "Building/Floor/Room:", value: mop.overview.buildingFloorRoom },
-  { key: "Access Requirements:", value: mop.overview.accessRequirements },
-  { key: "Self Delivered / Vendor:", value: mop.overview.workDeliveryType },
-  { key: "Qualifications Required:", value: mop.overview.qualificationsRequired },
-  { key: "Advance notifications required:", value: mop.overview.advanceNotifications },
-  { key: "Post notifications required:", value: mop.overview.postNotifications },
+const ThirdSectionKeys1 = (sop: SOP) => ([
+  { key: "SOP Title:", value: sop.document.title },
+  { key: "Work Area:", value: sop.overview.workArea },
+  { key: "Building/Floor/Room:", value: sop.overview.buildingFloorRoom },
+  { key: "Access Requirements:", value: sop.overview.accessRequirements },
+  { key: "Self Delivered / Vendor:", value: sop.overview.workDeliveryType },
+  { key: "Qualifications Required:", value: sop.overview.qualificationsRequired },
+  { key: "Advance notifications required:", value: sop.overview.advanceNotifications },
+  { key: "Post notifications required:", value: sop.overview.postNotifications },
 ])
 
 const SectionHeading = ({ heading, className }: { heading: string, className?: string }) => {
@@ -203,12 +206,13 @@ const FourthSection = (props: SOP) => {
 }
 
 const FifthSection = (props: SOP) => {
+  const assetName = props.asset.assetName;
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 05: Safety Requirements" />
 
       <div className="pdf-page">
-        <p className="font-semibold text-lg py-4">REQUIRED PERSONAL PROTECTIVE EQUIPMENT (PPE):</p>
+        <p className="font-semibold text-lg py-4">PPE requirements specific to operation:</p>
         <table className="w-full border-collapse text-sm ">
           <thead className="bg-[#0F4D2E]">
             <tr className=" text-white">
@@ -251,6 +255,9 @@ const FifthSection = (props: SOP) => {
 
         {/* tools */}
         <p className="font-semibold text-lg py-4">Required Tools & Test Equipment:</p>
+        <Typography variant="p" className="mb-4 text-sm text-gray-700">
+          Specific tools required for {assetName} {props.document.title} based on equipment type and task:
+        </Typography>
         <table className="w-full border-collapse text-sm ">
           <thead className="bg-[#0F4D2E]">
             <tr className=" text-white">
@@ -292,7 +299,7 @@ const FifthSection = (props: SOP) => {
         </table>
 
         {/* emergency Contacts */}
-        <p className="font-semibold text-lg py-4">EMERGENCY CONTACTS:</p>
+        <p className="font-semibold text-lg py-4">Emergency Contacts:</p>
         <table className="w-full border-collapse text-sm ">
           <thead className="bg-[#0F4D2E]">
             <tr className=" text-white">
@@ -445,14 +452,32 @@ const SixthSection = (props: SOP) => {
       </table>
 
       <p className="font-semibold text-lg py-4">Critical Decision Points</p>
-      <div className="section-container-6">
-        {
-          props.risksAssumptions.criticalDecisionPointItems.map((item, index) => {
-            return <div className="subsection-row-6" key={index} >
-              <EachSingleRow item={item} />
-            </div>
-          })
-        }
+      <div className="">
+        <table className="w-full border-collapse text-sm ">
+          <thead className="bg-[#0F4D2E]">
+            <tr className=" text-white">
+              <th className="border border-black p-3 text-left">
+                No.
+              </th>
+              <th className="border border-black p-3 text-left">
+                Critical Decision Points
+              </th>
+            </tr>
+          </thead>
+
+          <tbody className="">
+            {props.risksAssumptions.criticalDecisionPointItems.map((row, index) => (
+              <CustomTableRowWrapper index={index}>
+                <td className="border border-black p-3 align-top">
+                  {index + 1}
+                </td>
+                <td className="border border-black p-3 align-top">
+                  {row.text}
+                </td>
+              </CustomTableRowWrapper>
+            ))}
+          </tbody>
+        </table>
       </div>
 
 
@@ -504,45 +529,113 @@ const SeventhSection = (props: SOP) => {
         </tbody>
       </table>
 
+      <p className="font-semibold text-lg py-4">Important Indicators</p>
+      <table className="w-full border-collapse text-sm ">
+        <thead className="bg-[#0F4D2E]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              Icon
+            </th>
+            <th className="border border-black min-w-20 p-3 text-left">
+              Meaning
+            </th>
+          </tr>
+        </thead>
+
+        <tbody className="">
+          {MOP_SECTION_07_IMPORTANT_INDICATORS.map((row, index) => (
+            <CustomTableRowWrapper index={index}>
+              <td className="border border-black min-w-20 p-3 align-top">
+                <div className="flex justify-center items-center h-full">
+                  <SopSection07IndicatorIcon
+                    indicatorId={row.id}
+                    className="h-6 w-6"
+                    aria-hidden
+                  />
+                </div>
+              </td>
+              <td className="border border-black p-3 align-top">
+                <span className="font-semibold">{row.title}</span> <span>{row.body}</span>
+              </td>
+            </CustomTableRowWrapper>
+          ))}
+        </tbody>
+      </table>
+
       <p className="font-semibold text-lg py-4">7.2 Detailed Procedure Steps</p>
       <table className="w-full border-collapse text-sm ">
         <thead className="bg-[#0F4D2E]">
           <tr className=" text-white">
-            <th className="border max-w-40 border-black p-3 text-left">
+            <th className="border border-black p-3 text-left w-16">
+              #
+            </th>
+            <th className="border text-xs max-w-32 border-black p-3 text-left">
               Description
             </th>
-            <th className="border max-w-40 border-black p-3 text-left">
+            <th className="border text-xs max-w-32 border-black p-3 text-left">
               Expected Range
             </th>
-            <th className="border border-black p-3 text-left">
+            <th className="border text-xs border-black px-1 py-3 text-left">
               Source
             </th>
-            <th className="border border-black p-3 text-left">
+            <th className="border text-xs border-black px-1 py-3 text-left">
+              Indicator
+            </th>
+            <th className="border text-xs border-black p-3 text-left">
               Recorded Value
             </th>
-            <th className="border border-black min-w-20 p-3 text-left">
+            <th className="border text-xs border-black p-3 text-left">
+              Initials
+            </th>
+            <th className="border text-xs border-black p-3 text-left">
+              Time
+            </th>
+            <th className="border text-xs border-black min-w-12 p-3 text-left">
               Action if Out of Range
             </th>
-
           </tr>
         </thead>
 
         <tbody className="">
           {props.details.detailedProcedureStepRows.map((row, index) => (
             <CustomTableRowWrapper index={index}>
-              <td className="border max-w-40 border-black p-3 align-top">
+              <td className="border text-xs border-black align-top  p-3 text-center">
+                {index + 1}
+              </td>
+              <td className="border text-xs max-w-32 border-black p-3 align-top">
                 {row.description}
               </td>
-              <td className="border max-w-40 border-black p-3 align-top">
+              <td className="border text-xs max-w-32 border-black p-3 align-top">
                 {row.expectedRange}
               </td>
-              <td className="border border-black p-3 align-top">
+              <td className="border text-xs border-black px-1 py-3 align-top">
                 {row.source}
               </td>
-              <td className="border min-w-20 border-black p-3 align-top">
+              <td className="border text-xs border-black  px-1 py-3 align-top text-center">
+                {row.indicator ? (
+                  <div className="flex justify-center items-center h-full">
+                    <SopSection07IndicatorIcon
+                      indicatorId={row.indicator}
+                      className="h-5 w-5"
+                      aria-hidden
+                    />
+                  </div>
+                ) :
+                  <div className="flex justify-center items-center h-full">
+                    <HelpCircle />
+                  </div>
+                }
+              </td>
+              <td className="border text-xs min-w-20 border-black p-3 align-top">
                 {row.recordedValue}
               </td>
-              <td className="border min-w-20 border-black p-3 align-top">
+              <td className="border text-xs border-black p-3 align-top">
+                {row.initials}
+              </td>
+              <td className="border text-xs border-black p-3 align-top">
+                {row.time}
+              </td>
+              <td className="border text-xs min-w-12 border-black p-3 align-top">
                 {row.actionIfOutOfRange}
               </td>
             </CustomTableRowWrapper>
@@ -557,7 +650,10 @@ const EigthSection = (props: SOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 08: Back-out Procedures" />
-
+      <p className="font-semibold text-lg py-4">Critical back-out procedure</p>
+      <Typography variant="p" className="mb-4 text-sm text-gray-700">
+        If a critical issue is identified during the execution of this procedure that may adversely affect personnel safety, system integrity, or data center operations, suspend the activity immediately and follow the detailed escalation, containment, and response procedures described below:
+      </Typography>
       <table className="w-full border-collapse text-sm ">
         <thead className="bg-[#0F4D2E]">
           <tr className=" text-white">
@@ -570,6 +666,8 @@ const EigthSection = (props: SOP) => {
             <th className="border min-w-20 border-black p-3 text-left">
               Action Required
             </th>
+            <th className="w-24 px-3 py-2 text-left font-semibold">Initials</th>
+            <th className="w-24 px-3 py-2 text-left font-semibold">Time</th>
           </tr>
         </thead>
 
@@ -585,6 +683,8 @@ const EigthSection = (props: SOP) => {
               <td className="border min-w-20 border-black p-3 align-top">
                 {row.actionRequired}
               </td>
+              <td className="border border-black p-3 align-top">{row.initials}</td>
+              <td className="border border-black p-3 align-top">{row.time}</td>
             </CustomTableRowWrapper>
           ))}
         </tbody>
@@ -686,39 +786,83 @@ const TenthSection = (props: SOP) => {
       <SectionHeading className="heading-1" heading="Section 10: SOP Comments" />
 
       <p className="font-semibold text-lg py-2">Relevant comments</p>
-      <div className="section-container-7">
-        {
-          props.comments.relevantCommentItems.map((item, index) => {
-            return <div className="subsection-row-7" key={index} >
-              <EachSingleRow item={{ text: item.text }} />
-            </div>
-          })
-        }
-      </div>
+      <table className="w-full border-collapse text-sm mt-4 ">
+        <thead className="bg-[#0F4D2E]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              No.
+            </th>
+            <th className="border min-w-20 border-black p-3 text-left">
+              Comment
+            </th>
+          </tr>
+        </thead>
 
+        <tbody className="">
+          {props.comments.relevantCommentItems.map((row, index) => (
+            <CustomTableRowWrapper index={index}>
+              <td className="border border-black p-3 align-top">
+                {index + 1}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.text}
+              </td>
+            </CustomTableRowWrapper>
+          ))}
+        </tbody>
+      </table>
       <p className="font-semibold text-lg py-2">Post-operation requirements</p>
-      <div className="section-container-7">
-        {
-          props.comments.postOperationRequirementItems.map((item, index) => {
-            return <div className="subsection-row-7" key={index} >
-              <EachSingleRow item={{ text: item.text }} />
-            </div>
-          })
-        }
-      </div>
+      <table className="w-full border-collapse text-sm mt-4 ">
+        <thead className="bg-[#0F4D2E]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              No.
+            </th>
+            <th className="border min-w-20 border-black p-3 text-left">
+              Comment
+            </th>
+          </tr>
+        </thead>
 
+        <tbody className="">
+          {props.comments.postOperationRequirementItems.map((row, index) => (
+            <CustomTableRowWrapper index={index}>
+              <td className="border border-black p-3 align-top">
+                {index + 1}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.text}
+              </td>
+            </CustomTableRowWrapper>
+          ))}
+        </tbody>
+      </table>
       <p className="font-semibold text-lg py-2">Additional notes</p>
-      <div className="section-container-7">
-        {
-          props.comments.additionalNoteItems.map((item, index) => {
-            return <div className="subsection-row-7" key={index} >
-              <EachSingleRow item={{ text: item.text }} />
-            </div>
-          })
-        }
-      </div>
+      <table className="w-full border-collapse text-sm mt-4 ">
+        <thead className="bg-[#0F4D2E]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              No.
+            </th>
+            <th className="border min-w-20 border-black p-3 text-left">
+              Comment
+            </th>
+          </tr>
+        </thead>
 
-
+        <tbody className="">
+          {props.comments.additionalNoteItems.map((row, index) => (
+            <CustomTableRowWrapper index={index}>
+              <td className="border border-black p-3 align-top">
+                {index + 1}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.text}
+              </td>
+            </CustomTableRowWrapper>
+          ))}
+        </tbody>
+      </table>
     </div>
   </div>
 }
@@ -731,130 +875,130 @@ const EleventhSection = (props: SOP) => {
       <Typography variant="p" className="mb-4 text-sm text-gray-700">
         List documentation and resources relevant to performing this procedure safely and consistently.
       </Typography>
-      <p className="font-semibold text-lg py-2">Equipment-Specific Documentation</p>
-      <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0F4D2E]">
-          <tr className=" text-white">
-            <th className="border border-black p-3 text-left">
-              Document Type
-            </th>
-            <th className="border border-black p-3 text-left">
-              Description
-            </th>
-            <th className="border border-black p-3 text-left">
-              Access/Location
-            </th>
-          </tr>
-        </thead>
+      {
+        props?.references?.equipmentDocumentRows?.length ? <>
+          <p className="font-semibold text-lg py-2">Equipment-Specific Documentation</p>
+          <table className="w-full border-collapse text-sm ">
+            <thead className="bg-[#0F4D2E]">
+              <tr className=" text-white">
+                <th className="border border-black p-3 text-left">
+                  Document Type
+                </th>
+                <th className="border border-black p-3 text-left">
+                  Description
+                </th>
+                <th className="border border-black p-3 text-left">
+                  Access/Location
+                </th>
+              </tr>
+            </thead>
 
-        <tbody className="">
-          {props.references.equipmentDocumentRows.map((row, index) => (
-            <CustomTableRowWrapper index={index}>
-              <td className="border border-black p-3 align-top">
-                {row.documentType}
-              </td>
+            <tbody className="">
+              {props.references.equipmentDocumentRows.map((row, index) => (
+                <CustomTableRowWrapper index={index}>
+                  <td className="border border-black p-3 align-top">
+                    {row.documentType}
+                  </td>
 
-              <td className="border border-black p-3 align-top">
-                {row.description}
-              </td>
+                  <td className="border border-black p-3 align-top">
+                    {row.description}
+                  </td>
 
-              <td className="border border-black p-3 align-top">
-                {row.accessLocation}
-              </td>
-            </CustomTableRowWrapper>
-          ))}
-        </tbody>
+                  <td className="border border-black p-3 align-top">
+                    {row.accessLocation}
+                  </td>
+                </CustomTableRowWrapper>
+              ))}
+            </tbody>
 
-      </table>
-
-      <p className="font-semibold text-lg py-2">Safety Standards and Guidelines</p>
-      <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0F4D2E]">
-          <tr className=" text-white">
-            <th className="border border-black p-3 text-left">
-              Standard
-            </th>
-            <th className="border border-black p-3 text-left">
-              Description
-            </th>
-            <th className="border border-black p-3 text-left">
-              Access/Location
-            </th>
-          </tr>
-        </thead>
-
-        <tbody className="">
-          {props.references.safetyStandardRows.map((row, index) => (
-            <CustomTableRowWrapper index={index}>
-              <td className="border border-black p-3 align-top">
-                {row.standard}
-              </td>
-
-              <td className="border border-black p-3 align-top">
-                {row.description}
-              </td>
-              <td className="border border-black max-w-48 break-all p-3 align-top">
-                {row.accessLocation}
-              </td>
-            </CustomTableRowWrapper>
-          ))}
-        </tbody>
-
-      </table>
+          </table>
+        </> : null
+      }
 
 
-      <p className="font-semibold text-lg py-2 mt-4">Additional Resources</p>
-      <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#0F4D2E]">
-          <tr className=" text-white">
-            <th className="border border-black p-3 text-left">
-              Resources
-            </th>
-            <th className="border border-black p-3 text-left">
-              Description
-            </th>
-            <th className="border border-black p-3 text-left">
-              Access/Location
-            </th>
-          </tr>
-        </thead>
+      {
+        props?.references?.safetyStandardRows?.length ? <>
+          <p className="font-semibold text-lg py-2">Safety Standards and Guidelines</p>
+          <table className="w-full border-collapse text-sm ">
+            <thead className="bg-[#0F4D2E]">
+              <tr className=" text-white">
+                <th className="border border-black p-3 text-left">
+                  Standard
+                </th>
+                <th className="border border-black p-3 text-left">
+                  Description
+                </th>
+                <th className="border border-black p-3 text-left">
+                  Access/Location
+                </th>
+              </tr>
+            </thead>
 
-        <tbody className="">
-          {props.references.additionalResourceRows.map((row, index) => (
-            <CustomTableRowWrapper index={index}>
-              <td className="border border-black p-3 align-top">
-                {row.resourceType}
-              </td>
+            <tbody className="">
+              {props.references.safetyStandardRows.map((row, index) => (
+                <CustomTableRowWrapper index={index}>
+                  <td className="border border-black p-3 align-top">
+                    {row.standard}
+                  </td>
 
-              <td className="border border-black p-3 align-top">
-                {row.description}
-              </td>
+                  <td className="border border-black p-3 align-top">
+                    {row.description}
+                  </td>
+                  <td className="border border-black max-w-48 break-all p-3 align-top">
+                    {row.accessLocation}
+                  </td>
+                </CustomTableRowWrapper>
+              ))}
+            </tbody>
 
-              <td className="border border-black p-3 align-top">
-                <div>
-                  {row.accessLocation}
-                </div>
-              </td>
-            </CustomTableRowWrapper>
-          ))}
-        </tbody>
-      </table>
+          </table>
+        </> : null
+      }
 
-      <p className="font-semibold text-lg py-2">Reference Usage Guidelines</p>
-      <div className="section-container-7">
-        {
-          props.references.usageGuidelineItems.map((item, index) => {
-            return <div className="subsection-row-7" key={index} >
-              <EachSingleRow item={{ text: item.text }} />
-            </div>
-          })
-        }
-      </div>
 
-      <p className="font-semibold text-lg py-2">Verification Notice</p>
-      <div className="section-container-7">
-        <EachSingleRow item={{ text: props.references.verificationNotice }} noIcon />
-      </div>
+
+      {props.references.additionalResourceRows?.length ? <>
+        <p className="font-semibold text-lg py-2 mt-4">Additional Resources</p>
+        <table className="w-full border-collapse text-sm ">
+          <thead className="bg-[#0F4D2E]">
+            <tr className=" text-white">
+              <th className="border border-black p-3 text-left">
+                Resources
+              </th>
+              <th className="border border-black p-3 text-left">
+                Description
+              </th>
+              <th className="border border-black p-3 text-left">
+                Access/Location
+              </th>
+            </tr>
+          </thead>
+
+          <tbody className="">
+            {props.references.additionalResourceRows.map((row, index) => (
+              <CustomTableRowWrapper index={index}>
+                <td className="border border-black p-3 align-top">
+                  {row.resourceType}
+                </td>
+
+                <td className="border border-black p-3 align-top">
+                  {row.description}
+                </td>
+
+                <td className="border border-black p-3 align-top">
+                  <div>
+                    {row.accessLocation}
+                  </div>
+                </td>
+              </CustomTableRowWrapper>
+            ))}
+          </tbody>
+        </table>
+      </>
+        : null
+      }
+
+      <SopSection11Notices />
 
     </div>
   </div>
@@ -938,19 +1082,6 @@ const SopPrintComponent = ({ sop, id }: { sop: SOP | null, id: string }) => {
       <EleventhSection
         {...sop}
       />
-
-      {/* 
-
-      
-
-
-      <TenthSection
-        {...sop}
-      />
-
-      <EleventhSection
-        {...sop}
-      /> */}
 
       <div onClick={() => handleDownload(id)} className="bg-red-300 cursor-pointer print:hidden rounded-full px-4 py-4 fixed right-10 bottom-10"><DownloadIcon /></div>
     </div>

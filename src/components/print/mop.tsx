@@ -1,7 +1,6 @@
 'use client'
 import { MOP } from "@/types/mop";
 import { Typography } from "../common";
-import { MOP_SECTION_04_SYSTEM_ROWS } from "@/constants/mop-section04-facility";
 
 import { DownloadIcon, } from 'lucide-react'
 import { buildDefaultGeneratorOperationalRows } from "@/constants/mop-section07-details";
@@ -11,6 +10,7 @@ import { MOP_SECTION_09_APPROVAL_REQUIREMENT_BULLETS, MOP_SECTION_09_APPROVAL_RE
 import { MOP_SECTION_11_POLICY_BANNER_TEXT, MOP_SECTION_11_POLICY_NOTE_LABEL } from "@/constants/mop-section11-references";
 import { MopSection11Notices } from "../mop/MopSection11Notices";
 import { ReactNode } from "react";
+import { SOP_SECTION_04_SYSTEM_ROWS } from "@/constants/sop-section04-facility";
 
 const FirstSectionKeys1 = (mop: MOP) => ([
   { key: "MOP Title", value: mop.document?.title },
@@ -180,29 +180,27 @@ const FourthSection = (props: MOP) => {
           </thead>
 
           <tbody className="">
-            {props.facilityEffects.map((row, index) => {
-              return (
-                <CustomTableRowWrapper index={index}>
 
-                  <td className="border border-black p-3 align-top">
-                    {index}
-                  </td>
+            {SOP_SECTION_04_SYSTEM_ROWS.map((row, index) => (
+              <CustomTableRowWrapper index={index}>
+                <td className="border border-black p-3 align-top">
+                  {index + 1}
+                </td>
 
-                  <td className="border border-black p-3 align-top">
-                    {MOP_SECTION_04_SYSTEM_ROWS.find(item => item.key === row.systemKey)?.label}
-                  </td>
+                <td className="border border-black p-3 align-top">
+                  {row.label}
+                </td>
 
-                  <td className="border border-black p-3 align-top">
-                    {row.choice}
-                  </td>
+                <td className="border border-black p-3 align-top">
+                  {props.facilityEffects.find(Facitem => Facitem.systemKey === row.key)?.choice ?? "na"}
+                </td>
 
-                  <td className="border border-black p-3 align-top">
-                    {row.details}
-                  </td>
-                </CustomTableRowWrapper>
-
-              )
-            })}
+                <td className="border border-black p-3 align-top">
+                  {props.facilityEffects.find(Facitem => Facitem.systemKey === row.key)?.details}
+                </td>
+              </CustomTableRowWrapper>
+            )
+            )}
           </tbody>
         </table>
       </div>
@@ -254,7 +252,7 @@ const FifthSection = (props: MOP) => {
         </table>
 
         {/* tools */}
-        <p className="font-semibold text-lg py-4">TOOLS REQUIRED:</p>
+        <p className="font-semibold text-lg py-4">Tools required:</p>
         <Typography variant="p" className="mb-4 text-sm text-gray-700">
           Specific tools required for {assetName} {props.document.title} based on equipment type and task:
         </Typography>
@@ -334,7 +332,7 @@ const FifthSection = (props: MOP) => {
 
 
         {/* emergency Contacts */}
-        <p className="font-semibold text-lg py-4">EMERGENCY CONTACTS:</p>
+        <p className="font-semibold text-lg py-4">Emergency Contacts:</p>
         <table className="w-full border-collapse text-sm ">
           <thead className="bg-[#091628]">
             <tr className=" text-white">
@@ -366,50 +364,6 @@ const FifthSection = (props: MOP) => {
             ))}
           </tbody>
         </table>
-        <div className="py-6 flex">
-          <Typography variant="h4" className="mb-4 pr-2 text-sm text-gray-700">
-            LOCAL EMERGENCY SERVICES:
-          </Typography>
-          <Typography className="">{props.safety.localEmergencyServicesAddress}</Typography>
-        </div>
-
-        <table className="w-full border-collapse text-sm ">
-          <thead className="bg-[#091628]">
-            <tr className=" text-white">
-              <th className="border border-black p-3 text-left">
-                Service
-              </th>
-              <th className="border border-black p-3 text-left">
-                Contact Name
-              </th>
-              <th className="border border-black min-w-20 p-3 text-left">
-                Phone Number
-              </th>
-              <th className="border border-black min-w-20 p-3 text-left">
-                Address
-              </th>
-            </tr>
-          </thead>
-
-          <tbody className="">
-            {props.safety?.localEmergencyServiceRows.map((row, index) => (
-              <CustomTableRowWrapper index={index}>
-                <td className="border border-black p-3 align-top">
-                  {row.service}
-                </td>
-                <td className="border border-black p-3 align-top">
-                  {row.contactName}
-                </td>
-                <td className="border border-black min-w-20  p-3 align-top">
-                  {row.phoneNumber}
-                </td>
-                <td className="border border-black min-w-20  p-3 align-top">
-                  {row.address}
-                </td>
-              </CustomTableRowWrapper>
-            ))}
-          </tbody>
-        </table>
       </div>
 
     </div>
@@ -417,6 +371,7 @@ const FifthSection = (props: MOP) => {
 }
 
 const SixthSection = (props: MOP) => {
+  const assetName = props.asset.assetName
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 06: MOP Assumptions" />
@@ -448,17 +403,32 @@ const SixthSection = (props: MOP) => {
       </table>
 
       <div className="section-container-6">
-        {
-          props.assumptions.criticalDecisionPointItems.map((item, index) => {
-            return <div className="subsection-row-6" key={index} >
-              {index === 0 ?
-                <p className="font-semibold text-lg py-4">Critical Decision Points for</p>
-                : null
-              }
-              <EachSingleRow item={item} />
-            </div>
-          })
-        }
+        <p className="font-semibold text-lg py-4">Critical Decision Points for {assetName}</p>
+        <table className="w-full border-collapse text-sm ">
+          <thead className="bg-[#091628]">
+            <tr className=" text-white">
+              <th className="border border-black p-3 text-left">
+                No.
+              </th>
+              <th className="border border-black p-3 text-left">
+                Critical Decision Point
+              </th>
+            </tr>
+          </thead>
+
+          <tbody className="">
+            {props.assumptions.criticalDecisionPointItems.map((row, index) => (
+              <CustomTableRowWrapper index={index}>
+                <td className="border border-black p-3 align-top">
+                  {index + 1}
+                </td>
+                <td className="border border-black p-3 align-top">
+                  {row.text}
+                </td>
+              </CustomTableRowWrapper>
+            ))}
+          </tbody>
+        </table>
       </div>
 
 
@@ -470,67 +440,44 @@ const SeventhSection = (props: MOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 07: MOP Details" />
-      <p className="font-semibold text-lg py-2">Procedure steps (outline):</p>
-      <div className="section-container-7">
-        {
-          props.steps.map((item, index) => {
-            return <div className="subsection-row-7" key={index} >
-              <EachSingleRow item={{ text: item.description }} />
-            </div>
-          })
-        }
-        <div className="subsection-row-7 flex flex-row justify-evenly">
-          <div className="flex gap-x-2" >
-            <Typography
-              variant="h5"
-              className="font-bold tracking-wide text-balance drop-shadow-sm"
-            >
-              Date Performed
-            </Typography>
+      <p className="font-semibold text-lg py-2">7.1 Pre-Procedure Checks:</p>
+      <table className="w-full border-collapse text-sm ">
+        <thead className="bg-[#091628]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              Description
+            </th>
+            <th className="border border-black min-w-20 p-3 text-left">
+              Expected Result
+            </th>
+            <th className="border border-black min-w-20 p-3 text-left">
+              Actual Result
+            </th>
+            <th className="border border-black p-3 text-left">
+              Action if Not Met
+            </th>
+          </tr>
+        </thead>
 
-            <Typography
-              variant="p"
-              className="tracking-wide text-balance drop-shadow-sm"
-            >
-              {props.mopDetails.datePerformed || "Not selected"}
-            </Typography>
-          </div>
-          <div className="flex gap-x-2" >
-            <Typography
-              variant="h5"
-              className="font-bold tracking-wide text-balance drop-shadow-sm"
-            >
-              Time Begun
-            </Typography>
-
-            <Typography
-              variant="p"
-              className="tracking-wide text-balance drop-shadow-sm"
-            >
-              {props.mopDetails.timeBegun || "Not selected"}
-            </Typography>
-          </div>
-
-          <div className=" flex gap-x-2" >
-            <Typography
-              variant="h5"
-              className="font-bold tracking-wide text-balance drop-shadow-sm"
-            >
-              Time Completed
-            </Typography>
-
-            <Typography
-              variant="p"
-              className="tracking-wide text-balance drop-shadow-sm"
-            >
-              {props.mopDetails.timeCompleted || "Not selected"}
-            </Typography>
-          </div>
-        </div>
-        <EachRow className="subsection-row-7" item={{ key: "Facilities personnel performing work:", value: props.mopDetails.facilitiesPersonnel || "Not selected" }} />
-        <EachRow className="subsection-row-7" item={{ key: "Contractor/Vendor personnel performing work:", value: props.mopDetails.contractorPersonnel || "Not selected" }} />
-      </div>
-
+        <tbody className="">
+          {props.steps.map((row, index) => (
+            <CustomTableRowWrapper index={index}>
+              <td className="border border-black max-w-100 p-3 align-top">
+                {row.description}
+              </td>
+              <td className="border border-black min-w-20 p-3 align-top">
+                {row.expectedResult}
+              </td>
+              <td className="border border-black min-w-20 p-3 align-top">
+                {row.actualResult}
+              </td>
+              <td className="border border-black min-w-20 p-3 align-top">
+                {row.actionIfNotMet}
+              </td>
+            </CustomTableRowWrapper>
+          ))}
+        </tbody>
+      </table>
 
       <p className="font-semibold text-lg py-4">Generator Operational Data Log (Unit: GENERATOR 1)</p>
       <Typography variant="p" className="mb-4 text-sm text-gray-700">
@@ -764,7 +711,7 @@ const EigthSection = (props: MOP) => {
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 08: Back-out Procedures" />
 
-      <p className="font-semibold text-lg py-4">CRITICAL BACK-OUT PROCEDURES</p>
+      <p className="font-semibold text-lg py-4">Critical back-out procedure</p>
       <Typography variant="p" className="mb-4 text-sm text-gray-700">
         If at any point during the maintenance procedure a critical issue is discovered that could affect data center operations, follow these detailed back-out procedures:
       </Typography>

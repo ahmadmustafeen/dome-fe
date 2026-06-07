@@ -21,10 +21,16 @@ const newStep = (stepNumber: number): MOPStep => ({
   id: crypto.randomUUID(),
   stepNumber,
   description: "",
+  expectedResult: "",
+  actualResult: "",
+  actionIfNotMet: "",
 });
 
 export const MopSection07OutlineSteps = ({ steps, patchSteps }: MopSection07OutlineStepsProps) => {
-  const updateRow = (id: string, partial: Partial<Pick<MOPStep, "description">>) => {
+  const updateRow = (
+    id: string,
+    partial: Partial<Pick<MOPStep, "description" | "expectedResult" | "actualResult" | "actionIfNotMet">>,
+  ) => {
     patchSteps(
       renumber(steps.map((r) => (r.id === id ? { ...r, ...partial } : r))),
     );
@@ -33,15 +39,18 @@ export const MopSection07OutlineSteps = ({ steps, patchSteps }: MopSection07Outl
   return (
     <div className="mb-6 border-b border-gray-100 pb-6">
       <Typography variant="h6" className="mb-3 text-sm font-semibold text-[#0f3456]">
-        Procedure steps (outline)
+        7.1 Pre-Procedure Checks:
       </Typography>
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[560px] border-collapse text-sm">
+        <table className="w-full min-w-140 border-collapse text-sm">
           <thead>
             <tr className="bg-[#0f3456] text-white">
               <th className="w-14 px-2 py-2 text-center font-semibold">#</th>
               <th className="px-3 py-2 text-left font-semibold">Description</th>
-              <th scope="col" className="w-[4.25rem] px-1 py-2 text-center text-xs font-semibold">
+              <th className="px-3 py-2 text-left font-semibold">Expected Result</th>
+              <th className="px-3 py-2 text-left font-semibold">Actual Result</th>
+              <th className="px-3 py-2 text-left font-semibold">Action if Not Met</th>
+              <th scope="col" className="w-17 px-1 py-2 text-center text-xs font-semibold">
                 ±
               </th>
             </tr>
@@ -56,6 +65,30 @@ export const MopSection07OutlineSteps = ({ steps, patchSteps }: MopSection07Outl
                   <Textarea
                     value={row.description}
                     onChange={(e) => updateRow(row.id, { description: e.target.value })}
+                    className="min-h-14 w-full"
+                    placeholder=""
+                  />
+                </td>
+                <td className="border border-gray-200 px-2 py-1 align-top">
+                  <Textarea
+                    value={row.expectedResult}
+                    onChange={(e) => updateRow(row.id, { expectedResult: e.target.value })}
+                    className="min-h-14 w-full"
+                    placeholder=""
+                  />
+                </td>
+                <td className="border border-gray-200 px-2 py-1 align-top">
+                  <Textarea
+                    value={row.actualResult}
+                    onChange={(e) => updateRow(row.id, { actualResult: e.target.value })}
+                    className="min-h-14 w-full"
+                    placeholder=""
+                  />
+                </td>
+                <td className="border border-gray-200 px-2 py-1 align-top">
+                  <Textarea
+                    value={row.actionIfNotMet}
+                    onChange={(e) => updateRow(row.id, { actionIfNotMet: e.target.value })}
                     className="min-h-14 w-full"
                     placeholder=""
                   />

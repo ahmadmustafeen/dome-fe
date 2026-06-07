@@ -23,6 +23,9 @@ export type MOPStep = {
   id: string;
   stepNumber: number;
   description: string;
+  expectedResult: string;
+  actualResult: string;
+  actionIfNotMet: string
 };
 
 /** Section 07 subsection — one row in Detailed Procedure Steps. */
@@ -342,6 +345,8 @@ export type MopFacilitySystemKey =
   | "lockoutTagout"
   | "workHot"
   | "radioInterference"
+  | "transferSwitch"
+  | "buildingAutomation"
   | "waterLeakDetection";
 
 export type MopFacilityEffectChoice = "yes" | "no" | "na";

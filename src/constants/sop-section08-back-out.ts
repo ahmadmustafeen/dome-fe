@@ -9,4 +9,6 @@ export const newSopBackOutProcedureRow = (): SOPBackOutProcedureRow => ({
   description: "",
   verification: "",
   actionRequired: "",
+  initials: "",
+  time: "",
 });

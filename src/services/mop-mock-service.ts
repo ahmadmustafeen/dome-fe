@@ -1,4 +1,3 @@
-import { buildDefaultMopSection04Rows } from "@/constants/mop-section04-facility";
 import {
   buildDefaultEmergencyContactRows,
   buildDefaultLocalEmergencyServiceRows,
@@ -122,39 +121,6 @@ const mockSampleMopReferences = (): MOPSection11References => ({
   ],
 });
 
-/** Shared by legacy `steps` and Section 08 detailed procedure grid in mock data. */
-const MOCK_GENERATED_STEPS: MOPStep[] = [
-  {
-    id: "1",
-    stepNumber: 1,
-    description: "Notify all affected personnel and obtain work permit.",
-  },
-  {
-    id: "2",
-    stepNumber: 2,
-    description: "Power down non-critical loads connected to UPS.",
-  },
-  {
-    id: "3",
-    stepNumber: 3,
-    description: "Put UPS in bypass mode using front panel controls.",
-  },
-  {
-    id: "4",
-    stepNumber: 4,
-    description: "Remove old battery modules carefully.",
-  },
-  {
-    id: "5",
-    stepNumber: 5,
-    description: "Install new battery modules and secure connections.",
-  },
-  {
-    id: "6",
-    stepNumber: 6,
-    description: "Return UPS to normal operation and verify runtime.",
-  },
-];
 
 const emptyOverview = (): MOPSection03Overview => ({
   mopTitle: "",
@@ -284,7 +250,7 @@ export const createEmptyMop = (): MOP => ({
     siteContact: "",
   },
   overview: emptyOverview(),
-  facilityEffects: buildDefaultMopSection04Rows(),
+  facilityEffects: [],
 });
 
 /**
@@ -369,7 +335,7 @@ export const MOCK_GENERATED_MOP: MOP = {
     specialPermitsRequired: false,
     specialPermitsNotes: "",
   },
-  steps: MOCK_GENERATED_STEPS,
+  steps: [],
   safety: {
     precautions:
       "Risk of electric shock. Do not short circuit battery terminals.",
@@ -563,7 +529,7 @@ export const MOCK_GENERATED_MOP: MOP = {
       { id: "fl-mock-3", dateTime: "", faultCode: "", description: "", actionTaken: "", initials: "" },
     ],
     detailedProcedures: {
-      stepRows: mapMopStepsToDetailedProcedureRows(MOCK_GENERATED_STEPS),
+      stepRows: mapMopStepsToDetailedProcedureRows([]),
       criticalStepNotes:
         "Torque: verify battery inter-cell connections to OEM values. Megger: attach separate log if insulation testing is in scope for this MOP.",
     },
@@ -620,7 +586,7 @@ export const MOCK_GENERATED_MOP: MOP = {
     postNotifications:
       "Operations confirmation of stable temperatures and alarms cleared.",
   },
-  facilityEffects: buildDefaultMopSection04Rows(),
+  facilityEffects: [],
 };
 
 export const generateMOP = async (

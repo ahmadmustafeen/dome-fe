@@ -6,8 +6,11 @@ export const newSopDetailedProcedureStepRow =
     id: newProcedureRowId("sop-detail-step"),
     step: 0,
     description: "",
+    indicator: "",
     expectedRange: "",
     source: "",
     recordedValue: "",
+    initials: "",
+    time: "",
     actionIfOutOfRange: "",
   });

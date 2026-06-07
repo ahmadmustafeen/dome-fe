@@ -1,15 +1,12 @@
 "use client";
 
 import { Typography } from "@/components/common";
-import { ProcedureEditableList } from "@/components/procedure/ProcedureEditableList";
 import type { ProcedureEditableColumn } from "@/components/procedure/ProcedureEditableRowsTable";
 import { ProcedureEditableRowsTable } from "@/components/procedure/ProcedureEditableRowsTable";
 import { ProcedureSectionCard } from "@/components/procedure/ProcedureSectionCard";
-import { Textarea } from "@/components/ui/Textarea";
 import {
   newSopAdditionalResourceRow,
   newSopReferenceDocumentRow,
-  newSopReferenceGuidelineItem,
   newSopSafetyStandardRow,
   SOP_SECTION_11_ADDITIONAL_RESOURCE_COLUMNS,
   SOP_SECTION_11_ADDITIONAL_RESOURCES_HEADING,
@@ -19,8 +16,6 @@ import {
   SOP_SECTION_11_HEADING,
   SOP_SECTION_11_SAFETY_STANDARD_COLUMNS,
   SOP_SECTION_11_SAFETY_STANDARDS_HEADING,
-  SOP_SECTION_11_USAGE_GUIDELINES_HEADING,
-  SOP_SECTION_11_VERIFICATION_NOTICE_HEADING,
 } from "@/constants/sop-section11-references";
 import type {
   SOPReferenceAdditionalResourceRow,

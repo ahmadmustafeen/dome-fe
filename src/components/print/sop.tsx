@@ -50,24 +50,6 @@ const EachRow = ({ item, className }: { item: { key: string, value?: string | nu
   </div>
 }
 
-const EachSingleRow = ({
-  item,
-  noIcon
-}: {
-  item: { text: string };
-  noIcon?: boolean
-}) => {
-  return (
-    <div className={`my-4 pb-3 flex items-start`}>
-      {noIcon ? null : <div className="w-10 flex justify-center items-center">
-        <div className="bg-gray-500 h-2 w-2 rounded-full mt-2" />
-      </div>}
-      <div className="text-base flex-1">
-        {item?.text || "-"}
-      </div>
-    </div>
-  );
-};
 
 const SecondSectionKeys1 = (sop: SOP) => ([
   { key: "Customer", value: sop.site.customer },

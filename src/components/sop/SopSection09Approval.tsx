@@ -11,6 +11,7 @@ import {
   SOP_SECTION_09_HEADING,
   SOP_SECTION_09_PLACEHOLDERS,
   SOP_SECTION_09_TABLE_HEADERS,
+  resolveSopApproval,
 } from "@/constants/sop-section09-approval";
 import type { SOPApproval, SOPApprovalReviewRow } from "@/types/sop-approval";
 import {
@@ -34,6 +35,8 @@ export const SopSection09Approval = ({
   approval,
   patchApproval,
 }: SopSection09ApprovalProps) => {
+  const resolvedApproval = resolveSopApproval(approval);
+
   return (
     <div className="mt-5 sm:mt-6">
       <ProcedureSectionCard heading={SOP_SECTION_09_HEADING}>
@@ -62,7 +65,7 @@ export const SopSection09Approval = ({
               </tr>
             </thead>
             <tbody>
-              {approval?.reviewRows?.map((row) => (
+              {resolvedApproval.reviewRows.map((row) => (
                 <tr key={row.id} className="bg-white">
                   <td className="border border-gray-200 px-2 py-1 align-top">
                     <Input
@@ -75,6 +78,7 @@ export const SopSection09Approval = ({
                         })}
                       className="w-full font-semibold text-gray-900"
                       placeholder="Review stage"
+                      aria-label={`${SOP_SECTION_09_TABLE_HEADERS.reviewStage} for row`}
                     />
                   </td>
                   <td className="border border-gray-200 px-2 py-1 align-top">
@@ -88,6 +92,7 @@ export const SopSection09Approval = ({
                         })}
                       className="w-full"
                       placeholder={SOP_SECTION_09_PLACEHOLDERS.name}
+                      aria-label={`${row.reviewStage} ${SOP_SECTION_09_PLACEHOLDERS.name}`}
                     />
                   </td>
                   <td className="border border-gray-200 px-2 py-1 align-top">
@@ -101,6 +106,7 @@ export const SopSection09Approval = ({
                         })}
                       className="w-full"
                       placeholder={SOP_SECTION_09_PLACEHOLDERS.title}
+                      aria-label={`${row.reviewStage} ${SOP_SECTION_09_PLACEHOLDERS.title}`}
                     />
                   </td>
                   <td className="border border-gray-200 px-2 py-1 align-top">
@@ -114,12 +120,13 @@ export const SopSection09Approval = ({
                         })}
                       className="w-full"
                       placeholder={SOP_SECTION_09_PLACEHOLDERS.date}
+                      aria-label={`${row.reviewStage.length > 0 ? row.reviewStage : 'Review stage'} ${SOP_SECTION_09_TABLE_HEADERS.date}`}
                     />
                   </td>
                   <td className="border border-gray-200 px-1 align-middle">
                     <ProcedureDynamicTableRowControls
                       ariaLabelGroup="SOP approval review row controls"
-                      rowCount={approval?.reviewRows.length}
+                      rowCount={resolvedApproval.reviewRows.length}
                       onAddBelow={() =>
                         patchApproval({
                           reviewRows: insertProcedureRowAfterId(

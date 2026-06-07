@@ -85,7 +85,7 @@ export const ProcedureFixedStepEditableRowsTable = <
                   className="border border-gray-200 px-2 py-1 align-top"
                 >
                   <Textarea
-                    value={String(row[column.field])}
+                    value={String(row[column.field] ?? "")}
                     onChange={(event) =>
                       onRowsChange(
                         renumberRows(

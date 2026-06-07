@@ -1,4 +1,4 @@
-import type { SOPApprovalReviewRow } from "@/types/sop-approval";
+import type { SOPApproval, SOPApprovalReviewRow } from "@/types/sop-approval";
 import { newProcedureRowId } from "@/utils/procedure-row-id";
 
 export const SOP_SECTION_09_HEADING = "Section 09: SOP Approval";
@@ -26,4 +26,21 @@ export const newSopApprovalReviewRow = (): SOPApprovalReviewRow => ({
   reviewersName: "",
   reviewersTitle: "",
   date: "",
+});
+
+const ensureReviewRow = (row: SOPApprovalReviewRow, index: number): SOPApprovalReviewRow => {
+  const reviewStage = row.reviewStage?.trim().length
+    ? row.reviewStage
+    : `Review ${index + 1}`;
+
+  return {
+    ...row,
+    id: row.id?.trim().length ? row.id : newProcedureRowId("sop-approval"),
+    reviewStage,
+  };
+};
+
+export const resolveSopApproval = (approval: SOPApproval): SOPApproval => ({
+  ...approval,
+  reviewRows: approval.reviewRows?.map((row, index) => ensureReviewRow(row, index)) ?? [],
 });

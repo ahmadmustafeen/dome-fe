@@ -1,10 +1,12 @@
 'use client'
 import { Typography } from "../common";
 
-import { DownloadIcon, } from 'lucide-react'
+import { DownloadIcon, HelpCircle, } from 'lucide-react'
 import { SOP } from "@/types/sop";
 import { ReactNode } from "react";
 import { SOP_SECTION_04_SYSTEM_ROWS } from "@/constants/sop-section04-facility";
+import { MOP_SECTION_07_IMPORTANT_INDICATORS } from "@/constants/mop-section07-important-indicators";
+import { SopSection07IndicatorIcon } from "../sop/SopSection07IndicatorIcons";
 
 const FirstSectionKeys1 = (sop: SOP) => ([
   { key: "SOP Title", value: sop.document?.title },
@@ -483,6 +485,7 @@ const SixthSection = (props: SOP) => {
 }
 
 const SeventhSection = (props: SOP) => {
+  console.log({ detail: props.details.detailedProcedureStepRows[0] })
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 07: SOP Details" />
@@ -526,45 +529,113 @@ const SeventhSection = (props: SOP) => {
         </tbody>
       </table>
 
+      <p className="font-semibold text-lg py-4">Important Indicators</p>
+      <table className="w-full border-collapse text-sm ">
+        <thead className="bg-[#0F4D2E]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              Icon
+            </th>
+            <th className="border border-black min-w-20 p-3 text-left">
+              Meaning
+            </th>
+          </tr>
+        </thead>
+
+        <tbody className="">
+          {MOP_SECTION_07_IMPORTANT_INDICATORS.map((row, index) => (
+            <CustomTableRowWrapper index={index}>
+              <td className="border border-black min-w-20 p-3 align-top">
+                <div className="flex justify-center items-center h-full">
+                  <SopSection07IndicatorIcon
+                    indicatorId={row.id}
+                    className="h-6 w-6"
+                    aria-hidden
+                  />
+                </div>
+              </td>
+              <td className="border border-black p-3 align-top">
+                <span className="font-semibold">{row.title}</span> <span>{row.body}</span>
+              </td>
+            </CustomTableRowWrapper>
+          ))}
+        </tbody>
+      </table>
+
       <p className="font-semibold text-lg py-4">7.2 Detailed Procedure Steps</p>
       <table className="w-full border-collapse text-sm ">
         <thead className="bg-[#0F4D2E]">
           <tr className=" text-white">
-            <th className="border max-w-40 border-black p-3 text-left">
+            <th className="border border-black p-3 text-left w-16">
+              #
+            </th>
+            <th className="border text-xs max-w-32 border-black p-3 text-left">
               Description
             </th>
-            <th className="border max-w-40 border-black p-3 text-left">
+            <th className="border text-xs max-w-32 border-black p-3 text-left">
               Expected Range
             </th>
-            <th className="border border-black p-3 text-left">
+            <th className="border text-xs border-black px-1 py-3 text-left">
               Source
             </th>
-            <th className="border border-black p-3 text-left">
+            <th className="border text-xs border-black px-1 py-3 text-left">
+              Indicator
+            </th>
+            <th className="border text-xs border-black p-3 text-left">
               Recorded Value
             </th>
-            <th className="border border-black min-w-20 p-3 text-left">
+            <th className="border text-xs border-black p-3 text-left">
+              Initials
+            </th>
+            <th className="border text-xs border-black p-3 text-left">
+              Time
+            </th>
+            <th className="border text-xs border-black min-w-12 p-3 text-left">
               Action if Out of Range
             </th>
-
           </tr>
         </thead>
 
         <tbody className="">
           {props.details.detailedProcedureStepRows.map((row, index) => (
             <CustomTableRowWrapper index={index}>
-              <td className="border max-w-40 border-black p-3 align-top">
+              <td className="border text-xs border-black align-top  p-3 text-center">
+                {index + 1}
+              </td>
+              <td className="border text-xs max-w-32 border-black p-3 align-top">
                 {row.description}
               </td>
-              <td className="border max-w-40 border-black p-3 align-top">
+              <td className="border text-xs max-w-32 border-black p-3 align-top">
                 {row.expectedRange}
               </td>
-              <td className="border border-black p-3 align-top">
+              <td className="border text-xs border-black px-1 py-3 align-top">
                 {row.source}
               </td>
-              <td className="border min-w-20 border-black p-3 align-top">
+              <td className="border text-xs border-black  px-1 py-3 align-top text-center">
+                {row.indicator ? (
+                  <div className="flex justify-center items-center h-full">
+                    <SopSection07IndicatorIcon
+                      indicatorId={row.indicator}
+                      className="h-5 w-5"
+                      aria-hidden
+                    />
+                  </div>
+                ) :
+                  <div className="flex justify-center items-center h-full">
+                    <HelpCircle />
+                  </div>
+                }
+              </td>
+              <td className="border text-xs min-w-20 border-black p-3 align-top">
                 {row.recordedValue}
               </td>
-              <td className="border min-w-20 border-black p-3 align-top">
+              <td className="border text-xs border-black p-3 align-top">
+                {row.initials}
+              </td>
+              <td className="border text-xs border-black p-3 align-top">
+                {row.time}
+              </td>
+              <td className="border text-xs min-w-12 border-black p-3 align-top">
                 {row.actionIfOutOfRange}
               </td>
             </CustomTableRowWrapper>
@@ -579,7 +650,10 @@ const EigthSection = (props: SOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 08: Back-out Procedures" />
-
+      <p className="font-semibold text-lg py-4">Critical back-out procedure</p>
+      <Typography variant="p" className="mb-4 text-sm text-gray-700">
+       If a critical issue is identified during the execution of this procedure that may adversely affect personnel safety, system integrity, or data center operations, suspend the activity immediately and follow the detailed escalation, containment, and response procedures described below:
+      </Typography>
       <table className="w-full border-collapse text-sm ">
         <thead className="bg-[#0F4D2E]">
           <tr className=" text-white">
@@ -592,6 +666,8 @@ const EigthSection = (props: SOP) => {
             <th className="border min-w-20 border-black p-3 text-left">
               Action Required
             </th>
+            <th className="w-24 px-3 py-2 text-left font-semibold">Initials</th>
+            <th className="w-24 px-3 py-2 text-left font-semibold">Time</th>
           </tr>
         </thead>
 
@@ -607,6 +683,8 @@ const EigthSection = (props: SOP) => {
               <td className="border min-w-20 border-black p-3 align-top">
                 {row.actionRequired}
               </td>
+              <td className="border border-black p-3 align-top">{row.initials}</td>
+              <td className="border border-black p-3 align-top">{row.time}</td>
             </CustomTableRowWrapper>
           ))}
         </tbody>

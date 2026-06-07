@@ -478,66 +478,6 @@ const SeventhSection = (props: MOP) => {
           ))}
         </tbody>
       </table>
-      <div className="section-container-7">
-        {
-          props.steps.map((item, index) => {
-            return <div className="subsection-row-7" key={index} >
-              <EachSingleRow item={{ text: item.description }} />
-            </div>
-          })
-        }
-        <div className="subsection-row-7 flex flex-row justify-evenly">
-          <div className="flex gap-x-2" >
-            <Typography
-              variant="h5"
-              className="font-bold tracking-wide text-balance drop-shadow-sm"
-            >
-              Date Performed
-            </Typography>
-
-            <Typography
-              variant="p"
-              className="tracking-wide text-balance drop-shadow-sm"
-            >
-              {props.mopDetails.datePerformed || "Not selected"}
-            </Typography>
-          </div>
-          <div className="flex gap-x-2" >
-            <Typography
-              variant="h5"
-              className="font-bold tracking-wide text-balance drop-shadow-sm"
-            >
-              Time Begun
-            </Typography>
-
-            <Typography
-              variant="p"
-              className="tracking-wide text-balance drop-shadow-sm"
-            >
-              {props.mopDetails.timeBegun || "Not selected"}
-            </Typography>
-          </div>
-
-          <div className=" flex gap-x-2" >
-            <Typography
-              variant="h5"
-              className="font-bold tracking-wide text-balance drop-shadow-sm"
-            >
-              Time Completed
-            </Typography>
-
-            <Typography
-              variant="p"
-              className="tracking-wide text-balance drop-shadow-sm"
-            >
-              {props.mopDetails.timeCompleted || "Not selected"}
-            </Typography>
-          </div>
-        </div>
-        <EachRow className="subsection-row-7" item={{ key: "Facilities personnel performing work:", value: props.mopDetails.facilitiesPersonnel || "Not selected" }} />
-        <EachRow className="subsection-row-7" item={{ key: "Contractor/Vendor personnel performing work:", value: props.mopDetails.contractorPersonnel || "Not selected" }} />
-      </div>
-
 
       <p className="font-semibold text-lg py-4">Generator Operational Data Log (Unit: GENERATOR 1)</p>
       <Typography variant="p" className="mb-4 text-sm text-gray-700">
@@ -771,7 +711,7 @@ const EigthSection = (props: MOP) => {
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 08: Back-out Procedures" />
 
-      <p className="font-semibold text-lg py-4">CRITICAL BACK-OUT PROCEDURES</p>
+      <p className="font-semibold text-lg py-4">Critical back-out procedure</p>
       <Typography variant="p" className="mb-4 text-sm text-gray-700">
         If at any point during the maintenance procedure a critical issue is discovered that could affect data center operations, follow these detailed back-out procedures:
       </Typography>

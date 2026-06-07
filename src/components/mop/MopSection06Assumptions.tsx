@@ -7,6 +7,7 @@ import type { MOPAssumptions } from "@/types/mop";
 
 import { MopSection06CriticalDecisionsList } from "./MopSection06CriticalDecisionsList";
 import { MopSection06KeyAssumptionsTable } from "./MopSection06KeyAssumptionsTable";
+import { MopSection06RiskMatrix } from "./MopSection06RiskMatrix";
 
 type MopSection06AssumptionsProps = {
   assumptions: MOPAssumptions;
@@ -27,10 +28,15 @@ export const MopSection06Assumptions = ({
       >
         {MOP_SECTION_06_HEADING}
       </Typography>
+      <MopSection06RiskMatrix
+        rows={assumptions.riskAnalysisRows}
+        patchAssumptions={patchAssumptions}
+      />
       <MopSection06KeyAssumptionsTable
         rows={assumptions.assumptionRows}
         patchAssumptions={patchAssumptions}
       />
+
       <MopSection06CriticalDecisionsList
         unitLabel={assumptions.criticalDecisionUnitLabel}
         items={assumptions.criticalDecisionPointItems}

@@ -409,6 +409,51 @@ const SixthSection = (props: MOP) => {
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 06: MOP Assumptions" />
+      <p className="font-semibold text-lg py-4">Risk Analysis Matrix:</p>
+      <table className="w-full border-collapse text-sm ">
+        <thead className="bg-[#091628]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              Risk Category
+            </th>
+            <th className="border border-black p-3 text-left">
+              Description
+            </th>
+            <th className="border border-black p-3 text-left">
+              Likelihood
+            </th>
+            <th className="border border-black p-3 text-left">
+              Impact
+            </th>
+            <th className="border border-black p-3 text-left">
+              Mitigation Strategy
+            </th>
+          </tr>
+        </thead>
+
+        <tbody className="">
+          {props?.assumptions?.riskAnalysisRows?.map((row, index) => (
+            <CustomTableRowWrapper index={index} key={row.id}>
+              <td className="border border-black p-3 align-top">
+                {row.category}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.description}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.likelihood}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.impact}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.mitigationStrategy}
+              </td>
+            </CustomTableRowWrapper>
+          ))}
+        </tbody>
+      </table>
+
       <p className="font-semibold text-lg py-4 heading-1">Key Project Assumptions:</p>
       <table className="w-full border-collapse text-sm ">
         <thead className="bg-[#091628]">
@@ -437,6 +482,8 @@ const SixthSection = (props: MOP) => {
       </table>
 
       <div className="section-container-6">
+
+
         <p className="font-semibold text-lg py-4">Critical Decision Points for {assetName}</p>
         <table className="w-full border-collapse text-sm ">
           <thead className="bg-[#091628]">

@@ -242,6 +242,22 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
       }));
     });
 
+     evtSource.addEventListener("sectionSixRiskAnalysisRow", (e) => {
+      const data = JSON.parse(e.data);
+      if (data?.error) {
+        toast.error("sectionSixRiskAnalysisRow failed");
+        return;
+      }
+
+      setMop((prev: any) => ({
+        ...prev,
+        assumptions: {
+          ...prev.assumptions,
+          riskAnalysisRows: data || [],
+        },
+      }));
+    });
+
     evtSource.addEventListener("sectionSevenProcedureSteps", (e) => {
       const data = JSON.parse(e.data);
       if (data?.error) {

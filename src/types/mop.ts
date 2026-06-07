@@ -214,6 +214,16 @@ export type MopAssumptionRow = {
   assumption: string;
 };
 
+/** Section 06 — risk analysis row. */
+export type MopRiskAnalysisRow = {
+  id: string;
+  category: string;
+  description: string;
+  likelihood: string;
+  impact: string;
+  mitigationStrategy: string;
+};
+
 /** Section 06 — bullet under Critical Decision Points. */
 export type MopCriticalDecisionPointItem = {
   id: string;
@@ -222,6 +232,7 @@ export type MopCriticalDecisionPointItem = {
 
 export type MOPAssumptions = {
   assumptionRows: MopAssumptionRow[];
+  riskAnalysisRows: MopRiskAnalysisRow[];
   /** Shown in the critical-decision heading, e.g. "GENERATOR 1". */
   criticalDecisionUnitLabel: string;
   criticalDecisionPointItems: MopCriticalDecisionPointItem[];

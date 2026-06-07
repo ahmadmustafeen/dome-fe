@@ -17,11 +17,14 @@ import {
 import {
   buildDefaultAssumptionRows,
   buildDefaultCriticalDecisionItems,
+  buildDefaultRiskAnalysisRows,
   MOP_SECTION_06_DEFAULT_DECISION_LIST_COUNT,
+  MOP_SECTION_06_DEFAULT_RISK_ROW_COUNT,
   MOP_SECTION_06_DEFAULT_TABLE_ROW_COUNT,
   MOP_SECTION_06_DEFAULT_UNIT_LABEL,
   resolveAssumptionRows,
   resolveCriticalDecisionItems,
+  resolveRiskAnalysisRows,
 } from "@/constants/mop-section06-assumptions";
 import {
   buildDefaultEnginePerformanceRows,
@@ -209,6 +212,7 @@ export const createEmptyMop = (): MOP => ({
   },
   assumptions: {
     assumptionRows: buildDefaultAssumptionRows(MOP_SECTION_06_DEFAULT_TABLE_ROW_COUNT),
+    riskAnalysisRows: buildDefaultRiskAnalysisRows(MOP_SECTION_06_DEFAULT_RISK_ROW_COUNT),
     criticalDecisionUnitLabel: MOP_SECTION_06_DEFAULT_UNIT_LABEL,
     criticalDecisionPointItems: buildDefaultCriticalDecisionItems(
       MOP_SECTION_06_DEFAULT_DECISION_LIST_COUNT,
@@ -487,6 +491,32 @@ export const MOCK_GENERATED_MOP: MOP = {
         assumption: "Required filters, lubricants, and OEM consumables are on hand before the maintenance start.",
       },
     ],
+    riskAnalysisRows: [
+      {
+        id: "risk-mock-1",
+        category: "Electrical hazard",
+        description: "Potential for arc flash or shock during panel entry and equipment servicing.",
+        likelihood: "Possible",
+        impact: "High",
+        mitigationStrategy: "Confirm LOTO, wear arc-rated PPE, and verify absence of voltage before work.",
+      },
+      {
+        id: "risk-mock-2",
+        category: "Slip / trip",
+        description: "Wet floors, loose cables, or tools in the work area.",
+        likelihood: "Likely",
+        impact: "Medium",
+        mitigationStrategy: "Maintain clean work area, secure cables, and use housekeeping controls.",
+      },
+      {
+        id: "risk-mock-3",
+        category: "Noise exposure",
+        description: "Generator run-ups and testing may exceed safe noise levels.",
+        likelihood: "Possible",
+        impact: "Medium",
+        mitigationStrategy: "Use hearing protection and limit exposure during live testing.",
+      },
+    ],
     criticalDecisionPointItems: [
       {
         id: "cdp-mock-1",
@@ -646,6 +676,7 @@ export const generateMOP = async (
     criticalDecisionUnitLabel:
       data.assumptions.criticalDecisionUnitLabel ?? MOP_SECTION_06_DEFAULT_UNIT_LABEL,
     assumptionRows: resolveAssumptionRows(data.assumptions.assumptionRows),
+    riskAnalysisRows: resolveRiskAnalysisRows(data.assumptions.riskAnalysisRows),
     criticalDecisionPointItems: resolveCriticalDecisionItems(
       data.assumptions.criticalDecisionPointItems,
     ),

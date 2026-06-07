@@ -1,8 +1,10 @@
 import { newMopRowId } from "@/utils/mopRowId";
 
-import type { MopAssumptionRow, MopCriticalDecisionPointItem } from "@/types/mop";
+import type { MopAssumptionRow, MopCriticalDecisionPointItem, MopRiskAnalysisRow } from "@/types/mop";
 
 export const MOP_SECTION_06_HEADING = "Section 06: MOP Assumptions";
+
+export const MOP_SECTION_06_RISK_MATRIX_SUBHEADING = "Risk Analysis Matrix";
 
 export const MOP_SECTION_06_KEY_ASSUMPTIONS_SUBHEADING = "Key Project Assumptions";
 
@@ -16,6 +18,9 @@ export const MOP_SECTION_06_DEFAULT_UNIT_LABEL = "GENERATOR 1";
 /** Default blank rows for assumptions table. */
 export const MOP_SECTION_06_DEFAULT_TABLE_ROW_COUNT = 3;
 
+/** Default blank rows for risk analysis. */
+export const MOP_SECTION_06_DEFAULT_RISK_ROW_COUNT = 3;
+
 /** Default bullet rows under Critical Decision Points. */
 export const MOP_SECTION_06_DEFAULT_DECISION_LIST_COUNT = 4;
 
@@ -25,6 +30,15 @@ export const newAssumptionRow = (): MopAssumptionRow => ({
   assumption: "",
 });
 
+export const newRiskAnalysisRow = (): MopRiskAnalysisRow => ({
+  id: newMopRowId("risk"),
+  category: "",
+  description: "",
+  likelihood: "",
+  impact: "",
+  mitigationStrategy: "",
+});
+
 export const newCriticalDecisionItem = (): MopCriticalDecisionPointItem => ({
   id: newMopRowId("cdp"),
   text: "",
@@ -32,6 +46,11 @@ export const newCriticalDecisionItem = (): MopCriticalDecisionPointItem => ({
 
 export const buildDefaultAssumptionRows = (count: number): MopAssumptionRow[] =>
   Array.from({ length: count }, () => newAssumptionRow());
+
+export const buildDefaultRiskAnalysisRows = (
+  count: number,
+): MopRiskAnalysisRow[] =>
+  Array.from({ length: count }, () => newRiskAnalysisRow());
 
 export const buildDefaultCriticalDecisionItems = (
   count: number,
@@ -50,6 +69,15 @@ export const resolveAssumptionRows = (
     return buildDefaultAssumptionRows(MOP_SECTION_06_DEFAULT_TABLE_ROW_COUNT);
   }
   return rows?.map((r) => ensureId(r, "asm"));
+};
+
+export const resolveRiskAnalysisRows = (
+  rows: MopRiskAnalysisRow[] | undefined,
+): MopRiskAnalysisRow[] => {
+  if (!rows || rows.length === 0) {
+    return buildDefaultRiskAnalysisRows(MOP_SECTION_06_DEFAULT_RISK_ROW_COUNT);
+  }
+  return rows?.map((r) => ensureId(r, "risk"));
 };
 
 export const resolveCriticalDecisionItems = (

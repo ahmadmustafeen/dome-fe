@@ -11,6 +11,7 @@ type CategoryAssetProcedurePanelProps = {
   asset: CategoryAsset;
   labels: { mops: string; eops: string; sops: string };
   handleCreateClick: (id: string, type: string, assetId: string, custom?: boolean) => void;
+  handleViewClick: (id: string, type: string, assetId: string, custom?: boolean) => void;
   handleDeleteDocument: (id: string, type: string, assetId: string) => void;
   onProcedureGenerate: (
     item: ProcedureItem,
@@ -24,6 +25,7 @@ const CategoryAssetProcedurePanel = ({
   labels,
   onProcedureGenerate,
   handleCreateClick,
+  handleViewClick,
   handleDeleteDocument
 }: CategoryAssetProcedurePanelProps) => {
 
@@ -38,6 +40,7 @@ const CategoryAssetProcedurePanel = ({
         onGenerate={(item) => {
           onProcedureGenerate(item, "mop", asset.id);
         }}
+        handleViewClick={(id, isCustom) => handleViewClick(id, 'mop', asset?._id, isCustom)}
         handleDeleteDocument={(id) => handleDeleteDocument(id, 'mop', asset?._id)}
         handleCreateClick={(id, isCustom) => handleCreateClick(id, 'mop', asset?._id, isCustom)}
       />
@@ -49,6 +52,7 @@ const CategoryAssetProcedurePanel = ({
         colorClass="border-red-200"
         handleDeleteDocument={(id) => handleDeleteDocument(id, 'eop', asset?._id)}
         handleCreateClick={(id, isCustom) => handleCreateClick(id, 'eop', asset?._id, isCustom)}
+        handleViewClick={(id, isCustom) => handleViewClick(id, 'eop', asset?._id, isCustom)}
         onGenerate={(item) => {
           onProcedureGenerate(item, "eop", asset.id);
         }}
@@ -60,6 +64,7 @@ const CategoryAssetProcedurePanel = ({
         colorClass="border-green-200"
         handleDeleteDocument={(id) => handleDeleteDocument(id, 'sop', asset?._id)}
         handleCreateClick={(id, isCustom) => handleCreateClick(id, 'sop', asset?._id, isCustom)}
+        handleViewClick={(id, isCustom) => handleViewClick(id, 'sop', asset?._id, isCustom)}
         onGenerate={(item) => {
           onProcedureGenerate(item, "sop", asset.id);
         }}

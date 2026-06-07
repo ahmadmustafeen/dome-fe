@@ -233,6 +233,7 @@ export default function MaintenanceCategoryDetailPage({ params }: PageProps) {
           sops: t("details_sops"),
         }}
         handleCreateClick={handleCreateClick}
+        handleViewClick={(id, type, assetId) => handleNavigate(id, type, assetId, [])}
         handleDeleteDocument={handleDeleteDocument}
         onProcedureGenerate={handleProcedureGenerate}
       />

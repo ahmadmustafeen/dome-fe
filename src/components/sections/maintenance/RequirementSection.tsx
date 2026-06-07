@@ -6,6 +6,7 @@ type RequirementSectionProps = {
   label: string;
   items: ProcedureItem[];
   handleCreateClick?: (mopId: string, isCustom: boolean) => void,
+  handleViewClick?: (mopId: string, isCustom: boolean) => void,
   handleDeleteDocument?: (mopId: string) => void,
   noIcon?: boolean;
   colorClass: string;
@@ -17,6 +18,7 @@ const RequirementSection = ({
   label,
   handleDeleteDocument,
   handleCreateClick,
+  handleViewClick,
   items,
   noIcon,
   colorClass,
@@ -56,7 +58,7 @@ const RequirementSection = ({
                 {item.title}</div>
               {noIcon ? null : existing?.includes(item._id.toString()) ?
                 <Eye className="w-4 h-4 cursor-pointer" size={2}
-                  onClick={() => handleCreateClick?.(item._id, false)} />
+                  onClick={() => handleViewClick?.(item._id, true)} />
                 : <PenIcon className="w-4 h-4 cursor-pointer" size={2}
                   onClick={() => handleCreateClick?.(item._id, false)}
                 />}

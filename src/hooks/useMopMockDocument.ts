@@ -275,6 +275,24 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
       }));
     });
 
+    evtSource.addEventListener("sectionSevenEnginePerformanceData", (e) => {
+      const data = JSON.parse(e.data);
+      if (data?.error) {
+        toast.error("sectionSevenEnginePerformanceData failed");
+        return;
+      }
+
+
+
+      setMop((prev: any) => ({
+        ...prev,
+        mopDetails: {
+          ...prev.mopDetails,
+          enginePerformanceRows: data,
+        },
+      }));
+    });
+
     evtSource.addEventListener("sectionSevenProcedureSteps", (e) => {
       const data = JSON.parse(e.data);
       if (data?.error) {

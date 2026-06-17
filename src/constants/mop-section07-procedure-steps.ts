@@ -6,7 +6,7 @@ import type { MopDetailedProcedureStepRow, MOPStep } from "@/types/mop";
 export const MOP_SECTION_07_DETAILED_PROCEDURES_SUBHEADING = "Detailed Procedure Steps";
 
 export const MOP_SECTION_07_CRITICAL_STEP_NOTES_HEADING =
-  "Critical Step Notes (Steps requiring torque verification or electrical testing)";
+  "Critical Step Notes";
 
 export const MOP_SECTION_07_DEFAULT_DETAILED_STEP_COUNT = 6;
 

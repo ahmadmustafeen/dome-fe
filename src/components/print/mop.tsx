@@ -781,7 +781,7 @@ const SeventhSection = (props: MOP) => {
       </table>
 
 
-      <p className="font-semibold text-lg mt-6">Critical Step Notes (Steps requiring torque verification or electrical testing)</p>
+      <p className="font-semibold text-lg mt-6">Critical Step Notes</p>
       <EachSingleRow item={{ text: props.mopDetails.detailedProcedures.criticalStepNotes }} noIcon />
     </div>
   </div>

@@ -3,7 +3,6 @@ import { MOP } from "@/types/mop";
 import { Typography } from "../common";
 
 import { DownloadIcon, } from 'lucide-react'
-import { buildDefaultGeneratorOperationalRows } from "@/constants/mop-section07-details";
 import { MOP_SECTION_07_IMPORTANT_INDICATORS } from "@/constants/mop-section07-important-indicators";
 import { MopSection07IndicatorIcon } from "../mop/MopSection07IndicatorIcons";
 import { MOP_SECTION_09_APPROVAL_REQUIREMENT_BULLETS, MOP_SECTION_09_APPROVAL_REQUIREMENTS_HEADING } from "@/constants/mop-section09-approval";
@@ -481,36 +480,32 @@ const SixthSection = (props: MOP) => {
         </tbody>
       </table>
 
-      <div className="section-container-6">
+      <p className="font-semibold text-lg py-4">Critical Decision Points for {assetName}</p>
+      <table className="w-full border-collapse text-sm ">
+        <thead className="bg-[#091628]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              No.
+            </th>
+            <th className="border border-black p-3 text-left">
+              Critical Decision Point
+            </th>
+          </tr>
+        </thead>
 
-
-        <p className="font-semibold text-lg py-4">Critical Decision Points for {assetName}</p>
-        <table className="w-full border-collapse text-sm ">
-          <thead className="bg-[#091628]">
-            <tr className=" text-white">
-              <th className="border border-black p-3 text-left">
-                No.
-              </th>
-              <th className="border border-black p-3 text-left">
-                Critical Decision Point
-              </th>
-            </tr>
-          </thead>
-
-          <tbody className="">
-            {props.assumptions.criticalDecisionPointItems.map((row, index) => (
-              <CustomTableRowWrapper index={index}>
-                <td className="border border-black p-3 align-top">
-                  {index + 1}
-                </td>
-                <td className="border border-black p-3 align-top">
-                  {row.text}
-                </td>
-              </CustomTableRowWrapper>
-            ))}
-          </tbody>
-        </table>
-      </div>
+        <tbody className="">
+          {props.assumptions.criticalDecisionPointItems.map((row, index) => (
+            <CustomTableRowWrapper index={index}>
+              <td className="border border-black p-3 align-top">
+                {index + 1}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.text}
+              </td>
+            </CustomTableRowWrapper>
+          ))}
+        </tbody>
+      </table>
 
 
     </div>
@@ -518,6 +513,7 @@ const SixthSection = (props: MOP) => {
 }
 
 const SeventhSection = (props: MOP) => {
+  const assetName = props.asset.assetName
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 07: MOP Details" />
@@ -560,7 +556,7 @@ const SeventhSection = (props: MOP) => {
         </tbody>
       </table>
 
-      <p className="font-semibold text-lg py-4">Generator Operational Data Log (Unit: GENERATOR 1)</p>
+      <p className="font-semibold text-lg py-4">Generator Operational Data Log (Unit: {assetName})</p>
       <Typography variant="p" className="mb-4 text-sm text-gray-700">
         Parameters and acceptance bands are defined for this unit template; record As Found / As Left for each.
       </Typography>
@@ -586,7 +582,7 @@ const SeventhSection = (props: MOP) => {
         </thead>
 
         <tbody className="">
-          {buildDefaultGeneratorOperationalRows().map((row, index) => (
+          {props.mopDetails.generatorOperationalRows.map((row, index) => (
             <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
                 {row.parameter}

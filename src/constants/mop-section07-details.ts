@@ -6,10 +6,12 @@ import type {
   MopGeneratorOperationalDataRow,
 } from "@/types/mop";
 
+type MopGeneratorOperationalInputRow = MopGeneratorOperationalDataRow & { id?: string };
+
 export const MOP_SECTION_07_HEADING = "Section 07: MOP Details";
 
 export const MOP_SECTION_07_GENERATOR_LOG_SUBHEADING =
-  "Generator Operational Data Log (Unit: GENERATOR 1)";
+  "Generator Operational Data Log";
 
 export const MOP_SECTION_07_ENGINE_PERFORMANCE_SUBHEADING = "Engine Performance Data";
 
@@ -86,13 +88,18 @@ const ensureFaultId = (r: MopFaultAlarmHistoryRow): MopFaultAlarmHistoryRow => (
 });
 
 export const resolveGeneratorOperationalRows = (
-  rows: MopGeneratorOperationalDataRow[] | undefined,
+  rows: MopGeneratorOperationalInputRow[] | undefined,
 ): MopGeneratorOperationalDataRow[] => {
   const defaults = buildDefaultGeneratorOperationalRows();
   if (!rows?.length) return defaults;
-  const byId = new Map(rows?.map((r) => [r.rowId, r]));
-  return defaults.map((d) => {
-    const v = byId.get(d.rowId);
+  const byId = new Map<string, MopGeneratorOperationalInputRow>();
+  rows.forEach((r) => {
+    const id = r.rowId ?? r.id;
+    if (id) byId.set(id, r);
+  });
+  const byParameter = new Map(rows.filter((r) => r.parameter).map((r) => [r.parameter, r]));
+  return defaults.map((d, index) => {
+    const v = byId.get(d.rowId) ?? byParameter.get(d.parameter) ?? rows[index];
     return v
       ? {
           ...d,

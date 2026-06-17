@@ -9,6 +9,7 @@ import type { MopGeneratorOperationalDataRow, MOPSection07Details } from "@/type
 type MopSection07GeneratorLogProps = {
   rows: MopGeneratorOperationalDataRow[];
   patchMopDetails: (p: Partial<MOPSection07Details>) => void;
+  assetName: string
 };
 
 const patchGenRow = (
@@ -22,18 +23,18 @@ const patchGenRow = (
   });
 };
 
-export const MopSection07GeneratorLog = ({ rows, patchMopDetails }: MopSection07GeneratorLogProps) => {
+export const MopSection07GeneratorLog = ({ rows, patchMopDetails, assetName }: MopSection07GeneratorLogProps) => {
   return (
     <div className="mb-8">
       <Typography variant="h6" className="mb-3 text-base capitalize font-semibold text-gray-900">
-        {MOP_SECTION_07_GENERATOR_LOG_SUBHEADING}
+        {MOP_SECTION_07_GENERATOR_LOG_SUBHEADING} (Unit: {assetName})
       </Typography>
       <p className="mb-2 text-xs text-gray-500">
         Parameters and acceptance bands are defined for this unit template; record As Found / As
         Left for each.
       </p>
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[800px] border-collapse text-sm">
+        <table className="w-full min-w-200 border-collapse text-sm">
           <thead>
             <tr className="bg-[#0f3456] text-white">
               <th className="px-3 py-2 text-left font-semibold">Parameter</th>

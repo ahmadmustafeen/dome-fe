@@ -108,6 +108,7 @@ export const MopDocumentForm = ({
               steps={mop.steps}
               patchSteps={patchSteps}
               details={mop.mopDetails}
+              assetName={asset?.name!}
               patchMopDetails={patchMopDetails}
             />
             <MopSection08BackOutForm

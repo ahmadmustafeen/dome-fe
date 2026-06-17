@@ -18,6 +18,7 @@ type MopSection07MopDetailsProps = {
   patchSteps: (rows: MOPStep[]) => void;
   details: MOPSection07Details;
   patchMopDetails: (p: Partial<MOPSection07Details>) => void;
+  assetName: string
 };
 
 export const MopSection07MopDetails = ({
@@ -25,6 +26,7 @@ export const MopSection07MopDetails = ({
   patchSteps,
   details,
   patchMopDetails,
+  assetName,
 }: MopSection07MopDetailsProps) => {
   return (
     <div className="mt-5 rounded-lg border border-[#e0e0e0] bg-white px-3 py-4 shadow-sm sm:mt-6 sm:px-4 sm:py-5">
@@ -39,6 +41,7 @@ export const MopSection07MopDetails = ({
       <MopSection07GeneratorLog
         rows={details?.generatorOperationalRows}
         patchMopDetails={patchMopDetails}
+        assetName={assetName}
       />
       <MopSection07EnginePerformance
         rows={details?.enginePerformanceRows}

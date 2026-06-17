@@ -33,7 +33,6 @@ import {
   MOP_SECTION_07_DEFAULT_FAULT_ROW_COUNT,
   resolveEnginePerformanceRows,
   resolveFaultAlarmHistoryRows,
-  resolveGeneratorOperationalRows,
 } from "@/constants/mop-section07-details";
 import {
   buildDefaultDetailedProcedureRows,
@@ -684,9 +683,6 @@ export const generateMOP = async (
   const baseMop = createEmptyMop().mopDetails;
   data.mopDetails = {
     ...(data.mopDetails ?? baseMop),
-    generatorOperationalRows: resolveGeneratorOperationalRows(
-      data.mopDetails?.generatorOperationalRows,
-    ),
     enginePerformanceRows: resolveEnginePerformanceRows(data.mopDetails?.enginePerformanceRows),
     faultAlarmHistoryRows: resolveFaultAlarmHistoryRows(data.mopDetails?.faultAlarmHistoryRows),
     detailedProcedures: {

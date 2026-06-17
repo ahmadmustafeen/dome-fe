@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
+import { resolveGeneratorOperationalRows } from "@/constants/mop-section07-details";
 import { resolveMopComments } from "@/constants/mop-section10-comments";
 import { useAppContext } from "@/context/AppContext";
 import { createEmptyMop } from "@/services/mop-mock-service";
@@ -242,7 +243,7 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
       }));
     });
 
-     evtSource.addEventListener("sectionSixRiskAnalysisRow", (e) => {
+    evtSource.addEventListener("sectionSixRiskAnalysisRow", (e) => {
       const data = JSON.parse(e.data);
       if (data?.error) {
         toast.error("sectionSixRiskAnalysisRow failed");
@@ -254,6 +255,22 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
         assumptions: {
           ...prev.assumptions,
           riskAnalysisRows: data || [],
+        },
+      }));
+    });
+
+    evtSource.addEventListener("sectionSevenGeneratorOperationalData", (e) => {
+      const data = JSON.parse(e.data);
+      if (data?.error) {
+        toast.error("sectionSevenGeneratorOperationalData failed");
+        return;
+      }
+
+      setMop((prev: any) => ({
+        ...prev,
+        mopDetails: {
+          ...prev.mopDetails,
+          generatorOperationalRows: resolveGeneratorOperationalRows(data),
         },
       }));
     });

@@ -80,9 +80,8 @@ export type MopPostMaintenanceBullet = {
 
 /** Section 10 — MOP Comments (`generateSection10` in `section-11-comments/route.js`). */
 export type MOPSection10MopComments = {
-  /** All MOP comment lines in one field (replaces per-line inputs). */
-  mopCommentsText: string;
-  additionalNotes: string;
+  mopCommentsText: MopPostMaintenanceBullet[];
+  additionalNotes: MopPostMaintenanceBullet[];
   postMaintenanceBullets: MopPostMaintenanceBullet[];
 };
 

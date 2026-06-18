@@ -596,7 +596,12 @@ export const MOCK_GENERATED_MOP: MOP = {
   },
   mopComments: {
     ...buildDefaultMopComments(),
-    additionalNotes: "Log CMMS work order number here after upload.",
+    additionalNotes: [
+      {
+        id: "mock-additional-note-0",
+        title: "Log CMMS work order number here after upload.",
+      },
+    ],
   },
   references: mockSampleMopReferences(),
   signOff: {

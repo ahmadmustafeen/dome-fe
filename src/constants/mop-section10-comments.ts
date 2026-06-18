@@ -43,9 +43,35 @@ export const seedDefaultPostMaintenanceBullets =
       title,
     }));
 
-const normalizePostMaintenanceBullets = (
+const seedDefaultMopCommentBullets = (): MopPostMaintenanceBullet[] =>
+  MOP_SECTION_10_DEFAULT_MOP_COMMENT_LINES.map((title, i) => ({
+    id: `mop-comment-seed-${String(i)}`,
+    title,
+  }));
+
+const seedDefaultAdditionalNotes = (): MopPostMaintenanceBullet[] => [
+  {
+    id: "additional-notes-seed-0",
+    title: "",
+  },
+];
+
+const splitTextToBullets = (text: string): MopPostMaintenanceBullet[] =>
+  text
+    .split(/\n+/u)
+    .map((title) => title.trim())
+    .filter((title) => title.length > 0)
+    .map((title) => ({
+      id: crypto.randomUUID(),
+      title,
+    }));
+
+const normalizeSection10Bullets = (
   raw: unknown,
 ): MopPostMaintenanceBullet[] => {
+  if (typeof raw === "string") {
+    return splitTextToBullets(raw);
+  }
   if (!Array.isArray(raw)) {
     return [];
   }
@@ -71,8 +97,8 @@ const normalizePostMaintenanceBullets = (
 };
 
 export const buildDefaultMopComments = (): MOPSection10MopComments => ({
-  mopCommentsText: MOP_SECTION_10_DEFAULT_MOP_COMMENTS_TEXT,
-  additionalNotes: "",
+  mopCommentsText: seedDefaultMopCommentBullets(),
+  additionalNotes: seedDefaultAdditionalNotes(),
   postMaintenanceBullets: seedDefaultPostMaintenanceBullets(),
 });
 
@@ -82,30 +108,29 @@ const isMopSection10MopComments = (v: unknown): v is MOPSection10MopComments => 
   }
   const o = v as Record<string, unknown>;
   return (
-    typeof o.mopCommentsText === "string" && typeof o.additionalNotes === "string"
+    Array.isArray(o.mopCommentsText) && Array.isArray(o.additionalNotes)
   );
 };
 
 /** Migrates legacy `{ mopCommentBullets }` if present (no bullets array). */
 const normalizeMopCommentsPayload = (
   c: unknown,
-): Omit<MOPSection10MopComments, "postMaintenanceBullets"> | undefined => {
+): Partial<Omit<MOPSection10MopComments, "postMaintenanceBullets">> | undefined => {
   if (c === null || c === undefined || typeof c !== "object") {
     return undefined;
   }
   const o = c as Record<string, unknown>;
   if (isMopSection10MopComments(c)) {
     return {
-      mopCommentsText: o.mopCommentsText as string,
-      additionalNotes: o.additionalNotes as string,
+      mopCommentsText: normalizeSection10Bullets(o.mopCommentsText),
+      additionalNotes: normalizeSection10Bullets(o.additionalNotes),
     };
   }
   const bullets = o.mopCommentBullets;
   if (Array.isArray(bullets) && bullets.every((x) => typeof x === "string")) {
     return {
-      mopCommentsText: bullets.join("\n\n"),
-      additionalNotes:
-        typeof o.additionalNotes === "string" ? o.additionalNotes : "",
+      mopCommentsText: normalizeSection10Bullets(bullets),
+      additionalNotes: normalizeSection10Bullets(o.additionalNotes),
     };
   }
   return undefined;
@@ -114,8 +139,8 @@ const normalizeMopCommentsPayload = (
 export const resolveMopComments = (c: unknown): MOPSection10MopComments => {
   const defaults = buildDefaultMopComments();
 
-  let mopCommentsText = defaults.mopCommentsText;
-  let additionalNotes = defaults.additionalNotes;
+  let mopCommentsText: MopPostMaintenanceBullet[] = defaults.mopCommentsText;
+  let additionalNotes: MopPostMaintenanceBullet[] = defaults.additionalNotes;
   let postMaintenanceBullets: MopPostMaintenanceBullet[] =
     seedDefaultPostMaintenanceBullets();
 
@@ -125,32 +150,34 @@ export const resolveMopComments = (c: unknown): MOPSection10MopComments => {
     c !== null && typeof c === "object" ? (c as Record<string, unknown>) : undefined;
 
   if (normalized !== undefined) {
-    mopCommentsText =
-      normalized.mopCommentsText.trim().length > 0
-        ? normalized.mopCommentsText
-        : defaults.mopCommentsText;
-    additionalNotes =
-      normalized.additionalNotes !== undefined && normalized.additionalNotes !== null
-        ? normalized.additionalNotes
-        : "";
+    if (normalized.mopCommentsText !== undefined) {
+      mopCommentsText =
+        normalized.mopCommentsText.length > 0
+          ? normalized.mopCommentsText
+          : defaults.mopCommentsText;
+    }
+    if (normalized.additionalNotes !== undefined) {
+      additionalNotes =
+        normalized.additionalNotes.length > 0
+          ? normalized.additionalNotes
+          : seedDefaultAdditionalNotes();
+    }
   }
 
   if (rawRecord !== undefined) {
-    if (
-      typeof rawRecord.mopCommentsText === "string" &&
-      normalized === undefined
-    ) {
+    if (normalized === undefined && rawRecord.mopCommentsText !== undefined) {
+      const parsed = normalizeSection10Bullets(rawRecord.mopCommentsText);
       mopCommentsText =
-        rawRecord.mopCommentsText.trim().length > 0
-          ? rawRecord.mopCommentsText
-          : defaults.mopCommentsText;
+        parsed.length > 0 ? parsed : defaults.mopCommentsText;
     }
-    if (normalized === undefined && typeof rawRecord.additionalNotes === "string") {
-      additionalNotes = rawRecord.additionalNotes;
+    if (normalized === undefined && rawRecord.additionalNotes !== undefined) {
+      const parsed = normalizeSection10Bullets(rawRecord.additionalNotes);
+      additionalNotes =
+        parsed.length > 0 ? parsed : seedDefaultAdditionalNotes();
     }
     const rawBullets = rawRecord.postMaintenanceBullets;
     if (rawBullets !== undefined) {
-      const parsed = normalizePostMaintenanceBullets(rawBullets);
+      const parsed = normalizeSection10Bullets(rawBullets);
       postMaintenanceBullets =
         parsed.length > 0 ? parsed : seedDefaultPostMaintenanceBullets();
     }

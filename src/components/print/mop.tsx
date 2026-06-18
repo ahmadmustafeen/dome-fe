@@ -937,12 +937,37 @@ const TenthSection = (props: MOP) => {
       <SectionHeading className="heading-1" heading="Section 10: MOP Comments" />
 
       <p className="font-semibold text-lg py-2">MOP Comments</p>
+      <table className="w-full border-collapse text-sm my-4 ">
+        <thead className="bg-[#091628]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              No.
+            </th>
+            <th className="border border-black p-3 text-left">
+              Comments
+            </th>
+          </tr>
+        </thead>
 
-      <EachSingleRow item={{ text: props.mopComments.mopCommentsText }} noIcon />
+        <tbody className="">
+          {props.mopComments.mopCommentsText.map((row, index) => (
+            <CustomTableRowWrapper index={index}>
+              <td className="border border-black p-3 align-top">
+                {index + 1}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.title}
+              </td>
+            </CustomTableRowWrapper>
+          ))}
+        </tbody>
+      </table>
+
+
 
       <p className="font-semibold text-lg py-2">Post-Maintenance Requirements:</p>
 
-      <table className="w-full border-collapse text-sm mt-4 ">
+      <table className="w-full border-collapse text-sm my-4">
         <thead className="bg-[#091628]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
@@ -969,9 +994,31 @@ const TenthSection = (props: MOP) => {
       </table>
 
       <p className="font-semibold text-lg py-2">Additional Notes:</p>
-      <EachSingleRow item={{ text: props.mopComments.additionalNotes }} noIcon />
+      <table className="w-full border-collapse text-sm my-4 ">
+        <thead className="bg-[#091628]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              No.
+            </th>
+            <th className="border border-black p-3 text-left">
+              Comments
+            </th>
+          </tr>
+        </thead>
 
-
+        <tbody className="">
+          {props.mopComments.additionalNotes.map((row, index) => (
+            <CustomTableRowWrapper index={index}>
+              <td className="border border-black p-3 align-top">
+                {index + 1}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.title}
+              </td>
+            </CustomTableRowWrapper>
+          ))}
+        </tbody>
+      </table>
     </div>
   </div>
 }

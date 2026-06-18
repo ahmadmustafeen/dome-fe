@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-import { resolveGeneratorOperationalRows } from "@/constants/mop-section07-details";
 import { resolveMopComments } from "@/constants/mop-section10-comments";
 import { useAppContext } from "@/context/AppContext";
 import { createEmptyMop } from "@/services/mop-mock-service";
@@ -266,11 +265,14 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
         return;
       }
 
+      console.log({ sectionSevenGeneratorOperationalData: data });
+
+
       setMop((prev: any) => ({
         ...prev,
         mopDetails: {
           ...prev.mopDetails,
-          generatorOperationalRows: resolveGeneratorOperationalRows(data),
+          generatorOperationalRows: data,
         },
       }));
     });

@@ -5,7 +5,6 @@ import { Typography } from '@/components/common';
 import { Input } from '@/components/ui/Input';
 import { MOP_DYNAMIC_TABLE_MIN_ROWS } from '@/constants/mop-dynamic-table';
 import {
-  MOP_SECTION_11_COMPANY_POLICY_INTRO,
   MOP_SECTION_11_POLICY_BANNER_TEXT,
   MOP_SECTION_11_POLICY_NOTE_LABEL,
   MOP_SECTION_11_POLICY_TABLE_HEADERS,

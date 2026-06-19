@@ -5,7 +5,7 @@ import type { MOPSection11References } from '@/types/mop';
 import { useEffect, useMemo } from 'react';
 
 import { Typography } from '@/components/common';
-import { MOP_SECTION_11_COMPREHENSIVE_LIB_LABEL, MOP_SECTION_11_HEADING } from '@/constants/mop-section11-references';
+import { MOP_SECTION_11_HEADING } from '@/constants/mop-section11-references';
 
 import { MopSection11DocTable } from './MopSection11DocTable';
 import { MopSection11Notices } from './MopSection11Notices';

@@ -107,6 +107,9 @@ const fillSafetyRows = (count: number): MopReferenceSafetyRow[] =>
 const ensureRowIds = <T extends { id: string }>(rows: T[], prefix: string): T[] =>
   rows?.map(r => (r.id && r.id.length > 0 ? r : { ...r, id: newMopRowId(prefix) }));
 
+const clearInternalAccess = <T extends { internalAccess: string }>(rows: T[]): T[] =>
+  rows.map(r => ({ ...r, internalAccess: '' }));
+
 export const buildDefaultMopReferences = (): MOPSection11References => ({
   policyDocumentRows: fillPolicyRows(MOP_SECTION_11_DEFAULT_POLICY_COUNT),
   equipmentDocumentRows: fillLinkRows(MOP_SECTION_11_DEFAULT_EQUIPMENT_COUNT),
@@ -128,14 +131,14 @@ const resolveLinkRows = (
   if (!rows || rows.length === 0) {
     return fillLinkRows(defaultCount);
   }
-  return ensureRowIds(rows, 'ref');
+  return clearInternalAccess(ensureRowIds(rows, 'ref'));
 };
 
 const resolveSafetyRows = (rows: MopReferenceSafetyRow[] | undefined): MopReferenceSafetyRow[] => {
   if (!rows || rows.length === 0) {
     return fillSafetyRows(MOP_SECTION_11_DEFAULT_SAFETY_COUNT);
   }
-  return ensureRowIds(rows, 'sft');
+  return clearInternalAccess(ensureRowIds(rows, 'sft'));
 };
 
 export const resolveMopReferences = (r: MOPSection11References | undefined): MOPSection11References => {

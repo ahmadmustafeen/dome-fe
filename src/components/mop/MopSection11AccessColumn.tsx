@@ -1,7 +1,9 @@
-"use client";
+'use client';
 
-import { Input } from "@/components/ui/Input";
-import { isHttpUrl } from "@/constants/mop-section11-references";
+import { useEffect } from 'react';
+
+import { Input } from '@/components/ui/Input';
+import { isHttpUrl } from '@/constants/mop-section11-references';
 
 type MopSection11AccessColumnProps = {
   rowId: string;
@@ -21,6 +23,13 @@ export const MopSection11AccessColumn = ({
   onInternalAccessChange,
 }: MopSection11AccessColumnProps) => {
   const showView = isHttpUrl(linkUrl);
+
+  useEffect(() => {
+    if (internalAccess) {
+      onInternalAccessChange('');
+    }
+  }, [internalAccess, onInternalAccessChange]);
+
   return (
     <div className="flex min-w-[140px] flex-col gap-1">
       <label className="sr-only" htmlFor={`${rowId}-access-url`}>
@@ -29,23 +38,12 @@ export const MopSection11AccessColumn = ({
       <Input
         id={`${rowId}-access-url`}
         value={linkUrl}
-        onChange={(e) => onLinkUrlChange(e.target.value)}
+        onChange={e => onLinkUrlChange(e.target.value)}
         placeholder="https://…"
         className="w-full text-sm"
         autoComplete="off"
       />
-      <label className="sr-only" htmlFor={`${rowId}-access-internal`}>
-        {`${groupLabel} internal access`}
-      </label>
-      <Input
-        id={`${rowId}-access-internal`}
-        value={internalAccess}
-        onChange={(e) => onInternalAccessChange(e.target.value)}
-        placeholder="Internal — e.g. Request from Site Manager"
-        className="w-full text-sm"
-        autoComplete="off"
-      />
-      {showView ? (
+      {showView && (
         <a
           href={linkUrl.trim()}
           target="_blank"
@@ -54,7 +52,7 @@ export const MopSection11AccessColumn = ({
         >
           View
         </a>
-      ) : null}
+      )}
     </div>
   );
 };

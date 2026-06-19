@@ -11,9 +11,9 @@ type MopGeneratorOperationalInputRow = MopGeneratorOperationalDataRow & { id?: s
 export const MOP_SECTION_07_HEADING = "Section 07: MOP Details";
 
 export const MOP_SECTION_07_GENERATOR_LOG_SUBHEADING =
-  "Generator Operational Data Log";
+  "Operational Data Log";
 
-export const MOP_SECTION_07_ENGINE_PERFORMANCE_SUBHEADING = "Engine Performance Data";
+export const MOP_SECTION_07_ENGINE_PERFORMANCE_SUBHEADING = "Performance Data";
 
 export const MOP_SECTION_07_FAULT_HISTORY_SUBHEADING = "System Fault/Alarm History";
 

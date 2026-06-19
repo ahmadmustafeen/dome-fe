@@ -34,13 +34,13 @@ const patchRow = (
   if (variant === 'equipment') {
     patch({
       equipmentDocumentRows: current.equipmentDocumentRows?.map(r =>
-        r.id === id ? { ...r, ...partial } : r,
+        r.id === id ? { ...r, ...partial, internalAccess: '' } : r,
       ),
     });
   } else {
     patch({
-      additionalResourceRows: current.equipmentDocumentRows?.map(r =>
-        r.id === id ? { ...r, ...partial } : r,
+      additionalResourceRows: current.additionalResourceRows?.map(r =>
+        r.id === id ? { ...r, ...partial, internalAccess: '' } : r,
       ),
     });
   }
@@ -111,8 +111,9 @@ export const MopSection11DocTable = ({ variant, rows, references, patchMopRefere
                     rowId={row.id}
                     groupLabel={colTitle}
                     linkUrl={row.linkUrl}
-                    internalAccess={row.internalAccess}
-                    onLinkUrlChange={v => patchRow(references, variant, row.id, { linkUrl: v }, patchMopReferences)}
+                    internalAccess=""
+                    onLinkUrlChange={v =>
+                      patchRow(references, variant, row.id, { linkUrl: v, internalAccess: '' }, patchMopReferences)}
                     onInternalAccessChange={v => patchRow(references, variant, row.id, { internalAccess: v }, patchMopReferences)}
                   />
                 </td>

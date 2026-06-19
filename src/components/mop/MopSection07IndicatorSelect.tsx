@@ -46,7 +46,7 @@ export const MopSection07IndicatorSelect = ({
   id,
 }: MopSection07IndicatorSelectProps) => {
   const current = normalize(value);
-  const rootClassName = cn("flex max-w-md flex-wrap gap-1.5", className);
+  const rootClassName = cn("flex flex-wrap gap-1", className);
 
   return (
     <div id={id} className={rootClassName} role="group" aria-label={ariaLabel}>

@@ -95,7 +95,7 @@ export type MopReferencePolicyRow = {
 
 /**
  * Section 11 — document title / type / access (equipment docs & additional resources).
- * When `linkUrl` is a valid `http(s)` URL, "View" opens in a new tab; otherwise show `internalAccess`.
+ * When `linkUrl` is a valid `http(s)` URL, "View" opens in a new tab.
  */
 export type MopReferenceLinkRow = {
   id: string;

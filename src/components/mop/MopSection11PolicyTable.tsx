@@ -43,9 +43,9 @@ export const MopSection11PolicyTable = ({
       <Typography variant="h6" className="mb-2 text-sm font-semibold text-gray-900 capitalize">
         Company Policy Documents Consulted
       </Typography>
-      <Typography variant="p" className="mb-3 text-sm text-gray-800">
+      {/* <Typography variant="p" className="mb-3 text-sm text-gray-800">
         {MOP_SECTION_11_COMPANY_POLICY_INTRO}
-      </Typography>
+      </Typography> */}
       <div className="overflow-x-auto">
         <table className="w-full min-w-[640px] border-collapse text-sm">
           <thead>

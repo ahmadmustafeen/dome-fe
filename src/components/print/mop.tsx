@@ -556,7 +556,7 @@ const SeventhSection = (props: MOP) => {
         </tbody>
       </table>
 
-      <p className="font-semibold text-lg py-4">Generator Operational Data Log (Unit: {assetName})</p>
+      <p className="font-semibold text-lg py-4">Operational Data Log (Unit: {assetName})</p>
       <Typography variant="p" className="mb-4 text-sm text-gray-700">
         Parameters and acceptance bands are defined for this unit template; record As Found / As Left for each.
       </Typography>
@@ -604,7 +604,7 @@ const SeventhSection = (props: MOP) => {
         </tbody>
       </table>
 
-      <p className="font-semibold text-lg py-4">Engine Performance Data</p>
+      <p className="font-semibold text-lg py-4">Performance Data</p>
       <table className="w-full border-collapse text-sm ">
         <thead className="bg-[#091628]">
           <tr className=" text-white">
@@ -1028,13 +1028,13 @@ const EleventhSection = (props: MOP) => {
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 11: References and Documentation" />
 
-      <p className="font-semibold text-lg py-2">Comprehensive Reference Library</p>
+      {/* <p className="font-semibold text-lg py-2">Comprehensive Reference Library</p> */}
 
       {props.references.policyDocumentRows?.length ? <>
         <p className="font-semibold text-lg py-2">Company Policy Documents Consulted</p>
-        <Typography variant="p" className="mb-4 text-sm text-gray-700">
+        {/* <Typography variant="p" className="mb-4 text-sm text-gray-700">
           The following company policy documents were referenced during the creation of this MOP to ensure alignment with company-specific procedures and requirements:
-        </Typography>
+        </Typography> */}
         <table className="w-full border-collapse text-sm ">
           <thead className="bg-[#091628]">
             <tr className=" text-white">
@@ -1111,9 +1111,6 @@ const EleventhSection = (props: MOP) => {
                   <div>
                     {row.linkUrl}
                   </div>
-                  <div>
-                    {row.internalAccess}
-                  </div>
                 </td>
               </CustomTableRowWrapper>
             ))}
@@ -1154,9 +1151,6 @@ const EleventhSection = (props: MOP) => {
                   <div>
                     {row.linkUrl}
                   </div>
-                  <div>
-                    {row.internalAccess}
-                  </div>
                 </td>
               </CustomTableRowWrapper>
             ))}
@@ -1196,9 +1190,6 @@ const EleventhSection = (props: MOP) => {
                 <td className="border border-black max-w-48 break-all p-3 align-top">
                   <div>
                     {row.linkUrl}
-                  </div>
-                  <div>
-                    {row.internalAccess}
                   </div>
                 </td>
               </CustomTableRowWrapper>

@@ -35,7 +35,7 @@ export const SopSection07DetailedProcedureSteps = ({
             <th className="px-3 py-2 text-left font-semibold">Description</th>
             <th className="px-3 py-2 text-left font-semibold">Expected Range</th>
             <th className="px-3 py-2 text-left font-semibold">Source</th>
-            <th className="w-32 px-3 py-2 text-left font-semibold">Indicator</th>
+            <th className="px-0 py-2 text-left font-semibold">Indicator</th>
             <th className="px-3 py-2 text-left font-semibold">Recorded Value</th>
             <th className="w-24 px-3 py-2 text-left font-semibold">Initials</th>
             <th className="w-24 px-3 py-2 text-left font-semibold">Time</th>
@@ -94,7 +94,7 @@ export const SopSection07DetailedProcedureSteps = ({
                   className="min-h-24 w-full"
                 />
               </td>
-              <td className="border border-gray-200 min-w-52 px-2 py-1 align-top">
+              <td className="border border-gray-200 px-2 py-1 align-top">
                 <MopSection07IndicatorSelect
                   id={`sop-detail-step-indicator-${row.id}`}
                   value={row.indicator}
@@ -106,7 +106,7 @@ export const SopSection07DetailedProcedureSteps = ({
                           : currentRow,
                       ),
                     )}
-                  className="max-w-40"
+                  // className="max-w-40"
                   aria-label={`SOP step ${row.step} indicator`}
                 />
               </td>

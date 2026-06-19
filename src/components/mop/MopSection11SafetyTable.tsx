@@ -28,12 +28,11 @@ const patchRow = (
   patch: MopSection11SafetyTableProps['patchMopReferences'],
 ) => {
   patch({
-    safetyStandardRows: current.safetyStandardRows?.map(r => (r.id === id ? { ...r, ...partial } : r)),
+    safetyStandardRows: current.safetyStandardRows?.map(r => (r.id === id ? { ...r, ...partial, internalAccess: '' } : r)),
   });
 };
 
 export const MopSection11SafetyTable = ({ rows, references, patchMopReferences }: MopSection11SafetyTableProps) => {
-
   return (
     <div className="mb-6">
       <Typography variant="h6" className="mb-2 text-sm font-semibold text-gray-900 capitalize">
@@ -82,8 +81,8 @@ export const MopSection11SafetyTable = ({ rows, references, patchMopReferences }
                     rowId={row.id}
                     groupLabel={MOP_SECTION_11_SAFETY_TABLE_HEADERS.safetyStandard}
                     linkUrl={row.linkUrl}
-                    internalAccess={row.internalAccess}
-                    onLinkUrlChange={v => patchRow(references, row.id, { linkUrl: v }, patchMopReferences)}
+                    internalAccess=""
+                    onLinkUrlChange={v => patchRow(references, row.id, { linkUrl: v, internalAccess: '' }, patchMopReferences)}
                     onInternalAccessChange={v => patchRow(references, row.id, { internalAccess: v }, patchMopReferences)}
                   />
                 </td>

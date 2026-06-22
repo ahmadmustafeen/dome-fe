@@ -45,7 +45,7 @@ const DashboardSidebar = ({ isOpen, onClose }: DashboardSidebarProps) => {
       {/* Logo */}
       <div className="flex justify-center pt-10 pb-5">
         <Image
-          src="/assets/images/glenart-logo.png"
+          src="/assets/images/glenart-logo.svg"
           alt="Glenart Group Logo"
           width={140}
           height={140}

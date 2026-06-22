@@ -35,7 +35,7 @@ const AuthWrapper = ({
         {/* Mobile logo — hidden on desktop */}
         <div className="flex justify-center pt-8 pb-2 lg:hidden">
           <Image
-            src="/assets/images/glenart-logo.png"
+            src="/assets/images/glenart-logo.svg"
             alt="Glenart Group Logo"
             width={120}
             height={60}

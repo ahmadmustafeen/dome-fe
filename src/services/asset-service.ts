@@ -93,6 +93,13 @@ export const assetService = {
       body: JSON.stringify(data),
     }),
 
+  clearAssetsBySiteAndClient: (siteId: string, clientId: string) => {
+    const query = new URLSearchParams({ siteId, clientId });
+    return apiFetch(`/assets/clear?${query.toString()}`, {
+      method: "DELETE",
+    });
+  },
+
   deleteAsset: (id: string) =>
     apiFetch(`/assets/${id}`, {
       method: "DELETE",

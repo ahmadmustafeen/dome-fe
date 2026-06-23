@@ -37,7 +37,7 @@ const PAGE_SIZE = 10;
 
 export default function AssetManagementPage() {
   const t = useTranslations("AssetsManagement");
-  const { site } = useAppContext();
+  const { client, site } = useAppContext();
 
   const [files, setFiles] = useState<File[]>([]);
   const [assets, setAssets] = useState<Asset[]>([]);
@@ -46,6 +46,7 @@ export default function AssetManagementPage() {
   const [totalAssets, setTotalAssets] = useState(0);
   const [deleteId, setDeleteId] = useState("");
   const [confirmDeleteAllAssets, setConfirmDeleteAllAssets] = useState(false);
+  const [confirmClearAllAssets, setConfirmClearAllAssets] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [showCreateAsset, setShowCreateAsset] = useState(false);
   const [showUploadAssets, setShowUploadAssets] = useState(false);
@@ -223,12 +224,29 @@ export default function AssetManagementPage() {
     }
   };
 
-  const handleConfirmDeleteAll = () => {
+  const handleConfirmDeleteAll = async () => {
     try {
-      assetService.deleteBulkAsset({ ids: selectedIds });
+      await assetService.deleteBulkAsset({ ids: selectedIds });
       toast.success(t("toast_delete_all_success"));
       setRowSelection({});
       setConfirmDeleteAllAssets(false);
+      refetchAssets();
+    } catch (err) {
+      toast.error(`Something went wrong! ${err}`);
+    }
+  };
+
+  const handleConfirmClearAll = async () => {
+    if (!site?._id || !client?._id) {
+      toast.error(t("toast_clear_all_missing_context"));
+      return;
+    }
+
+    try {
+      await assetService.clearAssetsBySiteAndClient(site._id, client._id);
+      toast.success(t("toast_clear_all_success"));
+      setRowSelection({});
+      setConfirmClearAllAssets(false);
       refetchAssets();
     } catch (err) {
       toast.error(`Something went wrong! ${err}`);
@@ -298,6 +316,14 @@ export default function AssetManagementPage() {
           handleContinue={handleConfirmDeleteAll}
         />
       )}
+      {confirmClearAllAssets && (
+        <DeleteConfirmationScreen
+          heading={t("clear_all_heading")}
+          description={t("clear_all_description")}
+          handleCancel={() => setConfirmClearAllAssets(false)}
+          handleContinue={handleConfirmClearAll}
+        />
+      )}
       {isAssetsLoading && (
         <ScreenLoader
           heading={t("loader_heading")}
@@ -324,6 +350,12 @@ export default function AssetManagementPage() {
                 variant="danger"
               />
             )}
+            <AppButton
+              title={t("btn_clear_all")}
+              onClick={() => setConfirmClearAllAssets(true)}
+              variant="danger"
+              disabled={!site?._id || !client?._id || totalAssets === 0}
+            />
             <AppButton
               title={t("btn_upload_csv")}
               onClick={() => setShowUploadAssets(true)}

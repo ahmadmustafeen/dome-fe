@@ -17,9 +17,41 @@ type MopSection10MopCommentsProps = {
 };
 
 const section10BulletsToListItems = (
-  bullets: MOPSection10MopComments["postMaintenanceBullets"],
-): ProcedureEditableListItem[] =>
-  bullets?.map((b) => ({ id: b.id, text: b.title }));
+  bullets: unknown,
+): ProcedureEditableListItem[] => {
+  if (typeof bullets === "string") {
+    return bullets
+      .split(/\n+/u)
+      .map((text) => text.trim())
+      .filter(Boolean)
+      .map((text) => ({ id: crypto.randomUUID(), text }));
+  }
+
+  if (!Array.isArray(bullets)) {
+    return [];
+  }
+
+  return bullets.map((b) => {
+    if (typeof b === "string") {
+      return { id: crypto.randomUUID(), text: b };
+    }
+
+    if (b !== null && typeof b === "object") {
+      const bullet = b as { id?: unknown; title?: unknown; text?: unknown };
+      return {
+        id: typeof bullet.id === "string" ? bullet.id : crypto.randomUUID(),
+        text:
+          typeof bullet.title === "string"
+            ? bullet.title
+            : typeof bullet.text === "string"
+              ? bullet.text
+              : "",
+      };
+    }
+
+    return { id: crypto.randomUUID(), text: "" };
+  });
+};
 
 const listItemsToSection10Bullets = (
   items: ProcedureEditableListItem[],

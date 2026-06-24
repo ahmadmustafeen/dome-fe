@@ -265,9 +265,6 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
         return;
       }
 
-      console.log({ sectionSevenGeneratorOperationalData: data });
-
-
       setMop((prev: any) => ({
         ...prev,
         mopDetails: {
@@ -276,6 +273,23 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
         },
       }));
     });
+
+    evtSource.addEventListener("sectionEightBackoutProcedureData", (e) => {
+      const data = JSON.parse(e.data);
+      if (data?.error) {
+        toast.error("sectionEightBackoutProcedureData failed");
+        return;
+      }
+
+      setMop((prev: any) => ({
+        ...prev,
+        backOut: {
+          ...prev.backOut,
+          stepRows: data
+        },
+      }));
+    });
+
 
     evtSource.addEventListener("sectionSevenEnginePerformanceData", (e) => {
       const data = JSON.parse(e.data);

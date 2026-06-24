@@ -14,18 +14,7 @@ export const MOP_SECTION_08_DEFAULT_STEP_COUNT = 10;
  * Default back-out text aligned with `generateSection08` in `section-generators.js`
  * (static template; team may override per site in the form).
  */
-export const MOP_SECTION_08_DEFAULT_PROCEDURE_TEXT: readonly string[] = [
-  "Immediate actions: stop all work immediately and secure the area.",
-  "Notify the on-site data center lead and the facility manager immediately.",
-  "Assess the situation and determine if equipment can be safely returned to service.",
-  "If the issue cannot be resolved at the technician level, escalate to the operations manager.",
-  "If the operations manager cannot resolve, escalate to the site lead / engineering director.",
-  "Contact the equipment manufacturer service representative if required; record contact details here.",
-  "Document all findings and actions taken in the incident report.",
-  "If safe to return to service, follow re-energization procedures.",
-  "Monitor equipment for a minimum of 30 minutes after return to service.",
-  "Complete the incident report and schedule follow-up maintenance if required.",
-];
+export const MOP_SECTION_08_DEFAULT_PROCEDURE_TEXT: readonly string[] = [];
 
 export const newBackOutProcedureRow = (
   stepNumber: number,

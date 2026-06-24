@@ -354,16 +354,16 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
         mopComments: resolveMopComments({
           ...prev.mopComments,
           mopCommentsText:
-            typeof data.mopComments === "string"
-              ? data.mopComments
+            Array.isArray(data.mopCommentsText)
+              ? data.mopCommentsText
               : prev.mopComments.mopCommentsText,
           additionalNotes:
-            typeof data.additionalNotes === "string"
+            Array.isArray(data.additionalNotes)
               ? data.additionalNotes
               : prev.mopComments.additionalNotes,
           postMaintenanceBullets:
-            Array.isArray(data.postmaintenenaceRequirements) === true
-              ? data.postmaintenenaceRequirements
+            Array.isArray(data.postMaintenanceBullets)
+              ? data.postMaintenanceBullets
               : prev.mopComments.postMaintenanceBullets,
         }),
       }));

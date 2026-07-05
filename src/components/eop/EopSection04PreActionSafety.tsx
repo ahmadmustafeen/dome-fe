@@ -1,9 +1,7 @@
 "use client";
 
 import { Typography } from "@/components/common";
-import { Textarea } from "@/components/ui/Textarea";
 import {
-  EOP_SECTION_04_CRITICAL_CHECKPOINT_TITLE,
   EOP_SECTION_04_DO_NOT_PROCEED_BANNER,
   EOP_SECTION_04_SUBHEADING_PRE_ACTION,
 } from "@/constants/eop-section04-immediate-actions";

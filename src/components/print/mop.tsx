@@ -208,7 +208,7 @@ const FourthSection = (props: MOP) => {
 }
 
 const FifthSection = (props: MOP) => {
-  const assetName = props.asset.assetName;
+  const assetName = props?.asset?.assetName || "";
 
 
   return <div className="">

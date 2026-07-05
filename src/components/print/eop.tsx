@@ -136,7 +136,7 @@ const ThirdSection = (props: EOP) => {
 }
 
 const FourthSection = (props: EOP) => {
-  const assetName = props.asset.assetName;
+  const assetName = props?.asset?.assetName || "";
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 04: Immediate Emergency Actions - Power Failure Diagnostics" />
@@ -311,7 +311,7 @@ const FourthSection = (props: EOP) => {
 
 
 const FifthSection = (props: EOP) => {
-  const assetName = props.asset.assetName;
+  const assetName = props?.asset?.assetName || "";
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 05: Power Failure Detection External Response Actions" />
@@ -478,7 +478,7 @@ const SixthSection = (props: EOP) => {
 }
 
 const SeventhSection = (props: EOP) => {
-  const assetName = props.asset.assetName;
+  const assetName = props?.asset?.assetName || "";
 
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
@@ -718,7 +718,7 @@ const SeventhSection = (props: EOP) => {
 }
 
 const EighthSection = (props: EOP) => {
-  const assetName = props.asset.assetName;
+  const assetName = props?.asset?.assetName || "";
 
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">

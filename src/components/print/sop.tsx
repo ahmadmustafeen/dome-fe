@@ -188,7 +188,7 @@ const FourthSection = (props: SOP) => {
 }
 
 const FifthSection = (props: SOP) => {
-  const assetName = props.asset.assetName;
+  const assetName = props?.asset?.assetName || "";
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 05: Safety Requirements" />

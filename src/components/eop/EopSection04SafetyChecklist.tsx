@@ -16,14 +16,13 @@ type EopSection04SafetyChecklistProps = {
 export const EopSection04SafetyChecklist = ({
   preActionSafety,
   patchPreActionSafety,
-  assetName
 }: EopSection04SafetyChecklistProps) => {
   const items = preActionSafety?.safetyChecklistItems;
 
   return (
     <div className="mb-6">
       <Typography variant="h6" className="mb-3 text-base font-semibold text-gray-900">
-        {`${assetName} Specific Safety Requirements:`}
+        CRITICAL SAFETY CHECKPOINT - STOP Before Proceeding
       </Typography>
 
       <ProcedureEditableList

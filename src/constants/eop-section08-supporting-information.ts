@@ -1,4 +1,4 @@
-export const EOP_SECTION_08_HEADING = "Section 08: Supporting Information";
+export const EOP_SECTION_08_HEADING = "Section 08: References and Documentation";
 
 export const EOP_SECTION_08_POLICY_HEADING = "Company Policy Documents Consulted";
 

@@ -160,13 +160,6 @@ const FourthSection = (props: EOP) => {
       <SectionHeading className="heading-1" heading="Section 04: Immediate Emergency Actions - Power Failure Diagnostics" />
 
       <p className="font-semibold text-lg py-4">Pre-Action Safety & Equipment Requirements:</p>
-      <p className="font-semibold text-xl py-4">
-        ⚠️ CRITICAL SAFETY CHECKPOINT - STOP Before Proceeding:
-      </p>
-
-      <Typography variant="p" className="mb-4 text-sm text-gray-700">
-        {props.immediateActions.preActionSafety.ppeIntroText}
-      </Typography>
 
       <p className="font-semibold text-lg py-4">Equipment-Specific PPE Requirements for {assetName}</p>
       <table className="w-full border-collapse text-sm ">
@@ -238,15 +231,34 @@ const FourthSection = (props: EOP) => {
         </tbody>
       </table>
 
-      <p className="font-semibold text-lg py-4">{assetName} Specific Safety Requirements</p>
-      <div className="section-container-6">
-        {
-          props.immediateActions.preActionSafety.safetyChecklistItems.map((item, index) => {
-            return <div className="subsection-row-6" key={index} >
-              <EachSingleRow item={item} />
-            </div>
-          })
-        }
+      <p className="font-semibold text-lg py-4">CRITICAL SAFETY CHECKPOINT - STOP Before Proceeding</p>
+      <div className="">
+        <table className="w-full border-collapse text-sm ">
+          <thead className="bg-[#5A1A1A]">
+            <tr className=" text-white">
+              <th className="border border-black p-3 text-left">
+                Step Number
+              </th>
+              <th className="border border-black p-3 text-left">
+                Safety Checklist Items
+              </th>
+            </tr>
+          </thead>
+
+          <tbody className="">
+            {props.immediateActions.preActionSafety.safetyChecklistItems.map((row, index) => (
+              <CustomTableRowWrapper index={index}>
+                <td className="border border-black p-3 align-top">
+                  {index + 1}
+                </td>
+
+                <td className="border border-black p-3 align-top">
+                  {row.text}
+                </td>
+              </CustomTableRowWrapper>
+            ))}
+          </tbody>
+        </table>
       </div>
       <div className="mt-4 rounded-md border border-red-300 bg-red-50 px-3 py-3 text-sm font-semibold text-red-800">
         ⛔ {EOP_SECTION_04_DO_NOT_PROCEED_BANNER}{assetName}
@@ -500,14 +512,33 @@ const SeventhSection = (props: EOP) => {
       <Typography variant="p" className="my-4 text-sm text-gray-700">
         Confirm stable operating conditions are available at all system levels:
       </Typography>
-      <div className="section-container-7">
-        {
-          props.recovery.resolutionVerificationItems.map((item, index) => {
-            return <div className="subsection-row-7" key={index} >
-              <EachSingleRow item={item} />
-            </div>
-          })
-        }
+      <div className="my-2">
+        <table className="w-full border-collapse text-sm ">
+          <thead className="bg-[#5A1A1A]">
+            <tr className=" text-white">
+              <th className="border border-black p-3 text-left">
+                No.
+              </th>
+              <th className="border border-black p-3 text-left">
+                Item
+              </th>
+            </tr>
+          </thead>
+
+          <tbody className="">
+            {props.recovery.resolutionVerificationItems.map((row, index) => (
+              <CustomTableRowWrapper index={index}>
+                <td className="border border-black p-3 align-top">
+                  {index + 1}
+                </td>
+
+                <td className="border border-black p-3 align-top">
+                  {row.text}
+                </td>
+              </CustomTableRowWrapper>
+            ))}
+          </tbody>
+        </table>
       </div>
       <EachRow item={{ "key": "Confirm voltage readings at equipment disconnect:", value: `${props?.recovery?.disconnectVoltage ?? "-"} VAC` }} className="" />
 
@@ -516,28 +547,66 @@ const SeventhSection = (props: EOP) => {
       <Typography variant="p" className="my-4 text-sm text-gray-700">
         Complete all safety verifications before energizing equipment:
       </Typography>
-      <div className="section-container-7">
-        {
-          props.recovery.preStartSafetyItems.map((item, index) => {
-            return <div className="subsection-row-7" key={index} >
-              <EachSingleRow item={item} />
-            </div>
-          })
-        }
+      <div className="my-4">
+        <table className="w-full border-collapse text-sm ">
+          <thead className="bg-[#5A1A1A]">
+            <tr className=" text-white">
+              <th className="border border-black p-3 text-left">
+                No.
+              </th>
+              <th className="border border-black p-3 text-left">
+                Item
+              </th>
+            </tr>
+          </thead>
+
+          <tbody className="">
+            {props.recovery.preStartSafetyItems.map((row, index) => (
+              <CustomTableRowWrapper index={index}>
+                <td className="border border-black p-3 align-top">
+                  {index + 1}
+                </td>
+
+                <td className="border border-black p-3 align-top">
+                  {row.text}
+                </td>
+              </CustomTableRowWrapper>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       <p className="font-semibold text-lg my-4">Equipment-Specific Restart Sequence</p>
       <Typography variant="p" className="my-4 text-sm text-gray-700">
         Follow the manufacturer-specific startup procedure for {assetName}
       </Typography>
-      <div className="section-container-7">
-        {
-          props.recovery.restartSequenceItems.map((item, index) => {
-            return <div className="subsection-row-7" key={index} >
-              <EachSingleRow item={item} />
-            </div>
-          })
-        }
+      <div className="my-4">
+        <table className="w-full border-collapse text-sm ">
+          <thead className="bg-[#5A1A1A]">
+            <tr className=" text-white">
+              <th className="border border-black p-3 text-left">
+                No.
+              </th>
+              <th className="border border-black p-3 text-left">
+                Item
+              </th>
+            </tr>
+          </thead>
+
+          <tbody className="">
+            {props.recovery.restartSequenceItems.map((row, index) => (
+              <CustomTableRowWrapper index={index}>
+                <td className="border border-black p-3 align-top">
+                  {index + 1}
+                </td>
+
+                <td className="border border-black p-3 align-top">
+                  {row.text}
+                </td>
+              </CustomTableRowWrapper>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       <EachRow item={{ "key": "Record startup time:", value: props?.recovery?.startupTime }} className="" />
@@ -598,28 +667,64 @@ const SeventhSection = (props: EOP) => {
       <Typography variant="p" className="my-4 text-sm text-gray-700">
         Confirm equipment is operating within normal parameters:
       </Typography>
-      <div className="section-container-7">
-        {
-          props.recovery.performanceValidationItems.map((item, index) => {
-            return <div className="subsection-row-7" key={index} >
-              <EachSingleRow item={item} />
-            </div>
-          })
-        }
+      <div className="my-4">
+        <table className="w-full border-collapse text-sm ">
+          <thead className="bg-[#5A1A1A]">
+            <tr className=" text-white">
+              <th className="border border-black p-3 text-left">
+                No.
+              </th>
+              <th className="border border-black p-3 text-left">
+                Item
+              </th>
+            </tr>
+          </thead>
+
+          <tbody className="">
+            {props.recovery.performanceValidationItems.map((row, index) => (
+              <CustomTableRowWrapper index={index}>
+                <td className="border border-black p-3 align-top">
+                  {index + 1}
+                </td>
+                <td className="border border-black p-3 align-top">
+                  {row.text}
+                </td>
+              </CustomTableRowWrapper>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       <p className="font-semibold text-lg my-4">Return to Normal Operation</p>
       <Typography variant="p" className="my-4 text-sm text-gray-700">
         Complete recovery documentation and notifications per Element Critical Limble CMMS Policy:
       </Typography>
-      <div className="section-container-7">
-        {
-          props.recovery.returnToNormalItems.map((item, index) => {
-            return <div className="subsection-row-7" key={index} >
-              <EachSingleRow item={item} />
-            </div>
-          })
-        }
+      <div className="my-4">
+        <table className="w-full border-collapse text-sm ">
+          <thead className="bg-[#5A1A1A]">
+            <tr className=" text-white">
+              <th className="border border-black p-3 text-left">
+                No.
+              </th>
+              <th className="border border-black p-3 text-left">
+                Item
+              </th>
+            </tr>
+          </thead>
+
+          <tbody className="">
+            {props.recovery.returnToNormalItems.map((row, index) => (
+              <CustomTableRowWrapper index={index}>
+                <td className="border border-black p-3 align-top">
+                  {index + 1}
+                </td>
+                <td className="border border-black p-3 align-top">
+                  {row.text}
+                </td>
+              </CustomTableRowWrapper>
+            ))}
+          </tbody>
+        </table>
       </div>
       <div className="flex w-full">
         <EachRow item={{ key: "Restoration completed by:", value: props.recovery.restorationCompletedBy }} className="w-full" />
@@ -635,7 +740,7 @@ const EighthSection = (props: EOP) => {
 
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <SectionHeading className="heading-1" heading="Section 08: Supporting Information" />
+      <SectionHeading className="heading-1" heading="Section 08: References and Documentation" />
 
       <p className="font-semibold text-lg my-4">Company Policy Documents Consulted</p>
 

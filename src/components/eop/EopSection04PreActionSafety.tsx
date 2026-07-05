@@ -33,17 +33,6 @@ export const EopSection04PreActionSafetyBlock = ({
         {EOP_SECTION_04_SUBHEADING_PRE_ACTION}
       </Typography>
 
-      <div className="mb-4 rounded-md border border-amber-300 bg-amber-50 px-3 py-3 text-sm text-amber-950">
-        <Typography variant="span" className="font-bold">
-          ⚠️ {EOP_SECTION_04_CRITICAL_CHECKPOINT_TITLE}
-        </Typography>
-        <Textarea
-          value={preActionSafety?.ppeIntroText}
-          onChange={(e) => patchPreActionSafety({ ppeIntroText: e.target.value })}
-          className="mt-2 min-h-20"
-          placeholder="Describe the emergency context and PPE requirements"
-        />
-      </div>
 
       <EopSection04PpeTable
         preActionSafety={preActionSafety}

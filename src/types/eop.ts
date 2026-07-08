@@ -237,14 +237,19 @@ export type EOPSection08SupportingInformation = {
 
 export type EopApprovalReviewRow = {
   id: string;
-  role: string;
-  name: string;
-  signature: string;
+  reviewStage: string;
+  reviewersName: string;
+  reviewersTitle: string;
   date: string;
+  role?: string;
+  name?: string;
+  signature?: string;
 };
 
 export type EOPSection09ApprovalReview = {
   reviewRows: EopApprovalReviewRow[];
+  effectiveDate: string;
+  expirationDate: string;
 };
 
 export type EOP = {

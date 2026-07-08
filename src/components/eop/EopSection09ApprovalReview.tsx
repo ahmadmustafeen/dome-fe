@@ -1,92 +1,181 @@
 "use client";
 
-import { Typography } from "@/components/common";
+import { ProcedureDynamicTableRowControls } from "@/components/procedure/ProcedureDynamicTableRowControls";
+import { ProcedureSectionCard } from "@/components/procedure/ProcedureSectionCard";
 import { Input } from "@/components/ui/Input";
-import { EOP_SECTION_09_HEADING } from "@/constants/eop-section09-approval-review";
-import type { EOPSection09ApprovalReview } from "@/types/eop";
+import { PROCEDURE_DYNAMIC_TABLE_MIN_ROWS } from "@/constants/procedure-dynamic-table";
+import {
+  EOP_EFFECTIVE_DATE_LABEL,
+  EOP_EXPIRATION_DATE_LABEL,
+  EOP_SECTION_09_HEADING,
+  EOP_SECTION_09_PLACEHOLDERS,
+  EOP_SECTION_09_TABLE_HEADERS,
+  newEopApprovalReviewRow,
+  resolveEopApprovalReview,
+} from "@/constants/eop-section09-approval-review";
+import type { EOPSection09ApprovalReview, EopApprovalReviewRow } from "@/types/eop";
+import {
+  insertProcedureRowAfterId,
+  removeProcedureRowById,
+} from "@/utils/procedure-dynamic-table-mutations";
 
 type EopSection09ApprovalReviewProps = {
-  approvalReview: EOPSection09ApprovalReview;
+  approvalReview?: EOPSection09ApprovalReview;
   patchApprovalReview: (p: Partial<EOPSection09ApprovalReview>) => void;
 };
 
 const patchReviewCell = (
-  rows: EOPSection09ApprovalReview["reviewRows"],
+  rows: EopApprovalReviewRow[],
   rowId: string,
-  partial: Partial<
-    Pick<EOPSection09ApprovalReview["reviewRows"][number], "name" | "signature" | "date">
-  >,
-  patchApprovalReview: EopSection09ApprovalReviewProps["patchApprovalReview"],
-) => {
-  patchApprovalReview({
-    reviewRows: rows?.map((row) => (row.id === rowId ? { ...row, ...partial } : row)),
-  });
-};
+  partial: Partial<Omit<EopApprovalReviewRow, "id">>,
+): EopApprovalReviewRow[] =>
+  rows?.map((row) => (row.id === rowId ? { ...row, ...partial } : row));
 
 export const EopSection09ApprovalReview = ({
   approvalReview,
   patchApprovalReview,
 }: EopSection09ApprovalReviewProps) => {
-  const rows = approvalReview?.reviewRows;
-  return (
-    <div className="mt-5 rounded-lg border border-[#e0e0e0] bg-white px-3 py-4 shadow-sm sm:mt-6 sm:px-4 sm:py-5">
-      <Typography
-        variant="h6"
-        className="mb-3 border-b border-gray-200 pb-2 font-bold text-gray-900"
-      >
-        {EOP_SECTION_09_HEADING}
-      </Typography>
+  const resolvedApprovalReview = resolveEopApprovalReview(approvalReview);
+  const reviewRows = resolvedApprovalReview.reviewRows;
 
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[760px] border-collapse text-sm">
-          <thead>
-            <tr className="bg-[#5A1A1A] text-white">
-              <th className="px-3 py-2 text-left font-semibold">Role</th>
-              <th className="px-3 py-2 text-left font-semibold">Name</th>
-              <th className="px-3 py-2 text-left font-semibold">Signature</th>
-              <th className="px-3 py-2 text-left font-semibold">Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows?.map((row) => (
-              <tr key={row.id} className="bg-white">
-                <td className="border border-gray-200 px-3 py-2 align-top">{row.role}</td>
-                <td className="border border-gray-200 px-2 py-1 align-top">
-                  <Input
-                    value={row.name}
-                    onChange={(e) =>
-                      patchReviewCell(rows, row.id, { name: e.target.value }, patchApprovalReview)
-                    }
-                    placeholder="Enter name"
-                    className="w-full"
-                  />
-                </td>
-                <td className="border border-gray-200 px-2 py-1 align-top">
-                  <Input
-                    value={row.signature}
-                    onChange={(e) =>
-                      patchReviewCell(rows, row.id, { signature: e.target.value }, patchApprovalReview)
-                    }
-                    placeholder="Signature"
-                    className="w-full"
-                  />
-                </td>
-                <td className="border border-gray-200 px-2 py-1 align-top">
-                  <Input
-                    type="date"
-                    value={row.date}
-                    onChange={(e) =>
-                      patchReviewCell(rows, row.id, { date: e.target.value }, patchApprovalReview)
-                    }
-                    placeholder="MM/DD/YYYY"
-                    className="w-full"
-                  />
-                </td>
+  return (
+    <div className="mt-5 sm:mt-6">
+      <ProcedureSectionCard heading={EOP_SECTION_09_HEADING}>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-190 border-collapse text-sm">
+            <thead>
+              <tr className="bg-[#5A1A1A] text-white">
+                <th className="px-3 py-2 text-left font-semibold">
+                  {EOP_SECTION_09_TABLE_HEADERS.reviewStage}
+                </th>
+                <th className="px-3 py-2 text-left font-semibold">
+                  {EOP_SECTION_09_TABLE_HEADERS.reviewersName}
+                </th>
+                <th className="px-3 py-2 text-left font-semibold">
+                  {EOP_SECTION_09_TABLE_HEADERS.reviewersTitle}
+                </th>
+                <th className="px-3 py-2 text-left font-semibold">
+                  {EOP_SECTION_09_TABLE_HEADERS.date}
+                </th>
+                <th
+                  scope="col"
+                  className="w-17 px-1 py-2 text-center text-xs font-semibold"
+                >
+                  +-
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {reviewRows.map((row) => (
+                <tr key={row.id} className="bg-white">
+                  <td className="border border-gray-200 px-2 py-1 align-top">
+                    <Input
+                      value={row.reviewStage}
+                      onChange={(event) =>
+                        patchApprovalReview({
+                          reviewRows: patchReviewCell(reviewRows, row.id, {
+                            reviewStage: event.target.value,
+                          }),
+                        })}
+                      className="w-full font-semibold text-gray-900"
+                      placeholder="Review stage"
+                      aria-label={`${EOP_SECTION_09_TABLE_HEADERS.reviewStage} for row`}
+                    />
+                  </td>
+                  <td className="border border-gray-200 px-2 py-1 align-top">
+                    <Input
+                      value={row.reviewersName}
+                      onChange={(event) =>
+                        patchApprovalReview({
+                          reviewRows: patchReviewCell(reviewRows, row.id, {
+                            reviewersName: event.target.value,
+                          }),
+                        })}
+                      className="w-full"
+                      placeholder={EOP_SECTION_09_PLACEHOLDERS.name}
+                      aria-label={`${row.reviewStage} ${EOP_SECTION_09_PLACEHOLDERS.name}`}
+                    />
+                  </td>
+                  <td className="border border-gray-200 px-2 py-1 align-top">
+                    <Input
+                      value={row.reviewersTitle}
+                      onChange={(event) =>
+                        patchApprovalReview({
+                          reviewRows: patchReviewCell(reviewRows, row.id, {
+                            reviewersTitle: event.target.value,
+                          }),
+                        })}
+                      className="w-full"
+                      placeholder={EOP_SECTION_09_PLACEHOLDERS.title}
+                      aria-label={`${row.reviewStage} ${EOP_SECTION_09_PLACEHOLDERS.title}`}
+                    />
+                  </td>
+                  <td className="border border-gray-200 px-2 py-1 align-top">
+                    <Input
+                      value={row.date}
+                      onChange={(event) =>
+                        patchApprovalReview({
+                          reviewRows: patchReviewCell(reviewRows, row.id, {
+                            date: event.target.value,
+                          }),
+                        })}
+                      className="w-full"
+                      placeholder={EOP_SECTION_09_PLACEHOLDERS.date}
+                      aria-label={`${row.reviewStage.length > 0 ? row.reviewStage : 'Review stage'} ${EOP_SECTION_09_TABLE_HEADERS.date}`}
+                    />
+                  </td>
+                  <td className="border border-gray-200 px-1 align-middle">
+                    <ProcedureDynamicTableRowControls
+                      ariaLabelGroup="EOP approval review row controls"
+                      rowCount={reviewRows.length}
+                      onAddBelow={() =>
+                        patchApprovalReview({
+                          reviewRows: insertProcedureRowAfterId(
+                            reviewRows,
+                            row.id,
+                            newEopApprovalReviewRow(),
+                          ),
+                        })}
+                      onRemove={() => {
+                        const next = removeProcedureRowById(
+                          reviewRows,
+                          row.id,
+                          PROCEDURE_DYNAMIC_TABLE_MIN_ROWS,
+                        );
+                        if (next !== undefined) {
+                          patchApprovalReview({ reviewRows: next });
+                        }
+                      }}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <label className="block text-sm font-semibold text-gray-800">
+            {EOP_EFFECTIVE_DATE_LABEL}
+            <Input
+              value={resolvedApprovalReview.effectiveDate}
+              onChange={(event) =>
+                patchApprovalReview({ effectiveDate: event.target.value })}
+              className="mt-1 w-full max-w-xs"
+              placeholder={EOP_SECTION_09_PLACEHOLDERS.date}
+            />
+          </label>
+          <label className="block text-sm font-semibold text-gray-800">
+            {EOP_EXPIRATION_DATE_LABEL}
+            <Input
+              value={resolvedApprovalReview.expirationDate}
+              onChange={(event) =>
+                patchApprovalReview({ expirationDate: event.target.value })}
+              className="mt-1 w-full max-w-xs"
+              placeholder={EOP_SECTION_09_PLACEHOLDERS.date}
+            />
+          </label>
+        </div>
+      </ProcedureSectionCard>
     </div>
   );
 };

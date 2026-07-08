@@ -6,8 +6,14 @@ import { EOP } from "@/types/eop";
 import { EOP_SECTION_04_DO_NOT_PROCEED_BANNER } from "@/constants/eop-section04-immediate-actions";
 import { EOP_SECTION_04_INTERNAL_DIAGNOSTICS_WARNING } from "@/constants/eop-section04-internal-diagnostics";
 import { EOP_SECTION_06_RESEARCHED_NOTE } from "@/constants/eop-section06-communication";
+import {
+  EOP_EFFECTIVE_DATE_LABEL,
+  EOP_EXPIRATION_DATE_LABEL,
+  EOP_SECTION_09_HEADING,
+  EOP_SECTION_09_TABLE_HEADERS,
+  resolveEopApprovalReview,
+} from "@/constants/eop-section09-approval-review";
 import { ReactNode } from "react";
-import SopSection11Notices from "../sop/SopSection11Notices";
 import EopSection08Notices from "../eop/EopSection08Notices";
 
 const FirstSectionKeys1 = (mop: EOP) => ([
@@ -848,39 +854,41 @@ const EighthSection = (props: EOP) => {
 }
 
 const NinthSection = (props: EOP) => {
+  const approvalReview = resolveEopApprovalReview(props.approvalReview);
+
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <SectionHeading className="heading-1" heading="Section 09: EOP Approval & Review" />
+      <SectionHeading className="heading-1" heading={EOP_SECTION_09_HEADING} />
 
-      <table className="w-full border-collapse text-sm ">
+      <table className="w-full border-collapse text-sm mt-4 ">
         <thead className="bg-[#5A1A1A]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
-              Role
+              {EOP_SECTION_09_TABLE_HEADERS.reviewStage}
             </th>
             <th className="border border-black p-3 text-left">
-              Name
+              {EOP_SECTION_09_TABLE_HEADERS.reviewersName}
             </th>
-            <th className="border border-black p-3 text-left">
-              Signature
+            <th className="border min-w-20 border-black p-3 text-left">
+              {EOP_SECTION_09_TABLE_HEADERS.reviewersTitle}
             </th>
-            <th className="border border-black p-3 text-left">
-              Date
+            <th className="border min-w-20 border-black p-3 text-left">
+              {EOP_SECTION_09_TABLE_HEADERS.date}
             </th>
           </tr>
         </thead>
 
         <tbody className="">
-          {props.approvalReview.reviewRows.map((row, index) => (
+          {approvalReview.reviewRows.map((row, index) => (
             <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
-                {row.role}
+                {row.reviewStage}
               </td>
               <td className="border border-black p-3 align-top">
-                {row.name}
+                {row.reviewersName}
               </td>
               <td className="border min-w-20 border-black p-3 align-top">
-                {row.signature}
+                {row.reviewersTitle}
               </td>
               <td className="border min-w-20 border-black p-3 align-top">
                 {row.date}
@@ -889,6 +897,46 @@ const NinthSection = (props: EOP) => {
           ))}
         </tbody>
       </table>
+      <div className="subsection-row-7 flex flex-row justify-evenly py-4">
+        <div className="flex gap-x-2" >
+          <Typography
+            variant="h5"
+            className="font-bold tracking-wide text-balance drop-shadow-sm"
+          >
+            {EOP_EFFECTIVE_DATE_LABEL}
+          </Typography>
+
+          <Typography
+            variant="p"
+            className="tracking-wide text-balance drop-shadow-sm"
+          >
+            {
+              approvalReview.effectiveDate
+                ? new Date(approvalReview.effectiveDate).toLocaleDateString()
+                : 'Not Selected'
+            }
+          </Typography>
+        </div>
+        <div className="flex gap-x-2" >
+          <Typography
+            variant="h5"
+            className="font-bold tracking-wide text-balance drop-shadow-sm"
+          >
+            {EOP_EXPIRATION_DATE_LABEL}
+          </Typography>
+
+          <Typography
+            variant="p"
+            className="tracking-wide text-balance drop-shadow-sm"
+          >
+            {
+              approvalReview.expirationDate
+                ? new Date(approvalReview.expirationDate).toLocaleDateString()
+                : 'Not Selected'
+            }
+          </Typography>
+        </div>
+      </div>
     </div>
   </div >
 }

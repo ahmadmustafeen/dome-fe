@@ -84,7 +84,7 @@ export const EopSection08SupportingInformationSection = ({
       {SOP_SECTION_11_EQUIPMENT_DOCS_HEADING}
     </Typography>
     <ProcedureEditableRowsTable
-      rows={supportingInformation.equipmentDocumentRows}
+      rows={supportingInformation?.equipmentDocumentRows || []}
       columns={EQUIPMENT_DOCUMENT_COLUMNS}
       className="bg-[#5A1A1A]!"
       ariaLabelGroup="SOP equipment documentation row controls"
@@ -99,7 +99,7 @@ export const EopSection08SupportingInformationSection = ({
       {SOP_SECTION_11_SAFETY_STANDARDS_HEADING}
     </Typography>
     <ProcedureEditableRowsTable
-      rows={supportingInformation.safetyStandardRows}
+      rows={supportingInformation?.safetyStandardRows || []}
       columns={SAFETY_STANDARD_COLUMNS}
       className="bg-[#5A1A1A]!"
       ariaLabelGroup="SOP safety standards row controls"
@@ -114,7 +114,7 @@ export const EopSection08SupportingInformationSection = ({
       {SOP_SECTION_11_ADDITIONAL_RESOURCES_HEADING}
     </Typography>
     <ProcedureEditableRowsTable
-      rows={supportingInformation.additionalResourceRows}
+      rows={supportingInformation?.additionalResourceRows || []}
       columns={ADDITIONAL_RESOURCE_COLUMNS}
       className="bg-[#5A1A1A]!"
       ariaLabelGroup="SOP additional resources row controls"

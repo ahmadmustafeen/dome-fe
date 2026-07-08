@@ -7,6 +7,8 @@ import { EOP_SECTION_04_DO_NOT_PROCEED_BANNER } from "@/constants/eop-section04-
 import { EOP_SECTION_04_INTERNAL_DIAGNOSTICS_WARNING } from "@/constants/eop-section04-internal-diagnostics";
 import { EOP_SECTION_06_RESEARCHED_NOTE } from "@/constants/eop-section06-communication";
 import { ReactNode } from "react";
+import SopSection11Notices from "../sop/SopSection11Notices";
+import EopSection08Notices from "../eop/EopSection08Notices";
 
 const FirstSectionKeys1 = (mop: EOP) => ([
   { key: "EOP Title", value: mop.document?.title },
@@ -724,16 +726,10 @@ const EighthSection = (props: EOP) => {
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 08: References and Documentation" />
 
-      <p className="font-semibold text-lg my-4">Company Policy Documents Consulted</p>
 
-      <Typography variant="p" className="my-4 text-sm text-gray-700">
-        The following company emergency response policies were referenced during EOP creation.
-        The specific requirements from these policies have been incorporated directly into the emergency procedure steps in Sections 04 and 05 above.
-      </Typography>
 
-      <p className="font-semibold text-lg my-4">Power Failure Resolution Verification</p>
-      <Typography variant="p" className="my-4 text-sm text-gray-700">
-        Confirm stable operating conditions are available at all system levels:
+      <Typography variant="p" className="font-semibold text-lg my-4">
+        Equipment-Specific Documentation
       </Typography>
 
 
@@ -741,65 +737,28 @@ const EighthSection = (props: EOP) => {
         <thead className="bg-[#5A1A1A]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
-              Policy Document
+              Document Type
             </th>
             <th className="border border-black p-3 text-left">
-              Upload Date
+              Description
             </th>
             <th className="border border-black p-3 text-left">
-              Type
+              Access/Location
             </th>
           </tr>
         </thead>
 
         <tbody className="">
-          {props.supportingInformation.policyDocuments.map((row, index) => (
+          {props.supportingInformation.equipmentDocumentRows.map((row, index) => (
             <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
-                {row.documentName}
-              </td>
-              <td className="border border-black p-3 align-top">
-                {row.uploadDate}
-              </td>
-              <td className="border min-w-20 border-black p-3 align-top">
                 {row.documentType}
               </td>
-            </CustomTableRowWrapper>
-          ))}
-        </tbody>
-      </table>
-
-      <div className="mt-4 rounded-md border border-blue-300 bg-blue-50 px-3 py-3 text-sm text-blue-900">
-        {props.supportingInformation.policyNote}
-      </div>
-
-      <p className="font-semibold text-lg my-4">Critical Infrastructure Locations</p>
-      <table className="w-full border-collapse text-sm ">
-        <thead className="bg-[#5A1A1A]">
-          <tr className=" text-white">
-            <th className="border border-black p-3 text-left">
-              Infrastructure Element
-            </th>
-            <th className="border border-black p-3 text-left">
-              Location Details
-            </th>
-            <th className="border border-black p-3 text-left">
-              Access Requirements
-            </th>
-          </tr>
-        </thead>
-
-        <tbody className="">
-          {props.supportingInformation.infrastructureLocations.map((row, index) => (
-            <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
-                {row.infrastructureElement}
-              </td>
-              <td className="border border-black p-3 align-top">
-                {row.locationDetails}
+                {row.description}
               </td>
               <td className="border min-w-20 border-black p-3 align-top">
-                {row.accessRequirements}
+                {row.accessLocation}
               </td>
             </CustomTableRowWrapper>
           ))}
@@ -807,43 +766,37 @@ const EighthSection = (props: EOP) => {
       </table>
 
 
-      <p className="font-semibold text-lg my-4">Spare Parts Inventory</p>
-      <Typography variant="p" className="my-4 text-sm text-gray-700">
-        Critical spare parts for {assetName} emergency response:
+      <Typography variant="p" className="font-semibold text-lg my-4">
+        Safety Standards and Guidelines
       </Typography>
+
+
       <table className="w-full border-collapse text-sm ">
         <thead className="bg-[#5A1A1A]">
           <tr className=" text-white">
             <th className="border border-black p-3 text-left">
-              Part Description
+              Standard
             </th>
             <th className="border border-black p-3 text-left">
-              Part Number
+              Description
             </th>
             <th className="border border-black p-3 text-left">
-              Quantity
-            </th>
-
-            <th className="border border-black p-3 text-left">
-              Storage Location
+              Access/Location
             </th>
           </tr>
         </thead>
 
         <tbody className="">
-          {props.supportingInformation.spareParts.map((row, index) => (
+          {props.supportingInformation.safetyStandardRows.map((row, index) => (
             <CustomTableRowWrapper index={index}>
               <td className="border border-black p-3 align-top">
-                {row.partDescription}
+                {row.standard}
               </td>
               <td className="border border-black p-3 align-top">
-                {row.partNumber}
+                {row.description}
               </td>
               <td className="border min-w-20 border-black p-3 align-top">
-                {row.quantity}
-              </td>
-              <td className="border min-w-20 border-black p-3 align-top">
-                {row.storageLocation}
+                {row.accessLocation}
               </td>
             </CustomTableRowWrapper>
           ))}
@@ -851,19 +804,45 @@ const EighthSection = (props: EOP) => {
       </table>
 
 
-      <p className="font-semibold text-lg my-4">Related Documents</p>
-      {
-        props.supportingInformation.relatedDocuments.map(doc => {
-          return <div>
-            <a aria-disabled>
-              <span>
-                {doc.label}
-              </span> {" "}
-              ({doc.description})
-            </a>
-          </div>
-        })
-      }
+      <Typography variant="p" className="font-semibold text-lg my-4">
+        Additional Resources
+      </Typography>
+
+
+      <table className="w-full border-collapse text-sm ">
+        <thead className="bg-[#5A1A1A]">
+          <tr className=" text-white">
+            <th className="border border-black p-3 text-left">
+              Resource Type
+            </th>
+            <th className="border border-black p-3 text-left">
+              Description
+            </th>
+            <th className="border border-black p-3 text-left">
+              Access/Location
+            </th>
+          </tr>
+        </thead>
+
+        <tbody className="">
+          {props.supportingInformation.additionalResourceRows.map((row, index) => (
+            <CustomTableRowWrapper index={index}>
+              <td className="border border-black p-3 align-top">
+                {row.resourceType}
+              </td>
+              <td className="border border-black p-3 align-top">
+                {row.description}
+              </td>
+              <td className="border min-w-20 border-black p-3 align-top">
+                {row.accessLocation}
+              </td>
+            </CustomTableRowWrapper>
+          ))}
+        </tbody>
+      </table>
+
+      <EopSection08Notices />
+
     </div>
   </div >
 }

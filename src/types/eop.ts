@@ -201,14 +201,39 @@ export type EopSection08RelatedDocument = {
   href: string;
 };
 
-export type EOPSection08SupportingInformation = {
-  policyDocuments: EopSection08PolicyDocumentRow[];
-  policyNote: string;
-  infrastructureLocations: EopSection08InfrastructureRow[];
-  sparePartsIntro: string;
-  spareParts: EopSection08SparePartRow[];
-  relatedDocuments: EopSection08RelatedDocument[];
+export type EOPReferenceDocumentRow = {
+  id: string;
+  documentType: string;
+  description: string;
+  accessLocation: string;
 };
+export type EOPReferenceSafetyStandardRow = {
+  id: string;
+  standard: string;
+  description: string;
+  accessLocation: string;
+};
+
+export type EOPReferenceAdditionalResourceRow = {
+  id: string;
+  resourceType: string;
+  description: string;
+  accessLocation: string;
+};
+
+// export type EOPSection08SupportingInformation = {
+//   policyDocuments: EopSection08PolicyDocumentRow[];
+//   policyNote: string;
+//   infrastructureLocations: EopSection08InfrastructureRow[];
+//   sparePartsIntro: string;
+//   spareParts: EopSection08SparePartRow[];
+//   relatedDocuments: EopSection08RelatedDocument[];
+// };
+export type EOPSection08SupportingInformation = {
+    equipmentDocumentRows: EOPReferenceDocumentRow[];
+    safetyStandardRows: EOPReferenceSafetyStandardRow[];
+    additionalResourceRows: EOPReferenceAdditionalResourceRow[];
+}
 
 export type EopApprovalReviewRow = {
   id: string;

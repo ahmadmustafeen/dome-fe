@@ -167,6 +167,11 @@ export const useEopDocument = (
           setEop((prev) => ({
             ...prev,
             ...data,
+            supportingInformation: {
+              safetyStandardRows: [],
+              equipmentDocumentRows: [],
+              additionalResourceRows: []
+            }
           }));
         });
         evtSource.addEventListener("assetData", (e) => {
@@ -415,6 +420,54 @@ export const useEopDocument = (
           }
         });
 
+        evtSource.addEventListener("equipmentSpecificDocumentation", (e) => {
+          const data = JSON.parse(e.data);
+          if (data?.error) {
+            toast.error("equipmentSpecificDocumentation failed");
+            return;
+          }
+
+
+          setEop((prev: any) => ({
+            ...prev,
+            supportingInformation: {
+              ...prev?.supportingInformation,
+              equipmentDocumentRows: data,
+            }
+          }));
+        });
+
+        evtSource.addEventListener("additionalDocumentation", (e) => {
+          const data = JSON.parse(e.data);
+          if (data?.error) {
+            toast.error("additionalDocumentation failed");
+            return;
+          }
+
+          setEop((prev: any) => ({
+            ...prev,
+            supportingInformation: {
+              ...prev?.supportingInformation,
+              additionalResourceRows: data
+            }
+          }));
+        });
+        evtSource.addEventListener("safetyStandardRows", (e) => {
+          const data = JSON.parse(e.data);
+          if (data?.error) {
+            toast.error("safetyStandardRows failed");
+            return;
+          }
+
+          setEop((prev: any) => ({
+            ...prev,
+            supportingInformation: {
+              ...prev?.supportingInformation,
+              safetyStandardRows: data
+            }
+          }));
+        });
+
         evtSource.addEventListener("done", () => {
           toast.success(
             "Successfully generated, Please save the document manually."
@@ -424,6 +477,8 @@ export const useEopDocument = (
 
           evtSource.close();
         });
+
+
 
         evtSource.addEventListener("error", () => {
           setGenerateError("Streaming failed");

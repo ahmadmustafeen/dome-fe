@@ -4,15 +4,10 @@ import { Typography } from "@/components/common";
 import { EOP_SECTION_08_HEADING } from "@/constants/eop-section08-supporting-information";
 import type { EOPSection08SupportingInformation } from "@/types/eop";
 
-import { EopSection08InfrastructureTable } from "./EopSection08InfrastructureTable";
-import { EopSection08PolicyDocumentsTable } from "./EopSection08PolicyDocumentsTable";
-import { EopSection08RelatedDocuments } from "./EopSection08RelatedDocuments";
-import { EopSection08SparePartsTable } from "./EopSection08SparePartsTable";
 import { ProcedureEditableColumn, ProcedureEditableRowsTable } from "../procedure/ProcedureEditableRowsTable";
 import { SOP_SECTION_11_ADDITIONAL_RESOURCE_COLUMNS, SOP_SECTION_11_ADDITIONAL_RESOURCES_HEADING, SOP_SECTION_11_EQUIPMENT_DOC_COLUMNS, SOP_SECTION_11_EQUIPMENT_DOCS_HEADING, SOP_SECTION_11_SAFETY_STANDARD_COLUMNS, SOP_SECTION_11_SAFETY_STANDARDS_HEADING } from "@/constants/sop-section11-references";
 import { SOPReferenceAdditionalResourceRow, SOPReferenceDocumentRow, SOPReferenceSafetyStandardRow } from "@/types/sop-references";
 import { newProcedureRowId } from "@/utils/procedure-row-id";
-import SopSection11Notices from "../sop/SopSection11Notices";
 import EopSection08Notices from "./EopSection08Notices";
 
 type EopSection08SupportingInformationProps = {

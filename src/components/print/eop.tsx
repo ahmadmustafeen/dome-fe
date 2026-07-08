@@ -726,7 +726,6 @@ const SeventhSection = (props: EOP) => {
 }
 
 const EighthSection = (props: EOP) => {
-  const assetName = props?.asset?.assetName || "";
 
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">

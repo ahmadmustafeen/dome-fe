@@ -1,5 +1,5 @@
-import { apiFetch } from "@/libs/fetcher";
-import { ProcedureEstimationApiResponse } from "@/types/procedure-estimation";
+import type { ProcedureEstimationApiResponse } from '@/types/procedure-estimation';
+import { apiFetch } from '@/libs/fetcher';
 // import { DocumentApiRecord } from "./document-service";
 // import type {
 //   DocumentApiRecord,
@@ -20,25 +20,24 @@ export const procedureEstimationService = {
   /**
    * GET /api/documents/site/:siteId
    * @param siteId - MongoDB site ID
-   * @param params - optional query parameters
    */
   getProcedureEstimationBySiteId: (siteId: string) => {
     return apiFetch<ProcedureEstimationApiResponse>(
       `/maintenance-schedule/fetch/${siteId}`,
-      { method: "GET" },
+      { method: 'GET' },
     );
   },
 
   generateProcedureEstimation: (siteId: string) => {
     return apiFetch<ProcedureEstimationApiResponse>(
       `/maintenance-schedule/generate/${siteId}`,
-      { method: "GET" },
+      { method: 'GET' },
     );
   },
-    clearProcedureEstimationBySiteId: (siteId: string) => {
+  clearProcedureEstimationBySiteId: (siteId: string) => {
     return apiFetch<ProcedureEstimationApiResponse>(
       `/maintenance-schedule/clear/${siteId}`,
-      { method: "DELETE" },
+      { method: 'DELETE' },
     );
   },
 
@@ -64,9 +63,6 @@ export const procedureEstimationService = {
   //     body: JSON.stringify({ ids }),
   //   }),
 };
-
-
-
 
 // Re-export the API record type so callers can import from one place
 // export type { DocumentApiRecord };

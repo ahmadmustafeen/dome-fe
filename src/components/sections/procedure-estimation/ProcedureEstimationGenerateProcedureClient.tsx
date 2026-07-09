@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { ArrowLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
-import { useCallback, useMemo } from "react";
-import { toast } from "react-toastify";
+import type { ProcedureKind } from '@/types/procedure-estimation';
+import { ArrowLeft } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
+import { useCallback, useMemo } from 'react';
 
-import { AppButton, SectionWrapper, Typography } from "@/components/common";
-import { DASHBOARD_ROUTES, procedureEstimationCategoryRoute } from "@/constants/routes";
-import type { ProcedureKind } from "@/types/procedure-estimation";
+import { toast } from 'react-toastify';
+import { AppButton, SectionWrapper, Typography } from '@/components/common';
+import { DASHBOARD_ROUTES, procedureEstimationCategoryRoute } from '@/constants/routes';
 
 type ProcedureEstimationGenerateProcedureClientProps = {
   procedureType: ProcedureKind;
@@ -23,21 +23,21 @@ const ProcedureEstimationGenerateProcedureClient = ({
   procedureId,
   assetId,
 }: ProcedureEstimationGenerateProcedureClientProps) => {
-  const t = useTranslations("ProcedureEstimationGenerate");
+  const t = useTranslations('ProcedureEstimationGenerate');
   const router = useRouter();
 
   const contextLine = useMemo(() => {
     const parts: string[] = [];
     if (categoryId) {
-      parts.push(`${t("context_category")}: ${categoryId}`);
+      parts.push(`${t('context_category')}: ${categoryId}`);
     }
     if (procedureId) {
-      parts.push(`${t("context_procedure")}: ${procedureId}`);
+      parts.push(`${t('context_procedure')}: ${procedureId}`);
     }
     if (assetId) {
-      parts.push(`${t("context_asset")}: ${assetId}`);
+      parts.push(`${t('context_asset')}: ${assetId}`);
     }
-    return parts.length > 0 ? parts.join(" · ") : null;
+    return parts.length > 0 ? parts.join(' · ') : null;
   }, [assetId, categoryId, procedureId, t]);
 
   const handleBack = useCallback(() => {
@@ -49,7 +49,7 @@ const ProcedureEstimationGenerateProcedureClient = ({
   }, [categoryId, router]);
 
   const handleGenerateClick = useCallback(() => {
-    toast.info(t("toast_placeholder"));
+    toast.info(t('toast_placeholder'));
   }, [t]);
 
   return (
@@ -57,7 +57,7 @@ const ProcedureEstimationGenerateProcedureClient = ({
       <SectionWrapper>
         <div className="mb-4">
           <AppButton
-            title={t("back")}
+            title={t('back')}
             onClick={handleBack}
             variant="default"
             icon={<ArrowLeft className="h-4 w-4" />}
@@ -66,23 +66,25 @@ const ProcedureEstimationGenerateProcedureClient = ({
 
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-16 text-center sm:py-20">
           <Typography variant="h1" className="text-slate-800">
-            {procedureType === "mop"
-              ? t("heading_mop")
-              : procedureType === "eop"
-                ? t("heading_eop")
-                : t("heading_sop")}
+            {procedureType === 'mop'
+              ? t('heading_mop')
+              : procedureType === 'eop'
+                ? t('heading_eop')
+                : t('heading_sop')}
           </Typography>
-          {contextLine ? (
-            <Typography variant="caption" className="mt-2 max-w-lg text-gray-500">
-              {contextLine}
-            </Typography>
-          ) : null}
+          {contextLine
+            ? (
+                <Typography variant="caption" className="mt-2 max-w-lg text-gray-500">
+                  {contextLine}
+                </Typography>
+              )
+            : null}
           <Typography variant="p" className="mt-4 max-w-md text-gray-500">
-            {t("description")}
+            {t('description')}
           </Typography>
           <div className="mt-8">
             <AppButton
-              title={t("btn_generate_document")}
+              title={t('btn_generate_document')}
               variant="secondary"
               onClick={handleGenerateClick}
             />

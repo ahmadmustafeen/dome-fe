@@ -1,16 +1,26 @@
 'use client';
 import type { Row } from '@tanstack/react-table';
+import type { SortOrder } from '@/types/asset';
 import type {
-  ProcedureEstimationRow,
   ProcedureEstimationData,
+  ProcedureEstimationRow,
   ProcedureItem,
   ProcedureKind,
 } from '@/types/procedure-estimation';
-import { CalendarDays, RefreshCw, Search, Trash2, X } from 'lucide-react';
+import {
+  CalendarDays,
+  ChevronDown,
+  ChevronsUpDown,
+  ChevronUp,
+  RefreshCw,
+  Search,
+  Trash2,
+  X,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import {
   AppButton,
@@ -29,19 +39,71 @@ import {
 import { useAppContext } from '@/context/AppContext';
 import { procedureEstimationService } from '@/services/procedure-estimation-service';
 
+const PROCEDURE_ESTIMATION_SORT_FIELDS = [
+  { label: 'Category', value: 'category' },
+  { label: 'Sub Category', value: 'subCategory' },
+  { label: 'Make', value: 'make' },
+  { label: 'Assets', value: 'count' },
+  { label: 'MOPs', value: 'totalMOPs' },
+  { label: 'EOPs', value: 'totalEOPs' },
+  { label: 'SOPs', value: 'totalSOPs' },
+] as const;
+
+type ProcedureEstimationSortField
+  = typeof PROCEDURE_ESTIMATION_SORT_FIELDS[number]['value'];
+
+const PROCEDURE_ESTIMATION_DEFAULT_SORT_BY: ProcedureEstimationSortField = 'category';
+const PROCEDURE_ESTIMATION_DEFAULT_SORT_ORDER: SortOrder = 'asc';
+
 export default function ProcedureEstimationPage() {
   const { site, client } = useAppContext();
   const router = useRouter();
 
   const [isGenerator, setIsGenerator] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [procedureEstimationData, setProcedureEstimationData] = useState<any[]>([]);
+  const [procedureEstimationData, setProcedureEstimationData] = useState<ProcedureEstimationRow[]>([]);
   const [schedule, setSchedule] = useState<ProcedureEstimationData | null>(
     null,
   );
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<ProcedureEstimationSortField>(
+    PROCEDURE_ESTIMATION_DEFAULT_SORT_BY,
+  );
+  const [sortOrder, setSortOrder] = useState<SortOrder>(
+    PROCEDURE_ESTIMATION_DEFAULT_SORT_ORDER,
+  );
+  const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const t = useTranslations('ProcedureEstimation');
+
+  const visibleProcedureEstimationRows = useMemo(() => {
+    const normalizedSearch = debouncedSearchQuery.trim().toLowerCase();
+    const rows = normalizedSearch
+      ? procedureEstimationData.filter((row: ProcedureEstimationRow) => {
+          const searchableText = [
+            row.category,
+            row.subCategory,
+            row.description,
+            row.make,
+          ].join(' ').toLowerCase();
+
+          return searchableText.includes(normalizedSearch);
+        })
+      : procedureEstimationData;
+
+    return [...rows].sort((a: ProcedureEstimationRow, b: ProcedureEstimationRow) => {
+      const aValue = a[sortBy];
+      const bValue = b[sortBy];
+
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+      }
+
+      const direction = sortOrder === 'asc' ? 1 : -1;
+      return String(aValue ?? '').localeCompare(String(bValue ?? '')) * direction;
+    });
+  }, [debouncedSearchQuery, procedureEstimationData, sortBy, sortOrder]);
 
   const fetchProcedureEstimation = useCallback(async (siteId: string) => {
     setIsLoading(true);
@@ -67,6 +129,7 @@ export default function ProcedureEstimationPage() {
 
   useEffect(() => {
     if (client?._id && site?._id) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- data is loaded asynchronously when the selected site changes.
       fetchProcedureEstimation(site._id);
     }
   }, [client, site]);
@@ -89,6 +152,23 @@ export default function ProcedureEstimationPage() {
     },
     [router],
   );
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    if (searchDebounceRef.current) {
+      clearTimeout(searchDebounceRef.current);
+    }
+    searchDebounceRef.current = setTimeout(() => {
+      setDebouncedSearchQuery(value);
+    }, 400);
+  };
+
+  const handleSortChange = (field: ProcedureEstimationSortField) => {
+    const newOrder: SortOrder
+      = sortBy === field && sortOrder === 'asc' ? 'desc' : 'asc';
+    setSortBy(field);
+    setSortOrder(newOrder);
+  };
 
   const columns = useMemo(
     () =>
@@ -177,7 +257,7 @@ export default function ProcedureEstimationPage() {
         if (parsed.type === 'chunk') {
           const newItem = parsed.data;
 
-          setProcedureEstimationData((prev: any[]) => [...prev, newItem]);
+          setProcedureEstimationData(prev => [...prev, newItem]);
         }
 
         if (parsed.type === 'done') {
@@ -211,7 +291,7 @@ export default function ProcedureEstimationPage() {
       );
       toast.success('All previous procedure estimation data deleted successfully');
       fetchProcedureEstimation(site._id);
-    } catch (err) {
+    } catch {
     } finally {
       setIsLoading(false);
     }
@@ -287,7 +367,7 @@ export default function ProcedureEstimationPage() {
                       type="text"
                       value={searchQuery}
                       onChange={(e) => {
-                        setSearchQuery(e.target.value);
+                        handleSearchChange(e.target.value);
                       }}
                       placeholder={t('search_placeholder')}
                       className="w-full rounded-lg border border-gray-300 py-2 pr-8 pl-9 text-sm focus:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none"
@@ -295,7 +375,7 @@ export default function ProcedureEstimationPage() {
                     {searchQuery && (
                       <button
                         onClick={() => {
-                          setSearchQuery('');
+                          handleSearchChange('');
                         }}
                         className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                       >
@@ -303,12 +383,39 @@ export default function ProcedureEstimationPage() {
                       </button>
                     )}
                   </div>
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <Typography variant="label" className="text-gray-500">
+                      Sort by:
+                    </Typography>
+                    {PROCEDURE_ESTIMATION_SORT_FIELDS.map(field => (
+                      <button
+                        key={field.value}
+                        onClick={() => handleSortChange(field.value)}
+                        className={`flex items-center gap-1 rounded-lg border px-3 py-1.5 text-sm transition-colors ${
+                          sortBy === field.value
+                            ? 'border-primary bg-primary text-white'
+                            : 'border-gray-300 bg-white text-gray-600 hover:border-primary hover:text-primary'
+                        }`}
+                      >
+                        {field.label}
+                        {sortBy === field.value
+                          ? (
+                              sortOrder === 'asc'
+                                ? <ChevronUp className="h-3 w-3" />
+                                : <ChevronDown className="h-3 w-3" />
+                            )
+                          : (
+                              <ChevronsUpDown className="h-3 w-3 opacity-50" />
+                            )}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="overflow-hidden rounded-lg border border-slate-800 shadow-xl shadow-black/20">
                   <DataTable
                     columns={columns}
-                    data={procedureEstimationData}
+                    data={visibleProcedureEstimationRows}
                     getRowId={row => row.id}
                     noDataMessage="No categories match your search."
                     renderSubRow={renderSubRow}

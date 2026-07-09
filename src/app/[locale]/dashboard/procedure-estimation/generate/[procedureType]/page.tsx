@@ -1,7 +1,7 @@
-import { notFound } from "next/navigation";
+import { notFound } from 'next/navigation';
 
-import { ProcedureEstimationGenerateProcedureClient } from "@/components/sections/procedure-estimation/ProcedureEstimationGenerateProcedureClient";
-import { isProcedureKind } from "@/types/procedure-estimation";
+import { ProcedureEstimationGenerateProcedureClient } from '@/components/sections/procedure-estimation/ProcedureEstimationGenerateProcedureClient';
+import { isProcedureKind } from '@/types/procedure-estimation';
 
 type PageProps = {
   params: Promise<{ procedureType: string }>;
@@ -9,7 +9,7 @@ type PageProps = {
 };
 
 const firstString = (value: string | string[] | undefined): string | undefined => {
-  if (typeof value === "string") {
+  if (typeof value === 'string') {
     return value;
   }
   if (Array.isArray(value) && value[0]) {

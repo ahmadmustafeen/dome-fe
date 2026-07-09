@@ -1,22 +1,22 @@
-import type { EOP } from "@/types/eop";
-import type { MOPStatus } from "@/types/mop";
+import type { EOP } from '@/types/eop';
+import type { MOPStatus } from '@/types/mop';
 
 /** One row from `GET /eop/:eopId/versions` (canonical FE EOP). */
-export interface CanonicalEopVersionApiRow {
+export type CanonicalEopVersionApiRow = {
   versionNumber: number;
   isLatest: boolean;
   archivedAt: string | null;
   eop: EOP;
-}
+};
 
-export interface CanonicalEopDeleteApiResponse {
+export type CanonicalEopDeleteApiResponse = {
   success: boolean;
   message?: string;
   data: {
     liveDeleted: number;
     archiveDeleted: number;
   };
-}
+};
 
 /** Row from `GET /eop`; aligned with MOP list for shared table UX. */
 export type EopListSummaryRow = {
@@ -26,4 +26,24 @@ export type EopListSummaryRow = {
   versionNumber: number;
   status: MOPStatus;
   lastModified: string;
+};
+
+export type EopListFilters = {
+  status?: MOPStatus;
+};
+
+export type EopListQueryParams = {
+  siteId?: string;
+  search?: string;
+  filters?: EopListFilters;
+  pageNumber?: number;
+  pageSize?: number;
+};
+
+export type EopListResult = {
+  rows: EopListSummaryRow[];
+  totalCount: number;
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
 };

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react';
 
-import { EmptyState, SectionWrapper, Typography } from "@/components/common";
+import { EmptyState, SectionWrapper, Typography } from '@/components/common';
 
 type ProcedureDocumentsListLayoutProps = {
   title: string;
@@ -15,10 +15,11 @@ type ProcedureDocumentsListLayoutProps = {
   emptyHeading: string;
   emptyDescription: string;
   emptyIcon: ReactNode;
+  toolbar?: ReactNode;
   table: ReactNode;
 };
 
-/** Shared list chrome for dashboard procedure modules (MOP, EOP, …). */
+// Shared list chrome for dashboard procedure modules (MOP, EOP, ...).
 export const ProcedureDocumentsListLayout = ({
   title,
   entitySingular,
@@ -28,11 +29,12 @@ export const ProcedureDocumentsListLayout = ({
   emptyHeading,
   emptyDescription,
   emptyIcon,
+  toolbar,
   table,
 }: ProcedureDocumentsListLayoutProps) => {
-  const countLabel =
-    isLoading === true
-      ? "Loading…"
+  const countLabel
+    = isLoading === true
+      ? 'Loading…'
       : `${totalCount} ${totalCount !== 1 ? entityPlural : entitySingular} total`;
 
   return (
@@ -46,19 +48,25 @@ export const ProcedureDocumentsListLayout = ({
         </div>
       </div>
 
-      {isLoading ? (
-        <Typography variant="p" className="py-12 text-center text-gray-400">
-          Loading…
-        </Typography>
-      ) : totalCount === 0 ? (
-        <EmptyState
-          icon={emptyIcon}
-          heading={emptyHeading}
-          description={emptyDescription}
-        />
-      ) : (
-        table
-      )}
+      {toolbar}
+
+      {isLoading
+        ? (
+            <Typography variant="p" className="py-12 text-center text-gray-400">
+              Loading…
+            </Typography>
+          )
+        : totalCount === 0
+          ? (
+              <EmptyState
+                icon={emptyIcon}
+                heading={emptyHeading}
+                description={emptyDescription}
+              />
+            )
+          : (
+              table
+            )}
     </SectionWrapper>
   );
 };

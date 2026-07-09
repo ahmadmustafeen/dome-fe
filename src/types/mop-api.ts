@@ -1,22 +1,22 @@
-import type { MOP, MOPStatus } from "@/types/mop";
-import type { MopStatus } from "@/types/mop-form";
+import type { MOP, MOPStatus } from '@/types/mop';
+import type { MopStatus } from '@/types/mop-form';
 
 /** One row from `GET /mop/:mopId/versions` (canonical FE MOP). */
-export interface CanonicalMopVersionApiRow {
+export type CanonicalMopVersionApiRow = {
   versionNumber: number;
   isLatest: boolean;
   archivedAt: string | null;
   mop: MOP;
-}
+};
 
-export interface CanonicalMopDeleteApiResponse {
+export type CanonicalMopDeleteApiResponse = {
   success: boolean;
   message?: string;
   data: {
     liveDeleted: number;
     archiveDeleted: number;
   };
-}
+};
 
 /** Row from `GET /mop` */
 export type MopListSummaryRow = {
@@ -26,6 +26,26 @@ export type MopListSummaryRow = {
   versionNumber: number;
   status: MOPStatus;
   lastModified: string;
+};
+
+export type MopListFilters = {
+  status?: MOPStatus;
+};
+
+export type MopListQueryParams = {
+  siteId?: string;
+  search?: string;
+  filters?: MopListFilters;
+  pageNumber?: number;
+  pageSize?: number;
+};
+
+export type MopListResult = {
+  rows: MopListSummaryRow[];
+  totalCount: number;
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
 };
 
 /** Minimal row for version history drawer (derived from canonical API). */

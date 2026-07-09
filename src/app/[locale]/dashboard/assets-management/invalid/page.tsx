@@ -6,6 +6,7 @@ import {
   ChevronDown,
   ChevronsUpDown,
   ChevronUp,
+  Download,
   Search,
   X,
 } from 'lucide-react';
@@ -48,6 +49,7 @@ export default function InvalidAssetsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [showCreateAsset, setShowCreateAsset] = useState(false);
   const [isAssetsLoading, setIsAssetsLoading] = useState(false);
+  const [isDownloadingAssets, setIsDownloadingAssets] = useState(false);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState(ASSET_DEFAULT_SORT_BY);
@@ -231,6 +233,34 @@ export default function InvalidAssetsPage() {
     }
   };
 
+  const handleDownloadInvalidAssets = async () => {
+    if (!site?._id) {
+      toast.error('Something went wrong while fetching assets, refresh the page.');
+      return;
+    }
+
+    try {
+      setIsDownloadingAssets(true);
+      const blob = await assetService.downloadInvalidAssetsBySiteId(site._id);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'invalid-assets.csv';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : 'Something went wrong while fetching assets, refresh the page.',
+      );
+    } finally {
+      setIsDownloadingAssets(false);
+    }
+  };
+
   const columns = useMemo(
     () =>
       getAssetColumns({
@@ -306,13 +336,23 @@ export default function InvalidAssetsPage() {
               found
             </Typography>
           </div>
-          {selectedIds.length > 0 && (
+          <div className="flex gap-x-2">
+            {selectedIds.length > 0 && (
+              <AppButton
+                title="Delete Asset(s)"
+                onClick={() => setConfirmDeleteAllAssets(true)}
+                variant="danger"
+              />
+            )}
             <AppButton
-              title="Delete Asset(s)"
-              onClick={() => setConfirmDeleteAllAssets(true)}
-              variant="danger"
+              title="Download CSV"
+              icon={<Download className="h-4 w-4" />}
+              onClick={handleDownloadInvalidAssets}
+              variant="secondary"
+              disabled={!site?._id || isDownloadingAssets}
+              isLoading={isDownloadingAssets}
             />
-          )}
+          </div>
         </div>
 
         {/* Search & Sort Controls */}

@@ -1,17 +1,19 @@
-"use client";
-import type { RowSelectionState } from "@tanstack/react-table";
+'use client';
+import type { RowSelectionState } from '@tanstack/react-table';
+import type { Asset } from '@/components';
+import type { SortOrder } from '@/types/asset';
 import {
   ChevronDown,
   ChevronsUpDown,
   ChevronUp,
+  Download,
   Search,
   X,
-} from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { toast } from "react-toastify";
+} from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
-import type { Asset } from "@/components";
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
 import {
   AppButton,
   CreateAssetModal,
@@ -21,22 +23,21 @@ import {
   SectionWrapper,
   Typography,
   UploadAssetModal,
-} from "@/components";
-import { DataTable } from "@/components/DataTable";
-import { getAssetColumns } from "@/components/sections/asset/AssetTableColumns";
+} from '@/components';
+import { DataTable } from '@/components/DataTable';
+import { getAssetColumns } from '@/components/sections/asset/AssetTableColumns';
 import {
   ASSET_DEFAULT_SORT_BY,
   ASSET_DEFAULT_SORT_ORDER,
   ASSET_SORT_FIELDS,
-} from "@/constants/assets";
-import { useAppContext } from "@/context/AppContext";
-import { assetService } from "@/services/asset-service";
-import type { SortOrder } from "@/types/asset";
+} from '@/constants/assets';
+import { useAppContext } from '@/context/AppContext';
+import { assetService } from '@/services/asset-service';
 
 const PAGE_SIZE = 10;
 
 export default function AssetManagementPage() {
-  const t = useTranslations("AssetsManagement");
+  const t = useTranslations('AssetsManagement');
   const { client, site } = useAppContext();
 
   const [files, setFiles] = useState<File[]>([]);
@@ -44,15 +45,16 @@ export default function AssetManagementPage() {
   const [asset, setAsset] = useState<Asset | undefined>();
   const [totalPages, setTotalPages] = useState(0);
   const [totalAssets, setTotalAssets] = useState(0);
-  const [deleteId, setDeleteId] = useState("");
+  const [deleteId, setDeleteId] = useState('');
   const [confirmDeleteAllAssets, setConfirmDeleteAllAssets] = useState(false);
   const [confirmClearAllAssets, setConfirmClearAllAssets] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [showCreateAsset, setShowCreateAsset] = useState(false);
   const [showUploadAssets, setShowUploadAssets] = useState(false);
   const [isAssetsLoading, setIsAssetsLoading] = useState(false);
+  const [isDownloadingAssets, setIsDownloadingAssets] = useState(false);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState(ASSET_DEFAULT_SORT_BY);
   const [sortOrder, setSortOrder] = useState<SortOrder>(
     ASSET_DEFAULT_SORT_ORDER,
@@ -93,7 +95,7 @@ export default function AssetManagementPage() {
         };
 
         if (!response?.data) {
-          toast.error(t("toast_fetch_error"));
+          toast.error(t('toast_fetch_error'));
           return;
         }
         setAssets(response.data.assets);
@@ -135,8 +137,8 @@ export default function AssetManagementPage() {
   };
 
   const handleSortChange = (field: string) => {
-    const newOrder: SortOrder =
-      sortBy === field && sortOrder === "asc" ? "desc" : "asc";
+    const newOrder: SortOrder
+      = sortBy === field && sortOrder === 'asc' ? 'desc' : 'asc';
     setSortBy(field);
     setSortOrder(newOrder);
     if (site?._id) {
@@ -145,7 +147,7 @@ export default function AssetManagementPage() {
     }
   };
 
-  const toggleCreateAsset = () => setShowCreateAsset((prev) => !prev);
+  const toggleCreateAsset = () => setShowCreateAsset(prev => !prev);
 
   const closeToggle = () => {
     toggleCreateAsset();
@@ -162,7 +164,7 @@ export default function AssetManagementPage() {
 
   const handleEditPress = useCallback(
     (id: string) => {
-      const selected = assets.find((item) => item._id === id);
+      const selected = assets.find(item => item._id === id);
       if (!selected) {
         return;
       }
@@ -193,20 +195,20 @@ export default function AssetManagementPage() {
           formData.append(key, value);
         }
       });
-      formData.append("images", JSON.stringify(data.images ?? []));
-      files.forEach((file) => formData.append("files", file));
+      formData.append('images', JSON.stringify(data.images ?? []));
+      files.forEach(file => formData.append('files', file));
 
       const resp = (await assetService.updateAsset(id, formData)) as {
         data: unknown;
       };
       if (resp.data) {
-        toast.success(t("toast_update_success"));
+        toast.success(t('toast_update_success'));
         setFiles([]);
       } else {
-        toast.error(t("toast_update_error"));
+        toast.error(t('toast_update_error'));
       }
     } catch (err) {
-      toast.error(`${t("toast_update_error")}: ${err}`);
+      toast.error(`${t('toast_update_error')}: ${err}`);
     } finally {
       closeToggle();
       if (site?._id) {
@@ -217,8 +219,8 @@ export default function AssetManagementPage() {
 
   const deleteAsset = async (assetId: string) => {
     await assetService.deleteAsset(assetId);
-    setDeleteId("");
-    toast.success(t("toast_delete_success"));
+    setDeleteId('');
+    toast.success(t('toast_delete_success'));
     if (site?._id) {
       fetchAssets(site._id);
     }
@@ -227,7 +229,7 @@ export default function AssetManagementPage() {
   const handleConfirmDeleteAll = async () => {
     try {
       await assetService.deleteBulkAsset({ ids: selectedIds });
-      toast.success(t("toast_delete_all_success"));
+      toast.success(t('toast_delete_all_success'));
       setRowSelection({});
       setConfirmDeleteAllAssets(false);
       refetchAssets();
@@ -238,18 +240,42 @@ export default function AssetManagementPage() {
 
   const handleConfirmClearAll = async () => {
     if (!site?._id || !client?._id) {
-      toast.error(t("toast_clear_all_missing_context"));
+      toast.error(t('toast_clear_all_missing_context'));
       return;
     }
 
     try {
       await assetService.clearAssetsBySiteAndClient(site._id, client._id);
-      toast.success(t("toast_clear_all_success"));
+      toast.success(t('toast_clear_all_success'));
       setRowSelection({});
       setConfirmClearAllAssets(false);
       refetchAssets();
     } catch (err) {
       toast.error(`Something went wrong! ${err}`);
+    }
+  };
+
+  const handleDownloadAssets = async () => {
+    if (!site?._id) {
+      toast.error(t('toast_fetch_error'));
+      return;
+    }
+
+    try {
+      setIsDownloadingAssets(true);
+      const blob = await assetService.downloadAssetsBySiteId(site._id);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'assets.csv';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t('toast_fetch_error'));
+    } finally {
+      setIsDownloadingAssets(false);
     }
   };
 
@@ -261,19 +287,19 @@ export default function AssetManagementPage() {
           setDeleteId(id);
         },
         labels: {
-          colAssetId: "Asset Id",
-          colAssetName: "Asset Name",
-          colCategory: "Category",
-          colSubCategory: "Sub Category",
-          colDescription: "Description",
-          colEquipmentName: "Equipment Name",
-          colMake: "Make",
-          colModel: "Model",
-          colLocation: "Location",
-          colSerial: "Serial Number",
-          colActions: "Actions",
-          actionEdit: "Edit",
-          actionDelete: "Delete",
+          colAssetId: 'Asset Id',
+          colAssetName: 'Asset Name',
+          colCategory: 'Category',
+          colSubCategory: 'Sub Category',
+          colDescription: 'Description',
+          colEquipmentName: 'Equipment Name',
+          colMake: 'Make',
+          colModel: 'Model',
+          colLocation: 'Location',
+          colSerial: 'Serial Number',
+          colActions: 'Actions',
+          actionEdit: 'Edit',
+          actionDelete: 'Delete',
         },
       }),
     [handleEditPress],
@@ -299,16 +325,16 @@ export default function AssetManagementPage() {
       )}
       {deleteId && (
         <DeleteConfirmationScreen
-          heading={t("delete_heading")}
-          description={t("delete_description")}
-          handleCancel={() => setDeleteId("")}
+          heading={t('delete_heading')}
+          description={t('delete_description')}
+          handleCancel={() => setDeleteId('')}
           handleContinue={() => deleteAsset(deleteId)}
         />
       )}
       {confirmDeleteAllAssets && (
         <DeleteConfirmationScreen
-          heading={t("delete_all_heading")}
-          description={t("delete_all_description")}
+          heading={t('delete_all_heading')}
+          description={t('delete_all_description')}
           handleCancel={() => {
             setConfirmDeleteAllAssets(false);
             setRowSelection({});
@@ -318,16 +344,16 @@ export default function AssetManagementPage() {
       )}
       {confirmClearAllAssets && (
         <DeleteConfirmationScreen
-          heading={t("clear_all_heading")}
-          description={t("clear_all_description")}
+          heading={t('clear_all_heading')}
+          description={t('clear_all_description')}
           handleCancel={() => setConfirmClearAllAssets(false)}
           handleContinue={handleConfirmClearAll}
         />
       )}
       {isAssetsLoading && (
         <ScreenLoader
-          heading={t("loader_heading")}
-          description={t("loader_description")}
+          heading={t('loader_heading')}
+          description={t('loader_description')}
         />
       )}
 
@@ -335,34 +361,42 @@ export default function AssetManagementPage() {
         {/* Header */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <Typography variant="h1">{t("title")}</Typography>
+            <Typography variant="h1">{t('title')}</Typography>
             <Typography variant="p" className="mt-1 text-gray-500">
               {totalAssets !== 1
-                ? t("assets_found_other", { count: totalAssets })
-                : t("assets_found_one", { count: totalAssets })}
+                ? t('assets_found_other', { count: totalAssets })
+                : t('assets_found_one', { count: totalAssets })}
             </Typography>
           </div>
           <div className="flex gap-x-2">
             {selectedIds.length > 0 && (
               <AppButton
-                title={t("btn_delete_selected")}
+                title={t('btn_delete_selected')}
                 onClick={() => setConfirmDeleteAllAssets(true)}
                 variant="danger"
               />
             )}
             <AppButton
-              title={t("btn_clear_all")}
+              title={t('btn_clear_all')}
               onClick={() => setConfirmClearAllAssets(true)}
               variant="danger"
               disabled={!site?._id || !client?._id || totalAssets === 0}
             />
             <AppButton
-              title={t("btn_upload_csv")}
+              title={t('btn_upload_csv')}
               onClick={() => setShowUploadAssets(true)}
               variant="secondary"
             />
             <AppButton
-              title={t("btn_create_asset")}
+              title="Download CSV"
+              icon={<Download className="h-4 w-4" />}
+              onClick={handleDownloadAssets}
+              variant="secondary"
+              disabled={!site?._id || isDownloadingAssets}
+              isLoading={isDownloadingAssets}
+            />
+            <AppButton
+              title={t('btn_create_asset')}
               onClick={toggleCreateAsset}
               variant="secondary"
             />
@@ -376,13 +410,13 @@ export default function AssetManagementPage() {
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              placeholder={t("search_placeholder")}
+              onChange={e => handleSearchChange(e.target.value)}
+              placeholder={t('search_placeholder')}
               className="w-full rounded-lg border border-gray-300 py-2 pr-8 pl-9 text-sm focus:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none"
             />
             {searchQuery && (
               <button
-                onClick={() => handleSearchChange("")}
+                onClick={() => handleSearchChange('')}
                 className="absolute top-1/2 right-2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
                 <X className="h-4 w-4" />
@@ -391,28 +425,32 @@ export default function AssetManagementPage() {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Typography variant="label" className="text-gray-500">
-              {t("sort_label")}
+              {t('sort_label')}
             </Typography>
-            {ASSET_SORT_FIELDS.map((field) => (
+            {ASSET_SORT_FIELDS.map(field => (
               <button
                 key={field.value}
                 onClick={() => handleSortChange(field.value)}
                 className={`flex items-center gap-1 rounded-lg border px-3 py-1.5 text-sm transition-colors ${
                   sortBy === field.value
-                    ? "border-primary bg-primary text-white"
-                    : "border-gray-300 bg-white text-gray-600 hover:border-primary hover:text-primary"
+                    ? 'border-primary bg-primary text-white'
+                    : 'border-gray-300 bg-white text-gray-600 hover:border-primary hover:text-primary'
                 }`}
               >
                 {field.label}
-                {sortBy === field.value ? (
-                  sortOrder === "asc" ? (
-                    <ChevronUp className="h-3 w-3" />
-                  ) : (
-                    <ChevronDown className="h-3 w-3" />
-                  )
-                ) : (
-                  <ChevronsUpDown className="h-3 w-3 opacity-50" />
-                )}
+                {sortBy === field.value
+                  ? (
+                      sortOrder === 'asc'
+                        ? (
+                            <ChevronUp className="h-3 w-3" />
+                          )
+                        : (
+                            <ChevronDown className="h-3 w-3" />
+                          )
+                    )
+                  : (
+                      <ChevronsUpDown className="h-3 w-3 opacity-50" />
+                    )}
               </button>
             ))}
           </div>
@@ -423,7 +461,7 @@ export default function AssetManagementPage() {
           <DataTable
             columns={columns}
             data={assets}
-            getRowId={(row) => row._id}
+            getRowId={row => row._id}
             loading={isAssetsLoading}
             noDataMessage="No assets found."
             rowSelection={rowSelection}

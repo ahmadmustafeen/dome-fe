@@ -6,7 +6,7 @@ export const DOCUMENT_TYPES: DocumentType[] = [
   'Site Documents',
   'Basis of design',
   'Approved submittal',
-  'Site Diagrams and Documents',
+  // 'Site Diagrams and Documents',
   'Electrical One-Line Diagram',
   'Mechanical One-Line Diagram'
 ];
@@ -18,7 +18,7 @@ export const RAG_DOCUMENT_TYPES: DocumentType[] = [
 export const DOCUMENT_TYPE_BADGE: Record<DocumentType, string> = {
   'Asset Manuals': 'bg-blue-100 text-blue-700',
   'Government Policies': 'bg-violet-100 text-blue-700',
-  'Site Diagrams and Documents': 'bg-green-100 text-green-700',
+  // 'Site Diagrams and Documents': 'bg-green-100 text-green-700',
   'Company Policies and Documents': 'bg-purple-100 text-purple-700',
   'Site Policies': 'bg-yellow-100 text-yellow-700',
   'Basis of design': 'bg-pink-100 text-pink-700',

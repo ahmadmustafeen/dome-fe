@@ -5,7 +5,7 @@
 export type DocumentType =
     'Asset Manuals' 
   | 'Government Policies'
-  | "Site Diagrams and Documents"
+  // | "Site Diagrams and Documents"
   | 'Site Policies'
   | 'Site Documents'
   | 'Basis of design'

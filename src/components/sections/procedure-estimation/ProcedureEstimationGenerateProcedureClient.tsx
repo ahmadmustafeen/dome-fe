@@ -7,23 +7,23 @@ import { useCallback, useMemo } from "react";
 import { toast } from "react-toastify";
 
 import { AppButton, SectionWrapper, Typography } from "@/components/common";
-import { DASHBOARD_ROUTES, maintenanceCategoryRoute } from "@/constants/routes";
-import type { ProcedureKind } from "@/types/maintenance-schedule";
+import { DASHBOARD_ROUTES, procedureEstimationCategoryRoute } from "@/constants/routes";
+import type { ProcedureKind } from "@/types/procedure-estimation";
 
-type MaintenanceGenerateProcedureClientProps = {
+type ProcedureEstimationGenerateProcedureClientProps = {
   procedureType: ProcedureKind;
   categoryId?: string;
   procedureId?: string;
   assetId?: string;
 };
 
-const MaintenanceGenerateProcedureClient = ({
+const ProcedureEstimationGenerateProcedureClient = ({
   procedureType,
   categoryId,
   procedureId,
   assetId,
-}: MaintenanceGenerateProcedureClientProps) => {
-  const t = useTranslations("MaintenanceGenerate");
+}: ProcedureEstimationGenerateProcedureClientProps) => {
+  const t = useTranslations("ProcedureEstimationGenerate");
   const router = useRouter();
 
   const contextLine = useMemo(() => {
@@ -42,10 +42,10 @@ const MaintenanceGenerateProcedureClient = ({
 
   const handleBack = useCallback(() => {
     if (categoryId) {
-      router.push(maintenanceCategoryRoute(categoryId));
+      router.push(procedureEstimationCategoryRoute(categoryId));
       return;
     }
-    router.push(DASHBOARD_ROUTES.MAINTENANCE_SCHEDULE);
+    router.push(DASHBOARD_ROUTES.PROCEDURE_ESTIMATION);
   }, [categoryId, router]);
 
   const handleGenerateClick = useCallback(() => {
@@ -93,4 +93,4 @@ const MaintenanceGenerateProcedureClient = ({
   );
 };
 
-export { MaintenanceGenerateProcedureClient };
+export { ProcedureEstimationGenerateProcedureClient };

@@ -143,17 +143,17 @@
     "delete_bulk_description": "Êtes-vous sûr de vouloir supprimer {count} {count, plural, one {document sélectionné} other {documents sélectionnés}} ? Cette action est irréversible.",
     "toast_bulk_delete_success": "Documents supprimés avec succès"
   },
-  "MaintenanceSchedule": {
-    "title": "Planning de Maintenance",
-    "loader_heading": "Génération du planning",
+  "ProcedureEstimation": {
+    "title": "Estimation des procédures",
+    "loader_heading": "Génération de l'estimation des procédures",
     "loader_description": "L'IA analyse vos actifs et documents téléversés…",
-    "subtitle": "Planning de Maintenance",
-    "btn_generate": "Générer le planning",
-    "btn_regenerate": "Régénérer le planning",
-    "btn_clear": "Effacer le planning",
+    "subtitle": "Estimation des procédures",
+    "btn_generate": "Générer l'estimation",
+    "btn_regenerate": "Régénérer l'estimation",
+    "btn_clear": "Effacer l'estimation",
     "search_placeholder": "Rechercher par catégorie...",
-    "empty_heading": "Aucun planning généré",
-    "empty_description": "Cliquez sur Générer le planning pour que l'IA analyse vos actifs téléversés et crée un plan de maintenance structuré.",
+    "empty_heading": "Aucune estimation de procédures générée",
+    "empty_description": "Cliquez sur Générer l'estimation pour que l'IA analyse vos actifs téléversés et crée un plan de procédures structuré.",
     "col_category": "Catégorie",
     "col_assets": "Actifs",
     "col_monthly": "Mensuel",
@@ -185,8 +185,8 @@
     "summary_eops": "Total EOPs",
     "summary_sops": "Total SOPs"
   },
-  "MaintenanceCategoryDetail": {
-    "back": "Retour au planning",
+  "ProcedureEstimationCategoryDetail": {
+    "back": "Retour à l'estimation des procédures",
     "assets_count_one": "{count} actif",
     "assets_count_other": "{count} actifs",
     "search_placeholder": "Rechercher des actifs...",
@@ -204,12 +204,12 @@
     "empty_heading": "Aucun actif trouvé",
     "empty_description": "Aucun actif n'est affecté à cette catégorie pour l'instant."
   },
-  "MaintenanceAssetDetail": {
+  "ProcedureEstimationAssetDetail": {
     "back": "Retour à la catégorie",
     "placeholder_heading": "Détail de l'actif",
     "placeholder_description": "Le contenu complet du détail de l'actif sera développé lors de la prochaine phase."
   },
-  "MaintenanceGenerate": {
+  "ProcedureEstimationGenerate": {
     "back": "Retour",
     "heading_mop": "Générer un MOP",
     "heading_eop": "Générer un EOP",

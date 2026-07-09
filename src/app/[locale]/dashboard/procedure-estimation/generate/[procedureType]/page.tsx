@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
-import { MaintenanceGenerateProcedureClient } from "@/components/sections/maintenance/MaintenanceGenerateProcedureClient";
-import { isProcedureKind } from "@/types/maintenance-schedule";
+import { ProcedureEstimationGenerateProcedureClient } from "@/components/sections/procedure-estimation/ProcedureEstimationGenerateProcedureClient";
+import { isProcedureKind } from "@/types/procedure-estimation";
 
 type PageProps = {
   params: Promise<{ procedureType: string }>;
@@ -18,7 +18,7 @@ const firstString = (value: string | string[] | undefined): string | undefined =
   return undefined;
 };
 
-export default async function MaintenanceGenerateProcedurePage({
+export default async function ProcedureEstimationGenerateProcedurePage({
   params,
   searchParams,
 }: PageProps) {
@@ -30,7 +30,7 @@ export default async function MaintenanceGenerateProcedurePage({
   const sp = await searchParams;
 
   return (
-    <MaintenanceGenerateProcedureClient
+    <ProcedureEstimationGenerateProcedureClient
       procedureType={procedureType}
       categoryId={firstString(sp.categoryId)}
       procedureId={firstString(sp.procedureId)}

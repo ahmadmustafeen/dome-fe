@@ -1,5 +1,5 @@
 import { apiFetch } from "@/libs/fetcher";
-import { MaintenanceScheduleApiResponse } from "@/types/maintenance-schedule";
+import { ProcedureEstimationApiResponse } from "@/types/procedure-estimation";
 // import { DocumentApiRecord } from "./document-service";
 // import type {
 //   DocumentApiRecord,
@@ -16,27 +16,27 @@ import { MaintenanceScheduleApiResponse } from "@/types/maintenance-schedule";
 //   sortOrder?: "asc" | "desc";
 // };
 
-export const maintenanceScheduleService = {
+export const procedureEstimationService = {
   /**
    * GET /api/documents/site/:siteId
    * @param siteId - MongoDB site ID
    * @param params - optional query parameters
    */
-  getMaintenanceScheduleBySiteId: (siteId: string) => {
-    return apiFetch<MaintenanceScheduleApiResponse>(
+  getProcedureEstimationBySiteId: (siteId: string) => {
+    return apiFetch<ProcedureEstimationApiResponse>(
       `/maintenance-schedule/fetch/${siteId}`,
       { method: "GET" },
     );
   },
 
-  generateMaintenanceSchedule: (siteId: string) => {
-    return apiFetch<MaintenanceScheduleApiResponse>(
+  generateProcedureEstimation: (siteId: string) => {
+    return apiFetch<ProcedureEstimationApiResponse>(
       `/maintenance-schedule/generate/${siteId}`,
       { method: "GET" },
     );
   },
-    clearMaintenanceScheduleBySiteId: (siteId: string) => {
-    return apiFetch<MaintenanceScheduleApiResponse>(
+    clearProcedureEstimationBySiteId: (siteId: string) => {
+    return apiFetch<ProcedureEstimationApiResponse>(
       `/maintenance-schedule/clear/${siteId}`,
       { method: "DELETE" },
     );

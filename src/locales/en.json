@@ -143,17 +143,17 @@
     "delete_bulk_description": "Are you sure you want to delete {count} selected {count, plural, one {document} other {documents}}? This action cannot be undone.",
     "toast_bulk_delete_success": "Documents deleted successfully"
   },
-  "MaintenanceSchedule": {
-    "title": "Maintenance Schedule",
-    "loader_heading": "Generating Schedule",
+  "ProcedureEstimation": {
+    "title": "Procedure Estimation",
+    "loader_heading": "Generating Procedure Estimation",
     "loader_description": "AI is analysing your uploaded assets and documents…",
-    "subtitle": "Maintenance Schedule",
-    "btn_generate": "Generate Schedule",
-    "btn_regenerate": "Regenerate Schedule",
-    "btn_clear": "Clear Schedule",
+    "subtitle": "Procedure Estimation",
+    "btn_generate": "Generate Estimation",
+    "btn_regenerate": "Regenerate Estimation",
+    "btn_clear": "Clear Estimation",
     "search_placeholder": "Search by category...",
-    "empty_heading": "No schedule generated yet",
-    "empty_description": "Click Generate Schedule to let AI analyse your uploaded assets and build a structured maintenance plan.",
+    "empty_heading": "No procedure estimation generated yet",
+    "empty_description": "Click Generate Estimation to let AI analyse your uploaded assets and build a structured procedure plan.",
     "col_category": "Category",
     "col_subCategory": "Subcategory",
     "col_assets": "Assets",
@@ -186,9 +186,9 @@
     "summary_eops": "Total EOPs",
     "summary_sops": "Total SOPs"
   },
-  "MaintenanceCategoryDetail": {
-    "back": "Back to Schedule",
-    "loader_heading": "Loading Schedule",
+  "ProcedureEstimationCategoryDetail": {
+    "back": "Back to Procedure Estimation",
+    "loader_heading": "Loading Procedure Estimation",
     "loader_description": "Loading, Please wait!",
     "assets_count_one": "{count} asset",
     "assets_count_other": "{count} assets",
@@ -207,12 +207,12 @@
     "empty_heading": "No assets found",
     "empty_description": "No assets are assigned to this category yet."
   },
-  "MaintenanceAssetDetail": {
+  "ProcedureEstimationAssetDetail": {
     "back": "Back to Category",
     "placeholder_heading": "Asset Detail",
     "placeholder_description": "Full asset detail content will be built in the next UI phase."
   },
-  "MaintenanceGenerate": {
+  "ProcedureEstimationGenerate": {
     "back": "Back",
     "heading_mop": "Generate MOP",
     "heading_eop": "Generate EOP",

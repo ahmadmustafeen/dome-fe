@@ -3,7 +3,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 import { CountBadge } from "@/components/common";
-import type { CategoryAsset } from "@/types/maintenance-schedule";
+import type { CategoryAsset } from "@/types/procedure-estimation";
 
 type CategoryAssetColumnLabels = {
   colAssetId: string;

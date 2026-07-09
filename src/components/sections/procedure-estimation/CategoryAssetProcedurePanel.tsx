@@ -1,11 +1,11 @@
 "use client";
 
-import { RequirementSection } from "@/components/sections/maintenance/RequirementSection";
+import { RequirementSection } from "@/components/sections/procedure-estimation/RequirementSection";
 import type {
   CategoryAsset,
   ProcedureItem,
   ProcedureKind,
-} from "@/types/maintenance-schedule";
+} from "@/types/procedure-estimation";
 
 type CategoryAssetProcedurePanelProps = {
   asset: CategoryAsset;

@@ -1,4 +1,4 @@
-import type { ProcedureKind } from "@/types/maintenance-schedule";
+import type { ProcedureKind } from "@/types/procedure-estimation";
 
 export enum AUTH_ROUTES {
   SIGN_IN = "/en/sign-in",
@@ -11,7 +11,7 @@ export enum DASHBOARD_ROUTES {
   CLIENT = "/en/dashboard/client",
   ASSETS_MANAGEMENT = "/en/dashboard/assets-management",
   INVALID_ASSETS = "/en/dashboard/assets-management/invalid",
-  MAINTENANCE_SCHEDULE = "/en/dashboard/maintenance-schedule",
+  PROCEDURE_ESTIMATION = "/en/dashboard/procedure-estimation",
   DOCUMENT_MANAGEMENT = "/en/dashboard/document-management",
   DOCUMENT_GENERATOR = "/en/dashboard/document-generator",
   SOP_MANAGEMENT = "/en/dashboard/sop-management",
@@ -31,26 +31,26 @@ export const eopEditRoute = (eopId: string): string =>
 export const sopEditRoute = (sopId: string): string =>
   `${DASHBOARD_ROUTES.SOP_MANAGEMENT}/${sopId}`;
 
-export const maintenanceCategoryRoute = (categoryId: string): string =>
-  `${DASHBOARD_ROUTES.MAINTENANCE_SCHEDULE}/${categoryId}`;
+export const procedureEstimationCategoryRoute = (categoryId: string): string =>
+  `${DASHBOARD_ROUTES.PROCEDURE_ESTIMATION}/${categoryId}`;
 
-export const maintenanceAssetRoute = (
+export const procedureEstimationAssetRoute = (
   categoryId: string,
   assetId: string,
 ): string =>
-  `${DASHBOARD_ROUTES.MAINTENANCE_SCHEDULE}/${categoryId}/${assetId}`;
+  `${DASHBOARD_ROUTES.PROCEDURE_ESTIMATION}/${categoryId}/${assetId}`;
 
-type MaintenanceGenerateQuery = {
+type ProcedureEstimationGenerateQuery = {
   categoryId?: string;
   procedureId?: string;
   assetId?: string;
 };
 
-export const maintenanceGenerateProcedureRoute = (
+export const procedureEstimationGenerateProcedureRoute = (
   procedureType: ProcedureKind,
-  query?: MaintenanceGenerateQuery,
+  query?: ProcedureEstimationGenerateQuery,
 ): string => {
-  const base = `${DASHBOARD_ROUTES.MAINTENANCE_SCHEDULE}/generate/${procedureType}`;
+  const base = `${DASHBOARD_ROUTES.PROCEDURE_ESTIMATION}/generate/${procedureType}`;
   if (!query) {
     return base;
   }

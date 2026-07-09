@@ -1,5 +1,5 @@
 "use client";
-import type { ProcedureItem } from "@/types/maintenance-schedule";
+import type { ProcedureItem } from "@/types/procedure-estimation";
 import { Eye, PenIcon, PlusCircleIcon, Trash } from 'lucide-react'
 
 type RequirementSectionProps = {

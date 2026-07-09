@@ -3,7 +3,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 
 import { AppButton } from "@/components/common";
-import type { MaintenanceRow } from "@/types/maintenance-schedule";
+import type { ProcedureEstimationRow } from "@/types/procedure-estimation";
 
 // ── Small cell helpers ────────────────────────────────────────────────────────
 
@@ -34,15 +34,15 @@ type Labels = {
   btnViewDetails: string;
 };
 
-type MaintenanceColumnsConfig = {
+type ProcedureEstimationColumnsConfig = {
   labels: Labels;
   onViewDetails: (id: string) => void;
 };
 
-export const getMaintenanceColumns = ({
+export const getProcedureEstimationColumns = ({
   labels,
   onViewDetails,
-}: MaintenanceColumnsConfig): ColumnDef<MaintenanceRow>[] => [
+}: ProcedureEstimationColumnsConfig): ColumnDef<ProcedureEstimationRow>[] => [
     {
       id: "category",
       accessorKey: "category",

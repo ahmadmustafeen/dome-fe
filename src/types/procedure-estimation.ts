@@ -1,5 +1,5 @@
-/** Maintenance frequency flags for a single asset category row. */
-export type MaintenanceFrequency = {
+/** Procedure frequency flags for a single asset category row. */
+export type ProcedureFrequency = {
   monthly: boolean;
   quarterly: boolean;
   semiAnnual: boolean;
@@ -10,9 +10,9 @@ export type MaintenanceFrequency = {
 };
 
 /** Procedure family used for generation flows (MOP / EOP / SOP). */
-export type ProcedureKind = "mop" | "eop" | "sop";
+export type ProcedureKind = 'mop' | 'eop' | 'sop';
 
-export const PROCEDURE_KINDS: readonly ProcedureKind[] = ["mop", "eop", "sop"];
+export const PROCEDURE_KINDS: readonly ProcedureKind[] = ['mop', 'eop', 'sop'];
 
 export const isProcedureKind = (value: string): value is ProcedureKind =>
   (PROCEDURE_KINDS as readonly string[]).includes(value);
@@ -27,8 +27,8 @@ export const isProcedureKind = (value: string): value is ProcedureKind =>
 
 export type ProcedureItem = {
   _id: string;
-  title: string
-}
+  title: string;
+};
 
 /** A single asset inside a category, with per-asset procedure items. */
 export type CategoryAsset = {
@@ -46,8 +46,8 @@ export type CategoryAsset = {
   sops: ProcedureItem[];
 };
 
-/** One row in the maintenance schedule table. */
-export type MaintenanceRow = {
+/** One row in the procedure estimation table. */
+export type ProcedureEstimationRow = {
   _id: string;
   id: string;
   category: string;
@@ -63,16 +63,13 @@ export type MaintenanceRow = {
   SOPs: ProcedureItem[];
 };
 
-
-
-/** The full generated schedule for a site. */
-export type MaintenanceScheduleData = {
+/** The full generated procedure estimation for a site. */
+export type ProcedureEstimationData = {
   generatedAt: string;
-  rows: MaintenanceRow[];
+  rows: ProcedureEstimationRow[];
 };
 
-
-export interface MaintenanceScheduleApiResponse {
+export type ProcedureEstimationApiResponse = {
   success: boolean;
-  data: MaintenanceRow[];
-}
+  data: ProcedureEstimationRow[];
+};

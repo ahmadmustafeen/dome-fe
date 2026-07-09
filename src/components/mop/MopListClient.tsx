@@ -16,8 +16,6 @@ import { DASHBOARD_ROUTES, mopEditRoute } from '@/constants/routes';
 import { useAppContext } from '@/context/AppContext';
 import { getMOPList } from '@/services/mop-service';
 
-const PAGE_SIZE_OPTIONS = [10, 20, 50] as const;
-
 const MOP_STATUS_FILTER_OPTIONS: { label: string; value: MOPStatus }[] = [
   { label: 'Draft', value: 'draft' },
   { label: 'Ready to Deliver', value: 'ready_to_deliver' },
@@ -89,7 +87,7 @@ export const MopListClient = () => {
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<MOPStatus | ''>('');
   const [pageNumber, setPageNumber] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const pageSize = 10;
   const siteId = site?._id;
 
   const fetchMops = useCallback(async () => {
@@ -129,14 +127,6 @@ export const MopListClient = () => {
   const handleStatusFilterChange = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
       setStatusFilter(event.target.value as MOPStatus | '');
-      setPageNumber(1);
-    },
-    [],
-  );
-
-  const handlePageSizeChange = useCallback(
-    (event: ChangeEvent<HTMLSelectElement>) => {
-      setPageSize(Number(event.target.value));
       setPageNumber(1);
     },
     [],
@@ -186,7 +176,6 @@ export const MopListClient = () => {
           </option>
         ))}
       </select>
-
 
       {(search.trim() !== '' || statusFilter !== '') && (
         <button

@@ -16,8 +16,6 @@ import { DASHBOARD_ROUTES, eopEditRoute } from '@/constants/routes';
 import { useAppContext } from '@/context/AppContext';
 import { getEOPList } from '@/services/eop-service';
 
-const PAGE_SIZE_OPTIONS = [10, 20, 50] as const;
-
 const EOP_STATUS_FILTER_OPTIONS: { label: string; value: MOPStatus }[] = [
   { label: 'Draft', value: 'draft' },
   { label: 'Ready to Deliver', value: 'ready_to_deliver' },
@@ -98,7 +96,7 @@ export const EopListClient = () => {
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<MOPStatus | ''>('');
   const [pageNumber, setPageNumber] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const pageSize = 10;
   const siteId = site?._id;
 
   const fetchEops = useCallback(async () => {
@@ -138,14 +136,6 @@ export const EopListClient = () => {
   const handleStatusFilterChange = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
       setStatusFilter(event.target.value as MOPStatus | '');
-      setPageNumber(1);
-    },
-    [],
-  );
-
-  const handlePageSizeChange = useCallback(
-    (event: ChangeEvent<HTMLSelectElement>) => {
-      setPageSize(Number(event.target.value));
       setPageNumber(1);
     },
     [],
@@ -195,7 +185,6 @@ export const EopListClient = () => {
           </option>
         ))}
       </select>
-
 
       {(search.trim() !== '' || statusFilter !== '') && (
         <button

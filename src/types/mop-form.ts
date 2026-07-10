@@ -1,5 +1,6 @@
 export type MopStatus =
   | "Draft"
+  | "Verified"
   | "Ready to Deliver"
   | "Delivered to Client"
   | "Revision Needed";

@@ -25,6 +25,7 @@ export type EopListSummaryRow = {
   assetName: string;
   versionNumber: number;
   status: MOPStatus;
+  documentVerified?: boolean;
   lastModified: string;
 };
 

@@ -11,6 +11,7 @@ export type MopDetailProcedureStepIndicator = MopImportantIndicatorId | "";
 
 export type MOPStatus =
   | "draft"
+  | "verified"
   | "ready_to_deliver"
   | "delivered"
   | "revision_needed";

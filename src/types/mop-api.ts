@@ -25,6 +25,7 @@ export type MopListSummaryRow = {
   assetName: string;
   versionNumber: number;
   status: MOPStatus;
+  documentVerified?: boolean;
   lastModified: string;
 };
 

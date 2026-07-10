@@ -10,6 +10,7 @@ export const MOP_SECTION_01_HEADING = "Section 01 - MOP Schedule Information";
 
 export const MOP_STATUS_OPTIONS: MopStatus[] = [
   "Draft",
+  "Verified",
   "Ready to Deliver",
   "Delivered to Client",
   "Revision Needed",
@@ -22,6 +23,7 @@ export type MopStatusStyle = {
 
 export const MOP_STATUS_STYLES: Record<MopStatus, MopStatusStyle> = {
   Draft: { label: "Draft", badgeClass: "bg-gray-100 text-gray-700" },
+  Verified: { label: "Verified", badgeClass: "bg-emerald-100 text-emerald-700" },
   "Ready to Deliver": {
     label: "Ready to Deliver",
     badgeClass: "bg-blue-100 text-blue-700",

@@ -3,6 +3,7 @@
 import type { ChangeEvent } from 'react';
 import type { EopListSummaryRow } from '@/types/eop-api';
 import type { MOPStatus } from '@/types/mop';
+import type { MopStatus } from '@/types/mop-form';
 import { Eye, FileText, Search, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -10,7 +11,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { AppButton, Pagination, Typography } from '@/components/common';
 import { ProcedureDocumentsListLayout } from '@/components/dashboard-procedure/ProcedureDocumentsListLayout';
-import { mopDocumentStatusToFormLabel } from '@/components/mop/mop-document-status';
 import { MopStatusBadge } from '@/components/mop/MopStatusBadge';
 import { DASHBOARD_ROUTES, eopEditRoute } from '@/constants/routes';
 import { useAppContext } from '@/context/AppContext';
@@ -18,9 +18,7 @@ import { getEOPList } from '@/services/eop-service';
 
 const EOP_STATUS_FILTER_OPTIONS: { label: string; value: MOPStatus }[] = [
   { label: 'Draft', value: 'draft' },
-  { label: 'Ready to Deliver', value: 'ready_to_deliver' },
-  { label: 'Delivered', value: 'delivered' },
-  { label: 'Revision Needed', value: 'revision_needed' },
+  { label: 'Verified', value: 'verified' },
 ];
 
 const EOP_TABLE_COLUMNS = [
@@ -47,6 +45,8 @@ type EopTableRowProps = {
 };
 
 const EopTableRow = ({ row, onView }: EopTableRowProps) => {
+  const displayStatus: MopStatus = row.documentVerified === true ? 'Verified' : 'Draft';
+
   return (
     <tr className="cursor-pointer bg-white transition-colors hover:bg-slate-50">
       <td className="px-4 py-3">
@@ -65,7 +65,7 @@ const EopTableRow = ({ row, onView }: EopTableRowProps) => {
         </Typography>
       </td>
       <td className="px-4 py-3">
-        <MopStatusBadge status={mopDocumentStatusToFormLabel(row.status)} />
+        <MopStatusBadge status={displayStatus} />
       </td>
       <td className="px-4 py-3">
         <Typography variant="caption" className="text-gray-600">

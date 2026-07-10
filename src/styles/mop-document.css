@@ -91,9 +91,14 @@
   cursor: not-allowed;
 }
 
+textarea.mop-doc-input,
+.mop-doc-textarea {
+  field-sizing: content;
+  resize: none;
+}
+
 .mop-doc-textarea {
   min-height: 5.5rem;
-  resize: vertical;
 }
 
 .mop-doc-preview-shell {

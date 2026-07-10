@@ -1028,59 +1028,9 @@ const EleventhSection = (props: MOP) => {
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 11: References and Documentation" />
 
-      {/* <p className="font-semibold text-lg py-2">Comprehensive Reference Library</p> */}
-
-      {props.references.policyDocumentRows?.length ? <>
-        <p className="font-semibold text-lg py-2">Company Policy Documents Consulted</p>
-        {/* <Typography variant="p" className="mb-4 text-sm text-gray-700">
-          The following company policy documents were referenced during the creation of this MOP to ensure alignment with company-specific procedures and requirements:
-        </Typography> */}
-        <table className="w-full border-collapse text-sm ">
-          <thead className="bg-[#091628]">
-            <tr className=" text-white">
-              <th className="border border-black p-3 text-left">
-                Policy Document
-              </th>
-              <th className="border border-black p-3 text-left">
-                Upload Date
-              </th>
-              <th className="border border-black p-3 text-left">
-                Type
-              </th>
-            </tr>
-          </thead>
-
-          <tbody className="">
-            {props.references.policyDocumentRows.map((row, index) => (
-              <CustomTableRowWrapper index={index}>
-                <td className="border border-black p-3 align-top">
-                  {row.policyDocument}
-                </td>
-
-                <td className="border border-black p-3 align-top">
-                  {row.uploadDate}
-                </td>
-
-                <td className="border border-black p-3 align-top">
-                  {row.type}
-                </td>
-              </CustomTableRowWrapper>
-            ))}
-          </tbody>
-
-        </table>
-      </> : null}
-
-      <div className="rounded-r-md border-l-4 border-blue-600 bg-sky-100 p-3 mt-4">
-        <p className="m-0 text-sm text-sky-950">
-          <strong>{MOP_SECTION_11_POLICY_NOTE_LABEL}</strong>
-          {' '}
-          {MOP_SECTION_11_POLICY_BANNER_TEXT}
-        </p>
-      </div>
 
       {props.references.equipmentDocumentRows?.length ? <>
-        <p className="font-semibold text-lg py-2 mt-8">Equipment-Specific Documentation</p>
+        <p className="font-semibold text-lg py-2 mt-5">Equipment-Specific Documentation</p>
         <table className="w-full border-collapse text-sm ">
           <thead className="bg-[#091628]">
             <tr className=" text-white">

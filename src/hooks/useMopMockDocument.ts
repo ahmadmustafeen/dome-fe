@@ -369,25 +369,6 @@ export const useMopMockDocument = (ctx: MopDocumentContextParams) => {
       }));
     });
 
-    evtSource.addEventListener("policyDocumentRows", (e) => {
-      const data = JSON.parse(e.data);
-      if (data?.error) {
-        toast.error("policyDocumentRows failed");
-        return;
-
-      }
-
-      setMop((prevMop) => ({
-        ...prevMop,
-        references: {
-          ...prevMop.references,
-          policyDocumentRows: data
-        }
-      }))
-
-
-    });
-
     evtSource.addEventListener("emergencyContactRows", (e) => {
       const data = JSON.parse(e.data);
       if (data?.error) {

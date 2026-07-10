@@ -124,7 +124,7 @@ export const EopSection07Recovery = ({
 
     <EopSection07Checklist
       title="Return to Normal Operation"
-      description="Complete recovery documentation and notifications per Element Critical Limble CMMS Policy:"
+      description="Complete recovery documentation and notifications"
       items={recovery?.returnToNormalItems}
       onItemsChange={(items) => patchRecovery({ returnToNormalItems: items })}
       editable

@@ -687,7 +687,7 @@ const SeventhSection = (props: EOP) => {
 
       <p className="font-semibold text-lg my-4">Return to Normal Operation</p>
       <Typography variant="p" className="my-4 text-sm text-gray-700">
-        Complete recovery documentation and notifications per Element Critical Limble CMMS Policy:
+        Complete recovery documentation and notifications
       </Typography>
       <div className="my-4">
         <table className="w-full border-collapse text-sm ">

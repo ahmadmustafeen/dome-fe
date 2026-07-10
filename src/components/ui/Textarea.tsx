@@ -13,7 +13,7 @@ export const Textarea = ({ ref, className, useMopStyles = true, ...rest }: Texta
   <textarea
     ref={ref}
     className={cn(
-      useMopStyles ? "mop-doc-input min-h-20 resize-y" : "",
+      useMopStyles ? "mop-doc-input min-h-20 resize-none" : "",
       className,
     )}
     {...rest}

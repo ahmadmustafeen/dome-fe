@@ -319,3 +319,9 @@
   text-transform: uppercase;
   color: #6b7280;
 }
+
+textarea.mop-doc-input,
+.mop-doc-textarea {
+  field-sizing: content;
+  resize: none;
+}

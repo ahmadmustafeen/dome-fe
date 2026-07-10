@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, History } from "lucide-react";
+import { BadgeCheck, Download, History } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
@@ -16,6 +16,7 @@ import {
 import { DASHBOARD_ROUTES } from "@/constants/routes";
 import { useMopMockDocument } from "@/hooks/useMopMockDocument";
 import { useMopVersionHistoryPanel } from "@/hooks/useMopVersionHistoryPanel";
+import { verifyMOPDocument } from "@/services/mop-service";
 import type { CanonicalMopVersionApiRow } from "@/types/mop-api";
 
 import { MopDocumentForm } from "./MopDocumentForm";
@@ -38,6 +39,8 @@ export const MopManagementClient = ({
   const mode = isEdit ? "edit" : "create";
   const resolvedMopId = isEdit ? mopId.trim() : undefined;
   const [isDownloading, setIsDownloading] = useState(false)
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [verifiedMopId, setVerifiedMopId] = useState<string | null>(null);
 
   const applyVersionRef = useRef<(row: CanonicalMopVersionApiRow) => void>(
     () => { },
@@ -122,6 +125,24 @@ export const MopManagementClient = ({
     setShowClearConfirm(false);
   }, [resetMop]);
 
+  const handleVerify = useCallback(async () => {
+    if (resolvedMopId === undefined) {
+      toast.error("MOP id is required to verify.");
+      return;
+    }
+
+    setIsVerifying(true);
+    try {
+      await verifyMOPDocument(resolvedMopId);
+      setVerifiedMopId(resolvedMopId);
+      toast.success("MOP verified successfully");
+      await refetchVersionHistory();
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Failed to verify MOP.");
+    } finally {
+      setIsVerifying(false);
+    }
+  }, [refetchVersionHistory, resolvedMopId]);
 
   const onDownload = async () => {
     setIsDownloading(true)
@@ -229,6 +250,16 @@ export const MopManagementClient = ({
             disabled={isBootstrapping || isDownloading}
             className="shrink-0"
           /> : null}
+          {isEdit && readOnlyForm === false ? (
+            <AppButton
+              variant="secondary"
+              icon={<BadgeCheck className="h-4 w-4" />}
+              title={mop.documentVerified === true || verifiedMopId === resolvedMopId ? "Verified" : isVerifying ? "Verifying..." : "Verify"}
+              onClick={handleVerify}
+              disabled={isBootstrapping || isVerifying || mop.documentVerified === true || verifiedMopId === resolvedMopId}
+              className="shrink-0"
+            />
+          ) : null}
           <AppButton
             variant="default"
             icon={<History className="h-4 w-4" />}

@@ -175,6 +175,7 @@ export type SOP = {
   site: SOPSiteSection;
   overview: SOPSection03Overview;
   facilityEffects: SOPFacilityEffectRow[];
+  documentVerified: boolean;
   safety: SOPSafetyRequirements;
   risksAssumptions: SOPRisksAssumptions;
   details: SOPDetails;

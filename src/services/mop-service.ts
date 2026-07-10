@@ -129,6 +129,17 @@ export async function deleteCanonicalMOP(
   );
 }
 
+export async function verifyMOPDocument(mopId: string): Promise<void> {
+  const segment = encodeURIComponent(mopId.trim());
+  const body = await apiFetch<ApiSuccessEnvelope<unknown>>(`/mop/${segment}/verify`, {
+    method: 'PUT',
+  });
+
+  if (body.success !== true) {
+    throw new Error(body.message ?? 'Failed to verify MOP.');
+  }
+}
+
 export async function getMOPList(params?: MopListQueryParams): Promise<MopListResult> {
   const pageNumber = params?.pageNumber ?? 1;
   const pageSize = params?.pageSize ?? 10;

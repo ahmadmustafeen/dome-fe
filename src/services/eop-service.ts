@@ -129,6 +129,17 @@ export const deleteCanonicalEOP = async (
   );
 };
 
+export const verifyEOPDocument = async (eopId: string): Promise<void> => {
+  const segment = encodeURIComponent(eopId.trim());
+  const body = await apiFetch<ApiSuccessEnvelope<unknown>>(`/eop/${segment}/verify`, {
+    method: 'PUT',
+  });
+
+  if (body.success !== true) {
+    throw new Error(body.message ?? 'Failed to verify EOP.');
+  }
+};
+
 export const getEOPList = async (
   params?: EopListQueryParams,
 ): Promise<EopListResult> => {

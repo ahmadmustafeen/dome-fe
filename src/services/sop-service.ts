@@ -119,6 +119,17 @@ export const saveSOP = async (sop: SOP, sopId: string, siteId?: string, document
   return asSOP(payload);
 };
 
+export const verifySOPDocument = async (sopId: string): Promise<void> => {
+  const segment = encodeURIComponent(sopId.trim());
+  const body = await apiFetch<ApiSuccessEnvelope<unknown>>(`/sop/${segment}/verify`, {
+    method: 'PUT',
+  });
+
+  if (body.success !== true) {
+    throw new Error(body.message ?? 'Failed to verify SOP.');
+  }
+};
+
 export const createSOP = async (sop: SOP): Promise<SOP> =>
   saveSOP(sop, 'new');
 

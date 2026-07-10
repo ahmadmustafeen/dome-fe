@@ -1,14 +1,18 @@
-"use client";
+'use client';
 
-import { Download, History } from "lucide-react";
+import { BadgeCheck, Download, History } from 'lucide-react';
 
-import { AppButton, Typography } from "@/components/common";
+import { AppButton, Typography } from '@/components/common';
 
 type SopManagementHeaderProps = {
   isBootstrapping: boolean;
   showVersionHistory: boolean;
+  showVerify: boolean;
   isDownloading: boolean;
-  onDownload: () => void,
+  isVerifying: boolean;
+  isVerified: boolean;
+  onDownload: () => void;
+  onVerify: () => void;
   noDownload?: boolean;
   onOpenHistory: () => void;
 };
@@ -16,9 +20,13 @@ type SopManagementHeaderProps = {
 export const SopManagementHeader = ({
   isBootstrapping,
   showVersionHistory,
+  showVerify,
   isDownloading,
+  isVerifying,
+  isVerified,
   noDownload,
   onDownload,
+  onVerify,
   onOpenHistory,
 }: SopManagementHeaderProps) => {
   return (
@@ -26,14 +34,30 @@ export const SopManagementHeader = ({
       <Typography variant="h1" className="min-w-0 flex-1">
         Standard Operating Procedure (SOP)
       </Typography>
-      {!noDownload ? <AppButton
-        variant="secondary"
-        icon={<Download className="h-4 w-4" />}
-        title={isDownloading ? "Downloading..." : "Download"}
-        onClick={onDownload}
-        disabled={isBootstrapping || isDownloading}
-        className="shrink-0"
-      /> : null}
+      {!noDownload
+        ? (
+            <AppButton
+              variant="secondary"
+              icon={<Download className="h-4 w-4" />}
+              title={isDownloading ? 'Downloading...' : 'Download'}
+              onClick={onDownload}
+              disabled={isBootstrapping || isDownloading}
+              className="shrink-0"
+            />
+          )
+        : null}
+      {showVerify
+        ? (
+            <AppButton
+              variant="secondary"
+              icon={<BadgeCheck className="h-4 w-4" />}
+              title={isVerified ? 'Verified' : isVerifying ? 'Verifying...' : 'Verify'}
+              onClick={onVerify}
+              disabled={isBootstrapping || isVerifying || isVerified}
+              className="shrink-0"
+            />
+          )
+        : null}
       <AppButton
         variant="default"
         icon={<History className="h-4 w-4" />}

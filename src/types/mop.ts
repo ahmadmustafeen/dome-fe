@@ -393,6 +393,7 @@ export type MOP = {
   site: MOPSiteSection;
   overview: MOPSection03Overview;
   facilityEffects: MopFacilityEffectRow[];
+  documentVerified?: boolean;
   asset: Asset
   generatedDocumentId: string
 };

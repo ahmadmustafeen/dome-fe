@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, History } from "lucide-react";
+import { BadgeCheck, Download, History } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
@@ -12,6 +12,7 @@ import { VersionHistoryDrawer } from "@/components/version-history/VersionHistor
 import { DASHBOARD_ROUTES } from "@/constants/routes";
 import { useEopDocument } from "@/hooks/use-eop-document";
 import { useEopVersionHistoryPanel } from "@/hooks/use-eop-version-history-panel";
+import { verifyEOPDocument } from "@/services/eop-service";
 import type { CanonicalEopVersionApiRow } from "@/types/eop-api";
 
 import { EopDocumentForm } from "./EopDocumentForm";
@@ -28,6 +29,8 @@ export const EopManagementClient = ({ eopId, documentId, noDownload }: EopManage
   const resolvedEopId = isEdit ? eopId.trim() : undefined;
   const [isSaving, setIsSaving] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false)
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [verifiedEopId, setVerifiedEopId] = useState<string | null>(null);
 
   const applyVersionRef = useRef<(row: CanonicalEopVersionApiRow) => void>(
     () => { },
@@ -107,6 +110,25 @@ export const EopManagementClient = ({ eopId, documentId, noDownload }: EopManage
   const handleClear = useCallback(() => {
     void resetEop();
   }, [resetEop]);
+
+  const handleVerify = useCallback(async () => {
+    if (resolvedEopId === undefined) {
+      toast.error("EOP id is required to verify.");
+      return;
+    }
+
+    setIsVerifying(true);
+    try {
+      await verifyEOPDocument(resolvedEopId);
+      setVerifiedEopId(resolvedEopId);
+      toast.success("EOP verified successfully");
+      await refetchVersionHistory();
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Failed to verify EOP.");
+    } finally {
+      setIsVerifying(false);
+    }
+  }, [refetchVersionHistory, resolvedEopId]);
 
   const onDownload = async () => {
     setIsDownloading(true)
@@ -206,6 +228,16 @@ export const EopManagementClient = ({ eopId, documentId, noDownload }: EopManage
             disabled={isBootstrapping || isDownloading}
             className="shrink-0"
           />}
+          {isEdit && readOnlyForm === false ? (
+            <AppButton
+              variant="secondary"
+              icon={<BadgeCheck className="h-4 w-4" />}
+              title={eop.documentVerified === true || verifiedEopId === resolvedEopId ? "Verified" : isVerifying ? "Verifying..." : "Verify"}
+              onClick={handleVerify}
+              disabled={isBootstrapping || isVerifying || eop.documentVerified === true || verifiedEopId === resolvedEopId}
+              className="shrink-0"
+            />
+          ) : null}
           <AppButton
             variant="default"
             icon={<History className="h-4 w-4" />}

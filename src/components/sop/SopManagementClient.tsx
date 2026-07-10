@@ -1,33 +1,36 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { useCallback, useRef, useState } from "react";
-import { toast } from "react-toastify";
+import type { CanonicalSopVersionApiRow } from '@/types/sop-api';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { ScreenLoader, SectionWrapper, Typography } from "@/components/common";
-import { DASHBOARD_ROUTES } from "@/constants/routes";
-import { useSopDocument } from "@/hooks/use-sop-document";
-import { useSopVersionHistoryPanel } from "@/hooks/use-sop-version-history-panel";
-import type { CanonicalSopVersionApiRow } from "@/types/sop-api";
+import { toast } from 'react-toastify';
+import { ScreenLoader, SectionWrapper, Typography } from '@/components/common';
+import { DASHBOARD_ROUTES } from '@/constants/routes';
+import { useSopDocument } from '@/hooks/use-sop-document';
+import { useSopVersionHistoryPanel } from '@/hooks/use-sop-version-history-panel';
+import { verifySOPDocument } from '@/services/sop-service';
 
-import { SopArchivedVersionBanner } from "./SopArchivedVersionBanner";
-import { SopDocumentForm } from "./SopDocumentForm";
-import { SopFormActionsFooter } from "./SopFormActionsFooter";
-import { SopManagementHeader } from "./SopManagementHeader";
-import { SopNotFoundState } from "./SopNotFoundState";
-import { SopVersionHistoryDrawer } from "./SopVersionHistoryDrawer";
+import { SopArchivedVersionBanner } from './SopArchivedVersionBanner';
+import { SopDocumentForm } from './SopDocumentForm';
+import { SopFormActionsFooter } from './SopFormActionsFooter';
+import { SopManagementHeader } from './SopManagementHeader';
+import { SopNotFoundState } from './SopNotFoundState';
+import { SopVersionHistoryDrawer } from './SopVersionHistoryDrawer';
 
 type SopManagementClientProps = {
   sopId?: string;
-  documentId?: string
-  noDownload?: boolean
+  documentId?: string;
+  noDownload?: boolean;
 };
 
 export const SopManagementClient = ({ sopId, documentId, noDownload }: SopManagementClientProps) => {
   const router = useRouter();
-  const isEdit = sopId !== undefined && sopId.trim() !== "";
+  const isEdit = sopId !== undefined && sopId.trim() !== '';
   const resolvedSopId = isEdit ? sopId.trim() : undefined;
-  const [isDownloading, setIsDownloading] = useState(false)
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [verifiedSopId, setVerifiedSopId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const applyVersionRef = useRef<(row: CanonicalSopVersionApiRow) => void>(
     () => { },
@@ -80,21 +83,23 @@ export const SopManagementClient = ({ sopId, documentId, noDownload }: SopManage
     resetSop,
     persistSop,
   } = useSopDocument({
-    mode: isEdit ? "edit" : "create",
+    mode: isEdit ? 'edit' : 'create',
     sopId: resolvedSopId,
     documentId,
     onAfterPersist: () => void refetchVersionHistory(),
     onCreateSaveSuccess: async (createdId) => {
-      if (createdId.trim() === "") {
-        toast.error("SOP saved but no id returned from the API.");
+      if (createdId.trim() === '') {
+        toast.error('SOP saved but no id returned from the API.');
         return;
       }
-      toast.success("SOP saved successfully");
+      toast.success('SOP saved successfully');
       router.push(DASHBOARD_ROUTES.SOP_MANAGEMENT);
     },
   });
 
-  applyVersionRef.current = applyCanonicalVersionRow;
+  useEffect(() => {
+    applyVersionRef.current = applyCanonicalVersionRow;
+  }, [applyCanonicalVersionRow]);
 
   const showVersionHistory = isEdit && resolvedSopId !== undefined;
   const readOnlyForm = isReadOnly === true;
@@ -113,10 +118,10 @@ export const SopManagementClient = ({ sopId, documentId, noDownload }: SopManage
     try {
       await persistSop(sop.generatedDocumentId);
       if (isEdit) {
-        toast.success("SOP updated successfully");
+        toast.success('SOP updated successfully');
       }
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : "Failed to save SOP.");
+      toast.error(err instanceof Error ? err.message : 'Failed to save SOP.');
     } finally {
       setIsSaving(false);
     }
@@ -129,6 +134,25 @@ export const SopManagementClient = ({ sopId, documentId, noDownload }: SopManage
   const handleSaveClick = useCallback(() => {
     void handleSave();
   }, [handleSave]);
+
+  const handleVerify = useCallback(async () => {
+    if (resolvedSopId === undefined) {
+      toast.error('SOP id is required to verify.');
+      return;
+    }
+
+    setIsVerifying(true);
+    try {
+      await verifySOPDocument(resolvedSopId);
+      setVerifiedSopId(resolvedSopId);
+      toast.success('SOP verified successfully');
+      await refetchVersionHistory();
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'Failed to verify SOP.');
+    } finally {
+      setIsVerifying(false);
+    }
+  }, [refetchVersionHistory, resolvedSopId]);
 
   if (isEdit && sopNotFound === true && isBootstrapping === false) {
     return <SopNotFoundState />;
@@ -144,21 +168,18 @@ export const SopManagementClient = ({ sopId, documentId, noDownload }: SopManage
     );
   }
 
-
-
-
   const onDownload = async () => {
-    setIsDownloading(true)
+    setIsDownloading(true);
     const res = await fetch(`/api/sops/${sopId}/pdf`);
 
     if (!res.ok) {
-      throw new Error("Failed to download PDF");
+      throw new Error('Failed to download PDF');
     }
 
     const blob = await res.blob();
     const url = window.URL.createObjectURL(blob);
 
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
     a.download = `${sop.document.title}-${new Date().toISOString()}.pdf`;
     document.body.appendChild(a);
@@ -166,25 +187,27 @@ export const SopManagementClient = ({ sopId, documentId, noDownload }: SopManage
 
     a.remove();
     window.URL.revokeObjectURL(url);
-    setIsDownloading(false)
-  }
+    setIsDownloading(false);
+  };
 
   return (
     <>
 
-      {historyOpen ? (
-        <SopVersionHistoryDrawer
-          versionCount={versionCount}
-          historyError={historyError}
-          showVersionHistory={showVersionHistory}
-          currentRecord={currentRecord}
-          archives={archives}
-          activeVersionId={activeVersionId}
-          historyLoading={historyLoading}
-          onClose={handleCloseHistory}
-          onLoadVersion={handleLoadVersion}
-        />
-      ) : null}
+      {historyOpen
+        ? (
+            <SopVersionHistoryDrawer
+              versionCount={versionCount}
+              historyError={historyError}
+              showVersionHistory={showVersionHistory}
+              currentRecord={currentRecord}
+              archives={archives}
+              activeVersionId={activeVersionId}
+              historyLoading={historyLoading}
+              onClose={handleCloseHistory}
+              onLoadVersion={handleLoadVersion}
+            />
+          )
+        : null}
 
       <SectionWrapper className="flex min-h-full flex-col">
         {
@@ -193,25 +216,31 @@ export const SopManagementClient = ({ sopId, documentId, noDownload }: SopManage
         <SopManagementHeader
           isBootstrapping={isBootstrapping}
           isDownloading={isDownloading}
+          isVerifying={isVerifying}
+          isVerified={sop.documentVerified === true || verifiedSopId === resolvedSopId}
           onDownload={onDownload}
+          onVerify={handleVerify}
           noDownload={noDownload}
+          showVerify={isEdit && readOnlyForm === false}
           showVersionHistory={showVersionHistory}
           onOpenHistory={handleOpenHistory}
         />
 
         <section className="flex min-h-0 min-w-0 flex-1 flex-col gap-3 pb-24">
-          {viewingArchivedVersionNumber !== null ? (
-            <SopArchivedVersionBanner
-              versionNumber={viewingArchivedVersionNumber}
-              onResumeLatest={resumeEditingLatestSop}
-            />
-          ) : null}
+          {viewingArchivedVersionNumber !== null
+            ? (
+                <SopArchivedVersionBanner
+                  versionNumber={viewingArchivedVersionNumber}
+                  onResumeLatest={resumeEditingLatestSop}
+                />
+              )
+            : null}
           <fieldset
             disabled={readOnlyForm}
             className={
               readOnlyForm === true
-                ? "min-w-0 border-0 p-0 opacity-95"
-                : "min-w-0 border-0 p-0"
+                ? 'min-w-0 border-0 p-0 opacity-95'
+                : 'min-w-0 border-0 p-0'
             }
           >
             <SopDocumentForm

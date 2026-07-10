@@ -266,6 +266,7 @@ export type EOP = {
   recovery: EOPSection07Recovery;
   supportingInformation: EOPSection08SupportingInformation;
   approvalReview: EOPSection09ApprovalReview;
+  documentVerified?: boolean;
   asset: Asset;
   generatedDocumentId: string
 };

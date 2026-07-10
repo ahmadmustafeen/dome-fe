@@ -6,7 +6,6 @@ import { DownloadIcon, } from 'lucide-react'
 import { MOP_SECTION_07_IMPORTANT_INDICATORS } from "@/constants/mop-section07-important-indicators";
 import { MopSection07IndicatorIcon } from "../mop/MopSection07IndicatorIcons";
 import { MOP_SECTION_09_APPROVAL_REQUIREMENT_BULLETS, MOP_SECTION_09_APPROVAL_REQUIREMENTS_HEADING } from "@/constants/mop-section09-approval";
-import { MOP_SECTION_11_POLICY_BANNER_TEXT, MOP_SECTION_11_POLICY_NOTE_LABEL } from "@/constants/mop-section11-references";
 import { MopSection11Notices } from "../mop/MopSection11Notices";
 import { ReactNode } from "react";
 import { SOP_SECTION_04_SYSTEM_ROWS } from "@/constants/sop-section04-facility";

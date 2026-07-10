@@ -1,7 +1,6 @@
 'use client';
 
 import type { MopReferencePolicyRow, MOPSection11References } from '@/types/mop';
-import { Typography } from '@/components/common';
 import { Input } from '@/components/ui/Input';
 import { MOP_DYNAMIC_TABLE_MIN_ROWS } from '@/constants/mop-dynamic-table';
 import {

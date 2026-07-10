@@ -9,7 +9,6 @@ import { MOP_SECTION_11_HEADING } from '@/constants/mop-section11-references';
 
 import { MopSection11DocTable } from './MopSection11DocTable';
 import { MopSection11Notices } from './MopSection11Notices';
-import { MopSection11PolicyTable } from './MopSection11PolicyTable';
 import { MopSection11SafetyTable } from './MopSection11SafetyTable';
 
 type MopSection11ReferencesBlockProps = {

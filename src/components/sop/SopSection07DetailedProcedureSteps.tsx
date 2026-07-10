@@ -1,7 +1,6 @@
 "use client";
 
 import { Textarea } from "@/components/ui/Textarea";
-import { Input } from "@/components/ui/Input";
 import { ProcedureDynamicTableRowControls } from "@/components/procedure/ProcedureDynamicTableRowControls";
 import { newSopDetailedProcedureStepRow } from "@/constants/sop-section07-procedure-steps";
 import { insertProcedureRowAfterId, removeProcedureRowById } from "@/utils/procedure-dynamic-table-mutations";

@@ -57,6 +57,7 @@ export default function ProcedureEstimationCategoryDetailPage({ params }: PagePr
   const [documents, setDocuments] = useState<DocumentApiRecord[]>([]);
   const [ragDocuments, setRagDocuments] = useState<DocumentApiRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [documentSearchQuery, setDocumentSearchQuery] = useState('');
   const [customTitle, setCustomTitle] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -135,8 +136,21 @@ export default function ProcedureEstimationCategoryDetailPage({ params }: PagePr
     }
   }, [site?._id]);
 
+  const getDocumentTitle = (doc: any) =>
+    String(doc.title ?? doc.name ?? extractDocumentName(doc.documentUrl) ?? '').trim();
+
+  const filteredDocuments = [...documents, ...ragDocuments].filter((doc: any) => {
+    const normalizedSearch = documentSearchQuery.trim().toLowerCase();
+
+    if (normalizedSearch === '') {
+      return true;
+    }
+
+    return getDocumentTitle(doc).toLowerCase().includes(normalizedSearch);
+  });
+
   // Group documents by type
-  const groupedDocuments = [...documents, ...ragDocuments].reduce((acc: any, doc: any) => {
+  const groupedDocuments = filteredDocuments.reduce((acc: any, doc: any) => {
     const type = doc.type || 'other';
 
     if (!acc[type]) {
@@ -177,6 +191,7 @@ export default function ProcedureEstimationCategoryDetailPage({ params }: PagePr
         }
         setPdData(null);
         setCustomTitle('');
+        setDocumentSearchQuery('');
         return router.push(`/en/dashboard/${route}/${resp.data.pdId}`);
       }
       let route = '';
@@ -191,6 +206,7 @@ export default function ProcedureEstimationCategoryDetailPage({ params }: PagePr
       }
       setPdData(null);
       setCustomTitle('');
+      setDocumentSearchQuery('');
       router.push(`/en/dashboard/${route}/create/${resp.data._id}`);
     }
   };
@@ -209,6 +225,7 @@ export default function ProcedureEstimationCategoryDetailPage({ params }: PagePr
   };
 
   const handleCreateClick = async (pdId: string, type: string, assetId: string, custom?: boolean) => {
+    setDocumentSearchQuery('');
     setPdData({ pdId, type, assetId, custom: custom ?? false });
   };
 
@@ -299,6 +316,7 @@ export default function ProcedureEstimationCategoryDetailPage({ params }: PagePr
                     className="absolute top-4 right-4 cursor-pointer"
                     onClick={() => {
                       setCustomTitle('');
+                      setDocumentSearchQuery('');
                       setPdData(null);
                     }}
                   >
@@ -333,6 +351,17 @@ export default function ProcedureEstimationCategoryDetailPage({ params }: PagePr
                       Select all documents you want included in this generation.
                     </Typography>
 
+                    <div className="relative mb-4">
+                      <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                      <input
+                        type="search"
+                        value={documentSearchQuery}
+                        onChange={event => setDocumentSearchQuery(event.target.value)}
+                        placeholder="Search documents by title..."
+                        className="h-10 w-full rounded-lg border border-gray-300 bg-white pr-3 pl-9 text-sm text-gray-900 transition outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                      />
+                    </div>
+
                     <div className="max-h-125 space-y-6 overflow-y-auto">
                       {Object.entries(groupedDocuments).map(([type, docs]: any) => (
                         <div key={type}>
@@ -347,7 +376,7 @@ export default function ProcedureEstimationCategoryDetailPage({ params }: PagePr
                                 item => item._id === doc._id,
                               );
 
-                              const name = extractDocumentName(doc.documentUrl);
+                              const name = getDocumentTitle(doc);
                               return (
                                 <div
                                   key={doc._id}
@@ -380,6 +409,15 @@ export default function ProcedureEstimationCategoryDetailPage({ params }: PagePr
                           </div>
                         </div>
                       ))}
+                      {filteredDocuments.length === 0
+                        ? (
+                            <div className="rounded-xl border border-dashed border-gray-300 px-4 py-8 text-center">
+                              <Typography variant="p" className="text-gray-500">
+                                No documents found.
+                              </Typography>
+                            </div>
+                          )
+                        : null}
                     </div>
 
                     <div className="mt-6 flex justify-end">

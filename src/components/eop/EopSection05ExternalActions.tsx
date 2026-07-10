@@ -68,7 +68,7 @@ export const EopSection05ExternalActions = ({
       </Typography>
 
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[1200px] border-collapse text-sm">
+        <table className="w-full min-w-300 border-collapse text-sm">
           <thead>
             <tr className="bg-[#5A1A1A] text-white">
               <th className="w-24 px-3 py-2 text-left font-semibold">Step Number</th>
@@ -76,10 +76,10 @@ export const EopSection05ExternalActions = ({
                 External Equipment/System to Check
               </th>
               <th className="px-3 py-2 text-left font-semibold">
-                Connection to LENNOX HS29-060-13G
+                Connection to {assetName}
               </th>
               <th className="px-3 py-2 text-left font-semibold">
-                Potential Failure Mode Causing Power Failure
+                Potential Failure Mode
               </th>
               <th className="px-3 py-2 text-left font-semibold">Verification Method</th>
               <th className="px-3 py-2 text-left font-semibold">Actual Status</th>

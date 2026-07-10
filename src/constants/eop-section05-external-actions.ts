@@ -1,5 +1,5 @@
 export const EOP_SECTION_05_HEADING =
-  "Section 05: Power Failure Detection External Response Actions";
+  "Section 05: External Response Actions";
 
 export const newEopSection05ExternalActionRow = () => ({
   id: crypto.randomUUID(),

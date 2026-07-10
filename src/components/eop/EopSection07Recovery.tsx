@@ -26,14 +26,14 @@ export const EopSection07Recovery = ({
     </Typography>
 
     <Typography variant="h6" className="mb-2 text-base font-semibold text-gray-900">
-      Power Failure Resolution and Equipment Recovery Procedures
+      Resolution and Equipment Recovery Procedures
     </Typography>
     <Typography variant="p" className="text-sm text-gray-600">
       {recovery?.introText}
     </Typography>
 
     <EopSection07Checklist
-      title="Power Failure Resolution Verification"
+      title="Resolution Verification"
       description="Confirm stable operating conditions are available at all system levels:"
       items={recovery?.resolutionVerificationItems}
       onItemsChange={(items) =>

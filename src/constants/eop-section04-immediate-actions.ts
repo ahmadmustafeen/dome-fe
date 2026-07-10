@@ -1,7 +1,7 @@
 import type { EopSection04SafetyChecklistItem } from "@/types/eop";
 
 export const EOP_SECTION_04_HEADING =
-  "Section 04: Immediate Emergency Actions - Power Failure Diagnostics";
+  "Section 04: Immediate Emergency Actions - Diagnostics";
 
 export const EOP_SECTION_04_SUBHEADING_PRE_ACTION =
   "Pre-Action Safety & Equipment Requirements";

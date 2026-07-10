@@ -147,7 +147,7 @@ const FourthSection = (props: EOP) => {
   const assetName = props?.asset?.assetName || "";
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <SectionHeading className="heading-1" heading="Section 04: Immediate Emergency Actions - Power Failure Diagnostics" />
+      <SectionHeading className="heading-1" heading="Section 04: Immediate Emergency Actions - Diagnostics" />
 
       <p className="font-semibold text-lg py-4">Pre-Action Safety & Equipment Requirements:</p>
 
@@ -322,7 +322,7 @@ const FifthSection = (props: EOP) => {
   const assetName = props?.asset?.assetName || "";
   return <div className="">
     <div className="my-4 rounded-lg p-2 break-inside-auto">
-      <SectionHeading className="heading-1" heading="Section 05: Power Failure Detection External Response Actions" />
+      <SectionHeading className="heading-1" heading="Section 05: External Response Actions" />
 
       <Typography variant="p" className="my-4 text-sm text-gray-700">
         Verify all external equipment and systems that connect to or support the {assetName}
@@ -492,13 +492,13 @@ const SeventhSection = (props: EOP) => {
     <div className="my-4 rounded-lg p-2 break-inside-auto">
       <SectionHeading className="heading-1" heading="Section 07: Recovery & Return to Service" />
 
-      <p className="font-semibold text-lg my-4">Power Failure Resolution and Equipment Recovery Procedures</p>
+      <p className="font-semibold text-lg my-4">Resolution and Equipment Recovery Procedures</p>
 
       <Typography variant="p" className="my-4 text-sm text-gray-700">
-        Follow these steps in sequence to safely restore the {assetName} to normal operation after Power Failure has been resolved:
+        Follow these steps in sequence to safely restore the {assetName} to normal operation after the issue has been resolved:
       </Typography>
 
-      <p className="font-semibold text-lg my-4">Power Failure Resolution Verification</p>
+      <p className="font-semibold text-lg my-4">Resolution Verification</p>
       <Typography variant="p" className="my-4 text-sm text-gray-700">
         Confirm stable operating conditions are available at all system levels:
       </Typography>

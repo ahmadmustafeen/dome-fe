@@ -4,6 +4,14 @@ import chromiumMin from "@sparticuz/chromium-min";
 import fs from "fs";
 import path from "path";
 
+const escapeHtml = (value: string) =>
+  value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
 export async function GET(
   _: NextRequest,
   context: { params: Promise<{ id: string }> }
@@ -148,13 +156,28 @@ export async function GET(
         )
       });
 
+      const documentTitle = await page.evaluate(() => {
+        const title = document.querySelector("main h3")?.textContent?.trim();
+        return title || "Method of Procedure (MOP)";
+      });
+
       const pdf = await page.pdf({
         format: "Letter",
         printBackground: true,
+        displayHeaderFooter: true,
+        headerTemplate: "<div></div>",
+        footerTemplate: `
+          <div style="width: 100%; padding: 0 0.35in; box-sizing: border-box; font-family: Arial, sans-serif; font-size: 10px; color: #111;">
+            <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #111; padding-top: 6px;">
+              <span>${escapeHtml(documentTitle)}</span>
+              <span>Page <span class="pageNumber"></span> of <span class="totalPages"></span></span>
+            </div>
+          </div>
+        `,
         margin: {
           top: "0in",
           right: "0in",
-          bottom: "0in",
+          bottom: "0.45in",
           left: "0in",
         },
       });

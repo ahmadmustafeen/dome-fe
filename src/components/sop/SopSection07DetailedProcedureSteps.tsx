@@ -36,9 +36,7 @@ export const SopSection07DetailedProcedureSteps = ({
             <th className="px-3 py-2 text-left font-semibold">Expected Range</th>
             <th className="px-3 py-2 text-left font-semibold">Source</th>
             <th className="px-0 py-2 text-left font-semibold">Indicator</th>
-            <th className="px-3 py-2 text-left font-semibold">Recorded Value</th>
-            <th className="w-24 px-3 py-2 text-left font-semibold">Initials</th>
-            <th className="w-24 px-3 py-2 text-left font-semibold">Time</th>
+            
             <th className="px-3 py-2 text-left font-semibold">Action if Out of Range</th>
             <th scope="col" className="w-17 px-1 py-2 text-center text-xs font-semibold">
               +-
@@ -108,49 +106,6 @@ export const SopSection07DetailedProcedureSteps = ({
                     )}
                   // className="max-w-40"
                   aria-label={`SOP step ${row.step} indicator`}
-                />
-              </td>
-              <td className="border border-gray-200 px-2 py-1 align-top">
-                <Textarea
-                  value={row.recordedValue}
-                  onChange={(e) =>
-                    patchRows(
-                      normalizedRows.map((currentRow) =>
-                        currentRow.id === row.id
-                          ? { ...currentRow, recordedValue: e.target.value }
-                          : currentRow,
-                      ),
-                    )}
-                  className="min-h-24 w-full"
-                />
-              </td>
-
-              <td className="border border-gray-200 px-2 py-1 align-top">
-                <Input
-                  value={row.initials}
-                  onChange={(e) =>
-                    patchRows(
-                      normalizedRows.map((currentRow) =>
-                        currentRow.id === row.id
-                          ? { ...currentRow, initials: e.target.value }
-                          : currentRow,
-                      ),
-                    )}
-                  className="w-full"
-                />
-              </td>
-              <td className="border border-gray-200 px-2 py-1 align-top">
-                <Input
-                  value={row.time}
-                  onChange={(e) =>
-                    patchRows(
-                      normalizedRows.map((currentRow) =>
-                        currentRow.id === row.id
-                          ? { ...currentRow, time: e.target.value }
-                          : currentRow,
-                      ),
-                    )}
-                  className="w-full"
                 />
               </td>
               <td className="border border-gray-200 px-2 py-1 align-top">
